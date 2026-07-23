@@ -25,13 +25,13 @@ public class DBXFilePropertiesRoutes: NSObject {
     ///
     /// - parameter path: A unique identifier for the file or folder.
     /// - parameter propertyGroups: The property groups which are to be added to a Dropbox file. No two groups in the
-    /// input should  refer to the same template.
+    /// input should refer to the same template.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.AddPropertiesError` object on failure.
     @objc
-    @discardableResult public func propertiesAdd(path: String, propertyGroups: [DBXFilePropertiesPropertyGroup]) -> DBXFilePropertiesPropertiesAddRpcRequest {
-        let swift = swift.propertiesAdd(path: path, propertyGroups: propertyGroups.map(\.swift))
+    @discardableResult public func propertiesAdd(path: String, propertyGroups: Array<DBXFilePropertiesPropertyGroup>) -> DBXFilePropertiesPropertiesAddRpcRequest {
+        let swift = swift.propertiesAdd(path: path, propertyGroups: propertyGroups.map { $0.swift })
         return DBXFilePropertiesPropertiesAddRpcRequest(swift: swift)
     }
 
@@ -44,16 +44,13 @@ public class DBXFilePropertiesRoutes: NSObject {
     ///
     /// - parameter path: A unique identifier for the file or folder.
     /// - parameter propertyGroups: The property groups "snapshot" updates to force apply. No two groups in the input
-    /// should  refer to the same template.
+    /// should refer to the same template.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.InvalidPropertyGroupError` object on failure.
     @objc
-    @discardableResult public func propertiesOverwrite(
-        path: String,
-        propertyGroups: [DBXFilePropertiesPropertyGroup]
-    ) -> DBXFilePropertiesPropertiesOverwriteRpcRequest {
-        let swift = swift.propertiesOverwrite(path: path, propertyGroups: propertyGroups.map(\.swift))
+    @discardableResult public func propertiesOverwrite(path: String, propertyGroups: Array<DBXFilePropertiesPropertyGroup>) -> DBXFilePropertiesPropertiesOverwriteRpcRequest {
+        let swift = swift.propertiesOverwrite(path: path, propertyGroups: propertyGroups.map { $0.swift })
         return DBXFilePropertiesPropertiesOverwriteRpcRequest(swift: swift)
     }
 
@@ -70,7 +67,7 @@ public class DBXFilePropertiesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.RemovePropertiesError` object on failure.
     @objc
-    @discardableResult public func propertiesRemove(path: String, propertyTemplateIds: [String]) -> DBXFilePropertiesPropertiesRemoveRpcRequest {
+    @discardableResult public func propertiesRemove(path: String, propertyTemplateIds: Array<String>) -> DBXFilePropertiesPropertiesRemoveRpcRequest {
         let swift = swift.propertiesRemove(path: path, propertyTemplateIds: propertyTemplateIds)
         return DBXFilePropertiesPropertiesRemoveRpcRequest(swift: swift)
     }
@@ -85,11 +82,8 @@ public class DBXFilePropertiesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `FileProperties.PropertiesSearchResult`
     /// object on success or a `FileProperties.PropertiesSearchError` object on failure.
     @objc
-    @discardableResult public func propertiesSearch(
-        queries: [DBXFilePropertiesPropertiesSearchQuery],
-        templateFilter: DBXFilePropertiesTemplateFilter
-    ) -> DBXFilePropertiesPropertiesSearchRpcRequest {
-        let swift = swift.propertiesSearch(queries: queries.map(\.swift), templateFilter: templateFilter.swift)
+    @discardableResult public func propertiesSearch(queries: Array<DBXFilePropertiesPropertiesSearchQuery>, templateFilter: DBXFilePropertiesTemplateFilter) -> DBXFilePropertiesPropertiesSearchRpcRequest {
+        let swift = swift.propertiesSearch(queries: queries.map { $0.swift }, templateFilter: templateFilter.swift)
         return DBXFilePropertiesPropertiesSearchRpcRequest(swift: swift)
     }
 
@@ -100,8 +94,8 @@ public class DBXFilePropertiesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `FileProperties.PropertiesSearchResult`
     /// object on success or a `FileProperties.PropertiesSearchError` object on failure.
     @objc
-    @discardableResult public func propertiesSearch(queries: [DBXFilePropertiesPropertiesSearchQuery]) -> DBXFilePropertiesPropertiesSearchRpcRequest {
-        let swift = swift.propertiesSearch(queries: queries.map(\.swift))
+    @discardableResult public func propertiesSearch(queries: Array<DBXFilePropertiesPropertiesSearchQuery>) -> DBXFilePropertiesPropertiesSearchRpcRequest {
+        let swift = swift.propertiesSearch(queries: queries.map { $0.swift })
         return DBXFilePropertiesPropertiesSearchRpcRequest(swift: swift)
     }
 
@@ -132,11 +126,8 @@ public class DBXFilePropertiesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.UpdatePropertiesError` object on failure.
     @objc
-    @discardableResult public func propertiesUpdate(
-        path: String,
-        updatePropertyGroups: [DBXFilePropertiesPropertyGroupUpdate]
-    ) -> DBXFilePropertiesPropertiesUpdateRpcRequest {
-        let swift = swift.propertiesUpdate(path: path, updatePropertyGroups: updatePropertyGroups.map(\.swift))
+    @discardableResult public func propertiesUpdate(path: String, updatePropertyGroups: Array<DBXFilePropertiesPropertyGroupUpdate>) -> DBXFilePropertiesPropertiesUpdateRpcRequest {
+        let swift = swift.propertiesUpdate(path: path, updatePropertyGroups: updatePropertyGroups.map { $0.swift })
         return DBXFilePropertiesPropertiesUpdateRpcRequest(swift: swift)
     }
 
@@ -149,12 +140,8 @@ public class DBXFilePropertiesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object on
     /// success or a `FileProperties.ModifyTemplateError` object on failure.
     @objc
-    @discardableResult public func templatesAddForTeam(
-        name: String,
-        description_: String,
-        fields: [DBXFilePropertiesPropertyFieldTemplate]
-    ) -> DBXFilePropertiesTemplatesAddForTeamRpcRequest {
-        let swift = swift.templatesAddForTeam(name: name, description_: description_, fields: fields.map(\.swift))
+    @discardableResult public func templatesAddForTeam(name: String, description_: String, fields: Array<DBXFilePropertiesPropertyFieldTemplate>) -> DBXFilePropertiesTemplatesAddForTeamRpcRequest {
+        let swift = swift.templatesAddForTeam(name: name, description_: description_, fields: fields.map { $0.swift })
         return DBXFilePropertiesTemplatesAddForTeamRpcRequest(swift: swift)
     }
 
@@ -167,12 +154,8 @@ public class DBXFilePropertiesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object on
     /// success or a `FileProperties.ModifyTemplateError` object on failure.
     @objc
-    @discardableResult public func templatesAddForUser(
-        name: String,
-        description_: String,
-        fields: [DBXFilePropertiesPropertyFieldTemplate]
-    ) -> DBXFilePropertiesTemplatesAddForUserRpcRequest {
-        let swift = swift.templatesAddForUser(name: name, description_: description_, fields: fields.map(\.swift))
+    @discardableResult public func templatesAddForUser(name: String, description_: String, fields: Array<DBXFilePropertiesPropertyFieldTemplate>) -> DBXFilePropertiesTemplatesAddForUserRpcRequest {
+        let swift = swift.templatesAddForUser(name: name, description_: description_, fields: fields.map { $0.swift })
         return DBXFilePropertiesTemplatesAddForUserRpcRequest(swift: swift)
     }
 
@@ -277,13 +260,8 @@ public class DBXFilePropertiesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `FileProperties.UpdateTemplateResult` object
     /// on success or a `FileProperties.ModifyTemplateError` object on failure.
     @objc
-    @discardableResult public func templatesUpdateForTeam(
-        templateId: String,
-        name: String?,
-        description_: String?,
-        addFields: [DBXFilePropertiesPropertyFieldTemplate]?
-    ) -> DBXFilePropertiesTemplatesUpdateForTeamRpcRequest {
-        let swift = swift.templatesUpdateForTeam(templateId: templateId, name: name, description_: description_, addFields: addFields?.map(\.swift))
+    @discardableResult public func templatesUpdateForTeam(templateId: String, name: String?, description_: String?, addFields: Array<DBXFilePropertiesPropertyFieldTemplate>?) -> DBXFilePropertiesTemplatesUpdateForTeamRpcRequest {
+        let swift = swift.templatesUpdateForTeam(templateId: templateId, name: name, description_: description_, addFields: addFields?.map { $0.swift })
         return DBXFilePropertiesTemplatesUpdateForTeamRpcRequest(swift: swift)
     }
 
@@ -314,13 +292,8 @@ public class DBXFilePropertiesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `FileProperties.UpdateTemplateResult` object
     /// on success or a `FileProperties.ModifyTemplateError` object on failure.
     @objc
-    @discardableResult public func templatesUpdateForUser(
-        templateId: String,
-        name: String?,
-        description_: String?,
-        addFields: [DBXFilePropertiesPropertyFieldTemplate]?
-    ) -> DBXFilePropertiesTemplatesUpdateForUserRpcRequest {
-        let swift = swift.templatesUpdateForUser(templateId: templateId, name: name, description_: description_, addFields: addFields?.map(\.swift))
+    @discardableResult public func templatesUpdateForUser(templateId: String, name: String?, description_: String?, addFields: Array<DBXFilePropertiesPropertyFieldTemplate>?) -> DBXFilePropertiesTemplatesUpdateForUserRpcRequest {
+        let swift = swift.templatesUpdateForUser(templateId: templateId, name: name, description_: description_, addFields: addFields?.map { $0.swift })
         return DBXFilePropertiesTemplatesUpdateForUserRpcRequest(swift: swift)
     }
 
@@ -336,7 +309,9 @@ public class DBXFilePropertiesRoutes: NSObject {
         let swift = swift.templatesUpdateForUser(templateId: templateId)
         return DBXFilePropertiesTemplatesUpdateForUserRpcRequest(swift: swift)
     }
+
 }
+
 
 @objc
 public class DBXFilePropertiesPropertiesAddRpcRequest: NSObject, DBXRequest {
@@ -350,7 +325,7 @@ public class DBXFilePropertiesPropertiesAddRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesAddPropertiesError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -358,7 +333,7 @@ public class DBXFilePropertiesPropertiesAddRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesAddPropertiesError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXFilePropertiesAddPropertiesError?
             var callError: DBXCallError?
             switch error {
@@ -401,6 +376,7 @@ public class DBXFilePropertiesPropertiesAddRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXFilePropertiesPropertiesOverwriteRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, FileProperties.InvalidPropertyGroupErrorSerializer>
@@ -413,7 +389,7 @@ public class DBXFilePropertiesPropertiesOverwriteRpcRequest: NSObject, DBXReques
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesInvalidPropertyGroupError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -421,7 +397,7 @@ public class DBXFilePropertiesPropertiesOverwriteRpcRequest: NSObject, DBXReques
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesInvalidPropertyGroupError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXFilePropertiesInvalidPropertyGroupError?
             var callError: DBXCallError?
             switch error {
@@ -464,6 +440,7 @@ public class DBXFilePropertiesPropertiesOverwriteRpcRequest: NSObject, DBXReques
     }
 }
 
+
 @objc
 public class DBXFilePropertiesPropertiesRemoveRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, FileProperties.RemovePropertiesErrorSerializer>
@@ -476,7 +453,7 @@ public class DBXFilePropertiesPropertiesRemoveRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesRemovePropertiesError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -484,7 +461,7 @@ public class DBXFilePropertiesPropertiesRemoveRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesRemovePropertiesError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXFilePropertiesRemovePropertiesError?
             var callError: DBXCallError?
             switch error {
@@ -527,6 +504,7 @@ public class DBXFilePropertiesPropertiesRemoveRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXFilePropertiesPropertiesSearchRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileProperties.PropertiesSearchResultSerializer, FileProperties.PropertiesSearchErrorSerializer>
@@ -539,7 +517,7 @@ public class DBXFilePropertiesPropertiesSearchRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesPropertiesSearchResult?, DBXFilePropertiesPropertiesSearchError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -559,7 +537,7 @@ public class DBXFilePropertiesPropertiesSearchRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesPropertiesSearchResult?
+            var objc: DBXFilePropertiesPropertiesSearchResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesPropertiesSearchResult(swift: swift)
             }
@@ -594,6 +572,7 @@ public class DBXFilePropertiesPropertiesSearchRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXFilePropertiesPropertiesSearchContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileProperties.PropertiesSearchResultSerializer, FileProperties.PropertiesSearchContinueErrorSerializer>
@@ -606,7 +585,7 @@ public class DBXFilePropertiesPropertiesSearchContinueRpcRequest: NSObject, DBXR
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesPropertiesSearchResult?, DBXFilePropertiesPropertiesSearchContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -626,7 +605,7 @@ public class DBXFilePropertiesPropertiesSearchContinueRpcRequest: NSObject, DBXR
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesPropertiesSearchResult?
+            var objc: DBXFilePropertiesPropertiesSearchResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesPropertiesSearchResult(swift: swift)
             }
@@ -661,6 +640,7 @@ public class DBXFilePropertiesPropertiesSearchContinueRpcRequest: NSObject, DBXR
     }
 }
 
+
 @objc
 public class DBXFilePropertiesPropertiesUpdateRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, FileProperties.UpdatePropertiesErrorSerializer>
@@ -673,7 +653,7 @@ public class DBXFilePropertiesPropertiesUpdateRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesUpdatePropertiesError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -681,7 +661,7 @@ public class DBXFilePropertiesPropertiesUpdateRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesUpdatePropertiesError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXFilePropertiesUpdatePropertiesError?
             var callError: DBXCallError?
             switch error {
@@ -724,6 +704,7 @@ public class DBXFilePropertiesPropertiesUpdateRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXFilePropertiesTemplatesAddForTeamRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileProperties.AddTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer>
@@ -736,7 +717,7 @@ public class DBXFilePropertiesTemplatesAddForTeamRpcRequest: NSObject, DBXReques
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesAddTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -756,7 +737,7 @@ public class DBXFilePropertiesTemplatesAddForTeamRpcRequest: NSObject, DBXReques
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesAddTemplateResult?
+            var objc: DBXFilePropertiesAddTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesAddTemplateResult(swift: swift)
             }
@@ -790,6 +771,7 @@ public class DBXFilePropertiesTemplatesAddForTeamRpcRequest: NSObject, DBXReques
         swift.cancel()
     }
 }
+
 
 @objc
 public class DBXFilePropertiesTemplatesAddForUserRpcRequest: NSObject, DBXRequest {
@@ -803,7 +785,7 @@ public class DBXFilePropertiesTemplatesAddForUserRpcRequest: NSObject, DBXReques
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesAddTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -823,7 +805,7 @@ public class DBXFilePropertiesTemplatesAddForUserRpcRequest: NSObject, DBXReques
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesAddTemplateResult?
+            var objc: DBXFilePropertiesAddTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesAddTemplateResult(swift: swift)
             }
@@ -858,6 +840,7 @@ public class DBXFilePropertiesTemplatesAddForUserRpcRequest: NSObject, DBXReques
     }
 }
 
+
 @objc
 public class DBXFilePropertiesTemplatesGetForTeamRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileProperties.GetTemplateResultSerializer, FileProperties.TemplateErrorSerializer>
@@ -870,7 +853,7 @@ public class DBXFilePropertiesTemplatesGetForTeamRpcRequest: NSObject, DBXReques
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesGetTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -890,7 +873,7 @@ public class DBXFilePropertiesTemplatesGetForTeamRpcRequest: NSObject, DBXReques
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesGetTemplateResult?
+            var objc: DBXFilePropertiesGetTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesGetTemplateResult(swift: swift)
             }
@@ -924,6 +907,7 @@ public class DBXFilePropertiesTemplatesGetForTeamRpcRequest: NSObject, DBXReques
         swift.cancel()
     }
 }
+
 
 @objc
 public class DBXFilePropertiesTemplatesGetForUserRpcRequest: NSObject, DBXRequest {
@@ -937,7 +921,7 @@ public class DBXFilePropertiesTemplatesGetForUserRpcRequest: NSObject, DBXReques
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesGetTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -957,7 +941,7 @@ public class DBXFilePropertiesTemplatesGetForUserRpcRequest: NSObject, DBXReques
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesGetTemplateResult?
+            var objc: DBXFilePropertiesGetTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesGetTemplateResult(swift: swift)
             }
@@ -992,6 +976,7 @@ public class DBXFilePropertiesTemplatesGetForUserRpcRequest: NSObject, DBXReques
     }
 }
 
+
 @objc
 public class DBXFilePropertiesTemplatesListForTeamRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileProperties.ListTemplateResultSerializer, FileProperties.TemplateErrorSerializer>
@@ -1004,7 +989,7 @@ public class DBXFilePropertiesTemplatesListForTeamRpcRequest: NSObject, DBXReque
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesListTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1024,7 +1009,7 @@ public class DBXFilePropertiesTemplatesListForTeamRpcRequest: NSObject, DBXReque
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesListTemplateResult?
+            var objc: DBXFilePropertiesListTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesListTemplateResult(swift: swift)
             }
@@ -1058,6 +1043,7 @@ public class DBXFilePropertiesTemplatesListForTeamRpcRequest: NSObject, DBXReque
         swift.cancel()
     }
 }
+
 
 @objc
 public class DBXFilePropertiesTemplatesListForUserRpcRequest: NSObject, DBXRequest {
@@ -1071,7 +1057,7 @@ public class DBXFilePropertiesTemplatesListForUserRpcRequest: NSObject, DBXReque
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesListTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1091,7 +1077,7 @@ public class DBXFilePropertiesTemplatesListForUserRpcRequest: NSObject, DBXReque
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesListTemplateResult?
+            var objc: DBXFilePropertiesListTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesListTemplateResult(swift: swift)
             }
@@ -1126,6 +1112,7 @@ public class DBXFilePropertiesTemplatesListForUserRpcRequest: NSObject, DBXReque
     }
 }
 
+
 @objc
 public class DBXFilePropertiesTemplatesRemoveForTeamRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, FileProperties.TemplateErrorSerializer>
@@ -1138,7 +1125,7 @@ public class DBXFilePropertiesTemplatesRemoveForTeamRpcRequest: NSObject, DBXReq
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1146,7 +1133,7 @@ public class DBXFilePropertiesTemplatesRemoveForTeamRpcRequest: NSObject, DBXReq
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXFilePropertiesTemplateError?
             var callError: DBXCallError?
             switch error {
@@ -1188,6 +1175,7 @@ public class DBXFilePropertiesTemplatesRemoveForTeamRpcRequest: NSObject, DBXReq
         swift.cancel()
     }
 }
+
 
 @objc
 public class DBXFilePropertiesTemplatesRemoveForUserRpcRequest: NSObject, DBXRequest {
@@ -1201,7 +1189,7 @@ public class DBXFilePropertiesTemplatesRemoveForUserRpcRequest: NSObject, DBXReq
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1209,7 +1197,7 @@ public class DBXFilePropertiesTemplatesRemoveForUserRpcRequest: NSObject, DBXReq
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXFilePropertiesTemplateError?
             var callError: DBXCallError?
             switch error {
@@ -1252,6 +1240,7 @@ public class DBXFilePropertiesTemplatesRemoveForUserRpcRequest: NSObject, DBXReq
     }
 }
 
+
 @objc
 public class DBXFilePropertiesTemplatesUpdateForTeamRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileProperties.UpdateTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer>
@@ -1264,7 +1253,7 @@ public class DBXFilePropertiesTemplatesUpdateForTeamRpcRequest: NSObject, DBXReq
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesUpdateTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1284,7 +1273,7 @@ public class DBXFilePropertiesTemplatesUpdateForTeamRpcRequest: NSObject, DBXReq
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesUpdateTemplateResult?
+            var objc: DBXFilePropertiesUpdateTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesUpdateTemplateResult(swift: swift)
             }
@@ -1318,6 +1307,7 @@ public class DBXFilePropertiesTemplatesUpdateForTeamRpcRequest: NSObject, DBXReq
         swift.cancel()
     }
 }
+
 
 @objc
 public class DBXFilePropertiesTemplatesUpdateForUserRpcRequest: NSObject, DBXRequest {
@@ -1331,7 +1321,7 @@ public class DBXFilePropertiesTemplatesUpdateForUserRpcRequest: NSObject, DBXReq
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesUpdateTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1351,7 +1341,7 @@ public class DBXFilePropertiesTemplatesUpdateForUserRpcRequest: NSObject, DBXReq
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesUpdateTemplateResult?
+            var objc: DBXFilePropertiesUpdateTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesUpdateTemplateResult(swift: swift)
             }
@@ -1385,3 +1375,4 @@ public class DBXFilePropertiesTemplatesUpdateForUserRpcRequest: NSObject, DBXReq
         swift.cancel()
     }
 }
+

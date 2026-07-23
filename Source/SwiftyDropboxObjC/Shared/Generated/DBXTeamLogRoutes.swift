@@ -43,13 +43,7 @@ public class DBXTeamLogRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `TeamLog.GetTeamEventsResult` object on
     /// success or a `TeamLog.GetTeamEventsError` object on failure.
     @objc
-    @discardableResult public func getEvents(
-        limit: NSNumber,
-        accountId: String?,
-        time: DBXTeamCommonTimeRange?,
-        category: DBXTeamLogEventCategory?,
-        eventType: DBXTeamLogEventTypeArg?
-    ) -> DBXTeamLogGetEventsRpcRequest {
+    @discardableResult public func getEvents(limit: NSNumber, accountId: String?, time: DBXTeamCommonTimeRange?, category: DBXTeamLogEventCategory?, eventType: DBXTeamLogEventTypeArg?) -> DBXTeamLogGetEventsRpcRequest {
         let swift = swift.getEvents(limit: limit.uint32Value, accountId: accountId, time: time?.swift, category: category?.swift, eventType: eventType?.swift)
         return DBXTeamLogGetEventsRpcRequest(swift: swift)
     }
@@ -86,7 +80,9 @@ public class DBXTeamLogRoutes: NSObject {
         let swift = swift.getEventsContinue(cursor: cursor)
         return DBXTeamLogGetEventsContinueRpcRequest(swift: swift)
     }
+
 }
+
 
 @objc
 public class DBXTeamLogGetEventsRpcRequest: NSObject, DBXRequest {
@@ -100,7 +96,7 @@ public class DBXTeamLogGetEventsRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamLogGetTeamEventsResult?, DBXTeamLogGetTeamEventsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -120,7 +116,7 @@ public class DBXTeamLogGetEventsRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamLogGetTeamEventsResult?
+            var objc: DBXTeamLogGetTeamEventsResult? = nil
             if let swift = result {
                 objc = DBXTeamLogGetTeamEventsResult(swift: swift)
             }
@@ -155,6 +151,7 @@ public class DBXTeamLogGetEventsRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamLogGetEventsContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<TeamLog.GetTeamEventsResultSerializer, TeamLog.GetTeamEventsContinueErrorSerializer>
@@ -167,7 +164,7 @@ public class DBXTeamLogGetEventsContinueRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamLogGetTeamEventsResult?, DBXTeamLogGetTeamEventsContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -187,7 +184,7 @@ public class DBXTeamLogGetEventsContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamLogGetTeamEventsResult?
+            var objc: DBXTeamLogGetTeamEventsResult? = nil
             if let swift = result {
                 objc = DBXTeamLogGetTeamEventsResult(swift: swift)
             }
@@ -221,3 +218,4 @@ public class DBXTeamLogGetEventsContinueRpcRequest: NSObject, DBXRequest {
         swift.cancel()
     }
 }
+

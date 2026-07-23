@@ -41,16 +41,9 @@ public class Route<ASerial: JSONSerializer, RSerial: JSONSerializer, ESerial: JS
     public let errorSerializer: ESerial
     public let attributes: RouteAttributes
 
-    public init(
-        name: String,
-        version: Int32,
-        namespace: String,
-        deprecated: Bool,
-        argSerializer: ASerial,
-        responseSerializer: RSerial,
-        errorSerializer: ESerial,
-        attributes: RouteAttributes
-    ) {
+    public init(name: String, version: Int32, namespace: String, deprecated: Bool,
+                argSerializer: ASerial, responseSerializer: RSerial, errorSerializer: ESerial,
+                attributes: RouteAttributes) {
         self.name = name
         self.version = version
         self.namespace = namespace

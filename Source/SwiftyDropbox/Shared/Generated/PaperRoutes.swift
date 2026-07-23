@@ -27,7 +27,7 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Paper.DocLookupError` object on failure.
-    @available(*, unavailable, message: "docsArchive is deprecated.")
+    @available(*, unavailable, message:"docsArchive is deprecated.")
     @discardableResult public func docsArchive(docId: String) -> RpcRequest<VoidSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsArchive
         let serverArgs = Paper.RefPaperDoc(docId: docId)
@@ -49,12 +49,8 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object on
     /// success or a `Paper.PaperDocCreateError` object on failure.
-    @available(*, unavailable, message: "docsCreate is deprecated.")
-    @discardableResult public func docsCreate(
-        importFormat: Paper.ImportFormat,
-        parentFolderId: String? = nil,
-        input: Data
-    ) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer> {
+    @available(*, unavailable, message:"docsCreate is deprecated.")
+    @discardableResult public func docsCreate(importFormat: Paper.ImportFormat, parentFolderId: String? = nil, input: Data) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer> {
         let route = Paper.docsCreate
         let serverArgs = Paper.PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
@@ -75,12 +71,8 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object on
     /// success or a `Paper.PaperDocCreateError` object on failure.
-    @available(*, unavailable, message: "docsCreate is deprecated.")
-    @discardableResult public func docsCreate(
-        importFormat: Paper.ImportFormat,
-        parentFolderId: String? = nil,
-        input: URL
-    ) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer> {
+    @available(*, unavailable, message:"docsCreate is deprecated.")
+    @discardableResult public func docsCreate(importFormat: Paper.ImportFormat, parentFolderId: String? = nil, input: URL) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer> {
         let route = Paper.docsCreate
         let serverArgs = Paper.PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
@@ -101,12 +93,8 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object on
     /// success or a `Paper.PaperDocCreateError` object on failure.
-    @available(*, unavailable, message: "docsCreate is deprecated.")
-    @discardableResult public func docsCreate(
-        importFormat: Paper.ImportFormat,
-        parentFolderId: String? = nil,
-        input: InputStream
-    ) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer> {
+    @available(*, unavailable, message:"docsCreate is deprecated.")
+    @discardableResult public func docsCreate(importFormat: Paper.ImportFormat, parentFolderId: String? = nil, input: InputStream) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer> {
         let route = Paper.docsCreate
         let serverArgs = Paper.PaperDocCreateArgs(importFormat: importFormat, parentFolderId: parentFolderId)
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
@@ -120,6 +108,9 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - scope: files.content.read
     ///
+    /// - parameter includeComments: When true, export includes comment threads (e.g. markdown footnotes). When false or
+    /// omitted, body only. Other formats may adopt this later; currently only markdown uses it. Plain bool (not
+    /// optional): protoc-gen-godbx does not support proto3 optional yet.
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
     /// an NSError will be thrown).
@@ -127,15 +118,10 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.PaperDocExportResult` object on
     /// success or a `Paper.DocLookupError` object on failure.
-    @available(*, unavailable, message: "docsDownload is deprecated.")
-    @discardableResult public func docsDownload(
-        docId: String,
-        exportFormat: Paper.ExportFormat,
-        overwrite: Bool = false,
-        destination: URL
-    ) -> DownloadRequestFile<Paper.PaperDocExportResultSerializer, Paper.DocLookupErrorSerializer> {
+    @available(*, unavailable, message:"docsDownload is deprecated.")
+    @discardableResult public func docsDownload(docId: String, exportFormat: Paper.ExportFormat, includeComments: Bool = false, overwrite: Bool = false, destination: URL) -> DownloadRequestFile<Paper.PaperDocExportResultSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsDownload
-        let serverArgs = Paper.PaperDocExport(docId: docId, exportFormat: exportFormat)
+        let serverArgs = Paper.PaperDocExport(docId: docId, exportFormat: exportFormat, includeComments: includeComments)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
     }
 
@@ -147,16 +133,16 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - scope: files.content.read
     ///
+    /// - parameter includeComments: When true, export includes comment threads (e.g. markdown footnotes). When false or
+    /// omitted, body only. Other formats may adopt this later; currently only markdown uses it. Plain bool (not
+    /// optional): protoc-gen-godbx does not support proto3 optional yet.
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.PaperDocExportResult` object on
     /// success or a `Paper.DocLookupError` object on failure.
-    @available(*, unavailable, message: "docsDownload is deprecated.")
-    @discardableResult public func docsDownload(
-        docId: String,
-        exportFormat: Paper.ExportFormat
-    ) -> DownloadRequestMemory<Paper.PaperDocExportResultSerializer, Paper.DocLookupErrorSerializer> {
+    @available(*, unavailable, message:"docsDownload is deprecated.")
+    @discardableResult public func docsDownload(docId: String, exportFormat: Paper.ExportFormat, includeComments: Bool = false) -> DownloadRequestMemory<Paper.PaperDocExportResultSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsDownload
-        let serverArgs = Paper.PaperDocExport(docId: docId, exportFormat: exportFormat)
+        let serverArgs = Paper.PaperDocExport(docId: docId, exportFormat: exportFormat, includeComments: includeComments)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -175,11 +161,8 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.ListUsersOnFolderResponse` object on
     /// success or a `Paper.DocLookupError` object on failure.
-    @available(*, unavailable, message: "docsFolderUsersList is deprecated.")
-    @discardableResult public func docsFolderUsersList(
-        docId: String,
-        limit: Int32 = 1_000
-    ) -> RpcRequest<Paper.ListUsersOnFolderResponseSerializer, Paper.DocLookupErrorSerializer> {
+    @available(*, unavailable, message:"docsFolderUsersList is deprecated.")
+    @discardableResult public func docsFolderUsersList(docId: String, limit: Int32 = 1000) -> RpcRequest<Paper.ListUsersOnFolderResponseSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsFolderUsersList
         let serverArgs = Paper.ListUsersOnFolderArgs(docId: docId, limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -198,22 +181,19 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.ListUsersOnFolderResponse` object on
     /// success or a `Paper.ListUsersCursorError` object on failure.
-    @available(*, unavailable, message: "docsFolderUsersListContinue is deprecated.")
-    @discardableResult public func docsFolderUsersListContinue(
-        docId: String,
-        cursor: String
-    ) -> RpcRequest<Paper.ListUsersOnFolderResponseSerializer, Paper.ListUsersCursorErrorSerializer> {
+    @available(*, unavailable, message:"docsFolderUsersListContinue is deprecated.")
+    @discardableResult public func docsFolderUsersListContinue(docId: String, cursor: String) -> RpcRequest<Paper.ListUsersOnFolderResponseSerializer, Paper.ListUsersCursorErrorSerializer> {
         let route = Paper.docsFolderUsersListContinue
         let serverArgs = Paper.ListUsersOnFolderContinueArgs(docId: docId, cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Retrieves folder information for the given Paper doc. This includes:   - folder sharing policy; permissions for
-    /// subfolders are set by the top-level folder.   - full 'filepath', i.e. the list of folders (both folderId and
-    /// folderName) from     the root folder to the folder directly containing the Paper doc.  If the Paper doc is
-    /// not in any folder (aka unfiled) the response will be empty. Note that this endpoint will continue to work
-    /// for content created by users on the older version of Paper. To check which version of Paper a user is on,
-    /// use /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new
+    /// Retrieves folder information for the given Paper doc. This includes: - folder sharing policy; permissions for
+    /// subfolders are set by the top-level folder. - full 'filepath', i.e. the list of folders (both folderId and
+    /// folderName) from the root folder to the folder directly containing the Paper doc. If the Paper doc is not in
+    /// any folder (aka unfiled) the response will be empty. Note that this endpoint will continue to work for
+    /// content created by users on the older version of Paper. To check which version of Paper a user is on, use
+    /// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running the new
     /// version of Paper. Refer to the Paper Migration Guide
     /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide for migration information.
     ///
@@ -223,10 +203,25 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.FoldersContainingPaperDoc` object on
     /// success or a `Paper.DocLookupError` object on failure.
-    @available(*, unavailable, message: "docsGetFolderInfo is deprecated.")
+    @available(*, unavailable, message:"docsGetFolderInfo is deprecated.")
     @discardableResult public func docsGetFolderInfo(docId: String) -> RpcRequest<Paper.FoldersContainingPaperDocSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsGetFolderInfo
         let serverArgs = Paper.RefPaperDoc(docId: docId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns metadata for a Paper doc or Cloud Doc.
+    ///
+    /// - scope: files.metadata.read
+    ///
+    /// - parameter docId: Legacy Paper doc identifier.
+    /// - parameter fileId: Dropbox file ID for Cloud Docs (post-PiFS migration).
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Paper.PaperDocGetMetadataResult` object on
+    /// success or a `Paper.DocLookupError` object on failure.
+    @discardableResult public func docsGetMetadata(docId: String? = nil, fileId: String? = nil) -> RpcRequest<Paper.PaperDocGetMetadataResultSerializer, Paper.DocLookupErrorSerializer> {
+        let route = Paper.docsGetMetadata
+        let serverArgs = Paper.GetDocMetadataArg(docId: docId, fileId: fileId)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -244,18 +239,14 @@ public class PaperRoutes: DropboxTransportClientOwning {
     /// - parameter sortOrder: Allows user to specify the sort order of the result.
     /// - parameter limit: Size limit per batch. The maximum number of docs that can be retrieved per batch is 1000.
     /// Higher value results in invalid arguments error.
+    /// - parameter stopAtDate: Do not return results beyond this date. Behavior depends on sort order.
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.ListPaperDocsResponse` object on
     /// success or a `Void` object on failure.
-    @available(*, unavailable, message: "docsList is deprecated.")
-    @discardableResult public func docsList(
-        filterBy: Paper.ListPaperDocsFilterBy = .docsAccessed,
-        sortBy: Paper.ListPaperDocsSortBy = .accessed,
-        sortOrder: Paper.ListPaperDocsSortOrder = .ascending,
-        limit: Int32 = 1_000
-    ) -> RpcRequest<Paper.ListPaperDocsResponseSerializer, VoidSerializer> {
+    @available(*, unavailable, message:"docsList is deprecated.")
+    @discardableResult public func docsList(filterBy: Paper.ListPaperDocsFilterBy = .docsAccessed, sortBy: Paper.ListPaperDocsSortBy = .accessed, sortOrder: Paper.ListPaperDocsSortOrder = .ascending, limit: Int32 = 1000, stopAtDate: Date? = nil) -> RpcRequest<Paper.ListPaperDocsResponseSerializer, VoidSerializer> {
         let route = Paper.docsList
-        let serverArgs = Paper.ListPaperDocsArgs(filterBy: filterBy, sortBy: sortBy, sortOrder: sortOrder, limit: limit)
+        let serverArgs = Paper.ListPaperDocsArgs(filterBy: filterBy, sortBy: sortBy, sortOrder: sortOrder, limit: limit, stopAtDate: stopAtDate)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -271,7 +262,7 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.ListPaperDocsResponse` object on
     /// success or a `Paper.ListDocsCursorError` object on failure.
-    @available(*, unavailable, message: "docsListContinue is deprecated.")
+    @available(*, unavailable, message:"docsListContinue is deprecated.")
     @discardableResult public func docsListContinue(cursor: String) -> RpcRequest<Paper.ListPaperDocsResponseSerializer, Paper.ListDocsCursorErrorSerializer> {
         let route = Paper.docsListContinue
         let serverArgs = Paper.ListPaperDocsContinueArgs(cursor: cursor)
@@ -291,7 +282,7 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Paper.DocLookupError` object on failure.
-    @available(*, unavailable, message: "docsPermanentlyDelete is deprecated.")
+    @available(*, unavailable, message:"docsPermanentlyDelete is deprecated.")
     @discardableResult public func docsPermanentlyDelete(docId: String) -> RpcRequest<VoidSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsPermanentlyDelete
         let serverArgs = Paper.RefPaperDoc(docId: docId)
@@ -310,7 +301,7 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.SharingPolicy` object on success or a
     /// `Paper.DocLookupError` object on failure.
-    @available(*, unavailable, message: "docsSharingPolicyGet is deprecated.")
+    @available(*, unavailable, message:"docsSharingPolicyGet is deprecated.")
     @discardableResult public func docsSharingPolicyGet(docId: String) -> RpcRequest<Paper.SharingPolicySerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsSharingPolicyGet
         let serverArgs = Paper.RefPaperDoc(docId: docId)
@@ -331,11 +322,8 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Paper.DocLookupError` object on failure.
-    @available(*, unavailable, message: "docsSharingPolicySet is deprecated.")
-    @discardableResult public func docsSharingPolicySet(
-        docId: String,
-        sharingPolicy: Paper.SharingPolicy
-    ) -> RpcRequest<VoidSerializer, Paper.DocLookupErrorSerializer> {
+    @available(*, unavailable, message:"docsSharingPolicySet is deprecated.")
+    @discardableResult public func docsSharingPolicySet(docId: String, sharingPolicy: Paper.SharingPolicy) -> RpcRequest<VoidSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsSharingPolicySet
         let serverArgs = Paper.PaperDocSharingPolicy(docId: docId, sharingPolicy: sharingPolicy)
         return client.request(route, serverArgs: serverArgs)
@@ -357,14 +345,8 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object on
     /// success or a `Paper.PaperDocUpdateError` object on failure.
-    @available(*, unavailable, message: "docsUpdate is deprecated.")
-    @discardableResult public func docsUpdate(
-        docId: String,
-        docUpdatePolicy: Paper.PaperDocUpdatePolicy,
-        revision: Int64,
-        importFormat: Paper.ImportFormat,
-        input: Data
-    ) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer> {
+    @available(*, unavailable, message:"docsUpdate is deprecated.")
+    @discardableResult public func docsUpdate(docId: String, docUpdatePolicy: Paper.PaperDocUpdatePolicy, revision: Int64, importFormat: Paper.ImportFormat, input: Data) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer> {
         let route = Paper.docsUpdate
         let serverArgs = Paper.PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
         return client.request(route, serverArgs: serverArgs, input: .data(input))
@@ -386,14 +368,8 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object on
     /// success or a `Paper.PaperDocUpdateError` object on failure.
-    @available(*, unavailable, message: "docsUpdate is deprecated.")
-    @discardableResult public func docsUpdate(
-        docId: String,
-        docUpdatePolicy: Paper.PaperDocUpdatePolicy,
-        revision: Int64,
-        importFormat: Paper.ImportFormat,
-        input: URL
-    ) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer> {
+    @available(*, unavailable, message:"docsUpdate is deprecated.")
+    @discardableResult public func docsUpdate(docId: String, docUpdatePolicy: Paper.PaperDocUpdatePolicy, revision: Int64, importFormat: Paper.ImportFormat, input: URL) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer> {
         let route = Paper.docsUpdate
         let serverArgs = Paper.PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
         return client.request(route, serverArgs: serverArgs, input: .file(input))
@@ -415,14 +391,8 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.PaperDocCreateUpdateResult` object on
     /// success or a `Paper.PaperDocUpdateError` object on failure.
-    @available(*, unavailable, message: "docsUpdate is deprecated.")
-    @discardableResult public func docsUpdate(
-        docId: String,
-        docUpdatePolicy: Paper.PaperDocUpdatePolicy,
-        revision: Int64,
-        importFormat: Paper.ImportFormat,
-        input: InputStream
-    ) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer> {
+    @available(*, unavailable, message:"docsUpdate is deprecated.")
+    @discardableResult public func docsUpdate(docId: String, docUpdatePolicy: Paper.PaperDocUpdatePolicy, revision: Int64, importFormat: Paper.ImportFormat, input: InputStream) -> UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer> {
         let route = Paper.docsUpdate
         let serverArgs = Paper.PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy, revision: revision, importFormat: importFormat)
         return client.request(route, serverArgs: serverArgs, input: .stream(input))
@@ -444,13 +414,8 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Array<Paper.AddPaperDocUserMemberResult>`
     /// object on success or a `Paper.DocLookupError` object on failure.
-    @available(*, unavailable, message: "docsUsersAdd is deprecated.")
-    @discardableResult public func docsUsersAdd(
-        docId: String,
-        members: [Paper.AddMember],
-        customMessage: String? = nil,
-        quiet: Bool = false
-    ) -> RpcRequest<ArraySerializer<Paper.AddPaperDocUserMemberResultSerializer>, Paper.DocLookupErrorSerializer> {
+    @available(*, unavailable, message:"docsUsersAdd is deprecated.")
+    @discardableResult public func docsUsersAdd(docId: String, members: Array<Paper.AddMember>, customMessage: String? = nil, quiet: Bool = false) -> RpcRequest<ArraySerializer<Paper.AddPaperDocUserMemberResultSerializer>, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsUsersAdd
         let serverArgs = Paper.AddPaperDocUser(docId: docId, members: members, customMessage: customMessage, quiet: quiet)
         return client.request(route, serverArgs: serverArgs)
@@ -473,12 +438,8 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.ListUsersOnPaperDocResponse` object
     /// on success or a `Paper.DocLookupError` object on failure.
-    @available(*, unavailable, message: "docsUsersList is deprecated.")
-    @discardableResult public func docsUsersList(
-        docId: String,
-        limit: Int32 = 1_000,
-        filterBy: Paper.UserOnPaperDocFilter = .shared
-    ) -> RpcRequest<Paper.ListUsersOnPaperDocResponseSerializer, Paper.DocLookupErrorSerializer> {
+    @available(*, unavailable, message:"docsUsersList is deprecated.")
+    @discardableResult public func docsUsersList(docId: String, limit: Int32 = 1000, filterBy: Paper.UserOnPaperDocFilter = .shared) -> RpcRequest<Paper.ListUsersOnPaperDocResponseSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsUsersList
         let serverArgs = Paper.ListUsersOnPaperDocArgs(docId: docId, limit: limit, filterBy: filterBy)
         return client.request(route, serverArgs: serverArgs)
@@ -496,11 +457,8 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.ListUsersOnPaperDocResponse` object
     /// on success or a `Paper.ListUsersCursorError` object on failure.
-    @available(*, unavailable, message: "docsUsersListContinue is deprecated.")
-    @discardableResult public func docsUsersListContinue(
-        docId: String,
-        cursor: String
-    ) -> RpcRequest<Paper.ListUsersOnPaperDocResponseSerializer, Paper.ListUsersCursorErrorSerializer> {
+    @available(*, unavailable, message:"docsUsersListContinue is deprecated.")
+    @discardableResult public func docsUsersListContinue(docId: String, cursor: String) -> RpcRequest<Paper.ListUsersOnPaperDocResponseSerializer, Paper.ListUsersCursorErrorSerializer> {
         let route = Paper.docsUsersListContinue
         let serverArgs = Paper.ListUsersOnPaperDocContinueArgs(docId: docId, cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -520,11 +478,8 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Paper.DocLookupError` object on failure.
-    @available(*, unavailable, message: "docsUsersRemove is deprecated.")
-    @discardableResult public func docsUsersRemove(
-        docId: String,
-        member: Sharing.MemberSelector
-    ) -> RpcRequest<VoidSerializer, Paper.DocLookupErrorSerializer> {
+    @available(*, unavailable, message:"docsUsersRemove is deprecated.")
+    @discardableResult public func docsUsersRemove(docId: String, member: Sharing.MemberSelector) -> RpcRequest<VoidSerializer, Paper.DocLookupErrorSerializer> {
         let route = Paper.docsUsersRemove
         let serverArgs = Paper.RemovePaperDocUser(docId: docId, member: member)
         return client.request(route, serverArgs: serverArgs)
@@ -549,14 +504,11 @@ public class PaperRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Paper.PaperFolderCreateResult` object on
     /// success or a `Paper.PaperFolderCreateError` object on failure.
-    @available(*, unavailable, message: "foldersCreate is deprecated.")
-    @discardableResult public func foldersCreate(
-        name: String,
-        parentFolderId: String? = nil,
-        isTeamFolder: Bool? = nil
-    ) -> RpcRequest<Paper.PaperFolderCreateResultSerializer, Paper.PaperFolderCreateErrorSerializer> {
+    @available(*, unavailable, message:"foldersCreate is deprecated.")
+    @discardableResult public func foldersCreate(name: String, parentFolderId: String? = nil, isTeamFolder: Bool? = nil) -> RpcRequest<Paper.PaperFolderCreateResultSerializer, Paper.PaperFolderCreateErrorSerializer> {
         let route = Paper.foldersCreate
         let serverArgs = Paper.PaperFolderCreateArg(name: name, parentFolderId: parentFolderId, isTeamFolder: isTeamFolder)
         return client.request(route, serverArgs: serverArgs)
     }
+
 }

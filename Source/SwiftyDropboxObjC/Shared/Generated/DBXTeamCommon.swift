@@ -37,22 +37,22 @@ public class DBXTeamCommonGroupManagementType: NSObject {
 
     @objc
     public var asUserManaged: DBXTeamCommonGroupManagementTypeUserManaged? {
-        self as? DBXTeamCommonGroupManagementTypeUserManaged
+        return self as? DBXTeamCommonGroupManagementTypeUserManaged
     }
 
     @objc
     public var asCompanyManaged: DBXTeamCommonGroupManagementTypeCompanyManaged? {
-        self as? DBXTeamCommonGroupManagementTypeCompanyManaged
+        return self as? DBXTeamCommonGroupManagementTypeCompanyManaged
     }
 
     @objc
     public var asSystemManaged: DBXTeamCommonGroupManagementTypeSystemManaged? {
-        self as? DBXTeamCommonGroupManagementTypeSystemManaged
+        return self as? DBXTeamCommonGroupManagementTypeSystemManaged
     }
 
     @objc
     public var asOther: DBXTeamCommonGroupManagementTypeOther? {
-        self as? DBXTeamCommonGroupManagementTypeOther
+        return self as? DBXTeamCommonGroupManagementTypeOther
     }
 }
 
@@ -117,13 +117,7 @@ public class DBXTeamCommonGroupSummary: NSObject {
 
     @objc
     public init(groupName: String, groupId: String, groupManagementType: DBXTeamCommonGroupManagementType, groupExternalId: String?, memberCount: NSNumber?) {
-        self.swift = TeamCommon.GroupSummary(
-            groupName: groupName,
-            groupId: groupId,
-            groupManagementType: groupManagementType.swift,
-            groupExternalId: groupExternalId,
-            memberCount: memberCount?.uint32Value
-        )
+        self.swift = TeamCommon.GroupSummary(groupName: groupName, groupId: groupId, groupManagementType: groupManagementType.swift, groupExternalId: groupExternalId, memberCount: memberCount?.uint32Value)
     }
 
     let swift: TeamCommon.GroupSummary
@@ -131,6 +125,7 @@ public class DBXTeamCommonGroupSummary: NSObject {
     public init(swift: TeamCommon.GroupSummary) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -161,22 +156,22 @@ public class DBXTeamCommonGroupType: NSObject {
 
     @objc
     public var asTeam: DBXTeamCommonGroupTypeTeam? {
-        self as? DBXTeamCommonGroupTypeTeam
+        return self as? DBXTeamCommonGroupTypeTeam
     }
 
     @objc
     public var asUserManaged: DBXTeamCommonGroupTypeUserManaged? {
-        self as? DBXTeamCommonGroupTypeUserManaged
+        return self as? DBXTeamCommonGroupTypeUserManaged
     }
 
     @objc
     public var asOther: DBXTeamCommonGroupTypeOther? {
-        self as? DBXTeamCommonGroupTypeOther
+        return self as? DBXTeamCommonGroupTypeOther
     }
 }
 
 /// A group to which team members are automatically added. Applicable to team folders
-/// https://www.dropbox.com/help/986 only.
+        /// https://www.dropbox.com/help/986 only.
 @objc
 public class DBXTeamCommonGroupTypeTeam: DBXTeamCommonGroupType {
     @objc
@@ -233,22 +228,22 @@ public class DBXTeamCommonMemberSpaceLimitType: NSObject {
 
     @objc
     public var asOff: DBXTeamCommonMemberSpaceLimitTypeOff? {
-        self as? DBXTeamCommonMemberSpaceLimitTypeOff
+        return self as? DBXTeamCommonMemberSpaceLimitTypeOff
     }
 
     @objc
     public var asAlertOnly: DBXTeamCommonMemberSpaceLimitTypeAlertOnly? {
-        self as? DBXTeamCommonMemberSpaceLimitTypeAlertOnly
+        return self as? DBXTeamCommonMemberSpaceLimitTypeAlertOnly
     }
 
     @objc
     public var asStopSync: DBXTeamCommonMemberSpaceLimitTypeStopSync? {
-        self as? DBXTeamCommonMemberSpaceLimitTypeStopSync
+        return self as? DBXTeamCommonMemberSpaceLimitTypeStopSync
     }
 
     @objc
     public var asOther: DBXTeamCommonMemberSpaceLimitTypeOther? {
-        self as? DBXTeamCommonMemberSpaceLimitTypeOther
+        return self as? DBXTeamCommonMemberSpaceLimitTypeOther
     }
 }
 
@@ -313,6 +308,8 @@ public class DBXTeamCommonTimeRange: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
+

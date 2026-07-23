@@ -18,7 +18,9 @@ public class DBXAuthAppAuthRoutes: NSObject {
     }
 
     public let client: DBXDropboxTransportClient
+
 }
+
 
 @objc
 public class DBXAuthTokenFromOauth1RpcRequest: NSObject, DBXRequest {
@@ -32,7 +34,7 @@ public class DBXAuthTokenFromOauth1RpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXAuthTokenFromOAuth1Result?, DBXAuthTokenFromOAuth1Error?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -52,7 +54,7 @@ public class DBXAuthTokenFromOauth1RpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXAuthTokenFromOAuth1Result?
+            var objc: DBXAuthTokenFromOAuth1Result? = nil
             if let swift = result {
                 objc = DBXAuthTokenFromOAuth1Result(swift: swift)
             }
@@ -86,3 +88,4 @@ public class DBXAuthTokenFromOauth1RpcRequest: NSObject, DBXRequest {
         swift.cancel()
     }
 }
+

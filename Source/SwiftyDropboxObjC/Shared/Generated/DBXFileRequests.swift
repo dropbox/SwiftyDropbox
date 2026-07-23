@@ -33,12 +33,12 @@ public class DBXFileRequestsGeneralFileRequestsError: NSObject {
 
     @objc
     public var asDisabledForTeam: DBXFileRequestsGeneralFileRequestsErrorDisabledForTeam? {
-        self as? DBXFileRequestsGeneralFileRequestsErrorDisabledForTeam
+        return self as? DBXFileRequestsGeneralFileRequestsErrorDisabledForTeam
     }
 
     @objc
     public var asOther: DBXFileRequestsGeneralFileRequestsErrorOther? {
-        self as? DBXFileRequestsGeneralFileRequestsErrorOther
+        return self as? DBXFileRequestsGeneralFileRequestsErrorOther
     }
 }
 
@@ -85,12 +85,12 @@ public class DBXFileRequestsCountFileRequestsError: NSObject {
 
     @objc
     public var asDisabledForTeam: DBXFileRequestsCountFileRequestsErrorDisabledForTeam? {
-        self as? DBXFileRequestsCountFileRequestsErrorDisabledForTeam
+        return self as? DBXFileRequestsCountFileRequestsErrorDisabledForTeam
     }
 
     @objc
     public var asOther: DBXFileRequestsCountFileRequestsErrorOther? {
-        self as? DBXFileRequestsCountFileRequestsErrorOther
+        return self as? DBXFileRequestsCountFileRequestsErrorOther
     }
 }
 
@@ -132,6 +132,7 @@ public class DBXFileRequestsCountFileRequestsResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -148,10 +149,7 @@ public class DBXFileRequestsCreateFileRequestArgs: NSObject {
     public var destination: String { swift.destination }
     /// The deadline for the file request. Deadlines can only be set by Professional and Business accounts.
     @objc
-    public var deadline: DBXFileRequestsFileRequestDeadline? { guard let swift = swift.deadline else { return nil }
-        return DBXFileRequestsFileRequestDeadline(swift: swift)
-    }
-
+    public var deadline: DBXFileRequestsFileRequestDeadline? { guard let swift = swift.deadline else { return nil }; return DBXFileRequestsFileRequestDeadline(swift: swift) }
     /// Whether or not the file request should be open. If the file request is closed, it will not accept any file
     /// submissions, but it can be opened later.
     @objc
@@ -159,16 +157,13 @@ public class DBXFileRequestsCreateFileRequestArgs: NSObject {
     /// A description of the file request.
     @objc
     public var description_: String? { swift.description_ }
+    /// If this request was created from video project, its id.
+    @objc
+    public var videoProjectId: String? { swift.videoProjectId }
 
     @objc
-    public init(title: String, destination: String, deadline: DBXFileRequestsFileRequestDeadline?, open: NSNumber, description_: String?) {
-        self.swift = FileRequests.CreateFileRequestArgs(
-            title: title,
-            destination: destination,
-            deadline: deadline?.swift,
-            open: open.boolValue,
-            description_: description_
-        )
+    public init(title: String, destination: String, deadline: DBXFileRequestsFileRequestDeadline?, open: NSNumber, description_: String?, videoProjectId: String?) {
+        self.swift = FileRequests.CreateFileRequestArgs(title: title, destination: destination, deadline: deadline?.swift, open: open.boolValue, description_: description_, videoProjectId: videoProjectId)
     }
 
     let swift: FileRequests.CreateFileRequestArgs
@@ -176,6 +171,7 @@ public class DBXFileRequestsCreateFileRequestArgs: NSObject {
     public init(swift: FileRequests.CreateFileRequestArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -208,6 +204,8 @@ public class DBXFileRequestsFileRequestError: NSObject {
             return DBXFileRequestsFileRequestErrorEmailUnverified()
         case .validationError:
             return DBXFileRequestsFileRequestErrorValidationError()
+        case .noWritePermission:
+            return DBXFileRequestsFileRequestErrorNoWritePermission()
         }
     }
 
@@ -216,42 +214,47 @@ public class DBXFileRequestsFileRequestError: NSObject {
 
     @objc
     public var asDisabledForTeam: DBXFileRequestsFileRequestErrorDisabledForTeam? {
-        self as? DBXFileRequestsFileRequestErrorDisabledForTeam
+        return self as? DBXFileRequestsFileRequestErrorDisabledForTeam
     }
 
     @objc
     public var asOther: DBXFileRequestsFileRequestErrorOther? {
-        self as? DBXFileRequestsFileRequestErrorOther
+        return self as? DBXFileRequestsFileRequestErrorOther
     }
 
     @objc
     public var asNotFound: DBXFileRequestsFileRequestErrorNotFound? {
-        self as? DBXFileRequestsFileRequestErrorNotFound
+        return self as? DBXFileRequestsFileRequestErrorNotFound
     }
 
     @objc
     public var asNotAFolder: DBXFileRequestsFileRequestErrorNotAFolder? {
-        self as? DBXFileRequestsFileRequestErrorNotAFolder
+        return self as? DBXFileRequestsFileRequestErrorNotAFolder
     }
 
     @objc
     public var asAppLacksAccess: DBXFileRequestsFileRequestErrorAppLacksAccess? {
-        self as? DBXFileRequestsFileRequestErrorAppLacksAccess
+        return self as? DBXFileRequestsFileRequestErrorAppLacksAccess
     }
 
     @objc
     public var asNoPermission: DBXFileRequestsFileRequestErrorNoPermission? {
-        self as? DBXFileRequestsFileRequestErrorNoPermission
+        return self as? DBXFileRequestsFileRequestErrorNoPermission
     }
 
     @objc
     public var asEmailUnverified: DBXFileRequestsFileRequestErrorEmailUnverified? {
-        self as? DBXFileRequestsFileRequestErrorEmailUnverified
+        return self as? DBXFileRequestsFileRequestErrorEmailUnverified
     }
 
     @objc
     public var asValidationError: DBXFileRequestsFileRequestErrorValidationError? {
-        self as? DBXFileRequestsFileRequestErrorValidationError
+        return self as? DBXFileRequestsFileRequestErrorValidationError
+    }
+
+    @objc
+    public var asNoWritePermission: DBXFileRequestsFileRequestErrorNoWritePermission? {
+        return self as? DBXFileRequestsFileRequestErrorNoWritePermission
     }
 }
 
@@ -296,7 +299,7 @@ public class DBXFileRequestsFileRequestErrorNotAFolder: DBXFileRequestsFileReque
 }
 
 /// This file request is not accessible to this app. Apps with the app folder permission can only access file
-/// requests in their app folder.
+        /// requests in their app folder.
 @objc
 public class DBXFileRequestsFileRequestErrorAppLacksAccess: DBXFileRequestsFileRequestError {
     @objc
@@ -317,7 +320,7 @@ public class DBXFileRequestsFileRequestErrorNoPermission: DBXFileRequestsFileReq
 }
 
 /// This user's email address is not verified. File requests are only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXFileRequestsFileRequestErrorEmailUnverified: DBXFileRequestsFileRequestError {
     @objc
@@ -328,12 +331,22 @@ public class DBXFileRequestsFileRequestErrorEmailUnverified: DBXFileRequestsFile
 }
 
 /// There was an error validating the request. For example, the title was invalid, or there were disallowed
-/// characters in the destination path.
+        /// characters in the destination path.
 @objc
 public class DBXFileRequestsFileRequestErrorValidationError: DBXFileRequestsFileRequestError {
     @objc
     public init() {
         let swift = FileRequests.FileRequestError.validationError
+        super.init(swift: swift)
+    }
+}
+
+/// This user doesn't have permission to edit files in a destination folder
+@objc
+public class DBXFileRequestsFileRequestErrorNoWritePermission: DBXFileRequestsFileRequestError {
+    @objc
+    public init() {
+        let swift = FileRequests.FileRequestError.noWritePermission
         super.init(swift: swift)
     }
 }
@@ -365,6 +378,8 @@ public class DBXFileRequestsCreateFileRequestError: NSObject {
             return DBXFileRequestsCreateFileRequestErrorEmailUnverified()
         case .validationError:
             return DBXFileRequestsCreateFileRequestErrorValidationError()
+        case .noWritePermission:
+            return DBXFileRequestsCreateFileRequestErrorNoWritePermission()
         case .invalidLocation:
             return DBXFileRequestsCreateFileRequestErrorInvalidLocation()
         case .rateLimit:
@@ -377,52 +392,57 @@ public class DBXFileRequestsCreateFileRequestError: NSObject {
 
     @objc
     public var asDisabledForTeam: DBXFileRequestsCreateFileRequestErrorDisabledForTeam? {
-        self as? DBXFileRequestsCreateFileRequestErrorDisabledForTeam
+        return self as? DBXFileRequestsCreateFileRequestErrorDisabledForTeam
     }
 
     @objc
     public var asOther: DBXFileRequestsCreateFileRequestErrorOther? {
-        self as? DBXFileRequestsCreateFileRequestErrorOther
+        return self as? DBXFileRequestsCreateFileRequestErrorOther
     }
 
     @objc
     public var asNotFound: DBXFileRequestsCreateFileRequestErrorNotFound? {
-        self as? DBXFileRequestsCreateFileRequestErrorNotFound
+        return self as? DBXFileRequestsCreateFileRequestErrorNotFound
     }
 
     @objc
     public var asNotAFolder: DBXFileRequestsCreateFileRequestErrorNotAFolder? {
-        self as? DBXFileRequestsCreateFileRequestErrorNotAFolder
+        return self as? DBXFileRequestsCreateFileRequestErrorNotAFolder
     }
 
     @objc
     public var asAppLacksAccess: DBXFileRequestsCreateFileRequestErrorAppLacksAccess? {
-        self as? DBXFileRequestsCreateFileRequestErrorAppLacksAccess
+        return self as? DBXFileRequestsCreateFileRequestErrorAppLacksAccess
     }
 
     @objc
     public var asNoPermission: DBXFileRequestsCreateFileRequestErrorNoPermission? {
-        self as? DBXFileRequestsCreateFileRequestErrorNoPermission
+        return self as? DBXFileRequestsCreateFileRequestErrorNoPermission
     }
 
     @objc
     public var asEmailUnverified: DBXFileRequestsCreateFileRequestErrorEmailUnverified? {
-        self as? DBXFileRequestsCreateFileRequestErrorEmailUnverified
+        return self as? DBXFileRequestsCreateFileRequestErrorEmailUnverified
     }
 
     @objc
     public var asValidationError: DBXFileRequestsCreateFileRequestErrorValidationError? {
-        self as? DBXFileRequestsCreateFileRequestErrorValidationError
+        return self as? DBXFileRequestsCreateFileRequestErrorValidationError
+    }
+
+    @objc
+    public var asNoWritePermission: DBXFileRequestsCreateFileRequestErrorNoWritePermission? {
+        return self as? DBXFileRequestsCreateFileRequestErrorNoWritePermission
     }
 
     @objc
     public var asInvalidLocation: DBXFileRequestsCreateFileRequestErrorInvalidLocation? {
-        self as? DBXFileRequestsCreateFileRequestErrorInvalidLocation
+        return self as? DBXFileRequestsCreateFileRequestErrorInvalidLocation
     }
 
     @objc
     public var asRateLimit: DBXFileRequestsCreateFileRequestErrorRateLimit? {
-        self as? DBXFileRequestsCreateFileRequestErrorRateLimit
+        return self as? DBXFileRequestsCreateFileRequestErrorRateLimit
     }
 }
 
@@ -467,7 +487,7 @@ public class DBXFileRequestsCreateFileRequestErrorNotAFolder: DBXFileRequestsCre
 }
 
 /// This file request is not accessible to this app. Apps with the app folder permission can only access file
-/// requests in their app folder.
+        /// requests in their app folder.
 @objc
 public class DBXFileRequestsCreateFileRequestErrorAppLacksAccess: DBXFileRequestsCreateFileRequestError {
     @objc
@@ -488,7 +508,7 @@ public class DBXFileRequestsCreateFileRequestErrorNoPermission: DBXFileRequestsC
 }
 
 /// This user's email address is not verified. File requests are only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXFileRequestsCreateFileRequestErrorEmailUnverified: DBXFileRequestsCreateFileRequestError {
     @objc
@@ -499,12 +519,22 @@ public class DBXFileRequestsCreateFileRequestErrorEmailUnverified: DBXFileReques
 }
 
 /// There was an error validating the request. For example, the title was invalid, or there were disallowed
-/// characters in the destination path.
+        /// characters in the destination path.
 @objc
 public class DBXFileRequestsCreateFileRequestErrorValidationError: DBXFileRequestsCreateFileRequestError {
     @objc
     public init() {
         let swift = FileRequests.CreateFileRequestError.validationError
+        super.init(swift: swift)
+    }
+}
+
+/// This user doesn't have permission to edit files in a destination folder
+@objc
+public class DBXFileRequestsCreateFileRequestErrorNoWritePermission: DBXFileRequestsCreateFileRequestError {
+    @objc
+    public init() {
+        let swift = FileRequests.CreateFileRequestError.noWritePermission
         super.init(swift: swift)
     }
 }
@@ -520,7 +550,7 @@ public class DBXFileRequestsCreateFileRequestErrorInvalidLocation: DBXFileReques
 }
 
 /// The user has reached the rate limit for creating file requests. The limit is currently 4000 file requests
-/// total.
+        /// total.
 @objc
 public class DBXFileRequestsCreateFileRequestErrorRateLimit: DBXFileRequestsCreateFileRequestError {
     @objc
@@ -557,6 +587,8 @@ public class DBXFileRequestsDeleteAllClosedFileRequestsError: NSObject {
             return DBXFileRequestsDeleteAllClosedFileRequestsErrorEmailUnverified()
         case .validationError:
             return DBXFileRequestsDeleteAllClosedFileRequestsErrorValidationError()
+        case .noWritePermission:
+            return DBXFileRequestsDeleteAllClosedFileRequestsErrorNoWritePermission()
         }
     }
 
@@ -565,42 +597,47 @@ public class DBXFileRequestsDeleteAllClosedFileRequestsError: NSObject {
 
     @objc
     public var asDisabledForTeam: DBXFileRequestsDeleteAllClosedFileRequestsErrorDisabledForTeam? {
-        self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorDisabledForTeam
+        return self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorDisabledForTeam
     }
 
     @objc
     public var asOther: DBXFileRequestsDeleteAllClosedFileRequestsErrorOther? {
-        self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorOther
+        return self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorOther
     }
 
     @objc
     public var asNotFound: DBXFileRequestsDeleteAllClosedFileRequestsErrorNotFound? {
-        self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorNotFound
+        return self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorNotFound
     }
 
     @objc
     public var asNotAFolder: DBXFileRequestsDeleteAllClosedFileRequestsErrorNotAFolder? {
-        self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorNotAFolder
+        return self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorNotAFolder
     }
 
     @objc
     public var asAppLacksAccess: DBXFileRequestsDeleteAllClosedFileRequestsErrorAppLacksAccess? {
-        self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorAppLacksAccess
+        return self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorAppLacksAccess
     }
 
     @objc
     public var asNoPermission: DBXFileRequestsDeleteAllClosedFileRequestsErrorNoPermission? {
-        self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorNoPermission
+        return self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorNoPermission
     }
 
     @objc
     public var asEmailUnverified: DBXFileRequestsDeleteAllClosedFileRequestsErrorEmailUnverified? {
-        self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorEmailUnverified
+        return self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorEmailUnverified
     }
 
     @objc
     public var asValidationError: DBXFileRequestsDeleteAllClosedFileRequestsErrorValidationError? {
-        self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorValidationError
+        return self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorValidationError
+    }
+
+    @objc
+    public var asNoWritePermission: DBXFileRequestsDeleteAllClosedFileRequestsErrorNoWritePermission? {
+        return self as? DBXFileRequestsDeleteAllClosedFileRequestsErrorNoWritePermission
     }
 }
 
@@ -645,7 +682,7 @@ public class DBXFileRequestsDeleteAllClosedFileRequestsErrorNotAFolder: DBXFileR
 }
 
 /// This file request is not accessible to this app. Apps with the app folder permission can only access file
-/// requests in their app folder.
+        /// requests in their app folder.
 @objc
 public class DBXFileRequestsDeleteAllClosedFileRequestsErrorAppLacksAccess: DBXFileRequestsDeleteAllClosedFileRequestsError {
     @objc
@@ -666,7 +703,7 @@ public class DBXFileRequestsDeleteAllClosedFileRequestsErrorNoPermission: DBXFil
 }
 
 /// This user's email address is not verified. File requests are only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXFileRequestsDeleteAllClosedFileRequestsErrorEmailUnverified: DBXFileRequestsDeleteAllClosedFileRequestsError {
     @objc
@@ -677,7 +714,7 @@ public class DBXFileRequestsDeleteAllClosedFileRequestsErrorEmailUnverified: DBX
 }
 
 /// There was an error validating the request. For example, the title was invalid, or there were disallowed
-/// characters in the destination path.
+        /// characters in the destination path.
 @objc
 public class DBXFileRequestsDeleteAllClosedFileRequestsErrorValidationError: DBXFileRequestsDeleteAllClosedFileRequestsError {
     @objc
@@ -687,16 +724,26 @@ public class DBXFileRequestsDeleteAllClosedFileRequestsErrorValidationError: DBX
     }
 }
 
+/// This user doesn't have permission to edit files in a destination folder
+@objc
+public class DBXFileRequestsDeleteAllClosedFileRequestsErrorNoWritePermission: DBXFileRequestsDeleteAllClosedFileRequestsError {
+    @objc
+    public init() {
+        let swift = FileRequests.DeleteAllClosedFileRequestsError.noWritePermission
+        super.init(swift: swift)
+    }
+}
+
 /// Result for deleteAllClosed.
 @objc
 public class DBXFileRequestsDeleteAllClosedFileRequestsResult: NSObject {
     /// The file requests deleted for this user.
     @objc
-    public var fileRequests: [DBXFileRequestsFileRequest] { swift.fileRequests.map { DBXFileRequestsFileRequest(swift: $0) } }
+    public var fileRequests: Array<DBXFileRequestsFileRequest> { swift.fileRequests.map { DBXFileRequestsFileRequest(swift: $0) } }
 
     @objc
-    public init(fileRequests: [DBXFileRequestsFileRequest]) {
-        self.swift = FileRequests.DeleteAllClosedFileRequestsResult(fileRequests: fileRequests.map(\.swift))
+    public init(fileRequests: Array<DBXFileRequestsFileRequest>) {
+        self.swift = FileRequests.DeleteAllClosedFileRequestsResult(fileRequests: fileRequests.map { $0.swift })
     }
 
     let swift: FileRequests.DeleteAllClosedFileRequestsResult
@@ -704,6 +751,7 @@ public class DBXFileRequestsDeleteAllClosedFileRequestsResult: NSObject {
     public init(swift: FileRequests.DeleteAllClosedFileRequestsResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -714,10 +762,10 @@ public class DBXFileRequestsDeleteAllClosedFileRequestsResult: NSObject {
 public class DBXFileRequestsDeleteFileRequestArgs: NSObject {
     /// List IDs of the file requests to delete.
     @objc
-    public var ids: [String] { swift.ids }
+    public var ids: Array<String> { swift.ids }
 
     @objc
-    public init(ids: [String]) {
+    public init(ids: Array<String>) {
         self.swift = FileRequests.DeleteFileRequestArgs(ids: ids)
     }
 
@@ -726,6 +774,7 @@ public class DBXFileRequestsDeleteFileRequestArgs: NSObject {
     public init(swift: FileRequests.DeleteFileRequestArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -758,6 +807,8 @@ public class DBXFileRequestsDeleteFileRequestError: NSObject {
             return DBXFileRequestsDeleteFileRequestErrorEmailUnverified()
         case .validationError:
             return DBXFileRequestsDeleteFileRequestErrorValidationError()
+        case .noWritePermission:
+            return DBXFileRequestsDeleteFileRequestErrorNoWritePermission()
         case .fileRequestOpen:
             return DBXFileRequestsDeleteFileRequestErrorFileRequestOpen()
         }
@@ -768,47 +819,52 @@ public class DBXFileRequestsDeleteFileRequestError: NSObject {
 
     @objc
     public var asDisabledForTeam: DBXFileRequestsDeleteFileRequestErrorDisabledForTeam? {
-        self as? DBXFileRequestsDeleteFileRequestErrorDisabledForTeam
+        return self as? DBXFileRequestsDeleteFileRequestErrorDisabledForTeam
     }
 
     @objc
     public var asOther: DBXFileRequestsDeleteFileRequestErrorOther? {
-        self as? DBXFileRequestsDeleteFileRequestErrorOther
+        return self as? DBXFileRequestsDeleteFileRequestErrorOther
     }
 
     @objc
     public var asNotFound: DBXFileRequestsDeleteFileRequestErrorNotFound? {
-        self as? DBXFileRequestsDeleteFileRequestErrorNotFound
+        return self as? DBXFileRequestsDeleteFileRequestErrorNotFound
     }
 
     @objc
     public var asNotAFolder: DBXFileRequestsDeleteFileRequestErrorNotAFolder? {
-        self as? DBXFileRequestsDeleteFileRequestErrorNotAFolder
+        return self as? DBXFileRequestsDeleteFileRequestErrorNotAFolder
     }
 
     @objc
     public var asAppLacksAccess: DBXFileRequestsDeleteFileRequestErrorAppLacksAccess? {
-        self as? DBXFileRequestsDeleteFileRequestErrorAppLacksAccess
+        return self as? DBXFileRequestsDeleteFileRequestErrorAppLacksAccess
     }
 
     @objc
     public var asNoPermission: DBXFileRequestsDeleteFileRequestErrorNoPermission? {
-        self as? DBXFileRequestsDeleteFileRequestErrorNoPermission
+        return self as? DBXFileRequestsDeleteFileRequestErrorNoPermission
     }
 
     @objc
     public var asEmailUnverified: DBXFileRequestsDeleteFileRequestErrorEmailUnverified? {
-        self as? DBXFileRequestsDeleteFileRequestErrorEmailUnverified
+        return self as? DBXFileRequestsDeleteFileRequestErrorEmailUnverified
     }
 
     @objc
     public var asValidationError: DBXFileRequestsDeleteFileRequestErrorValidationError? {
-        self as? DBXFileRequestsDeleteFileRequestErrorValidationError
+        return self as? DBXFileRequestsDeleteFileRequestErrorValidationError
+    }
+
+    @objc
+    public var asNoWritePermission: DBXFileRequestsDeleteFileRequestErrorNoWritePermission? {
+        return self as? DBXFileRequestsDeleteFileRequestErrorNoWritePermission
     }
 
     @objc
     public var asFileRequestOpen: DBXFileRequestsDeleteFileRequestErrorFileRequestOpen? {
-        self as? DBXFileRequestsDeleteFileRequestErrorFileRequestOpen
+        return self as? DBXFileRequestsDeleteFileRequestErrorFileRequestOpen
     }
 }
 
@@ -853,7 +909,7 @@ public class DBXFileRequestsDeleteFileRequestErrorNotAFolder: DBXFileRequestsDel
 }
 
 /// This file request is not accessible to this app. Apps with the app folder permission can only access file
-/// requests in their app folder.
+        /// requests in their app folder.
 @objc
 public class DBXFileRequestsDeleteFileRequestErrorAppLacksAccess: DBXFileRequestsDeleteFileRequestError {
     @objc
@@ -874,7 +930,7 @@ public class DBXFileRequestsDeleteFileRequestErrorNoPermission: DBXFileRequestsD
 }
 
 /// This user's email address is not verified. File requests are only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXFileRequestsDeleteFileRequestErrorEmailUnverified: DBXFileRequestsDeleteFileRequestError {
     @objc
@@ -885,12 +941,22 @@ public class DBXFileRequestsDeleteFileRequestErrorEmailUnverified: DBXFileReques
 }
 
 /// There was an error validating the request. For example, the title was invalid, or there were disallowed
-/// characters in the destination path.
+        /// characters in the destination path.
 @objc
 public class DBXFileRequestsDeleteFileRequestErrorValidationError: DBXFileRequestsDeleteFileRequestError {
     @objc
     public init() {
         let swift = FileRequests.DeleteFileRequestError.validationError
+        super.init(swift: swift)
+    }
+}
+
+/// This user doesn't have permission to edit files in a destination folder
+@objc
+public class DBXFileRequestsDeleteFileRequestErrorNoWritePermission: DBXFileRequestsDeleteFileRequestError {
+    @objc
+    public init() {
+        let swift = FileRequests.DeleteFileRequestError.noWritePermission
         super.init(swift: swift)
     }
 }
@@ -910,11 +976,11 @@ public class DBXFileRequestsDeleteFileRequestErrorFileRequestOpen: DBXFileReques
 public class DBXFileRequestsDeleteFileRequestsResult: NSObject {
     /// The file requests deleted by the request.
     @objc
-    public var fileRequests: [DBXFileRequestsFileRequest] { swift.fileRequests.map { DBXFileRequestsFileRequest(swift: $0) } }
+    public var fileRequests: Array<DBXFileRequestsFileRequest> { swift.fileRequests.map { DBXFileRequestsFileRequest(swift: $0) } }
 
     @objc
-    public init(fileRequests: [DBXFileRequestsFileRequest]) {
-        self.swift = FileRequests.DeleteFileRequestsResult(fileRequests: fileRequests.map(\.swift))
+    public init(fileRequests: Array<DBXFileRequestsFileRequest>) {
+        self.swift = FileRequests.DeleteFileRequestsResult(fileRequests: fileRequests.map { $0.swift })
     }
 
     let swift: FileRequests.DeleteFileRequestsResult
@@ -922,6 +988,7 @@ public class DBXFileRequestsDeleteFileRequestsResult: NSObject {
     public init(swift: FileRequests.DeleteFileRequestsResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -948,10 +1015,7 @@ public class DBXFileRequestsFileRequest: NSObject {
     public var created: Date { swift.created }
     /// The deadline for this file request. Only set if the request has a deadline.
     @objc
-    public var deadline: DBXFileRequestsFileRequestDeadline? { guard let swift = swift.deadline else { return nil }
-        return DBXFileRequestsFileRequestDeadline(swift: swift)
-    }
-
+    public var deadline: DBXFileRequestsFileRequestDeadline? { guard let swift = swift.deadline else { return nil }; return DBXFileRequestsFileRequestDeadline(swift: swift) }
     /// Whether or not the file request is open. If the file request is closed, it will not accept any more file
     /// submissions.
     @objc
@@ -962,30 +1026,13 @@ public class DBXFileRequestsFileRequest: NSObject {
     /// A description of the file request.
     @objc
     public var description_: String? { swift.description_ }
+    /// If this request was created from video project, its id.
+    @objc
+    public var videoProjectId: String? { swift.videoProjectId }
 
     @objc
-    public init(
-        id: String,
-        url: String,
-        title: String,
-        created: Date,
-        isOpen: NSNumber,
-        fileCount: NSNumber,
-        destination: String?,
-        deadline: DBXFileRequestsFileRequestDeadline?,
-        description_: String?
-    ) {
-        self.swift = FileRequests.FileRequest(
-            id: id,
-            url: url,
-            title: title,
-            created: created,
-            isOpen: isOpen.boolValue,
-            fileCount: fileCount.int64Value,
-            destination: destination,
-            deadline: deadline?.swift,
-            description_: description_
-        )
+    public init(id: String, url: String, title: String, created: Date, isOpen: NSNumber, fileCount: NSNumber, destination: String?, deadline: DBXFileRequestsFileRequestDeadline?, description_: String?, videoProjectId: String?) {
+        self.swift = FileRequests.FileRequest(id: id, url: url, title: title, created: created, isOpen: isOpen.boolValue, fileCount: fileCount.int64Value, destination: destination, deadline: deadline?.swift, description_: description_, videoProjectId: videoProjectId)
     }
 
     let swift: FileRequests.FileRequest
@@ -993,6 +1040,7 @@ public class DBXFileRequestsFileRequest: NSObject {
     public init(swift: FileRequests.FileRequest) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1004,11 +1052,9 @@ public class DBXFileRequestsFileRequestDeadline: NSObject {
     /// The deadline for this file request.
     @objc
     public var deadline: Date { swift.deadline }
-    /// If set, allow uploads after the deadline has passed. These     uploads will be marked overdue.
+    /// If set, allow uploads after the deadline has passed. These uploads will be marked overdue.
     @objc
-    public var allowLateUploads: DBXFileRequestsGracePeriod? { guard let swift = swift.allowLateUploads else { return nil }
-        return DBXFileRequestsGracePeriod(swift: swift)
-    }
+    public var allowLateUploads: DBXFileRequestsGracePeriod? { guard let swift = swift.allowLateUploads else { return nil }; return DBXFileRequestsGracePeriod(swift: swift) }
 
     @objc
     public init(deadline: Date, allowLateUploads: DBXFileRequestsGracePeriod?) {
@@ -1020,6 +1066,7 @@ public class DBXFileRequestsFileRequestDeadline: NSObject {
     public init(swift: FileRequests.FileRequestDeadline) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1042,6 +1089,7 @@ public class DBXFileRequestsGetFileRequestArgs: NSObject {
     public init(swift: FileRequests.GetFileRequestArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1074,6 +1122,8 @@ public class DBXFileRequestsGetFileRequestError: NSObject {
             return DBXFileRequestsGetFileRequestErrorEmailUnverified()
         case .validationError:
             return DBXFileRequestsGetFileRequestErrorValidationError()
+        case .noWritePermission:
+            return DBXFileRequestsGetFileRequestErrorNoWritePermission()
         }
     }
 
@@ -1082,42 +1132,47 @@ public class DBXFileRequestsGetFileRequestError: NSObject {
 
     @objc
     public var asDisabledForTeam: DBXFileRequestsGetFileRequestErrorDisabledForTeam? {
-        self as? DBXFileRequestsGetFileRequestErrorDisabledForTeam
+        return self as? DBXFileRequestsGetFileRequestErrorDisabledForTeam
     }
 
     @objc
     public var asOther: DBXFileRequestsGetFileRequestErrorOther? {
-        self as? DBXFileRequestsGetFileRequestErrorOther
+        return self as? DBXFileRequestsGetFileRequestErrorOther
     }
 
     @objc
     public var asNotFound: DBXFileRequestsGetFileRequestErrorNotFound? {
-        self as? DBXFileRequestsGetFileRequestErrorNotFound
+        return self as? DBXFileRequestsGetFileRequestErrorNotFound
     }
 
     @objc
     public var asNotAFolder: DBXFileRequestsGetFileRequestErrorNotAFolder? {
-        self as? DBXFileRequestsGetFileRequestErrorNotAFolder
+        return self as? DBXFileRequestsGetFileRequestErrorNotAFolder
     }
 
     @objc
     public var asAppLacksAccess: DBXFileRequestsGetFileRequestErrorAppLacksAccess? {
-        self as? DBXFileRequestsGetFileRequestErrorAppLacksAccess
+        return self as? DBXFileRequestsGetFileRequestErrorAppLacksAccess
     }
 
     @objc
     public var asNoPermission: DBXFileRequestsGetFileRequestErrorNoPermission? {
-        self as? DBXFileRequestsGetFileRequestErrorNoPermission
+        return self as? DBXFileRequestsGetFileRequestErrorNoPermission
     }
 
     @objc
     public var asEmailUnverified: DBXFileRequestsGetFileRequestErrorEmailUnverified? {
-        self as? DBXFileRequestsGetFileRequestErrorEmailUnverified
+        return self as? DBXFileRequestsGetFileRequestErrorEmailUnverified
     }
 
     @objc
     public var asValidationError: DBXFileRequestsGetFileRequestErrorValidationError? {
-        self as? DBXFileRequestsGetFileRequestErrorValidationError
+        return self as? DBXFileRequestsGetFileRequestErrorValidationError
+    }
+
+    @objc
+    public var asNoWritePermission: DBXFileRequestsGetFileRequestErrorNoWritePermission? {
+        return self as? DBXFileRequestsGetFileRequestErrorNoWritePermission
     }
 }
 
@@ -1162,7 +1217,7 @@ public class DBXFileRequestsGetFileRequestErrorNotAFolder: DBXFileRequestsGetFil
 }
 
 /// This file request is not accessible to this app. Apps with the app folder permission can only access file
-/// requests in their app folder.
+        /// requests in their app folder.
 @objc
 public class DBXFileRequestsGetFileRequestErrorAppLacksAccess: DBXFileRequestsGetFileRequestError {
     @objc
@@ -1183,7 +1238,7 @@ public class DBXFileRequestsGetFileRequestErrorNoPermission: DBXFileRequestsGetF
 }
 
 /// This user's email address is not verified. File requests are only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXFileRequestsGetFileRequestErrorEmailUnverified: DBXFileRequestsGetFileRequestError {
     @objc
@@ -1194,12 +1249,22 @@ public class DBXFileRequestsGetFileRequestErrorEmailUnverified: DBXFileRequestsG
 }
 
 /// There was an error validating the request. For example, the title was invalid, or there were disallowed
-/// characters in the destination path.
+        /// characters in the destination path.
 @objc
 public class DBXFileRequestsGetFileRequestErrorValidationError: DBXFileRequestsGetFileRequestError {
     @objc
     public init() {
         let swift = FileRequests.GetFileRequestError.validationError
+        super.init(swift: swift)
+    }
+}
+
+/// This user doesn't have permission to edit files in a destination folder
+@objc
+public class DBXFileRequestsGetFileRequestErrorNoWritePermission: DBXFileRequestsGetFileRequestError {
+    @objc
+    public init() {
+        let swift = FileRequests.GetFileRequestError.noWritePermission
         super.init(swift: swift)
     }
 }
@@ -1235,32 +1300,32 @@ public class DBXFileRequestsGracePeriod: NSObject {
 
     @objc
     public var asOneDay: DBXFileRequestsGracePeriodOneDay? {
-        self as? DBXFileRequestsGracePeriodOneDay
+        return self as? DBXFileRequestsGracePeriodOneDay
     }
 
     @objc
     public var asTwoDays: DBXFileRequestsGracePeriodTwoDays? {
-        self as? DBXFileRequestsGracePeriodTwoDays
+        return self as? DBXFileRequestsGracePeriodTwoDays
     }
 
     @objc
     public var asSevenDays: DBXFileRequestsGracePeriodSevenDays? {
-        self as? DBXFileRequestsGracePeriodSevenDays
+        return self as? DBXFileRequestsGracePeriodSevenDays
     }
 
     @objc
     public var asThirtyDays: DBXFileRequestsGracePeriodThirtyDays? {
-        self as? DBXFileRequestsGracePeriodThirtyDays
+        return self as? DBXFileRequestsGracePeriodThirtyDays
     }
 
     @objc
     public var asAlways: DBXFileRequestsGracePeriodAlways? {
-        self as? DBXFileRequestsGracePeriodAlways
+        return self as? DBXFileRequestsGracePeriodAlways
     }
 
     @objc
     public var asOther: DBXFileRequestsGracePeriodOther? {
-        self as? DBXFileRequestsGracePeriodOther
+        return self as? DBXFileRequestsGracePeriodOther
     }
 }
 
@@ -1342,6 +1407,7 @@ public class DBXFileRequestsListFileRequestsArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -1363,6 +1429,7 @@ public class DBXFileRequestsListFileRequestsContinueArg: NSObject {
     public init(swift: FileRequests.ListFileRequestsContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1393,17 +1460,17 @@ public class DBXFileRequestsListFileRequestsContinueError: NSObject {
 
     @objc
     public var asDisabledForTeam: DBXFileRequestsListFileRequestsContinueErrorDisabledForTeam? {
-        self as? DBXFileRequestsListFileRequestsContinueErrorDisabledForTeam
+        return self as? DBXFileRequestsListFileRequestsContinueErrorDisabledForTeam
     }
 
     @objc
     public var asOther: DBXFileRequestsListFileRequestsContinueErrorOther? {
-        self as? DBXFileRequestsListFileRequestsContinueErrorOther
+        return self as? DBXFileRequestsListFileRequestsContinueErrorOther
     }
 
     @objc
     public var asInvalidCursor: DBXFileRequestsListFileRequestsContinueErrorInvalidCursor? {
-        self as? DBXFileRequestsListFileRequestsContinueErrorInvalidCursor
+        return self as? DBXFileRequestsListFileRequestsContinueErrorInvalidCursor
     }
 }
 
@@ -1460,12 +1527,12 @@ public class DBXFileRequestsListFileRequestsError: NSObject {
 
     @objc
     public var asDisabledForTeam: DBXFileRequestsListFileRequestsErrorDisabledForTeam? {
-        self as? DBXFileRequestsListFileRequestsErrorDisabledForTeam
+        return self as? DBXFileRequestsListFileRequestsErrorDisabledForTeam
     }
 
     @objc
     public var asOther: DBXFileRequestsListFileRequestsErrorOther? {
-        self as? DBXFileRequestsListFileRequestsErrorOther
+        return self as? DBXFileRequestsListFileRequestsErrorOther
     }
 }
 
@@ -1495,11 +1562,11 @@ public class DBXFileRequestsListFileRequestsResult: NSObject {
     /// The file requests owned by this user. Apps with the app folder permission will only see file requests in
     /// their app folder.
     @objc
-    public var fileRequests: [DBXFileRequestsFileRequest] { swift.fileRequests.map { DBXFileRequestsFileRequest(swift: $0) } }
+    public var fileRequests: Array<DBXFileRequestsFileRequest> { swift.fileRequests.map { DBXFileRequestsFileRequest(swift: $0) } }
 
     @objc
-    public init(fileRequests: [DBXFileRequestsFileRequest]) {
-        self.swift = FileRequests.ListFileRequestsResult(fileRequests: fileRequests.map(\.swift))
+    public init(fileRequests: Array<DBXFileRequestsFileRequest>) {
+        self.swift = FileRequests.ListFileRequestsResult(fileRequests: fileRequests.map { $0.swift })
     }
 
     let swift: FileRequests.ListFileRequestsResult
@@ -1507,6 +1574,7 @@ public class DBXFileRequestsListFileRequestsResult: NSObject {
     public init(swift: FileRequests.ListFileRequestsResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1518,7 +1586,7 @@ public class DBXFileRequestsListFileRequestsV2Result: NSObject {
     /// The file requests owned by this user. Apps with the app folder permission will only see file requests in
     /// their app folder.
     @objc
-    public var fileRequests: [DBXFileRequestsFileRequest] { swift.fileRequests.map { DBXFileRequestsFileRequest(swift: $0) } }
+    public var fileRequests: Array<DBXFileRequestsFileRequest> { swift.fileRequests.map { DBXFileRequestsFileRequest(swift: $0) } }
     /// Pass the cursor into listContinue to obtain additional file requests.
     @objc
     public var cursor: String { swift.cursor }
@@ -1528,8 +1596,8 @@ public class DBXFileRequestsListFileRequestsV2Result: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(fileRequests: [DBXFileRequestsFileRequest], cursor: String, hasMore: NSNumber) {
-        self.swift = FileRequests.ListFileRequestsV2Result(fileRequests: fileRequests.map(\.swift), cursor: cursor, hasMore: hasMore.boolValue)
+    public init(fileRequests: Array<DBXFileRequestsFileRequest>, cursor: String, hasMore: NSNumber) {
+        self.swift = FileRequests.ListFileRequestsV2Result(fileRequests: fileRequests.map { $0.swift }, cursor: cursor, hasMore: hasMore.boolValue)
     }
 
     let swift: FileRequests.ListFileRequestsV2Result
@@ -1537,6 +1605,7 @@ public class DBXFileRequestsListFileRequestsV2Result: NSObject {
     public init(swift: FileRequests.ListFileRequestsV2Result) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1567,14 +1636,7 @@ public class DBXFileRequestsUpdateFileRequestArgs: NSObject {
 
     @objc
     public init(id: String, title: String?, destination: String?, deadline: DBXFileRequestsUpdateFileRequestDeadline, open: NSNumber?, description_: String?) {
-        self.swift = FileRequests.UpdateFileRequestArgs(
-            id: id,
-            title: title,
-            destination: destination,
-            deadline: deadline.swift,
-            open: open?.boolValue,
-            description_: description_
-        )
+        self.swift = FileRequests.UpdateFileRequestArgs(id: id, title: title, destination: destination, deadline: deadline.swift, open: open?.boolValue, description_: description_)
     }
 
     let swift: FileRequests.UpdateFileRequestArgs
@@ -1582,6 +1644,7 @@ public class DBXFileRequestsUpdateFileRequestArgs: NSObject {
     public init(swift: FileRequests.UpdateFileRequestArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1614,17 +1677,17 @@ public class DBXFileRequestsUpdateFileRequestDeadline: NSObject {
 
     @objc
     public var asNoUpdate: DBXFileRequestsUpdateFileRequestDeadlineNoUpdate? {
-        self as? DBXFileRequestsUpdateFileRequestDeadlineNoUpdate
+        return self as? DBXFileRequestsUpdateFileRequestDeadlineNoUpdate
     }
 
     @objc
     public var asUpdate: DBXFileRequestsUpdateFileRequestDeadlineUpdate? {
-        self as? DBXFileRequestsUpdateFileRequestDeadlineUpdate
+        return self as? DBXFileRequestsUpdateFileRequestDeadlineUpdate
     }
 
     @objc
     public var asOther: DBXFileRequestsUpdateFileRequestDeadlineOther? {
-        self as? DBXFileRequestsUpdateFileRequestDeadlineOther
+        return self as? DBXFileRequestsUpdateFileRequestDeadlineOther
     }
 }
 
@@ -1646,7 +1709,7 @@ public class DBXFileRequestsUpdateFileRequestDeadlineUpdate: DBXFileRequestsUpda
 
     @objc
     public init(_ arg: DBXFileRequestsFileRequestDeadline?) {
-        self.update = arg
+        update = arg
         let swift = FileRequests.UpdateFileRequestDeadline.update(arg?.swift)
         super.init(swift: swift)
     }
@@ -1689,6 +1752,8 @@ public class DBXFileRequestsUpdateFileRequestError: NSObject {
             return DBXFileRequestsUpdateFileRequestErrorEmailUnverified()
         case .validationError:
             return DBXFileRequestsUpdateFileRequestErrorValidationError()
+        case .noWritePermission:
+            return DBXFileRequestsUpdateFileRequestErrorNoWritePermission()
         }
     }
 
@@ -1697,42 +1762,47 @@ public class DBXFileRequestsUpdateFileRequestError: NSObject {
 
     @objc
     public var asDisabledForTeam: DBXFileRequestsUpdateFileRequestErrorDisabledForTeam? {
-        self as? DBXFileRequestsUpdateFileRequestErrorDisabledForTeam
+        return self as? DBXFileRequestsUpdateFileRequestErrorDisabledForTeam
     }
 
     @objc
     public var asOther: DBXFileRequestsUpdateFileRequestErrorOther? {
-        self as? DBXFileRequestsUpdateFileRequestErrorOther
+        return self as? DBXFileRequestsUpdateFileRequestErrorOther
     }
 
     @objc
     public var asNotFound: DBXFileRequestsUpdateFileRequestErrorNotFound? {
-        self as? DBXFileRequestsUpdateFileRequestErrorNotFound
+        return self as? DBXFileRequestsUpdateFileRequestErrorNotFound
     }
 
     @objc
     public var asNotAFolder: DBXFileRequestsUpdateFileRequestErrorNotAFolder? {
-        self as? DBXFileRequestsUpdateFileRequestErrorNotAFolder
+        return self as? DBXFileRequestsUpdateFileRequestErrorNotAFolder
     }
 
     @objc
     public var asAppLacksAccess: DBXFileRequestsUpdateFileRequestErrorAppLacksAccess? {
-        self as? DBXFileRequestsUpdateFileRequestErrorAppLacksAccess
+        return self as? DBXFileRequestsUpdateFileRequestErrorAppLacksAccess
     }
 
     @objc
     public var asNoPermission: DBXFileRequestsUpdateFileRequestErrorNoPermission? {
-        self as? DBXFileRequestsUpdateFileRequestErrorNoPermission
+        return self as? DBXFileRequestsUpdateFileRequestErrorNoPermission
     }
 
     @objc
     public var asEmailUnverified: DBXFileRequestsUpdateFileRequestErrorEmailUnverified? {
-        self as? DBXFileRequestsUpdateFileRequestErrorEmailUnverified
+        return self as? DBXFileRequestsUpdateFileRequestErrorEmailUnverified
     }
 
     @objc
     public var asValidationError: DBXFileRequestsUpdateFileRequestErrorValidationError? {
-        self as? DBXFileRequestsUpdateFileRequestErrorValidationError
+        return self as? DBXFileRequestsUpdateFileRequestErrorValidationError
+    }
+
+    @objc
+    public var asNoWritePermission: DBXFileRequestsUpdateFileRequestErrorNoWritePermission? {
+        return self as? DBXFileRequestsUpdateFileRequestErrorNoWritePermission
     }
 }
 
@@ -1777,7 +1847,7 @@ public class DBXFileRequestsUpdateFileRequestErrorNotAFolder: DBXFileRequestsUpd
 }
 
 /// This file request is not accessible to this app. Apps with the app folder permission can only access file
-/// requests in their app folder.
+        /// requests in their app folder.
 @objc
 public class DBXFileRequestsUpdateFileRequestErrorAppLacksAccess: DBXFileRequestsUpdateFileRequestError {
     @objc
@@ -1798,7 +1868,7 @@ public class DBXFileRequestsUpdateFileRequestErrorNoPermission: DBXFileRequestsU
 }
 
 /// This user's email address is not verified. File requests are only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXFileRequestsUpdateFileRequestErrorEmailUnverified: DBXFileRequestsUpdateFileRequestError {
     @objc
@@ -1809,7 +1879,7 @@ public class DBXFileRequestsUpdateFileRequestErrorEmailUnverified: DBXFileReques
 }
 
 /// There was an error validating the request. For example, the title was invalid, or there were disallowed
-/// characters in the destination path.
+        /// characters in the destination path.
 @objc
 public class DBXFileRequestsUpdateFileRequestErrorValidationError: DBXFileRequestsUpdateFileRequestError {
     @objc
@@ -1818,3 +1888,14 @@ public class DBXFileRequestsUpdateFileRequestErrorValidationError: DBXFileReques
         super.init(swift: swift)
     }
 }
+
+/// This user doesn't have permission to edit files in a destination folder
+@objc
+public class DBXFileRequestsUpdateFileRequestErrorNoWritePermission: DBXFileRequestsUpdateFileRequestError {
+    @objc
+    public init() {
+        let swift = FileRequests.UpdateFileRequestError.noWritePermission
+        super.init(swift: swift)
+    }
+}
+

@@ -31,6 +31,7 @@ public class DBXPaperAddMember: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -53,6 +54,7 @@ public class DBXPaperRefPaperDoc: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -62,7 +64,7 @@ public class DBXPaperRefPaperDoc: NSObject {
 public class DBXPaperAddPaperDocUser: DBXPaperRefPaperDoc {
     /// User which should be added to the Paper doc. Specify only email address or Dropbox account ID.
     @objc
-    public var members: [DBXPaperAddMember] { subSwift.members.map { DBXPaperAddMember(swift: $0) } }
+    public var members: Array<DBXPaperAddMember> { subSwift.members.map { DBXPaperAddMember(swift: $0) } }
     /// A personal message that will be emailed to each successfully added member.
     @objc
     public var customMessage: String? { subSwift.customMessage }
@@ -71,8 +73,8 @@ public class DBXPaperAddPaperDocUser: DBXPaperRefPaperDoc {
     public var quiet: NSNumber { subSwift.quiet as NSNumber }
 
     @objc
-    public init(docId: String, members: [DBXPaperAddMember], customMessage: String?, quiet: NSNumber) {
-        let swift = Paper.AddPaperDocUser(docId: docId, members: members.map(\.swift), customMessage: customMessage, quiet: quiet.boolValue)
+    public init(docId: String, members: Array<DBXPaperAddMember>, customMessage: String?, quiet: NSNumber) {
+        let swift = Paper.AddPaperDocUser(docId: docId, members: members.map { $0.swift }, customMessage: customMessage, quiet: quiet.boolValue)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -83,6 +85,7 @@ public class DBXPaperAddPaperDocUser: DBXPaperRefPaperDoc {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -108,6 +111,7 @@ public class DBXPaperAddPaperDocUserMemberResult: NSObject {
     public init(swift: Paper.AddPaperDocUserMemberResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -148,42 +152,42 @@ public class DBXPaperAddPaperDocUserResult: NSObject {
 
     @objc
     public var asSuccess: DBXPaperAddPaperDocUserResultSuccess? {
-        self as? DBXPaperAddPaperDocUserResultSuccess
+        return self as? DBXPaperAddPaperDocUserResultSuccess
     }
 
     @objc
     public var asUnknownError: DBXPaperAddPaperDocUserResultUnknownError? {
-        self as? DBXPaperAddPaperDocUserResultUnknownError
+        return self as? DBXPaperAddPaperDocUserResultUnknownError
     }
 
     @objc
     public var asSharingOutsideTeamDisabled: DBXPaperAddPaperDocUserResultSharingOutsideTeamDisabled? {
-        self as? DBXPaperAddPaperDocUserResultSharingOutsideTeamDisabled
+        return self as? DBXPaperAddPaperDocUserResultSharingOutsideTeamDisabled
     }
 
     @objc
     public var asDailyLimitReached: DBXPaperAddPaperDocUserResultDailyLimitReached? {
-        self as? DBXPaperAddPaperDocUserResultDailyLimitReached
+        return self as? DBXPaperAddPaperDocUserResultDailyLimitReached
     }
 
     @objc
     public var asUserIsOwner: DBXPaperAddPaperDocUserResultUserIsOwner? {
-        self as? DBXPaperAddPaperDocUserResultUserIsOwner
+        return self as? DBXPaperAddPaperDocUserResultUserIsOwner
     }
 
     @objc
     public var asFailedUserDataRetrieval: DBXPaperAddPaperDocUserResultFailedUserDataRetrieval? {
-        self as? DBXPaperAddPaperDocUserResultFailedUserDataRetrieval
+        return self as? DBXPaperAddPaperDocUserResultFailedUserDataRetrieval
     }
 
     @objc
     public var asPermissionAlreadyGranted: DBXPaperAddPaperDocUserResultPermissionAlreadyGranted? {
-        self as? DBXPaperAddPaperDocUserResultPermissionAlreadyGranted
+        return self as? DBXPaperAddPaperDocUserResultPermissionAlreadyGranted
     }
 
     @objc
     public var asOther: DBXPaperAddPaperDocUserResultOther? {
-        self as? DBXPaperAddPaperDocUserResultOther
+        return self as? DBXPaperAddPaperDocUserResultOther
     }
 }
 
@@ -296,6 +300,7 @@ public class DBXPaperCursor: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -323,18 +328,18 @@ public class DBXPaperPaperApiBaseError: NSObject {
 
     @objc
     public var asInsufficientPermissions: DBXPaperPaperApiBaseErrorInsufficientPermissions? {
-        self as? DBXPaperPaperApiBaseErrorInsufficientPermissions
+        return self as? DBXPaperPaperApiBaseErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXPaperPaperApiBaseErrorOther? {
-        self as? DBXPaperPaperApiBaseErrorOther
+        return self as? DBXPaperPaperApiBaseErrorOther
     }
 }
 
 /// Your account does not have permissions to perform this action. This may be due to it only having access to
-/// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
-/// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
+        /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
+        /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
 @objc
 public class DBXPaperPaperApiBaseErrorInsufficientPermissions: DBXPaperPaperApiBaseError {
     @objc
@@ -379,23 +384,23 @@ public class DBXPaperDocLookupError: NSObject {
 
     @objc
     public var asInsufficientPermissions: DBXPaperDocLookupErrorInsufficientPermissions? {
-        self as? DBXPaperDocLookupErrorInsufficientPermissions
+        return self as? DBXPaperDocLookupErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXPaperDocLookupErrorOther? {
-        self as? DBXPaperDocLookupErrorOther
+        return self as? DBXPaperDocLookupErrorOther
     }
 
     @objc
     public var asDocNotFound: DBXPaperDocLookupErrorDocNotFound? {
-        self as? DBXPaperDocLookupErrorDocNotFound
+        return self as? DBXPaperDocLookupErrorDocNotFound
     }
 }
 
 /// Your account does not have permissions to perform this action. This may be due to it only having access to
-/// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
-/// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
+        /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
+        /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
 @objc
 public class DBXPaperDocLookupErrorInsufficientPermissions: DBXPaperDocLookupError {
     @objc
@@ -452,22 +457,22 @@ public class DBXPaperDocSubscriptionLevel: NSObject {
 
     @objc
     public var asDefault_: DBXPaperDocSubscriptionLevelDefault_? {
-        self as? DBXPaperDocSubscriptionLevelDefault_
+        return self as? DBXPaperDocSubscriptionLevelDefault_
     }
 
     @objc
     public var asIgnore: DBXPaperDocSubscriptionLevelIgnore? {
-        self as? DBXPaperDocSubscriptionLevelIgnore
+        return self as? DBXPaperDocSubscriptionLevelIgnore
     }
 
     @objc
     public var asEvery: DBXPaperDocSubscriptionLevelEvery? {
-        self as? DBXPaperDocSubscriptionLevelEvery
+        return self as? DBXPaperDocSubscriptionLevelEvery
     }
 
     @objc
     public var asNoEmail: DBXPaperDocSubscriptionLevelNoEmail? {
-        self as? DBXPaperDocSubscriptionLevelNoEmail
+        return self as? DBXPaperDocSubscriptionLevelNoEmail
     }
 }
 
@@ -526,6 +531,8 @@ public class DBXPaperExportFormat: NSObject {
             return DBXPaperExportFormatHtml()
         case .markdown:
             return DBXPaperExportFormatMarkdown()
+        case .json:
+            return DBXPaperExportFormatJson()
         case .other:
             return DBXPaperExportFormatOther()
         }
@@ -536,17 +543,22 @@ public class DBXPaperExportFormat: NSObject {
 
     @objc
     public var asHtml: DBXPaperExportFormatHtml? {
-        self as? DBXPaperExportFormatHtml
+        return self as? DBXPaperExportFormatHtml
     }
 
     @objc
     public var asMarkdown: DBXPaperExportFormatMarkdown? {
-        self as? DBXPaperExportFormatMarkdown
+        return self as? DBXPaperExportFormatMarkdown
+    }
+
+    @objc
+    public var asJson: DBXPaperExportFormatJson? {
+        return self as? DBXPaperExportFormatJson
     }
 
     @objc
     public var asOther: DBXPaperExportFormatOther? {
-        self as? DBXPaperExportFormatOther
+        return self as? DBXPaperExportFormatOther
     }
 }
 
@@ -566,6 +578,16 @@ public class DBXPaperExportFormatMarkdown: DBXPaperExportFormat {
     @objc
     public init() {
         let swift = Paper.ExportFormat.markdown
+        super.init(swift: swift)
+    }
+}
+
+/// Doc metadata JSON export format.
+@objc
+public class DBXPaperExportFormatJson: DBXPaperExportFormat {
+    @objc
+    public init() {
+        let swift = Paper.ExportFormat.json
         super.init(swift: swift)
     }
 }
@@ -601,6 +623,7 @@ public class DBXPaperFolder: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -628,12 +651,12 @@ public class DBXPaperFolderSharingPolicyType: NSObject {
 
     @objc
     public var asTeam: DBXPaperFolderSharingPolicyTypeTeam? {
-        self as? DBXPaperFolderSharingPolicyTypeTeam
+        return self as? DBXPaperFolderSharingPolicyTypeTeam
     }
 
     @objc
     public var asInviteOnly: DBXPaperFolderSharingPolicyTypeInviteOnly? {
-        self as? DBXPaperFolderSharingPolicyTypeInviteOnly
+        return self as? DBXPaperFolderSharingPolicyTypeInviteOnly
     }
 }
 
@@ -684,22 +707,22 @@ public class DBXPaperFolderSubscriptionLevel: NSObject {
 
     @objc
     public var asNone: DBXPaperFolderSubscriptionLevelNone? {
-        self as? DBXPaperFolderSubscriptionLevelNone
+        return self as? DBXPaperFolderSubscriptionLevelNone
     }
 
     @objc
     public var asActivityOnly: DBXPaperFolderSubscriptionLevelActivityOnly? {
-        self as? DBXPaperFolderSubscriptionLevelActivityOnly
+        return self as? DBXPaperFolderSubscriptionLevelActivityOnly
     }
 
     @objc
     public var asDailyEmails: DBXPaperFolderSubscriptionLevelDailyEmails? {
-        self as? DBXPaperFolderSubscriptionLevelDailyEmails
+        return self as? DBXPaperFolderSubscriptionLevelDailyEmails
     }
 
     @objc
     public var asWeeklyEmails: DBXPaperFolderSubscriptionLevelWeeklyEmails? {
-        self as? DBXPaperFolderSubscriptionLevelWeeklyEmails
+        return self as? DBXPaperFolderSubscriptionLevelWeeklyEmails
     }
 }
 
@@ -748,17 +771,14 @@ public class DBXPaperFolderSubscriptionLevelWeeklyEmails: DBXPaperFolderSubscrip
 public class DBXPaperFoldersContainingPaperDoc: NSObject {
     /// The sharing policy of the folder containing the Paper doc.
     @objc
-    public var folderSharingPolicyType: DBXPaperFolderSharingPolicyType? { guard let swift = swift.folderSharingPolicyType else { return nil }
-        return DBXPaperFolderSharingPolicyType(swift: swift)
-    }
-
+    public var folderSharingPolicyType: DBXPaperFolderSharingPolicyType? { guard let swift = swift.folderSharingPolicyType else { return nil }; return DBXPaperFolderSharingPolicyType(swift: swift) }
     /// The folder path. If present the first folder is the root folder.
     @objc
-    public var folders: [DBXPaperFolder]? { swift.folders?.map { DBXPaperFolder(swift: $0) } }
+    public var folders: Array<DBXPaperFolder>? { swift.folders?.map { DBXPaperFolder(swift: $0) } }
 
     @objc
-    public init(folderSharingPolicyType: DBXPaperFolderSharingPolicyType?, folders: [DBXPaperFolder]?) {
-        self.swift = Paper.FoldersContainingPaperDoc(folderSharingPolicyType: folderSharingPolicyType?.swift, folders: folders?.map(\.swift))
+    public init(folderSharingPolicyType: DBXPaperFolderSharingPolicyType?, folders: Array<DBXPaperFolder>?) {
+        self.swift = Paper.FoldersContainingPaperDoc(folderSharingPolicyType: folderSharingPolicyType?.swift, folders: folders?.map { $0.swift })
     }
 
     let swift: Paper.FoldersContainingPaperDoc
@@ -766,6 +786,33 @@ public class DBXPaperFoldersContainingPaperDoc: NSObject {
     public init(swift: Paper.FoldersContainingPaperDoc) {
         self.swift = swift
     }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Argument for retrieving Paper doc metadata. Accepts either a legacy Paper doc ID or a Cloud Doc file ID.
+@objc
+public class DBXPaperGetDocMetadataArg: NSObject {
+    /// Legacy Paper doc identifier.
+    @objc
+    public var docId: String? { swift.docId }
+    /// Dropbox file ID for Cloud Docs (post-PiFS migration).
+    @objc
+    public var fileId: String? { swift.fileId }
+
+    @objc
+    public init(docId: String?, fileId: String?) {
+        self.swift = Paper.GetDocMetadataArg(docId: docId, fileId: fileId)
+    }
+
+    let swift: Paper.GetDocMetadataArg
+
+    public init(swift: Paper.GetDocMetadataArg) {
+        self.swift = swift
+    }
+
 
     @objc
     public override var description: String { swift.description }
@@ -798,22 +845,22 @@ public class DBXPaperImportFormat: NSObject {
 
     @objc
     public var asHtml: DBXPaperImportFormatHtml? {
-        self as? DBXPaperImportFormatHtml
+        return self as? DBXPaperImportFormatHtml
     }
 
     @objc
     public var asMarkdown: DBXPaperImportFormatMarkdown? {
-        self as? DBXPaperImportFormatMarkdown
+        return self as? DBXPaperImportFormatMarkdown
     }
 
     @objc
     public var asPlainText: DBXPaperImportFormatPlainText? {
-        self as? DBXPaperImportFormatPlainText
+        return self as? DBXPaperImportFormatPlainText
     }
 
     @objc
     public var asOther: DBXPaperImportFormatOther? {
-        self as? DBXPaperImportFormatOther
+        return self as? DBXPaperImportFormatOther
     }
 }
 
@@ -828,7 +875,7 @@ public class DBXPaperImportFormatHtml: DBXPaperImportFormat {
 }
 
 /// The provided data is interpreted as markdown. The first line of the provided document will be used as the
-/// doc title.
+        /// doc title.
 @objc
 public class DBXPaperImportFormatMarkdown: DBXPaperImportFormat {
     @objc
@@ -839,7 +886,7 @@ public class DBXPaperImportFormatMarkdown: DBXPaperImportFormat {
 }
 
 /// The provided data is interpreted as plain text. The first line of the provided document will be used as the
-/// doc title.
+        /// doc title.
 @objc
 public class DBXPaperImportFormatPlainText: DBXPaperImportFormat {
     @objc
@@ -880,6 +927,7 @@ public class DBXPaperInviteeInfoWithPermissionLevel: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -908,12 +956,12 @@ public class DBXPaperListDocsCursorError: NSObject {
 
     @objc
     public var asCursorError: DBXPaperListDocsCursorErrorCursorError? {
-        self as? DBXPaperListDocsCursorErrorCursorError
+        return self as? DBXPaperListDocsCursorErrorCursorError
     }
 
     @objc
     public var asOther: DBXPaperListDocsCursorErrorOther? {
-        self as? DBXPaperListDocsCursorErrorOther
+        return self as? DBXPaperListDocsCursorErrorOther
     }
 }
 
@@ -925,7 +973,7 @@ public class DBXPaperListDocsCursorErrorCursorError: DBXPaperListDocsCursorError
 
     @objc
     public init(_ arg: DBXPaperPaperApiCursorError) {
-        self.cursorError = arg
+        cursorError = arg
         let swift = Paper.ListDocsCursorError.cursorError(arg.swift)
         super.init(swift: swift)
     }
@@ -957,10 +1005,13 @@ public class DBXPaperListPaperDocsArgs: NSObject {
     /// results in invalid arguments error.
     @objc
     public var limit: NSNumber { swift.limit as NSNumber }
+    /// Do not return results beyond this date. Behavior depends on sort order.
+    @objc
+    public var stopAtDate: Date? { swift.stopAtDate }
 
     @objc
-    public init(filterBy: DBXPaperListPaperDocsFilterBy, sortBy: DBXPaperListPaperDocsSortBy, sortOrder: DBXPaperListPaperDocsSortOrder, limit: NSNumber) {
-        self.swift = Paper.ListPaperDocsArgs(filterBy: filterBy.swift, sortBy: sortBy.swift, sortOrder: sortOrder.swift, limit: limit.int32Value)
+    public init(filterBy: DBXPaperListPaperDocsFilterBy, sortBy: DBXPaperListPaperDocsSortBy, sortOrder: DBXPaperListPaperDocsSortOrder, limit: NSNumber, stopAtDate: Date?) {
+        self.swift = Paper.ListPaperDocsArgs(filterBy: filterBy.swift, sortBy: sortBy.swift, sortOrder: sortOrder.swift, limit: limit.int32Value, stopAtDate: stopAtDate)
     }
 
     let swift: Paper.ListPaperDocsArgs
@@ -968,6 +1019,7 @@ public class DBXPaperListPaperDocsArgs: NSObject {
     public init(swift: Paper.ListPaperDocsArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -990,6 +1042,7 @@ public class DBXPaperListPaperDocsContinueArgs: NSObject {
     public init(swift: Paper.ListPaperDocsContinueArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1020,17 +1073,17 @@ public class DBXPaperListPaperDocsFilterBy: NSObject {
 
     @objc
     public var asDocsAccessed: DBXPaperListPaperDocsFilterByDocsAccessed? {
-        self as? DBXPaperListPaperDocsFilterByDocsAccessed
+        return self as? DBXPaperListPaperDocsFilterByDocsAccessed
     }
 
     @objc
     public var asDocsCreated: DBXPaperListPaperDocsFilterByDocsCreated? {
-        self as? DBXPaperListPaperDocsFilterByDocsCreated
+        return self as? DBXPaperListPaperDocsFilterByDocsCreated
     }
 
     @objc
     public var asOther: DBXPaperListPaperDocsFilterByOther? {
-        self as? DBXPaperListPaperDocsFilterByOther
+        return self as? DBXPaperListPaperDocsFilterByOther
     }
 }
 
@@ -1070,7 +1123,7 @@ public class DBXPaperListPaperDocsResponse: NSObject {
     /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to other API methods.
     /// The list is sorted in the order specified by the initial call to docsList.
     @objc
-    public var docIds: [String] { swift.docIds }
+    public var docIds: Array<String> { swift.docIds }
     /// Pass the cursor into docsListContinue to paginate through all files. The cursor preserves all properties as
     /// specified in the original call to docsList.
     @objc
@@ -1082,7 +1135,7 @@ public class DBXPaperListPaperDocsResponse: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(docIds: [String], cursor: DBXPaperCursor, hasMore: NSNumber) {
+    public init(docIds: Array<String>, cursor: DBXPaperCursor, hasMore: NSNumber) {
         self.swift = Paper.ListPaperDocsResponse(docIds: docIds, cursor: cursor.swift, hasMore: hasMore.boolValue)
     }
 
@@ -1091,6 +1144,7 @@ public class DBXPaperListPaperDocsResponse: NSObject {
     public init(swift: Paper.ListPaperDocsResponse) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1123,22 +1177,22 @@ public class DBXPaperListPaperDocsSortBy: NSObject {
 
     @objc
     public var asAccessed: DBXPaperListPaperDocsSortByAccessed? {
-        self as? DBXPaperListPaperDocsSortByAccessed
+        return self as? DBXPaperListPaperDocsSortByAccessed
     }
 
     @objc
     public var asModified: DBXPaperListPaperDocsSortByModified? {
-        self as? DBXPaperListPaperDocsSortByModified
+        return self as? DBXPaperListPaperDocsSortByModified
     }
 
     @objc
     public var asCreated: DBXPaperListPaperDocsSortByCreated? {
-        self as? DBXPaperListPaperDocsSortByCreated
+        return self as? DBXPaperListPaperDocsSortByCreated
     }
 
     @objc
     public var asOther: DBXPaperListPaperDocsSortByOther? {
-        self as? DBXPaperListPaperDocsSortByOther
+        return self as? DBXPaperListPaperDocsSortByOther
     }
 }
 
@@ -1207,17 +1261,17 @@ public class DBXPaperListPaperDocsSortOrder: NSObject {
 
     @objc
     public var asAscending: DBXPaperListPaperDocsSortOrderAscending? {
-        self as? DBXPaperListPaperDocsSortOrderAscending
+        return self as? DBXPaperListPaperDocsSortOrderAscending
     }
 
     @objc
     public var asDescending: DBXPaperListPaperDocsSortOrderDescending? {
-        self as? DBXPaperListPaperDocsSortOrderDescending
+        return self as? DBXPaperListPaperDocsSortOrderDescending
     }
 
     @objc
     public var asOther: DBXPaperListPaperDocsSortOrderOther? {
-        self as? DBXPaperListPaperDocsSortOrderOther
+        return self as? DBXPaperListPaperDocsSortOrderOther
     }
 }
 
@@ -1279,28 +1333,28 @@ public class DBXPaperListUsersCursorError: NSObject {
 
     @objc
     public var asInsufficientPermissions: DBXPaperListUsersCursorErrorInsufficientPermissions? {
-        self as? DBXPaperListUsersCursorErrorInsufficientPermissions
+        return self as? DBXPaperListUsersCursorErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXPaperListUsersCursorErrorOther? {
-        self as? DBXPaperListUsersCursorErrorOther
+        return self as? DBXPaperListUsersCursorErrorOther
     }
 
     @objc
     public var asDocNotFound: DBXPaperListUsersCursorErrorDocNotFound? {
-        self as? DBXPaperListUsersCursorErrorDocNotFound
+        return self as? DBXPaperListUsersCursorErrorDocNotFound
     }
 
     @objc
     public var asCursorError: DBXPaperListUsersCursorErrorCursorError? {
-        self as? DBXPaperListUsersCursorErrorCursorError
+        return self as? DBXPaperListUsersCursorErrorCursorError
     }
 }
 
 /// Your account does not have permissions to perform this action. This may be due to it only having access to
-/// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
-/// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
+        /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
+        /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
 @objc
 public class DBXPaperListUsersCursorErrorInsufficientPermissions: DBXPaperListUsersCursorError {
     @objc
@@ -1338,7 +1392,7 @@ public class DBXPaperListUsersCursorErrorCursorError: DBXPaperListUsersCursorErr
 
     @objc
     public init(_ arg: DBXPaperPaperApiCursorError) {
-        self.cursorError = arg
+        cursorError = arg
         let swift = Paper.ListUsersCursorError.cursorError(arg.swift)
         super.init(swift: swift)
     }
@@ -1366,6 +1420,7 @@ public class DBXPaperListUsersOnFolderArgs: DBXPaperRefPaperDoc {
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
 }
@@ -1391,6 +1446,7 @@ public class DBXPaperListUsersOnFolderContinueArgs: DBXPaperRefPaperDoc {
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
 }
@@ -1400,10 +1456,10 @@ public class DBXPaperListUsersOnFolderContinueArgs: DBXPaperRefPaperDoc {
 public class DBXPaperListUsersOnFolderResponse: NSObject {
     /// List of email addresses that are invited on the Paper folder.
     @objc
-    public var invitees: [DBXSharingInviteeInfo] { swift.invitees.map { DBXSharingInviteeInfo(swift: $0) } }
+    public var invitees: Array<DBXSharingInviteeInfo> { swift.invitees.map { DBXSharingInviteeInfo(swift: $0) } }
     /// List of users that are invited on the Paper folder.
     @objc
-    public var users: [DBXSharingUserInfo] { swift.users.map { DBXSharingUserInfo(swift: $0) } }
+    public var users: Array<DBXSharingUserInfo> { swift.users.map { DBXSharingUserInfo(swift: $0) } }
     /// Pass the cursor into docsFolderUsersListContinue to paginate through all users. The cursor preserves all
     /// properties as specified in the original call to docsFolderUsersList.
     @objc
@@ -1415,13 +1471,8 @@ public class DBXPaperListUsersOnFolderResponse: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(invitees: [DBXSharingInviteeInfo], users: [DBXSharingUserInfo], cursor: DBXPaperCursor, hasMore: NSNumber) {
-        self.swift = Paper.ListUsersOnFolderResponse(
-            invitees: invitees.map(\.swift),
-            users: users.map(\.swift),
-            cursor: cursor.swift,
-            hasMore: hasMore.boolValue
-        )
+    public init(invitees: Array<DBXSharingInviteeInfo>, users: Array<DBXSharingUserInfo>, cursor: DBXPaperCursor, hasMore: NSNumber) {
+        self.swift = Paper.ListUsersOnFolderResponse(invitees: invitees.map { $0.swift }, users: users.map { $0.swift }, cursor: cursor.swift, hasMore: hasMore.boolValue)
     }
 
     let swift: Paper.ListUsersOnFolderResponse
@@ -1429,6 +1480,7 @@ public class DBXPaperListUsersOnFolderResponse: NSObject {
     public init(swift: Paper.ListUsersOnFolderResponse) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1459,6 +1511,7 @@ public class DBXPaperListUsersOnPaperDocArgs: DBXPaperRefPaperDoc {
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
 }
@@ -1484,6 +1537,7 @@ public class DBXPaperListUsersOnPaperDocContinueArgs: DBXPaperRefPaperDoc {
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
 }
@@ -1493,10 +1547,10 @@ public class DBXPaperListUsersOnPaperDocContinueArgs: DBXPaperRefPaperDoc {
 public class DBXPaperListUsersOnPaperDocResponse: NSObject {
     /// List of email addresses with their respective permission levels that are invited on the Paper doc.
     @objc
-    public var invitees: [DBXPaperInviteeInfoWithPermissionLevel] { swift.invitees.map { DBXPaperInviteeInfoWithPermissionLevel(swift: $0) } }
+    public var invitees: Array<DBXPaperInviteeInfoWithPermissionLevel> { swift.invitees.map { DBXPaperInviteeInfoWithPermissionLevel(swift: $0) } }
     /// List of users with their respective permission levels that are invited on the Paper folder.
     @objc
-    public var users: [DBXPaperUserInfoWithPermissionLevel] { swift.users.map { DBXPaperUserInfoWithPermissionLevel(swift: $0) } }
+    public var users: Array<DBXPaperUserInfoWithPermissionLevel> { swift.users.map { DBXPaperUserInfoWithPermissionLevel(swift: $0) } }
     /// The Paper doc owner. This field is populated on every single response.
     @objc
     public var docOwner: DBXSharingUserInfo { DBXSharingUserInfo(swift: swift.docOwner) }
@@ -1511,20 +1565,8 @@ public class DBXPaperListUsersOnPaperDocResponse: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(
-        invitees: [DBXPaperInviteeInfoWithPermissionLevel],
-        users: [DBXPaperUserInfoWithPermissionLevel],
-        docOwner: DBXSharingUserInfo,
-        cursor: DBXPaperCursor,
-        hasMore: NSNumber
-    ) {
-        self.swift = Paper.ListUsersOnPaperDocResponse(
-            invitees: invitees.map(\.swift),
-            users: users.map(\.swift),
-            docOwner: docOwner.swift,
-            cursor: cursor.swift,
-            hasMore: hasMore.boolValue
-        )
+    public init(invitees: Array<DBXPaperInviteeInfoWithPermissionLevel>, users: Array<DBXPaperUserInfoWithPermissionLevel>, docOwner: DBXSharingUserInfo, cursor: DBXPaperCursor, hasMore: NSNumber) {
+        self.swift = Paper.ListUsersOnPaperDocResponse(invitees: invitees.map { $0.swift }, users: users.map { $0.swift }, docOwner: docOwner.swift, cursor: cursor.swift, hasMore: hasMore.boolValue)
     }
 
     let swift: Paper.ListUsersOnPaperDocResponse
@@ -1532,6 +1574,7 @@ public class DBXPaperListUsersOnPaperDocResponse: NSObject {
     public init(swift: Paper.ListUsersOnPaperDocResponse) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1566,27 +1609,27 @@ public class DBXPaperPaperApiCursorError: NSObject {
 
     @objc
     public var asExpiredCursor: DBXPaperPaperApiCursorErrorExpiredCursor? {
-        self as? DBXPaperPaperApiCursorErrorExpiredCursor
+        return self as? DBXPaperPaperApiCursorErrorExpiredCursor
     }
 
     @objc
     public var asInvalidCursor: DBXPaperPaperApiCursorErrorInvalidCursor? {
-        self as? DBXPaperPaperApiCursorErrorInvalidCursor
+        return self as? DBXPaperPaperApiCursorErrorInvalidCursor
     }
 
     @objc
     public var asWrongUserInCursor: DBXPaperPaperApiCursorErrorWrongUserInCursor? {
-        self as? DBXPaperPaperApiCursorErrorWrongUserInCursor
+        return self as? DBXPaperPaperApiCursorErrorWrongUserInCursor
     }
 
     @objc
     public var asReset: DBXPaperPaperApiCursorErrorReset? {
-        self as? DBXPaperPaperApiCursorErrorReset
+        return self as? DBXPaperPaperApiCursorErrorReset
     }
 
     @objc
     public var asOther: DBXPaperPaperApiCursorErrorOther? {
-        self as? DBXPaperPaperApiCursorErrorOther
+        return self as? DBXPaperPaperApiCursorErrorOther
     }
 }
 
@@ -1621,7 +1664,7 @@ public class DBXPaperPaperApiCursorErrorWrongUserInCursor: DBXPaperPaperApiCurso
 }
 
 /// Indicates that the cursor has been invalidated. Call the corresponding non-continue endpoint to obtain a new
-/// cursor.
+        /// cursor.
 @objc
 public class DBXPaperPaperApiCursorErrorReset: DBXPaperPaperApiCursorError {
     @objc
@@ -1663,6 +1706,7 @@ public class DBXPaperPaperDocCreateArgs: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -1698,38 +1742,38 @@ public class DBXPaperPaperDocCreateError: NSObject {
 
     @objc
     public var asInsufficientPermissions: DBXPaperPaperDocCreateErrorInsufficientPermissions? {
-        self as? DBXPaperPaperDocCreateErrorInsufficientPermissions
+        return self as? DBXPaperPaperDocCreateErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXPaperPaperDocCreateErrorOther? {
-        self as? DBXPaperPaperDocCreateErrorOther
+        return self as? DBXPaperPaperDocCreateErrorOther
     }
 
     @objc
     public var asContentMalformed: DBXPaperPaperDocCreateErrorContentMalformed? {
-        self as? DBXPaperPaperDocCreateErrorContentMalformed
+        return self as? DBXPaperPaperDocCreateErrorContentMalformed
     }
 
     @objc
     public var asFolderNotFound: DBXPaperPaperDocCreateErrorFolderNotFound? {
-        self as? DBXPaperPaperDocCreateErrorFolderNotFound
+        return self as? DBXPaperPaperDocCreateErrorFolderNotFound
     }
 
     @objc
     public var asDocLengthExceeded: DBXPaperPaperDocCreateErrorDocLengthExceeded? {
-        self as? DBXPaperPaperDocCreateErrorDocLengthExceeded
+        return self as? DBXPaperPaperDocCreateErrorDocLengthExceeded
     }
 
     @objc
     public var asImageSizeExceeded: DBXPaperPaperDocCreateErrorImageSizeExceeded? {
-        self as? DBXPaperPaperDocCreateErrorImageSizeExceeded
+        return self as? DBXPaperPaperDocCreateErrorImageSizeExceeded
     }
 }
 
 /// Your account does not have permissions to perform this action. This may be due to it only having access to
-/// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
-/// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
+        /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
+        /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
 @objc
 public class DBXPaperPaperDocCreateErrorInsufficientPermissions: DBXPaperPaperDocCreateError {
     @objc
@@ -1780,7 +1824,7 @@ public class DBXPaperPaperDocCreateErrorDocLengthExceeded: DBXPaperPaperDocCreat
 }
 
 /// The imported document contains an image that is too large. The current limit is 1MB. This only applies to
-/// HTML with data URI.
+        /// HTML with data URI.
 @objc
 public class DBXPaperPaperDocCreateErrorImageSizeExceeded: DBXPaperPaperDocCreateError {
     @objc
@@ -1814,6 +1858,7 @@ public class DBXPaperPaperDocCreateUpdateResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -1824,10 +1869,15 @@ public class DBXPaperPaperDocExport: DBXPaperRefPaperDoc {
     /// (no description)
     @objc
     public var exportFormat: DBXPaperExportFormat { DBXPaperExportFormat(swift: subSwift.exportFormat) }
+    /// When true, export includes comment threads (e.g. markdown footnotes). When false or omitted, body only.
+    /// Other formats may adopt this later; currently only markdown uses it. Plain bool (not optional):
+    /// protoc-gen-godbx does not support proto3 optional yet.
+    @objc
+    public var includeComments: NSNumber { subSwift.includeComments as NSNumber }
 
     @objc
-    public init(docId: String, exportFormat: DBXPaperExportFormat) {
-        let swift = Paper.PaperDocExport(docId: docId, exportFormat: exportFormat.swift)
+    public init(docId: String, exportFormat: DBXPaperExportFormat, includeComments: NSNumber) {
+        let swift = Paper.PaperDocExport(docId: docId, exportFormat: exportFormat.swift, includeComments: includeComments.boolValue)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -1838,6 +1888,7 @@ public class DBXPaperPaperDocExport: DBXPaperRefPaperDoc {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -1870,6 +1921,51 @@ public class DBXPaperPaperDocExportResult: NSObject {
         self.swift = swift
     }
 
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Metadata returned by docs/get_metadata.
+@objc
+public class DBXPaperPaperDocGetMetadataResult: NSObject {
+    /// The Paper doc ID.
+    @objc
+    public var docId: String { swift.docId }
+    /// The Paper doc owner's email address.
+    @objc
+    public var owner: String { swift.owner }
+    /// The Paper doc title.
+    @objc
+    public var title: String { swift.title }
+    /// The Paper doc creation date.
+    @objc
+    public var createdDate: Date { swift.createdDate }
+    /// The Paper doc status.
+    @objc
+    public var status: DBXPaperPaperDocStatus { DBXPaperPaperDocStatus(swift: swift.status) }
+    /// The Paper doc revision. Simply an ever increasing number.
+    @objc
+    public var revision: NSNumber { swift.revision as NSNumber }
+    /// The date when the Paper doc was last edited.
+    @objc
+    public var lastUpdatedDate: Date { swift.lastUpdatedDate }
+    /// The email address of the last editor of the Paper doc.
+    @objc
+    public var lastEditor: String { swift.lastEditor }
+
+    @objc
+    public init(docId: String, owner: String, title: String, createdDate: Date, status: DBXPaperPaperDocStatus, revision: NSNumber, lastUpdatedDate: Date, lastEditor: String) {
+        self.swift = Paper.PaperDocGetMetadataResult(docId: docId, owner: owner, title: title, createdDate: createdDate, status: status.swift, revision: revision.int64Value, lastUpdatedDate: lastUpdatedDate, lastEditor: lastEditor)
+    }
+
+    let swift: Paper.PaperDocGetMetadataResult
+
+    public init(swift: Paper.PaperDocGetMetadataResult) {
+        self.swift = swift
+    }
+
+
     @objc
     public override var description: String { swift.description }
 }
@@ -1899,17 +1995,17 @@ public class DBXPaperPaperDocPermissionLevel: NSObject {
 
     @objc
     public var asEdit: DBXPaperPaperDocPermissionLevelEdit? {
-        self as? DBXPaperPaperDocPermissionLevelEdit
+        return self as? DBXPaperPaperDocPermissionLevelEdit
     }
 
     @objc
     public var asViewAndComment: DBXPaperPaperDocPermissionLevelViewAndComment? {
-        self as? DBXPaperPaperDocPermissionLevelViewAndComment
+        return self as? DBXPaperPaperDocPermissionLevelViewAndComment
     }
 
     @objc
     public var asOther: DBXPaperPaperDocPermissionLevelOther? {
-        self as? DBXPaperPaperDocPermissionLevelOther
+        return self as? DBXPaperPaperDocPermissionLevelOther
     }
 }
 
@@ -1964,8 +2060,78 @@ public class DBXPaperPaperDocSharingPolicy: DBXPaperRefPaperDoc {
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
+}
+
+/// The status of a Paper doc.
+@objc
+public class DBXPaperPaperDocStatus: NSObject {
+    let swift: Paper.PaperDocStatus
+
+    public init(swift: Paper.PaperDocStatus) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Paper.PaperDocStatus) -> DBXPaperPaperDocStatus {
+        switch swift {
+        case .active:
+            return DBXPaperPaperDocStatusActive()
+        case .deleted:
+            return DBXPaperPaperDocStatusDeleted()
+        case .other:
+            return DBXPaperPaperDocStatusOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asActive: DBXPaperPaperDocStatusActive? {
+        return self as? DBXPaperPaperDocStatusActive
+    }
+
+    @objc
+    public var asDeleted: DBXPaperPaperDocStatusDeleted? {
+        return self as? DBXPaperPaperDocStatusDeleted
+    }
+
+    @objc
+    public var asOther: DBXPaperPaperDocStatusOther? {
+        return self as? DBXPaperPaperDocStatusOther
+    }
+}
+
+/// The Paper doc is active.
+@objc
+public class DBXPaperPaperDocStatusActive: DBXPaperPaperDocStatus {
+    @objc
+    public init() {
+        let swift = Paper.PaperDocStatus.active
+        super.init(swift: swift)
+    }
+}
+
+/// The Paper doc is deleted.
+@objc
+public class DBXPaperPaperDocStatusDeleted: DBXPaperPaperDocStatus {
+    @objc
+    public init() {
+        let swift = Paper.PaperDocStatus.deleted
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXPaperPaperDocStatusOther: DBXPaperPaperDocStatus {
+    @objc
+    public init() {
+        let swift = Paper.PaperDocStatus.other
+        super.init(swift: swift)
+    }
 }
 
 /// Objective-C compatible PaperDocUpdateArgs struct
@@ -1984,12 +2150,7 @@ public class DBXPaperPaperDocUpdateArgs: DBXPaperRefPaperDoc {
 
     @objc
     public init(docId: String, docUpdatePolicy: DBXPaperPaperDocUpdatePolicy, revision: NSNumber, importFormat: DBXPaperImportFormat) {
-        let swift = Paper.PaperDocUpdateArgs(
-            docId: docId,
-            docUpdatePolicy: docUpdatePolicy.swift,
-            revision: revision.int64Value,
-            importFormat: importFormat.swift
-        )
+        let swift = Paper.PaperDocUpdateArgs(docId: docId, docUpdatePolicy: docUpdatePolicy.swift, revision: revision.int64Value, importFormat: importFormat.swift)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -2000,6 +2161,7 @@ public class DBXPaperPaperDocUpdateArgs: DBXPaperRefPaperDoc {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -2042,53 +2204,53 @@ public class DBXPaperPaperDocUpdateError: NSObject {
 
     @objc
     public var asInsufficientPermissions: DBXPaperPaperDocUpdateErrorInsufficientPermissions? {
-        self as? DBXPaperPaperDocUpdateErrorInsufficientPermissions
+        return self as? DBXPaperPaperDocUpdateErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXPaperPaperDocUpdateErrorOther? {
-        self as? DBXPaperPaperDocUpdateErrorOther
+        return self as? DBXPaperPaperDocUpdateErrorOther
     }
 
     @objc
     public var asDocNotFound: DBXPaperPaperDocUpdateErrorDocNotFound? {
-        self as? DBXPaperPaperDocUpdateErrorDocNotFound
+        return self as? DBXPaperPaperDocUpdateErrorDocNotFound
     }
 
     @objc
     public var asContentMalformed: DBXPaperPaperDocUpdateErrorContentMalformed? {
-        self as? DBXPaperPaperDocUpdateErrorContentMalformed
+        return self as? DBXPaperPaperDocUpdateErrorContentMalformed
     }
 
     @objc
     public var asRevisionMismatch: DBXPaperPaperDocUpdateErrorRevisionMismatch? {
-        self as? DBXPaperPaperDocUpdateErrorRevisionMismatch
+        return self as? DBXPaperPaperDocUpdateErrorRevisionMismatch
     }
 
     @objc
     public var asDocLengthExceeded: DBXPaperPaperDocUpdateErrorDocLengthExceeded? {
-        self as? DBXPaperPaperDocUpdateErrorDocLengthExceeded
+        return self as? DBXPaperPaperDocUpdateErrorDocLengthExceeded
     }
 
     @objc
     public var asImageSizeExceeded: DBXPaperPaperDocUpdateErrorImageSizeExceeded? {
-        self as? DBXPaperPaperDocUpdateErrorImageSizeExceeded
+        return self as? DBXPaperPaperDocUpdateErrorImageSizeExceeded
     }
 
     @objc
     public var asDocArchived: DBXPaperPaperDocUpdateErrorDocArchived? {
-        self as? DBXPaperPaperDocUpdateErrorDocArchived
+        return self as? DBXPaperPaperDocUpdateErrorDocArchived
     }
 
     @objc
     public var asDocDeleted: DBXPaperPaperDocUpdateErrorDocDeleted? {
-        self as? DBXPaperPaperDocUpdateErrorDocDeleted
+        return self as? DBXPaperPaperDocUpdateErrorDocDeleted
     }
 }
 
 /// Your account does not have permissions to perform this action. This may be due to it only having access to
-/// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
-/// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
+        /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
+        /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
 @objc
 public class DBXPaperPaperDocUpdateErrorInsufficientPermissions: DBXPaperPaperDocUpdateError {
     @objc
@@ -2149,7 +2311,7 @@ public class DBXPaperPaperDocUpdateErrorDocLengthExceeded: DBXPaperPaperDocUpdat
 }
 
 /// The imported document contains an image that is too large. The current limit is 1MB. This only applies to
-/// HTML with data URI.
+        /// HTML with data URI.
 @objc
 public class DBXPaperPaperDocUpdateErrorImageSizeExceeded: DBXPaperPaperDocUpdateError {
     @objc
@@ -2206,22 +2368,22 @@ public class DBXPaperPaperDocUpdatePolicy: NSObject {
 
     @objc
     public var asAppend: DBXPaperPaperDocUpdatePolicyAppend? {
-        self as? DBXPaperPaperDocUpdatePolicyAppend
+        return self as? DBXPaperPaperDocUpdatePolicyAppend
     }
 
     @objc
     public var asPrepend: DBXPaperPaperDocUpdatePolicyPrepend? {
-        self as? DBXPaperPaperDocUpdatePolicyPrepend
+        return self as? DBXPaperPaperDocUpdatePolicyPrepend
     }
 
     @objc
     public var asOverwriteAll: DBXPaperPaperDocUpdatePolicyOverwriteAll? {
-        self as? DBXPaperPaperDocUpdatePolicyOverwriteAll
+        return self as? DBXPaperPaperDocUpdatePolicyOverwriteAll
     }
 
     @objc
     public var asOther: DBXPaperPaperDocUpdatePolicyOther? {
-        self as? DBXPaperPaperDocUpdatePolicyOther
+        return self as? DBXPaperPaperDocUpdatePolicyOther
     }
 }
 
@@ -2292,6 +2454,7 @@ public class DBXPaperPaperFolderCreateArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -2323,28 +2486,28 @@ public class DBXPaperPaperFolderCreateError: NSObject {
 
     @objc
     public var asInsufficientPermissions: DBXPaperPaperFolderCreateErrorInsufficientPermissions? {
-        self as? DBXPaperPaperFolderCreateErrorInsufficientPermissions
+        return self as? DBXPaperPaperFolderCreateErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXPaperPaperFolderCreateErrorOther? {
-        self as? DBXPaperPaperFolderCreateErrorOther
+        return self as? DBXPaperPaperFolderCreateErrorOther
     }
 
     @objc
     public var asFolderNotFound: DBXPaperPaperFolderCreateErrorFolderNotFound? {
-        self as? DBXPaperPaperFolderCreateErrorFolderNotFound
+        return self as? DBXPaperPaperFolderCreateErrorFolderNotFound
     }
 
     @objc
     public var asInvalidFolderId: DBXPaperPaperFolderCreateErrorInvalidFolderId? {
-        self as? DBXPaperPaperFolderCreateErrorInvalidFolderId
+        return self as? DBXPaperPaperFolderCreateErrorInvalidFolderId
     }
 }
 
 /// Your account does not have permissions to perform this action. This may be due to it only having access to
-/// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
-/// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
+        /// Paper as files in the Dropbox filesystem. For more information, refer to the Paper Migration Guide
+        /// https://www.dropbox.com/lp/developers/reference/paper-migration-guide.
 @objc
 public class DBXPaperPaperFolderCreateErrorInsufficientPermissions: DBXPaperPaperFolderCreateError {
     @objc
@@ -2402,6 +2565,7 @@ public class DBXPaperPaperFolderCreateResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -2427,6 +2591,7 @@ public class DBXPaperRemovePaperDocUser: DBXPaperRefPaperDoc {
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
 }
@@ -2436,15 +2601,10 @@ public class DBXPaperRemovePaperDocUser: DBXPaperRefPaperDoc {
 public class DBXPaperSharingPolicy: NSObject {
     /// This value applies to the non-team members.
     @objc
-    public var publicSharingPolicy: DBXPaperSharingPublicPolicyType? { guard let swift = swift.publicSharingPolicy else { return nil }
-        return DBXPaperSharingPublicPolicyType(swift: swift)
-    }
-
+    public var publicSharingPolicy: DBXPaperSharingPublicPolicyType? { guard let swift = swift.publicSharingPolicy else { return nil }; return DBXPaperSharingPublicPolicyType(swift: swift) }
     /// This value applies to the team members only. The value is null for all personal accounts.
     @objc
-    public var teamSharingPolicy: DBXPaperSharingTeamPolicyType? { guard let swift = swift.teamSharingPolicy else { return nil }
-        return DBXPaperSharingTeamPolicyType(swift: swift)
-    }
+    public var teamSharingPolicy: DBXPaperSharingTeamPolicyType? { guard let swift = swift.teamSharingPolicy else { return nil }; return DBXPaperSharingTeamPolicyType(swift: swift) }
 
     @objc
     public init(publicSharingPolicy: DBXPaperSharingPublicPolicyType?, teamSharingPolicy: DBXPaperSharingTeamPolicyType?) {
@@ -2456,6 +2616,7 @@ public class DBXPaperSharingPolicy: NSObject {
     public init(swift: Paper.SharingPolicy) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -2486,17 +2647,17 @@ public class DBXPaperSharingTeamPolicyType: NSObject {
 
     @objc
     public var asPeopleWithLinkCanEdit: DBXPaperSharingTeamPolicyTypePeopleWithLinkCanEdit? {
-        self as? DBXPaperSharingTeamPolicyTypePeopleWithLinkCanEdit
+        return self as? DBXPaperSharingTeamPolicyTypePeopleWithLinkCanEdit
     }
 
     @objc
     public var asPeopleWithLinkCanViewAndComment: DBXPaperSharingTeamPolicyTypePeopleWithLinkCanViewAndComment? {
-        self as? DBXPaperSharingTeamPolicyTypePeopleWithLinkCanViewAndComment
+        return self as? DBXPaperSharingTeamPolicyTypePeopleWithLinkCanViewAndComment
     }
 
     @objc
     public var asInviteOnly: DBXPaperSharingTeamPolicyTypeInviteOnly? {
-        self as? DBXPaperSharingTeamPolicyTypeInviteOnly
+        return self as? DBXPaperSharingTeamPolicyTypeInviteOnly
     }
 }
 
@@ -2557,22 +2718,22 @@ public class DBXPaperSharingPublicPolicyType: NSObject {
 
     @objc
     public var asPeopleWithLinkCanEdit: DBXPaperSharingPublicPolicyTypePeopleWithLinkCanEdit? {
-        self as? DBXPaperSharingPublicPolicyTypePeopleWithLinkCanEdit
+        return self as? DBXPaperSharingPublicPolicyTypePeopleWithLinkCanEdit
     }
 
     @objc
     public var asPeopleWithLinkCanViewAndComment: DBXPaperSharingPublicPolicyTypePeopleWithLinkCanViewAndComment? {
-        self as? DBXPaperSharingPublicPolicyTypePeopleWithLinkCanViewAndComment
+        return self as? DBXPaperSharingPublicPolicyTypePeopleWithLinkCanViewAndComment
     }
 
     @objc
     public var asInviteOnly: DBXPaperSharingPublicPolicyTypeInviteOnly? {
-        self as? DBXPaperSharingPublicPolicyTypeInviteOnly
+        return self as? DBXPaperSharingPublicPolicyTypeInviteOnly
     }
 
     @objc
     public var asDisabled: DBXPaperSharingPublicPolicyTypeDisabled? {
-        self as? DBXPaperSharingPublicPolicyTypeDisabled
+        return self as? DBXPaperSharingPublicPolicyTypeDisabled
     }
 }
 
@@ -2637,6 +2798,7 @@ public class DBXPaperUserInfoWithPermissionLevel: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -2666,17 +2828,17 @@ public class DBXPaperUserOnPaperDocFilter: NSObject {
 
     @objc
     public var asVisited: DBXPaperUserOnPaperDocFilterVisited? {
-        self as? DBXPaperUserOnPaperDocFilterVisited
+        return self as? DBXPaperUserOnPaperDocFilterVisited
     }
 
     @objc
     public var asShared: DBXPaperUserOnPaperDocFilterShared? {
-        self as? DBXPaperUserOnPaperDocFilterShared
+        return self as? DBXPaperUserOnPaperDocFilterShared
     }
 
     @objc
     public var asOther: DBXPaperUserOnPaperDocFilterOther? {
-        self as? DBXPaperUserOnPaperDocFilterOther
+        return self as? DBXPaperUserOnPaperDocFilterOther
     }
 }
 
@@ -2691,7 +2853,7 @@ public class DBXPaperUserOnPaperDocFilterVisited: DBXPaperUserOnPaperDocFilter {
 }
 
 /// All uses who are shared on the Paper doc. This includes all users who have visited the Paper doc as well as
-/// those who have not.
+        /// those who have not.
 @objc
 public class DBXPaperUserOnPaperDocFilterShared: DBXPaperUserOnPaperDocFilter {
     @objc
@@ -2710,3 +2872,4 @@ public class DBXPaperUserOnPaperDocFilterOther: DBXPaperUserOnPaperDocFilter {
         super.init(swift: swift)
     }
 }
+

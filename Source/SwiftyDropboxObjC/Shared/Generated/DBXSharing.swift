@@ -35,17 +35,17 @@ public class DBXSharingAccessInheritance: NSObject {
 
     @objc
     public var asInherit: DBXSharingAccessInheritanceInherit? {
-        self as? DBXSharingAccessInheritanceInherit
+        return self as? DBXSharingAccessInheritanceInherit
     }
 
     @objc
     public var asNoInherit: DBXSharingAccessInheritanceNoInherit? {
-        self as? DBXSharingAccessInheritanceNoInherit
+        return self as? DBXSharingAccessInheritanceNoInherit
     }
 
     @objc
     public var asOther: DBXSharingAccessInheritanceOther? {
-        self as? DBXSharingAccessInheritanceOther
+        return self as? DBXSharingAccessInheritanceOther
     }
 }
 
@@ -112,42 +112,42 @@ public class DBXSharingAccessLevel: NSObject {
 
     @objc
     public var asOwner: DBXSharingAccessLevelOwner? {
-        self as? DBXSharingAccessLevelOwner
+        return self as? DBXSharingAccessLevelOwner
     }
 
     @objc
     public var asEditor: DBXSharingAccessLevelEditor? {
-        self as? DBXSharingAccessLevelEditor
+        return self as? DBXSharingAccessLevelEditor
     }
 
     @objc
     public var asViewer: DBXSharingAccessLevelViewer? {
-        self as? DBXSharingAccessLevelViewer
+        return self as? DBXSharingAccessLevelViewer
     }
 
     @objc
     public var asViewerNoComment: DBXSharingAccessLevelViewerNoComment? {
-        self as? DBXSharingAccessLevelViewerNoComment
+        return self as? DBXSharingAccessLevelViewerNoComment
     }
 
     @objc
     public var asTraverse: DBXSharingAccessLevelTraverse? {
-        self as? DBXSharingAccessLevelTraverse
+        return self as? DBXSharingAccessLevelTraverse
     }
 
     @objc
     public var asNoAccess: DBXSharingAccessLevelNoAccess? {
-        self as? DBXSharingAccessLevelNoAccess
+        return self as? DBXSharingAccessLevelNoAccess
     }
 
     @objc
     public var asOther: DBXSharingAccessLevelOther? {
-        self as? DBXSharingAccessLevelOther
+        return self as? DBXSharingAccessLevelOther
     }
 }
 
 /// The collaborator is the owner of the shared folder. Owners can view and edit the shared folder as well as
-/// set the folder's policies using updateFolderPolicy.
+        /// set the folder's policies using updateFolderPolicy.
 @objc
 public class DBXSharingAccessLevelOwner: DBXSharingAccessLevel {
     @objc
@@ -198,8 +198,8 @@ public class DBXSharingAccessLevelTraverse: DBXSharingAccessLevel {
 }
 
 /// If there is a Righteous Link on the folder which grants access and the user has visited such link, they are
-/// allowed to perform certain action (i.e. add themselves to the folder) via the link access even
-/// though the user themselves are not a member on the shared folder yet.
+        /// allowed to perform certain action (i.e. add themselves to the folder) via the link access even
+        /// though the user themselves are not a member on the shared folder yet.
 @objc
 public class DBXSharingAccessLevelNoAccess: DBXSharingAccessLevel {
     @objc
@@ -245,17 +245,17 @@ public class DBXSharingAclUpdatePolicy: NSObject {
 
     @objc
     public var asOwner: DBXSharingAclUpdatePolicyOwner? {
-        self as? DBXSharingAclUpdatePolicyOwner
+        return self as? DBXSharingAclUpdatePolicyOwner
     }
 
     @objc
     public var asEditors: DBXSharingAclUpdatePolicyEditors? {
-        self as? DBXSharingAclUpdatePolicyEditors
+        return self as? DBXSharingAclUpdatePolicyEditors
     }
 
     @objc
     public var asOther: DBXSharingAclUpdatePolicyOther? {
-        self as? DBXSharingAclUpdatePolicyOther
+        return self as? DBXSharingAclUpdatePolicyOther
     }
 }
 
@@ -298,7 +298,7 @@ public class DBXSharingAddFileMemberArgs: NSObject {
     /// Members to add. Note that even an email address is given, this may result in a user being directly added to
     /// the membership if that email is the user's main account email.
     @objc
-    public var members: [DBXSharingMemberSelector] { swift.members.map { DBXSharingMemberSelector(swift: $0) } }
+    public var members: Array<DBXSharingMemberSelector> { swift.members.map { DBXSharingMemberSelector(swift: $0) } }
     /// Message to send to added members in their invitation.
     @objc
     public var customMessage: String? { swift.customMessage }
@@ -307,28 +307,17 @@ public class DBXSharingAddFileMemberArgs: NSObject {
     public var quiet: NSNumber { swift.quiet as NSNumber }
     /// AccessLevel union object, describing what access level we want to give new members.
     @objc
-    public var accessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.accessLevel) }
-    /// If the custom message should be added as a comment on the file.
+    public var accessLevel: DBXSharingAccessLevel? { guard let swift = swift.accessLevel else { return nil }; return DBXSharingAccessLevel(swift: swift) }
+    /// If the custom message should be added as a comment on the file. Only meant for Paper files.
     @objc
     public var addMessageAsComment: NSNumber { swift.addMessageAsComment as NSNumber }
+    /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
+    @objc
+    public var fpSealedResult: String? { swift.fpSealedResult }
 
     @objc
-    public init(
-        file: String,
-        members: [DBXSharingMemberSelector],
-        customMessage: String?,
-        quiet: NSNumber,
-        accessLevel: DBXSharingAccessLevel,
-        addMessageAsComment: NSNumber
-    ) {
-        self.swift = Sharing.AddFileMemberArgs(
-            file: file,
-            members: members.map(\.swift),
-            customMessage: customMessage,
-            quiet: quiet.boolValue,
-            accessLevel: accessLevel.swift,
-            addMessageAsComment: addMessageAsComment.boolValue
-        )
+    public init(file: String, members: Array<DBXSharingMemberSelector>, customMessage: String?, quiet: NSNumber, accessLevel: DBXSharingAccessLevel?, addMessageAsComment: NSNumber, fpSealedResult: String?) {
+        self.swift = Sharing.AddFileMemberArgs(file: file, members: members.map { $0.swift }, customMessage: customMessage, quiet: quiet.boolValue, accessLevel: accessLevel?.swift, addMessageAsComment: addMessageAsComment.boolValue, fpSealedResult: fpSealedResult)
     }
 
     let swift: Sharing.AddFileMemberArgs
@@ -336,6 +325,7 @@ public class DBXSharingAddFileMemberArgs: NSObject {
     public init(swift: Sharing.AddFileMemberArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -362,6 +352,8 @@ public class DBXSharingAddFileMemberError: NSObject {
             return DBXSharingAddFileMemberErrorRateLimit()
         case .invalidComment:
             return DBXSharingAddFileMemberErrorInvalidComment()
+        case .bannedMember:
+            return DBXSharingAddFileMemberErrorBannedMember()
         case .other:
             return DBXSharingAddFileMemberErrorOther()
         }
@@ -372,27 +364,32 @@ public class DBXSharingAddFileMemberError: NSObject {
 
     @objc
     public var asUserError: DBXSharingAddFileMemberErrorUserError? {
-        self as? DBXSharingAddFileMemberErrorUserError
+        return self as? DBXSharingAddFileMemberErrorUserError
     }
 
     @objc
     public var asAccessError: DBXSharingAddFileMemberErrorAccessError? {
-        self as? DBXSharingAddFileMemberErrorAccessError
+        return self as? DBXSharingAddFileMemberErrorAccessError
     }
 
     @objc
     public var asRateLimit: DBXSharingAddFileMemberErrorRateLimit? {
-        self as? DBXSharingAddFileMemberErrorRateLimit
+        return self as? DBXSharingAddFileMemberErrorRateLimit
     }
 
     @objc
     public var asInvalidComment: DBXSharingAddFileMemberErrorInvalidComment? {
-        self as? DBXSharingAddFileMemberErrorInvalidComment
+        return self as? DBXSharingAddFileMemberErrorInvalidComment
+    }
+
+    @objc
+    public var asBannedMember: DBXSharingAddFileMemberErrorBannedMember? {
+        return self as? DBXSharingAddFileMemberErrorBannedMember
     }
 
     @objc
     public var asOther: DBXSharingAddFileMemberErrorOther? {
-        self as? DBXSharingAddFileMemberErrorOther
+        return self as? DBXSharingAddFileMemberErrorOther
     }
 }
 
@@ -404,7 +401,7 @@ public class DBXSharingAddFileMemberErrorUserError: DBXSharingAddFileMemberError
 
     @objc
     public init(_ arg: DBXSharingSharingUserError) {
-        self.userError = arg
+        userError = arg
         let swift = Sharing.AddFileMemberError.userError(arg.swift)
         super.init(swift: swift)
     }
@@ -418,7 +415,7 @@ public class DBXSharingAddFileMemberErrorAccessError: DBXSharingAddFileMemberErr
 
     @objc
     public init(_ arg: DBXSharingSharingFileAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.AddFileMemberError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -444,6 +441,16 @@ public class DBXSharingAddFileMemberErrorInvalidComment: DBXSharingAddFileMember
     }
 }
 
+/// The current user has been banned for abuse reasons.
+@objc
+public class DBXSharingAddFileMemberErrorBannedMember: DBXSharingAddFileMemberError {
+    @objc
+    public init() {
+        let swift = Sharing.AddFileMemberError.bannedMember
+        super.init(swift: swift)
+    }
+}
+
 /// An unspecified error.
 @objc
 public class DBXSharingAddFileMemberErrorOther: DBXSharingAddFileMemberError {
@@ -462,22 +469,20 @@ public class DBXSharingAddFolderMemberArg: NSObject {
     public var sharedFolderId: String { swift.sharedFolderId }
     /// The intended list of members to add.  Added members will receive invites to join the shared folder.
     @objc
-    public var members: [DBXSharingAddMember] { swift.members.map { DBXSharingAddMember(swift: $0) } }
+    public var members: Array<DBXSharingAddMember> { swift.members.map { DBXSharingAddMember(swift: $0) } }
     /// Whether added members should be notified via email and device notifications of their invite.
     @objc
     public var quiet: NSNumber { swift.quiet as NSNumber }
     /// Optional message to display to added members in their invitation.
     @objc
     public var customMessage: String? { swift.customMessage }
+    /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
+    @objc
+    public var fpSealedResult: String? { swift.fpSealedResult }
 
     @objc
-    public init(sharedFolderId: String, members: [DBXSharingAddMember], quiet: NSNumber, customMessage: String?) {
-        self.swift = Sharing.AddFolderMemberArg(
-            sharedFolderId: sharedFolderId,
-            members: members.map(\.swift),
-            quiet: quiet.boolValue,
-            customMessage: customMessage
-        )
+    public init(sharedFolderId: String, members: Array<DBXSharingAddMember>, quiet: NSNumber, customMessage: String?, fpSealedResult: String?) {
+        self.swift = Sharing.AddFolderMemberArg(sharedFolderId: sharedFolderId, members: members.map { $0.swift }, quiet: quiet.boolValue, customMessage: customMessage, fpSealedResult: fpSealedResult)
     }
 
     let swift: Sharing.AddFolderMemberArg
@@ -485,6 +490,7 @@ public class DBXSharingAddFolderMemberArg: NSObject {
     public init(swift: Sharing.AddFolderMemberArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -541,72 +547,72 @@ public class DBXSharingAddFolderMemberError: NSObject {
 
     @objc
     public var asAccessError: DBXSharingAddFolderMemberErrorAccessError? {
-        self as? DBXSharingAddFolderMemberErrorAccessError
+        return self as? DBXSharingAddFolderMemberErrorAccessError
     }
 
     @objc
     public var asEmailUnverified: DBXSharingAddFolderMemberErrorEmailUnverified? {
-        self as? DBXSharingAddFolderMemberErrorEmailUnverified
+        return self as? DBXSharingAddFolderMemberErrorEmailUnverified
     }
 
     @objc
     public var asBannedMember: DBXSharingAddFolderMemberErrorBannedMember? {
-        self as? DBXSharingAddFolderMemberErrorBannedMember
+        return self as? DBXSharingAddFolderMemberErrorBannedMember
     }
 
     @objc
     public var asBadMember: DBXSharingAddFolderMemberErrorBadMember? {
-        self as? DBXSharingAddFolderMemberErrorBadMember
+        return self as? DBXSharingAddFolderMemberErrorBadMember
     }
 
     @objc
     public var asCantShareOutsideTeam: DBXSharingAddFolderMemberErrorCantShareOutsideTeam? {
-        self as? DBXSharingAddFolderMemberErrorCantShareOutsideTeam
+        return self as? DBXSharingAddFolderMemberErrorCantShareOutsideTeam
     }
 
     @objc
     public var asTooManyMembers: DBXSharingAddFolderMemberErrorTooManyMembers? {
-        self as? DBXSharingAddFolderMemberErrorTooManyMembers
+        return self as? DBXSharingAddFolderMemberErrorTooManyMembers
     }
 
     @objc
     public var asTooManyPendingInvites: DBXSharingAddFolderMemberErrorTooManyPendingInvites? {
-        self as? DBXSharingAddFolderMemberErrorTooManyPendingInvites
+        return self as? DBXSharingAddFolderMemberErrorTooManyPendingInvites
     }
 
     @objc
     public var asRateLimit: DBXSharingAddFolderMemberErrorRateLimit? {
-        self as? DBXSharingAddFolderMemberErrorRateLimit
+        return self as? DBXSharingAddFolderMemberErrorRateLimit
     }
 
     @objc
     public var asTooManyInvitees: DBXSharingAddFolderMemberErrorTooManyInvitees? {
-        self as? DBXSharingAddFolderMemberErrorTooManyInvitees
+        return self as? DBXSharingAddFolderMemberErrorTooManyInvitees
     }
 
     @objc
     public var asInsufficientPlan: DBXSharingAddFolderMemberErrorInsufficientPlan? {
-        self as? DBXSharingAddFolderMemberErrorInsufficientPlan
+        return self as? DBXSharingAddFolderMemberErrorInsufficientPlan
     }
 
     @objc
     public var asTeamFolder: DBXSharingAddFolderMemberErrorTeamFolder? {
-        self as? DBXSharingAddFolderMemberErrorTeamFolder
+        return self as? DBXSharingAddFolderMemberErrorTeamFolder
     }
 
     @objc
     public var asNoPermission: DBXSharingAddFolderMemberErrorNoPermission? {
-        self as? DBXSharingAddFolderMemberErrorNoPermission
+        return self as? DBXSharingAddFolderMemberErrorNoPermission
     }
 
     @objc
     public var asInvalidSharedFolder: DBXSharingAddFolderMemberErrorInvalidSharedFolder? {
-        self as? DBXSharingAddFolderMemberErrorInvalidSharedFolder
+        return self as? DBXSharingAddFolderMemberErrorInvalidSharedFolder
     }
 
     @objc
     public var asOther: DBXSharingAddFolderMemberErrorOther? {
-        self as? DBXSharingAddFolderMemberErrorOther
+        return self as? DBXSharingAddFolderMemberErrorOther
     }
 }
 
@@ -618,14 +624,14 @@ public class DBXSharingAddFolderMemberErrorAccessError: DBXSharingAddFolderMembe
 
     @objc
     public init(_ arg: DBXSharingSharedFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.AddFolderMemberError.accessError(arg.swift)
         super.init(swift: swift)
     }
 }
 
 /// This user's email address is not verified. This functionality is only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXSharingAddFolderMemberErrorEmailUnverified: DBXSharingAddFolderMemberError {
     @objc
@@ -653,7 +659,7 @@ public class DBXSharingAddFolderMemberErrorBadMember: DBXSharingAddFolderMemberE
 
     @objc
     public init(_ arg: DBXSharingAddMemberSelectorError) {
-        self.badMember = arg
+        badMember = arg
         let swift = Sharing.AddFolderMemberError.badMember(arg.swift)
         super.init(swift: swift)
     }
@@ -677,7 +683,7 @@ public class DBXSharingAddFolderMemberErrorTooManyMembers: DBXSharingAddFolderMe
 
     @objc
     public init(_ arg: NSNumber) {
-        self.tooManyMembers = arg
+        tooManyMembers = arg
         let swift = Sharing.AddFolderMemberError.tooManyMembers(arg.uint64Value)
         super.init(swift: swift)
     }
@@ -691,7 +697,7 @@ public class DBXSharingAddFolderMemberErrorTooManyPendingInvites: DBXSharingAddF
 
     @objc
     public init(_ arg: NSNumber) {
-        self.tooManyPendingInvites = arg
+        tooManyPendingInvites = arg
         let swift = Sharing.AddFolderMemberError.tooManyPendingInvites(arg.uint64Value)
         super.init(swift: swift)
     }
@@ -718,7 +724,7 @@ public class DBXSharingAddFolderMemberErrorTooManyInvitees: DBXSharingAddFolderM
 }
 
 /// The current user's account doesn't support this action. An example of this is when adding a read-only
-/// member. This action can only be performed by users that have upgraded to a Pro or Business plan.
+        /// member. This action can only be performed by users that have upgraded to a Pro or Business plan.
 @objc
 public class DBXSharingAddFolderMemberErrorInsufficientPlan: DBXSharingAddFolderMemberError {
     @objc
@@ -748,7 +754,7 @@ public class DBXSharingAddFolderMemberErrorNoPermission: DBXSharingAddFolderMemb
     }
 }
 
-/// Invalid shared folder error will be returned as an access_error.
+/// Field is deprecated. Invalid shared folder error will be returned as an access_error.
 @objc
 public class DBXSharingAddFolderMemberErrorInvalidSharedFolder: DBXSharingAddFolderMemberError {
     @objc
@@ -776,11 +782,11 @@ public class DBXSharingAddMember: NSObject {
     public var member: DBXSharingMemberSelector { DBXSharingMemberSelector(swift: swift.member) }
     /// The access level to grant member to the shared folder.  owner in AccessLevel is disallowed.
     @objc
-    public var accessLevel: DBXSharingAccessLevel { DBXSharingAccessLevel(swift: swift.accessLevel) }
+    public var accessLevel: DBXSharingAccessLevel? { guard let swift = swift.accessLevel else { return nil }; return DBXSharingAccessLevel(swift: swift) }
 
     @objc
-    public init(member: DBXSharingMemberSelector, accessLevel: DBXSharingAccessLevel) {
-        self.swift = Sharing.AddMember(member: member.swift, accessLevel: accessLevel.swift)
+    public init(member: DBXSharingMemberSelector, accessLevel: DBXSharingAccessLevel?) {
+        self.swift = Sharing.AddMember(member: member.swift, accessLevel: accessLevel?.swift)
     }
 
     let swift: Sharing.AddMember
@@ -788,6 +794,7 @@ public class DBXSharingAddMember: NSObject {
     public init(swift: Sharing.AddMember) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -812,6 +819,8 @@ public class DBXSharingAddMemberSelectorError: NSObject {
         case .invalidEmail(let swiftArg):
             let arg = swiftArg
             return DBXSharingAddMemberSelectorErrorInvalidEmail(arg)
+        case .invalidGroup:
+            return DBXSharingAddMemberSelectorErrorInvalidGroup()
         case .unverifiedDropboxId(let swiftArg):
             let arg = swiftArg
             return DBXSharingAddMemberSelectorErrorUnverifiedDropboxId(arg)
@@ -829,37 +838,42 @@ public class DBXSharingAddMemberSelectorError: NSObject {
 
     @objc
     public var asAutomaticGroup: DBXSharingAddMemberSelectorErrorAutomaticGroup? {
-        self as? DBXSharingAddMemberSelectorErrorAutomaticGroup
+        return self as? DBXSharingAddMemberSelectorErrorAutomaticGroup
     }
 
     @objc
     public var asInvalidDropboxId: DBXSharingAddMemberSelectorErrorInvalidDropboxId? {
-        self as? DBXSharingAddMemberSelectorErrorInvalidDropboxId
+        return self as? DBXSharingAddMemberSelectorErrorInvalidDropboxId
     }
 
     @objc
     public var asInvalidEmail: DBXSharingAddMemberSelectorErrorInvalidEmail? {
-        self as? DBXSharingAddMemberSelectorErrorInvalidEmail
+        return self as? DBXSharingAddMemberSelectorErrorInvalidEmail
+    }
+
+    @objc
+    public var asInvalidGroup: DBXSharingAddMemberSelectorErrorInvalidGroup? {
+        return self as? DBXSharingAddMemberSelectorErrorInvalidGroup
     }
 
     @objc
     public var asUnverifiedDropboxId: DBXSharingAddMemberSelectorErrorUnverifiedDropboxId? {
-        self as? DBXSharingAddMemberSelectorErrorUnverifiedDropboxId
+        return self as? DBXSharingAddMemberSelectorErrorUnverifiedDropboxId
     }
 
     @objc
     public var asGroupDeleted: DBXSharingAddMemberSelectorErrorGroupDeleted? {
-        self as? DBXSharingAddMemberSelectorErrorGroupDeleted
+        return self as? DBXSharingAddMemberSelectorErrorGroupDeleted
     }
 
     @objc
     public var asGroupNotOnTeam: DBXSharingAddMemberSelectorErrorGroupNotOnTeam? {
-        self as? DBXSharingAddMemberSelectorErrorGroupNotOnTeam
+        return self as? DBXSharingAddMemberSelectorErrorGroupNotOnTeam
     }
 
     @objc
     public var asOther: DBXSharingAddMemberSelectorErrorOther? {
-        self as? DBXSharingAddMemberSelectorErrorOther
+        return self as? DBXSharingAddMemberSelectorErrorOther
     }
 }
 
@@ -881,7 +895,7 @@ public class DBXSharingAddMemberSelectorErrorInvalidDropboxId: DBXSharingAddMemb
 
     @objc
     public init(_ arg: String) {
-        self.invalidDropboxId = arg
+        invalidDropboxId = arg
         let swift = Sharing.AddMemberSelectorError.invalidDropboxId(arg)
         super.init(swift: swift)
     }
@@ -895,14 +909,24 @@ public class DBXSharingAddMemberSelectorErrorInvalidEmail: DBXSharingAddMemberSe
 
     @objc
     public init(_ arg: String) {
-        self.invalidEmail = arg
+        invalidEmail = arg
         let swift = Sharing.AddMemberSelectorError.invalidEmail(arg)
         super.init(swift: swift)
     }
 }
 
+/// Provided group is invalid.
+@objc
+public class DBXSharingAddMemberSelectorErrorInvalidGroup: DBXSharingAddMemberSelectorError {
+    @objc
+    public init() {
+        let swift = Sharing.AddMemberSelectorError.invalidGroup
+        super.init(swift: swift)
+    }
+}
+
 /// The value is the ID of the Dropbox user with an unverified email address. Invite unverified users by email
-/// address instead of by their Dropbox ID.
+        /// address instead of by their Dropbox ID.
 @objc
 public class DBXSharingAddMemberSelectorErrorUnverifiedDropboxId: DBXSharingAddMemberSelectorError {
     @objc
@@ -910,7 +934,7 @@ public class DBXSharingAddMemberSelectorErrorUnverifiedDropboxId: DBXSharingAddM
 
     @objc
     public init(_ arg: String) {
-        self.unverifiedDropboxId = arg
+        unverifiedDropboxId = arg
         let swift = Sharing.AddMemberSelectorError.unverifiedDropboxId(arg)
         super.init(swift: swift)
     }
@@ -973,17 +997,17 @@ public class DBXSharingRequestedVisibility: NSObject {
 
     @objc
     public var asPublic_: DBXSharingRequestedVisibilityPublic_? {
-        self as? DBXSharingRequestedVisibilityPublic_
+        return self as? DBXSharingRequestedVisibilityPublic_
     }
 
     @objc
     public var asTeamOnly: DBXSharingRequestedVisibilityTeamOnly? {
-        self as? DBXSharingRequestedVisibilityTeamOnly
+        return self as? DBXSharingRequestedVisibilityTeamOnly
     }
 
     @objc
     public var asPassword: DBXSharingRequestedVisibilityPassword? {
-        self as? DBXSharingRequestedVisibilityPassword
+        return self as? DBXSharingRequestedVisibilityPassword
     }
 }
 
@@ -1054,42 +1078,42 @@ public class DBXSharingResolvedVisibility: NSObject {
 
     @objc
     public var asPublic_: DBXSharingResolvedVisibilityPublic_? {
-        self as? DBXSharingResolvedVisibilityPublic_
+        return self as? DBXSharingResolvedVisibilityPublic_
     }
 
     @objc
     public var asTeamOnly: DBXSharingResolvedVisibilityTeamOnly? {
-        self as? DBXSharingResolvedVisibilityTeamOnly
+        return self as? DBXSharingResolvedVisibilityTeamOnly
     }
 
     @objc
     public var asPassword: DBXSharingResolvedVisibilityPassword? {
-        self as? DBXSharingResolvedVisibilityPassword
+        return self as? DBXSharingResolvedVisibilityPassword
     }
 
     @objc
     public var asTeamAndPassword: DBXSharingResolvedVisibilityTeamAndPassword? {
-        self as? DBXSharingResolvedVisibilityTeamAndPassword
+        return self as? DBXSharingResolvedVisibilityTeamAndPassword
     }
 
     @objc
     public var asSharedFolderOnly: DBXSharingResolvedVisibilitySharedFolderOnly? {
-        self as? DBXSharingResolvedVisibilitySharedFolderOnly
+        return self as? DBXSharingResolvedVisibilitySharedFolderOnly
     }
 
     @objc
     public var asNoOne: DBXSharingResolvedVisibilityNoOne? {
-        self as? DBXSharingResolvedVisibilityNoOne
+        return self as? DBXSharingResolvedVisibilityNoOne
     }
 
     @objc
     public var asOnlyYou: DBXSharingResolvedVisibilityOnlyYou? {
-        self as? DBXSharingResolvedVisibilityOnlyYou
+        return self as? DBXSharingResolvedVisibilityOnlyYou
     }
 
     @objc
     public var asOther: DBXSharingResolvedVisibilityOther? {
-        self as? DBXSharingResolvedVisibilityOther
+        return self as? DBXSharingResolvedVisibilityOther
     }
 }
 
@@ -1144,8 +1168,8 @@ public class DBXSharingResolvedVisibilitySharedFolderOnly: DBXSharingResolvedVis
 }
 
 /// The link merely points the user to the content, and does not grant any additional rights. Existing members
-/// of the content who use this link can only access the content with their pre-existing access rights.
-/// Either on the file directly, or inherited from a parent folder.
+        /// of the content who use this link can only access the content with their pre-existing access rights.
+        /// Either on the file directly, or inherited from a parent folder.
 @objc
 public class DBXSharingResolvedVisibilityNoOne: DBXSharingResolvedVisibility {
     @objc
@@ -1210,42 +1234,42 @@ public class DBXSharingAlphaResolvedVisibility: NSObject {
 
     @objc
     public var asPublic_: DBXSharingAlphaResolvedVisibilityPublic_? {
-        self as? DBXSharingAlphaResolvedVisibilityPublic_
+        return self as? DBXSharingAlphaResolvedVisibilityPublic_
     }
 
     @objc
     public var asTeamOnly: DBXSharingAlphaResolvedVisibilityTeamOnly? {
-        self as? DBXSharingAlphaResolvedVisibilityTeamOnly
+        return self as? DBXSharingAlphaResolvedVisibilityTeamOnly
     }
 
     @objc
     public var asPassword: DBXSharingAlphaResolvedVisibilityPassword? {
-        self as? DBXSharingAlphaResolvedVisibilityPassword
+        return self as? DBXSharingAlphaResolvedVisibilityPassword
     }
 
     @objc
     public var asTeamAndPassword: DBXSharingAlphaResolvedVisibilityTeamAndPassword? {
-        self as? DBXSharingAlphaResolvedVisibilityTeamAndPassword
+        return self as? DBXSharingAlphaResolvedVisibilityTeamAndPassword
     }
 
     @objc
     public var asSharedFolderOnly: DBXSharingAlphaResolvedVisibilitySharedFolderOnly? {
-        self as? DBXSharingAlphaResolvedVisibilitySharedFolderOnly
+        return self as? DBXSharingAlphaResolvedVisibilitySharedFolderOnly
     }
 
     @objc
     public var asNoOne: DBXSharingAlphaResolvedVisibilityNoOne? {
-        self as? DBXSharingAlphaResolvedVisibilityNoOne
+        return self as? DBXSharingAlphaResolvedVisibilityNoOne
     }
 
     @objc
     public var asOnlyYou: DBXSharingAlphaResolvedVisibilityOnlyYou? {
-        self as? DBXSharingAlphaResolvedVisibilityOnlyYou
+        return self as? DBXSharingAlphaResolvedVisibilityOnlyYou
     }
 
     @objc
     public var asOther: DBXSharingAlphaResolvedVisibilityOther? {
-        self as? DBXSharingAlphaResolvedVisibilityOther
+        return self as? DBXSharingAlphaResolvedVisibilityOther
     }
 }
 
@@ -1300,8 +1324,8 @@ public class DBXSharingAlphaResolvedVisibilitySharedFolderOnly: DBXSharingAlphaR
 }
 
 /// The link merely points the user to the content, and does not grant any additional rights. Existing members
-/// of the content who use this link can only access the content with their pre-existing access rights.
-/// Either on the file directly, or inherited from a parent folder.
+        /// of the content who use this link can only access the content with their pre-existing access rights.
+        /// Either on the file directly, or inherited from a parent folder.
 @objc
 public class DBXSharingAlphaResolvedVisibilityNoOne: DBXSharingAlphaResolvedVisibility {
     @objc
@@ -1349,6 +1373,7 @@ public class DBXSharingAudienceExceptionContentInfo: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -1363,11 +1388,11 @@ public class DBXSharingAudienceExceptions: NSObject {
     /// A truncated list of some of the content that is an exception. The length of this list could be smaller than
     /// the count since it is only a sample but will not be empty as long as count is not 0.
     @objc
-    public var exceptions: [DBXSharingAudienceExceptionContentInfo] { swift.exceptions.map { DBXSharingAudienceExceptionContentInfo(swift: $0) } }
+    public var exceptions: Array<DBXSharingAudienceExceptionContentInfo> { swift.exceptions.map { DBXSharingAudienceExceptionContentInfo(swift: $0) } }
 
     @objc
-    public init(count: NSNumber, exceptions: [DBXSharingAudienceExceptionContentInfo]) {
-        self.swift = Sharing.AudienceExceptions(count: count.uint32Value, exceptions: exceptions.map(\.swift))
+    public init(count: NSNumber, exceptions: Array<DBXSharingAudienceExceptionContentInfo>) {
+        self.swift = Sharing.AudienceExceptions(count: count.uint32Value, exceptions: exceptions.map { $0.swift })
     }
 
     let swift: Sharing.AudienceExceptions
@@ -1375,6 +1400,7 @@ public class DBXSharingAudienceExceptions: NSObject {
     public init(swift: Sharing.AudienceExceptions) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1404,8 +1430,78 @@ public class DBXSharingAudienceRestrictingSharedFolder: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
+}
+
+/// Enumerates acceptable values for team's ChangeLinkExpirationPolicy setting.
+@objc
+public class DBXSharingChangeLinkExpirationPolicy: NSObject {
+    let swift: Sharing.ChangeLinkExpirationPolicy
+
+    public init(swift: Sharing.ChangeLinkExpirationPolicy) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Sharing.ChangeLinkExpirationPolicy) -> DBXSharingChangeLinkExpirationPolicy {
+        switch swift {
+        case .allowed:
+            return DBXSharingChangeLinkExpirationPolicyAllowed()
+        case .notAllowed:
+            return DBXSharingChangeLinkExpirationPolicyNotAllowed()
+        case .other:
+            return DBXSharingChangeLinkExpirationPolicyOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asAllowed: DBXSharingChangeLinkExpirationPolicyAllowed? {
+        return self as? DBXSharingChangeLinkExpirationPolicyAllowed
+    }
+
+    @objc
+    public var asNotAllowed: DBXSharingChangeLinkExpirationPolicyNotAllowed? {
+        return self as? DBXSharingChangeLinkExpirationPolicyNotAllowed
+    }
+
+    @objc
+    public var asOther: DBXSharingChangeLinkExpirationPolicyOther? {
+        return self as? DBXSharingChangeLinkExpirationPolicyOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXSharingChangeLinkExpirationPolicyAllowed: DBXSharingChangeLinkExpirationPolicy {
+    @objc
+    public init() {
+        let swift = Sharing.ChangeLinkExpirationPolicy.allowed
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXSharingChangeLinkExpirationPolicyNotAllowed: DBXSharingChangeLinkExpirationPolicy {
+    @objc
+    public init() {
+        let swift = Sharing.ChangeLinkExpirationPolicy.notAllowed
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXSharingChangeLinkExpirationPolicyOther: DBXSharingChangeLinkExpirationPolicy {
+    @objc
+    public init() {
+        let swift = Sharing.ChangeLinkExpirationPolicy.other
+        super.init(swift: swift)
+    }
 }
 
 /// Metadata for a shared link. This can be either a PathLinkMetadata or CollectionLinkMetadata.
@@ -1450,12 +1546,14 @@ public class DBXSharingLinkMetadata: NSObject {
 /// Metadata for a collection-based shared link.
 @objc
 public class DBXSharingCollectionLinkMetadata: DBXSharingLinkMetadata {
+
     let subSwift: Sharing.CollectionLinkMetadata
 
     public init(swift: Sharing.CollectionLinkMetadata) {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -1467,15 +1565,13 @@ public class DBXSharingCreateSharedLinkArg: NSObject {
     /// The path to share.
     @objc
     public var path: String { swift.path }
-    /// (no description)
+    /// Field is deprecated. None
     @objc
     public var shortUrl: NSNumber { swift.shortUrl as NSNumber }
     /// If it's okay to share a path that does not yet exist, set this to either file in PendingUploadMode or folder
     /// in PendingUploadMode to indicate whether to assume it's a file or folder.
     @objc
-    public var pendingUpload: DBXSharingPendingUploadMode? { guard let swift = swift.pendingUpload else { return nil }
-        return DBXSharingPendingUploadMode(swift: swift)
-    }
+    public var pendingUpload: DBXSharingPendingUploadMode? { guard let swift = swift.pendingUpload else { return nil }; return DBXSharingPendingUploadMode(swift: swift) }
 
     @objc
     public init(path: String, shortUrl: NSNumber, pendingUpload: DBXSharingPendingUploadMode?) {
@@ -1487,6 +1583,7 @@ public class DBXSharingCreateSharedLinkArg: NSObject {
     public init(swift: Sharing.CreateSharedLinkArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1516,12 +1613,12 @@ public class DBXSharingCreateSharedLinkError: NSObject {
 
     @objc
     public var asPath: DBXSharingCreateSharedLinkErrorPath? {
-        self as? DBXSharingCreateSharedLinkErrorPath
+        return self as? DBXSharingCreateSharedLinkErrorPath
     }
 
     @objc
     public var asOther: DBXSharingCreateSharedLinkErrorOther? {
-        self as? DBXSharingCreateSharedLinkErrorOther
+        return self as? DBXSharingCreateSharedLinkErrorOther
     }
 }
 
@@ -1533,7 +1630,7 @@ public class DBXSharingCreateSharedLinkErrorPath: DBXSharingCreateSharedLinkErro
 
     @objc
     public init(_ arg: DBXFilesLookupError) {
-        self.path = arg
+        path = arg
         let swift = Sharing.CreateSharedLinkError.path(arg.swift)
         super.init(swift: swift)
     }
@@ -1557,9 +1654,7 @@ public class DBXSharingCreateSharedLinkWithSettingsArg: NSObject {
     public var path: String { swift.path }
     /// The requested settings for the newly created shared link.
     @objc
-    public var settings: DBXSharingSharedLinkSettings? { guard let swift = swift.settings else { return nil }
-        return DBXSharingSharedLinkSettings(swift: swift)
-    }
+    public var settings: DBXSharingSharedLinkSettings? { guard let swift = swift.settings else { return nil }; return DBXSharingSharedLinkSettings(swift: swift) }
 
     @objc
     public init(path: String, settings: DBXSharingSharedLinkSettings?) {
@@ -1571,6 +1666,7 @@ public class DBXSharingCreateSharedLinkWithSettingsArg: NSObject {
     public init(swift: Sharing.CreateSharedLinkWithSettingsArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1601,6 +1697,10 @@ public class DBXSharingCreateSharedLinkWithSettingsError: NSObject {
             return DBXSharingCreateSharedLinkWithSettingsErrorSettingsError(arg)
         case .accessDenied:
             return DBXSharingCreateSharedLinkWithSettingsErrorAccessDenied()
+        case .bannedMember:
+            return DBXSharingCreateSharedLinkWithSettingsErrorBannedMember()
+        case .tooManySharedFolders:
+            return DBXSharingCreateSharedLinkWithSettingsErrorTooManySharedFolders()
         }
     }
 
@@ -1609,27 +1709,37 @@ public class DBXSharingCreateSharedLinkWithSettingsError: NSObject {
 
     @objc
     public var asPath: DBXSharingCreateSharedLinkWithSettingsErrorPath? {
-        self as? DBXSharingCreateSharedLinkWithSettingsErrorPath
+        return self as? DBXSharingCreateSharedLinkWithSettingsErrorPath
     }
 
     @objc
     public var asEmailNotVerified: DBXSharingCreateSharedLinkWithSettingsErrorEmailNotVerified? {
-        self as? DBXSharingCreateSharedLinkWithSettingsErrorEmailNotVerified
+        return self as? DBXSharingCreateSharedLinkWithSettingsErrorEmailNotVerified
     }
 
     @objc
     public var asSharedLinkAlreadyExists: DBXSharingCreateSharedLinkWithSettingsErrorSharedLinkAlreadyExists? {
-        self as? DBXSharingCreateSharedLinkWithSettingsErrorSharedLinkAlreadyExists
+        return self as? DBXSharingCreateSharedLinkWithSettingsErrorSharedLinkAlreadyExists
     }
 
     @objc
     public var asSettingsError: DBXSharingCreateSharedLinkWithSettingsErrorSettingsError? {
-        self as? DBXSharingCreateSharedLinkWithSettingsErrorSettingsError
+        return self as? DBXSharingCreateSharedLinkWithSettingsErrorSettingsError
     }
 
     @objc
     public var asAccessDenied: DBXSharingCreateSharedLinkWithSettingsErrorAccessDenied? {
-        self as? DBXSharingCreateSharedLinkWithSettingsErrorAccessDenied
+        return self as? DBXSharingCreateSharedLinkWithSettingsErrorAccessDenied
+    }
+
+    @objc
+    public var asBannedMember: DBXSharingCreateSharedLinkWithSettingsErrorBannedMember? {
+        return self as? DBXSharingCreateSharedLinkWithSettingsErrorBannedMember
+    }
+
+    @objc
+    public var asTooManySharedFolders: DBXSharingCreateSharedLinkWithSettingsErrorTooManySharedFolders? {
+        return self as? DBXSharingCreateSharedLinkWithSettingsErrorTooManySharedFolders
     }
 }
 
@@ -1641,14 +1751,14 @@ public class DBXSharingCreateSharedLinkWithSettingsErrorPath: DBXSharingCreateSh
 
     @objc
     public init(_ arg: DBXFilesLookupError) {
-        self.path = arg
+        path = arg
         let swift = Sharing.CreateSharedLinkWithSettingsError.path(arg.swift)
         super.init(swift: swift)
     }
 }
 
 /// This user's email address is not verified. This functionality is only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXSharingCreateSharedLinkWithSettingsErrorEmailNotVerified: DBXSharingCreateSharedLinkWithSettingsError {
     @objc
@@ -1658,8 +1768,9 @@ public class DBXSharingCreateSharedLinkWithSettingsErrorEmailNotVerified: DBXSha
     }
 }
 
-/// The shared link already exists. You can call listSharedLinks to get the  existing link, or use the provided
-/// metadata if it is returned.
+/// The shared link already exists. You can call listSharedLinks to get the existing link, or use the provided
+        /// metadata if it is returned. Existing link metadata will not be returned if custom settings were
+        /// specified in the request that could make the existing link incompatible with the requested settings.
 @objc
 public class DBXSharingCreateSharedLinkWithSettingsErrorSharedLinkAlreadyExists: DBXSharingCreateSharedLinkWithSettingsError {
     @objc
@@ -1667,7 +1778,7 @@ public class DBXSharingCreateSharedLinkWithSettingsErrorSharedLinkAlreadyExists:
 
     @objc
     public init(_ arg: DBXSharingSharedLinkAlreadyExistsMetadata?) {
-        self.sharedLinkAlreadyExists = arg
+        sharedLinkAlreadyExists = arg
         let swift = Sharing.CreateSharedLinkWithSettingsError.sharedLinkAlreadyExists(arg?.swift)
         super.init(swift: swift)
     }
@@ -1681,15 +1792,15 @@ public class DBXSharingCreateSharedLinkWithSettingsErrorSettingsError: DBXSharin
 
     @objc
     public init(_ arg: DBXSharingSharedLinkSettingsError) {
-        self.settingsError = arg
+        settingsError = arg
         let swift = Sharing.CreateSharedLinkWithSettingsError.settingsError(arg.swift)
         super.init(swift: swift)
     }
 }
 
-/// The user is not allowed to create a shared link to the specified file. For  example, this can occur if the
-/// file is restricted or if the user's links are  banned
-/// https://help.dropbox.com/files-folders/share/banned-links.
+/// The user is not allowed to create a shared link to the specified file. For example, this can occur if the
+        /// file is restricted or if the user's links are banned
+        /// https://help.dropbox.com/files-folders/share/banned-links.
 @objc
 public class DBXSharingCreateSharedLinkWithSettingsErrorAccessDenied: DBXSharingCreateSharedLinkWithSettingsError {
     @objc
@@ -1699,60 +1810,59 @@ public class DBXSharingCreateSharedLinkWithSettingsErrorAccessDenied: DBXSharing
     }
 }
 
+/// The current user has been banned https://help.dropbox.com/files-folders/share/banned-links for abuse
+        /// reasons.
+@objc
+public class DBXSharingCreateSharedLinkWithSettingsErrorBannedMember: DBXSharingCreateSharedLinkWithSettingsError {
+    @objc
+    public init() {
+        let swift = Sharing.CreateSharedLinkWithSettingsError.bannedMember
+        super.init(swift: swift)
+    }
+}
+
+/// Your Dropbox folder will have too many shared folders after the operation.
+        /// https://help.dropbox.com/share/shared-folder-faq#Is-there-a-limit-to-the-number-of-shared-folders-I-can-create
+@objc
+public class DBXSharingCreateSharedLinkWithSettingsErrorTooManySharedFolders: DBXSharingCreateSharedLinkWithSettingsError {
+    @objc
+    public init() {
+        let swift = Sharing.CreateSharedLinkWithSettingsError.tooManySharedFolders
+        super.init(swift: swift)
+    }
+}
+
 /// Objective-C compatible SharedContentLinkMetadataBase struct
 @objc
 public class DBXSharingSharedContentLinkMetadataBase: NSObject {
     /// The access level on the link for this file.
     @objc
-    public var accessLevel: DBXSharingAccessLevel? { guard let swift = swift.accessLevel else { return nil }
-        return DBXSharingAccessLevel(swift: swift)
-    }
-
+    public var accessLevel: DBXSharingAccessLevel? { guard let swift = swift.accessLevel else { return nil }; return DBXSharingAccessLevel(swift: swift) }
     /// The audience options that are available for the content. Some audience options may be unavailable. For
     /// example, team_only may be unavailable if the content is not owned by a user on a team. The 'default'
     /// audience option is always available if the user can modify link settings.
     @objc
-    public var audienceOptions: [DBXSharingLinkAudience] { swift.audienceOptions.map { DBXSharingLinkAudience(swift: $0) } }
+    public var audienceOptions: Array<DBXSharingLinkAudience> { swift.audienceOptions.map { DBXSharingLinkAudience(swift: $0) } }
     /// The shared folder that prevents the link audience for this link from being more restrictive.
     @objc
-    public var audienceRestrictingSharedFolder: DBXSharingAudienceRestrictingSharedFolder? {
-        guard let swift = swift.audienceRestrictingSharedFolder else { return nil }
-        return DBXSharingAudienceRestrictingSharedFolder(swift: swift)
-    }
-
+    public var audienceRestrictingSharedFolder: DBXSharingAudienceRestrictingSharedFolder? { guard let swift = swift.audienceRestrictingSharedFolder else { return nil }; return DBXSharingAudienceRestrictingSharedFolder(swift: swift) }
     /// The current audience of the link.
     @objc
     public var currentAudience: DBXSharingLinkAudience { DBXSharingLinkAudience(swift: swift.currentAudience) }
-    /// Whether the link has an expiry set on it. A link with an expiry will have its  audience changed to members
+    /// Whether the link has an expiry set on it. A link with an expiry will have its audience changed to members
     /// when the expiry is reached.
     @objc
     public var expiry: Date? { swift.expiry }
     /// A list of permissions for actions you can perform on the link.
     @objc
-    public var linkPermissions: [DBXSharingLinkPermission] { swift.linkPermissions.map { DBXSharingLinkPermission(swift: $0) } }
+    public var linkPermissions: Array<DBXSharingLinkPermission> { swift.linkPermissions.map { DBXSharingLinkPermission(swift: $0) } }
     /// Whether the link is protected by a password.
     @objc
     public var passwordProtected: NSNumber { swift.passwordProtected as NSNumber }
 
     @objc
-    public init(
-        audienceOptions: [DBXSharingLinkAudience],
-        currentAudience: DBXSharingLinkAudience,
-        linkPermissions: [DBXSharingLinkPermission],
-        passwordProtected: NSNumber,
-        accessLevel: DBXSharingAccessLevel?,
-        audienceRestrictingSharedFolder: DBXSharingAudienceRestrictingSharedFolder?,
-        expiry: Date?
-    ) {
-        self.swift = Sharing.SharedContentLinkMetadataBase(
-            audienceOptions: audienceOptions.map(\.swift),
-            currentAudience: currentAudience.swift,
-            linkPermissions: linkPermissions.map(\.swift),
-            passwordProtected: passwordProtected.boolValue,
-            accessLevel: accessLevel?.swift,
-            audienceRestrictingSharedFolder: audienceRestrictingSharedFolder?.swift,
-            expiry: expiry
-        )
+    public init(audienceOptions: Array<DBXSharingLinkAudience>, currentAudience: DBXSharingLinkAudience, linkPermissions: Array<DBXSharingLinkPermission>, passwordProtected: NSNumber, accessLevel: DBXSharingAccessLevel?, audienceRestrictingSharedFolder: DBXSharingAudienceRestrictingSharedFolder?, expiry: Date?) {
+        self.swift = Sharing.SharedContentLinkMetadataBase(audienceOptions: audienceOptions.map { $0.swift }, currentAudience: currentAudience.swift, linkPermissions: linkPermissions.map { $0.swift }, passwordProtected: passwordProtected.boolValue, accessLevel: accessLevel?.swift, audienceRestrictingSharedFolder: audienceRestrictingSharedFolder?.swift, expiry: expiry)
     }
 
     let swift: Sharing.SharedContentLinkMetadataBase
@@ -1760,6 +1870,7 @@ public class DBXSharingSharedContentLinkMetadataBase: NSObject {
     public init(swift: Sharing.SharedContentLinkMetadataBase) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1769,12 +1880,14 @@ public class DBXSharingSharedContentLinkMetadataBase: NSObject {
 /// if the link already exists.
 @objc
 public class DBXSharingExpectedSharedContentLinkMetadata: DBXSharingSharedContentLinkMetadataBase {
+
     let subSwift: Sharing.ExpectedSharedContentLinkMetadata
 
     public init(swift: Sharing.ExpectedSharedContentLinkMetadata) {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -1825,67 +1938,67 @@ public class DBXSharingFileAction: NSObject {
 
     @objc
     public var asDisableViewerInfo: DBXSharingFileActionDisableViewerInfo? {
-        self as? DBXSharingFileActionDisableViewerInfo
+        return self as? DBXSharingFileActionDisableViewerInfo
     }
 
     @objc
     public var asEditContents: DBXSharingFileActionEditContents? {
-        self as? DBXSharingFileActionEditContents
+        return self as? DBXSharingFileActionEditContents
     }
 
     @objc
     public var asEnableViewerInfo: DBXSharingFileActionEnableViewerInfo? {
-        self as? DBXSharingFileActionEnableViewerInfo
+        return self as? DBXSharingFileActionEnableViewerInfo
     }
 
     @objc
     public var asInviteViewer: DBXSharingFileActionInviteViewer? {
-        self as? DBXSharingFileActionInviteViewer
+        return self as? DBXSharingFileActionInviteViewer
     }
 
     @objc
     public var asInviteViewerNoComment: DBXSharingFileActionInviteViewerNoComment? {
-        self as? DBXSharingFileActionInviteViewerNoComment
+        return self as? DBXSharingFileActionInviteViewerNoComment
     }
 
     @objc
     public var asInviteEditor: DBXSharingFileActionInviteEditor? {
-        self as? DBXSharingFileActionInviteEditor
+        return self as? DBXSharingFileActionInviteEditor
     }
 
     @objc
     public var asUnshare: DBXSharingFileActionUnshare? {
-        self as? DBXSharingFileActionUnshare
+        return self as? DBXSharingFileActionUnshare
     }
 
     @objc
     public var asRelinquishMembership: DBXSharingFileActionRelinquishMembership? {
-        self as? DBXSharingFileActionRelinquishMembership
+        return self as? DBXSharingFileActionRelinquishMembership
     }
 
     @objc
     public var asShareLink: DBXSharingFileActionShareLink? {
-        self as? DBXSharingFileActionShareLink
+        return self as? DBXSharingFileActionShareLink
     }
 
     @objc
     public var asCreateLink: DBXSharingFileActionCreateLink? {
-        self as? DBXSharingFileActionCreateLink
+        return self as? DBXSharingFileActionCreateLink
     }
 
     @objc
     public var asCreateViewLink: DBXSharingFileActionCreateViewLink? {
-        self as? DBXSharingFileActionCreateViewLink
+        return self as? DBXSharingFileActionCreateViewLink
     }
 
     @objc
     public var asCreateEditLink: DBXSharingFileActionCreateEditLink? {
-        self as? DBXSharingFileActionCreateEditLink
+        return self as? DBXSharingFileActionCreateEditLink
     }
 
     @objc
     public var asOther: DBXSharingFileActionOther? {
-        self as? DBXSharingFileActionOther
+        return self as? DBXSharingFileActionOther
     }
 }
 
@@ -1969,7 +2082,7 @@ public class DBXSharingFileActionRelinquishMembership: DBXSharingFileAction {
     }
 }
 
-/// Use create_view_link and create_edit_link instead.
+/// Field is deprecated. Use create_view_link and create_edit_link instead.
 @objc
 public class DBXSharingFileActionShareLink: DBXSharingFileAction {
     @objc
@@ -1979,7 +2092,7 @@ public class DBXSharingFileActionShareLink: DBXSharingFileAction {
     }
 }
 
-/// Use create_view_link and create_edit_link instead.
+/// Field is deprecated. Use create_view_link and create_edit_link instead.
 @objc
 public class DBXSharingFileActionCreateLink: DBXSharingFileAction {
     @objc
@@ -2049,22 +2162,22 @@ public class DBXSharingFileErrorResult: NSObject {
 
     @objc
     public var asFileNotFoundError: DBXSharingFileErrorResultFileNotFoundError? {
-        self as? DBXSharingFileErrorResultFileNotFoundError
+        return self as? DBXSharingFileErrorResultFileNotFoundError
     }
 
     @objc
     public var asInvalidFileActionError: DBXSharingFileErrorResultInvalidFileActionError? {
-        self as? DBXSharingFileErrorResultInvalidFileActionError
+        return self as? DBXSharingFileErrorResultInvalidFileActionError
     }
 
     @objc
     public var asPermissionDeniedError: DBXSharingFileErrorResultPermissionDeniedError? {
-        self as? DBXSharingFileErrorResultPermissionDeniedError
+        return self as? DBXSharingFileErrorResultPermissionDeniedError
     }
 
     @objc
     public var asOther: DBXSharingFileErrorResultOther? {
-        self as? DBXSharingFileErrorResultOther
+        return self as? DBXSharingFileErrorResultOther
     }
 }
 
@@ -2076,7 +2189,7 @@ public class DBXSharingFileErrorResultFileNotFoundError: DBXSharingFileErrorResu
 
     @objc
     public init(_ arg: String) {
-        self.fileNotFoundError = arg
+        fileNotFoundError = arg
         let swift = Sharing.FileErrorResult.fileNotFoundError(arg)
         super.init(swift: swift)
     }
@@ -2090,7 +2203,7 @@ public class DBXSharingFileErrorResultInvalidFileActionError: DBXSharingFileErro
 
     @objc
     public init(_ arg: String) {
-        self.invalidFileActionError = arg
+        invalidFileActionError = arg
         let swift = Sharing.FileErrorResult.invalidFileActionError(arg)
         super.init(swift: swift)
     }
@@ -2104,7 +2217,7 @@ public class DBXSharingFileErrorResultPermissionDeniedError: DBXSharingFileError
 
     @objc
     public init(_ arg: String) {
-        self.permissionDeniedError = arg
+        permissionDeniedError = arg
         let swift = Sharing.FileErrorResult.permissionDeniedError(arg)
         super.init(swift: swift)
     }
@@ -2136,47 +2249,25 @@ public class DBXSharingSharedLinkMetadata: NSObject {
     @objc
     public var expires: Date? { swift.expires }
     /// The lowercased full path in the user's Dropbox. This always starts with a slash. This field will only be
-    /// present only if the linked file is in the authenticated user's  dropbox.
+    /// present only if the linked file is in the authenticated user's dropbox and the user is the owner of the
+    /// link.
     @objc
     public var pathLower: String? { swift.pathLower }
     /// The link's access permissions.
     @objc
     public var linkPermissions: DBXSharingLinkPermissions { DBXSharingLinkPermissions(swift: swift.linkPermissions) }
-    /// The team membership information of the link's owner.  This field will only be present  if the link's owner
-    /// is a team member.
+    /// The team membership information of the link's owner.  This field will only be present if the link's owner is
+    /// a team member.
     @objc
-    public var teamMemberInfo: DBXSharingTeamMemberInfo? { guard let swift = swift.teamMemberInfo else { return nil }
-        return DBXSharingTeamMemberInfo(swift: swift)
-    }
-
+    public var teamMemberInfo: DBXSharingTeamMemberInfo? { guard let swift = swift.teamMemberInfo else { return nil }; return DBXSharingTeamMemberInfo(swift: swift) }
     /// The team information of the content's owner. This field will only be present if the content's owner is a
     /// team member and the content's owner team is different from the link's owner team.
     @objc
-    public var contentOwnerTeamInfo: DBXUsersTeam? { guard let swift = swift.contentOwnerTeamInfo else { return nil }
-        return DBXUsersTeam(swift: swift)
-    }
+    public var contentOwnerTeamInfo: DBXUsersTeam? { guard let swift = swift.contentOwnerTeamInfo else { return nil }; return DBXUsersTeam(swift: swift) }
 
     @objc
-    public init(
-        url: String,
-        name: String,
-        linkPermissions: DBXSharingLinkPermissions,
-        id: String?,
-        expires: Date?,
-        pathLower: String?,
-        teamMemberInfo: DBXSharingTeamMemberInfo?,
-        contentOwnerTeamInfo: DBXUsersTeam?
-    ) {
-        self.swift = Sharing.SharedLinkMetadata(
-            url: url,
-            name: name,
-            linkPermissions: linkPermissions.swift,
-            id: id,
-            expires: expires,
-            pathLower: pathLower,
-            teamMemberInfo: teamMemberInfo?.swift,
-            contentOwnerTeamInfo: contentOwnerTeamInfo?.swift
-        )
+    public init(url: String, name: String, linkPermissions: DBXSharingLinkPermissions, id: String?, expires: Date?, pathLower: String?, teamMemberInfo: DBXSharingTeamMemberInfo?, contentOwnerTeamInfo: DBXUsersTeam?) {
+        self.swift = Sharing.SharedLinkMetadata(url: url, name: name, linkPermissions: linkPermissions.swift, id: id, expires: expires, pathLower: pathLower, teamMemberInfo: teamMemberInfo?.swift, contentOwnerTeamInfo: contentOwnerTeamInfo?.swift)
     }
 
     let swift: Sharing.SharedLinkMetadata
@@ -2220,34 +2311,8 @@ public class DBXSharingFileLinkMetadata: DBXSharingSharedLinkMetadata {
     public var size: NSNumber { subSwift.size as NSNumber }
 
     @objc
-    public init(
-        url: String,
-        name: String,
-        linkPermissions: DBXSharingLinkPermissions,
-        clientModified: Date,
-        serverModified: Date,
-        rev: String,
-        size: NSNumber,
-        id: String?,
-        expires: Date?,
-        pathLower: String?,
-        teamMemberInfo: DBXSharingTeamMemberInfo?,
-        contentOwnerTeamInfo: DBXUsersTeam?
-    ) {
-        let swift = Sharing.FileLinkMetadata(
-            url: url,
-            name: name,
-            linkPermissions: linkPermissions.swift,
-            clientModified: clientModified,
-            serverModified: serverModified,
-            rev: rev,
-            size: size.uint64Value,
-            id: id,
-            expires: expires,
-            pathLower: pathLower,
-            teamMemberInfo: teamMemberInfo?.swift,
-            contentOwnerTeamInfo: contentOwnerTeamInfo?.swift
-        )
+    public init(url: String, name: String, linkPermissions: DBXSharingLinkPermissions, clientModified: Date, serverModified: Date, rev: String, size: NSNumber, id: String?, expires: Date?, pathLower: String?, teamMemberInfo: DBXSharingTeamMemberInfo?, contentOwnerTeamInfo: DBXUsersTeam?) {
+        let swift = Sharing.FileLinkMetadata(url: url, name: name, linkPermissions: linkPermissions.swift, clientModified: clientModified, serverModified: serverModified, rev: rev, size: size.uint64Value, id: id, expires: expires, pathLower: pathLower, teamMemberInfo: teamMemberInfo?.swift, contentOwnerTeamInfo: contentOwnerTeamInfo?.swift)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -2258,6 +2323,7 @@ public class DBXSharingFileLinkMetadata: DBXSharingSharedLinkMetadata {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -2294,27 +2360,27 @@ public class DBXSharingFileMemberActionError: NSObject {
 
     @objc
     public var asInvalidMember: DBXSharingFileMemberActionErrorInvalidMember? {
-        self as? DBXSharingFileMemberActionErrorInvalidMember
+        return self as? DBXSharingFileMemberActionErrorInvalidMember
     }
 
     @objc
     public var asNoPermission: DBXSharingFileMemberActionErrorNoPermission? {
-        self as? DBXSharingFileMemberActionErrorNoPermission
+        return self as? DBXSharingFileMemberActionErrorNoPermission
     }
 
     @objc
     public var asAccessError: DBXSharingFileMemberActionErrorAccessError? {
-        self as? DBXSharingFileMemberActionErrorAccessError
+        return self as? DBXSharingFileMemberActionErrorAccessError
     }
 
     @objc
     public var asNoExplicitAccess: DBXSharingFileMemberActionErrorNoExplicitAccess? {
-        self as? DBXSharingFileMemberActionErrorNoExplicitAccess
+        return self as? DBXSharingFileMemberActionErrorNoExplicitAccess
     }
 
     @objc
     public var asOther: DBXSharingFileMemberActionErrorOther? {
-        self as? DBXSharingFileMemberActionErrorOther
+        return self as? DBXSharingFileMemberActionErrorOther
     }
 }
 
@@ -2346,14 +2412,14 @@ public class DBXSharingFileMemberActionErrorAccessError: DBXSharingFileMemberAct
 
     @objc
     public init(_ arg: DBXSharingSharingFileAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.FileMemberActionError.accessError(arg.swift)
         super.init(swift: swift)
     }
 }
 
 /// The action cannot be completed because the target member does not have explicit access to the file. The
-/// return value is the access that the member has to the file from a parent folder.
+        /// return value is the access that the member has to the file from a parent folder.
 @objc
 public class DBXSharingFileMemberActionErrorNoExplicitAccess: DBXSharingFileMemberActionError {
     @objc
@@ -2361,7 +2427,7 @@ public class DBXSharingFileMemberActionErrorNoExplicitAccess: DBXSharingFileMemb
 
     @objc
     public init(_ arg: DBXSharingMemberAccessLevelResult) {
-        self.noExplicitAccess = arg
+        noExplicitAccess = arg
         let swift = Sharing.FileMemberActionError.noExplicitAccess(arg.swift)
         super.init(swift: swift)
     }
@@ -2403,19 +2469,19 @@ public class DBXSharingFileMemberActionIndividualResult: NSObject {
 
     @objc
     public var asSuccess: DBXSharingFileMemberActionIndividualResultSuccess? {
-        self as? DBXSharingFileMemberActionIndividualResultSuccess
+        return self as? DBXSharingFileMemberActionIndividualResultSuccess
     }
 
     @objc
     public var asMemberError: DBXSharingFileMemberActionIndividualResultMemberError? {
-        self as? DBXSharingFileMemberActionIndividualResultMemberError
+        return self as? DBXSharingFileMemberActionIndividualResultMemberError
     }
 }
 
 /// Part of the response for both add_file_member and remove_file_member_v1 (deprecated). For add_file_member,
-/// indicates giving access was successful and at what AccessLevel. For remove_file_member_v1, indicates
-/// member was successfully removed from the file. If AccessLevel is given, the member still has access
-/// via a parent shared folder.
+        /// indicates giving access was successful and at what AccessLevel. For remove_file_member_v1, indicates
+        /// member was successfully removed from the file. If AccessLevel is given, the member still has access
+        /// via a parent shared folder.
 @objc
 public class DBXSharingFileMemberActionIndividualResultSuccess: DBXSharingFileMemberActionIndividualResult {
     @objc
@@ -2423,7 +2489,7 @@ public class DBXSharingFileMemberActionIndividualResultSuccess: DBXSharingFileMe
 
     @objc
     public init(_ arg: DBXSharingAccessLevel?) {
-        self.success = arg
+        success = arg
         let swift = Sharing.FileMemberActionIndividualResult.success(arg?.swift)
         super.init(swift: swift)
     }
@@ -2437,7 +2503,7 @@ public class DBXSharingFileMemberActionIndividualResultMemberError: DBXSharingFi
 
     @objc
     public init(_ arg: DBXSharingFileMemberActionError) {
-        self.memberError = arg
+        memberError = arg
         let swift = Sharing.FileMemberActionIndividualResult.memberError(arg.swift)
         super.init(swift: swift)
     }
@@ -2458,10 +2524,10 @@ public class DBXSharingFileMemberActionResult: NSObject {
     /// The sharing sender-recipient invitation signatures for the input member_id. A member_id can be a group and
     /// thus have multiple users and multiple invitation signatures.
     @objc
-    public var invitationSignature: [String]? { swift.invitationSignature }
+    public var invitationSignature: Array<String>? { swift.invitationSignature }
 
     @objc
-    public init(member: DBXSharingMemberSelector, result: DBXSharingFileMemberActionIndividualResult, sckeySha1: String?, invitationSignature: [String]?) {
+    public init(member: DBXSharingMemberSelector, result: DBXSharingFileMemberActionIndividualResult, sckeySha1: String?, invitationSignature: Array<String>?) {
         self.swift = Sharing.FileMemberActionResult(member: member.swift, result: result.swift, sckeySha1: sckeySha1, invitationSignature: invitationSignature)
     }
 
@@ -2470,6 +2536,7 @@ public class DBXSharingFileMemberActionResult: NSObject {
     public init(swift: Sharing.FileMemberActionResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -2502,17 +2569,17 @@ public class DBXSharingFileMemberRemoveActionResult: NSObject {
 
     @objc
     public var asSuccess: DBXSharingFileMemberRemoveActionResultSuccess? {
-        self as? DBXSharingFileMemberRemoveActionResultSuccess
+        return self as? DBXSharingFileMemberRemoveActionResultSuccess
     }
 
     @objc
     public var asMemberError: DBXSharingFileMemberRemoveActionResultMemberError? {
-        self as? DBXSharingFileMemberRemoveActionResultMemberError
+        return self as? DBXSharingFileMemberRemoveActionResultMemberError
     }
 
     @objc
     public var asOther: DBXSharingFileMemberRemoveActionResultOther? {
-        self as? DBXSharingFileMemberRemoveActionResultOther
+        return self as? DBXSharingFileMemberRemoveActionResultOther
     }
 }
 
@@ -2524,7 +2591,7 @@ public class DBXSharingFileMemberRemoveActionResultSuccess: DBXSharingFileMember
 
     @objc
     public init(_ arg: DBXSharingMemberAccessLevelResult) {
-        self.success = arg
+        success = arg
         let swift = Sharing.FileMemberRemoveActionResult.success(arg.swift)
         super.init(swift: swift)
     }
@@ -2538,7 +2605,7 @@ public class DBXSharingFileMemberRemoveActionResultMemberError: DBXSharingFileMe
 
     @objc
     public init(_ arg: DBXSharingFileMemberActionError) {
-        self.memberError = arg
+        memberError = arg
         let swift = Sharing.FileMemberRemoveActionResult.memberError(arg.swift)
         super.init(swift: swift)
     }
@@ -2565,9 +2632,7 @@ public class DBXSharingFilePermission: NSObject {
     public var allow: NSNumber { swift.allow as NSNumber }
     /// The reason why the user is denied the permission. Not present if the action is allowed.
     @objc
-    public var reason: DBXSharingPermissionDeniedReason? { guard let swift = swift.reason else { return nil }
-        return DBXSharingPermissionDeniedReason(swift: swift)
-    }
+    public var reason: DBXSharingPermissionDeniedReason? { guard let swift = swift.reason else { return nil }; return DBXSharingPermissionDeniedReason(swift: swift) }
 
     @objc
     public init(action: DBXSharingFileAction, allow: NSNumber, reason: DBXSharingPermissionDeniedReason?) {
@@ -2579,6 +2644,7 @@ public class DBXSharingFilePermission: NSObject {
     public init(swift: Sharing.FilePermission) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -2621,6 +2687,10 @@ public class DBXSharingFolderAction: NSObject {
             return DBXSharingFolderActionShareLink()
         case .createLink:
             return DBXSharingFolderActionCreateLink()
+        case .createViewLink:
+            return DBXSharingFolderActionCreateViewLink()
+        case .createEditLink:
+            return DBXSharingFolderActionCreateEditLink()
         case .setAccessInheritance:
             return DBXSharingFolderActionSetAccessInheritance()
         case .other:
@@ -2633,77 +2703,87 @@ public class DBXSharingFolderAction: NSObject {
 
     @objc
     public var asChangeOptions: DBXSharingFolderActionChangeOptions? {
-        self as? DBXSharingFolderActionChangeOptions
+        return self as? DBXSharingFolderActionChangeOptions
     }
 
     @objc
     public var asDisableViewerInfo: DBXSharingFolderActionDisableViewerInfo? {
-        self as? DBXSharingFolderActionDisableViewerInfo
+        return self as? DBXSharingFolderActionDisableViewerInfo
     }
 
     @objc
     public var asEditContents: DBXSharingFolderActionEditContents? {
-        self as? DBXSharingFolderActionEditContents
+        return self as? DBXSharingFolderActionEditContents
     }
 
     @objc
     public var asEnableViewerInfo: DBXSharingFolderActionEnableViewerInfo? {
-        self as? DBXSharingFolderActionEnableViewerInfo
+        return self as? DBXSharingFolderActionEnableViewerInfo
     }
 
     @objc
     public var asInviteEditor: DBXSharingFolderActionInviteEditor? {
-        self as? DBXSharingFolderActionInviteEditor
+        return self as? DBXSharingFolderActionInviteEditor
     }
 
     @objc
     public var asInviteViewer: DBXSharingFolderActionInviteViewer? {
-        self as? DBXSharingFolderActionInviteViewer
+        return self as? DBXSharingFolderActionInviteViewer
     }
 
     @objc
     public var asInviteViewerNoComment: DBXSharingFolderActionInviteViewerNoComment? {
-        self as? DBXSharingFolderActionInviteViewerNoComment
+        return self as? DBXSharingFolderActionInviteViewerNoComment
     }
 
     @objc
     public var asRelinquishMembership: DBXSharingFolderActionRelinquishMembership? {
-        self as? DBXSharingFolderActionRelinquishMembership
+        return self as? DBXSharingFolderActionRelinquishMembership
     }
 
     @objc
     public var asUnmount: DBXSharingFolderActionUnmount? {
-        self as? DBXSharingFolderActionUnmount
+        return self as? DBXSharingFolderActionUnmount
     }
 
     @objc
     public var asUnshare: DBXSharingFolderActionUnshare? {
-        self as? DBXSharingFolderActionUnshare
+        return self as? DBXSharingFolderActionUnshare
     }
 
     @objc
     public var asLeaveACopy: DBXSharingFolderActionLeaveACopy? {
-        self as? DBXSharingFolderActionLeaveACopy
+        return self as? DBXSharingFolderActionLeaveACopy
     }
 
     @objc
     public var asShareLink: DBXSharingFolderActionShareLink? {
-        self as? DBXSharingFolderActionShareLink
+        return self as? DBXSharingFolderActionShareLink
     }
 
     @objc
     public var asCreateLink: DBXSharingFolderActionCreateLink? {
-        self as? DBXSharingFolderActionCreateLink
+        return self as? DBXSharingFolderActionCreateLink
+    }
+
+    @objc
+    public var asCreateViewLink: DBXSharingFolderActionCreateViewLink? {
+        return self as? DBXSharingFolderActionCreateViewLink
+    }
+
+    @objc
+    public var asCreateEditLink: DBXSharingFolderActionCreateEditLink? {
+        return self as? DBXSharingFolderActionCreateEditLink
     }
 
     @objc
     public var asSetAccessInheritance: DBXSharingFolderActionSetAccessInheritance? {
-        self as? DBXSharingFolderActionSetAccessInheritance
+        return self as? DBXSharingFolderActionSetAccessInheritance
     }
 
     @objc
     public var asOther: DBXSharingFolderActionOther? {
-        self as? DBXSharingFolderActionOther
+        return self as? DBXSharingFolderActionOther
     }
 }
 
@@ -2817,7 +2897,7 @@ public class DBXSharingFolderActionLeaveACopy: DBXSharingFolderAction {
     }
 }
 
-/// Use create_link instead.
+/// Field is deprecated. Use create_view_link and create_edit_link instead.
 @objc
 public class DBXSharingFolderActionShareLink: DBXSharingFolderAction {
     @objc
@@ -2827,12 +2907,32 @@ public class DBXSharingFolderActionShareLink: DBXSharingFolderAction {
     }
 }
 
-/// Create a shared link for folder.
+/// Field is deprecated. Use create_view_link and create_edit_link instead.
 @objc
 public class DBXSharingFolderActionCreateLink: DBXSharingFolderAction {
     @objc
     public init() {
         let swift = Sharing.FolderAction.createLink
+        super.init(swift: swift)
+    }
+}
+
+/// Create a shared link that only allows users to view the content.
+@objc
+public class DBXSharingFolderActionCreateViewLink: DBXSharingFolderAction {
+    @objc
+    public init() {
+        let swift = Sharing.FolderAction.createViewLink
+        super.init(swift: swift)
+    }
+}
+
+/// Create a shared link that allows users to edit the content.
+@objc
+public class DBXSharingFolderActionCreateEditLink: DBXSharingFolderAction {
+    @objc
+    public init() {
+        let swift = Sharing.FolderAction.createEditLink
         super.init(swift: swift)
     }
 }
@@ -2860,12 +2960,14 @@ public class DBXSharingFolderActionOther: DBXSharingFolderAction {
 /// The metadata of a folder shared link.
 @objc
 public class DBXSharingFolderLinkMetadata: DBXSharingSharedLinkMetadata {
+
     let subSwift: Sharing.FolderLinkMetadata
 
     public init(swift: Sharing.FolderLinkMetadata) {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -2883,9 +2985,7 @@ public class DBXSharingFolderPermission: NSObject {
     /// The reason why the user is denied the permission. Not present if the action is allowed, or if no reason is
     /// available.
     @objc
-    public var reason: DBXSharingPermissionDeniedReason? { guard let swift = swift.reason else { return nil }
-        return DBXSharingPermissionDeniedReason(swift: swift)
-    }
+    public var reason: DBXSharingPermissionDeniedReason? { guard let swift = swift.reason else { return nil }; return DBXSharingPermissionDeniedReason(swift: swift) }
 
     @objc
     public init(action: DBXSharingFolderAction, allow: NSNumber, reason: DBXSharingPermissionDeniedReason?) {
@@ -2898,6 +2998,7 @@ public class DBXSharingFolderPermission: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -2908,18 +3009,12 @@ public class DBXSharingFolderPolicy: NSObject {
     /// Who can be a member of this shared folder, as set on the folder itself. The effective policy may differ from
     /// this value if the team-wide policy is more restrictive. Present only if the folder is owned by a team.
     @objc
-    public var memberPolicy: DBXSharingMemberPolicy? { guard let swift = swift.memberPolicy else { return nil }
-        return DBXSharingMemberPolicy(swift: swift)
-    }
-
+    public var memberPolicy: DBXSharingMemberPolicy? { guard let swift = swift.memberPolicy else { return nil }; return DBXSharingMemberPolicy(swift: swift) }
     /// Who can be a member of this shared folder, taking into account both the folder and the team-wide policy.
     /// This value may differ from that of member_policy if the team-wide policy is more restrictive than the
     /// folder policy. Present only if the folder is owned by a team.
     @objc
-    public var resolvedMemberPolicy: DBXSharingMemberPolicy? { guard let swift = swift.resolvedMemberPolicy else { return nil }
-        return DBXSharingMemberPolicy(swift: swift)
-    }
-
+    public var resolvedMemberPolicy: DBXSharingMemberPolicy? { guard let swift = swift.resolvedMemberPolicy else { return nil }; return DBXSharingMemberPolicy(swift: swift) }
     /// Who can add and remove members from this shared folder.
     @objc
     public var aclUpdatePolicy: DBXSharingAclUpdatePolicy { DBXSharingAclUpdatePolicy(swift: swift.aclUpdatePolicy) }
@@ -2928,25 +3023,11 @@ public class DBXSharingFolderPolicy: NSObject {
     public var sharedLinkPolicy: DBXSharingSharedLinkPolicy { DBXSharingSharedLinkPolicy(swift: swift.sharedLinkPolicy) }
     /// Who can enable/disable viewer info for this shared folder.
     @objc
-    public var viewerInfoPolicy: DBXSharingViewerInfoPolicy? { guard let swift = swift.viewerInfoPolicy else { return nil }
-        return DBXSharingViewerInfoPolicy(swift: swift)
-    }
+    public var viewerInfoPolicy: DBXSharingViewerInfoPolicy? { guard let swift = swift.viewerInfoPolicy else { return nil }; return DBXSharingViewerInfoPolicy(swift: swift) }
 
     @objc
-    public init(
-        aclUpdatePolicy: DBXSharingAclUpdatePolicy,
-        sharedLinkPolicy: DBXSharingSharedLinkPolicy,
-        memberPolicy: DBXSharingMemberPolicy?,
-        resolvedMemberPolicy: DBXSharingMemberPolicy?,
-        viewerInfoPolicy: DBXSharingViewerInfoPolicy?
-    ) {
-        self.swift = Sharing.FolderPolicy(
-            aclUpdatePolicy: aclUpdatePolicy.swift,
-            sharedLinkPolicy: sharedLinkPolicy.swift,
-            memberPolicy: memberPolicy?.swift,
-            resolvedMemberPolicy: resolvedMemberPolicy?.swift,
-            viewerInfoPolicy: viewerInfoPolicy?.swift
-        )
+    public init(aclUpdatePolicy: DBXSharingAclUpdatePolicy, sharedLinkPolicy: DBXSharingSharedLinkPolicy, memberPolicy: DBXSharingMemberPolicy?, resolvedMemberPolicy: DBXSharingMemberPolicy?, viewerInfoPolicy: DBXSharingViewerInfoPolicy?) {
+        self.swift = Sharing.FolderPolicy(aclUpdatePolicy: aclUpdatePolicy.swift, sharedLinkPolicy: sharedLinkPolicy.swift, memberPolicy: memberPolicy?.swift, resolvedMemberPolicy: resolvedMemberPolicy?.swift, viewerInfoPolicy: viewerInfoPolicy?.swift)
     }
 
     let swift: Sharing.FolderPolicy
@@ -2954,6 +3035,7 @@ public class DBXSharingFolderPolicy: NSObject {
     public init(swift: Sharing.FolderPolicy) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -2965,14 +3047,14 @@ public class DBXSharingGetFileMetadataArg: NSObject {
     /// The file to query.
     @objc
     public var file: String { swift.file }
-    /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the  response's permissions
-    /// in SharedFileMetadata field describing the actions the  authenticated user can perform on the file.
+    /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the response's permissions
+    /// in SharedFileMetadata field describing the actions the authenticated user can perform on the file.
     @objc
-    public var actions: [DBXSharingFileAction]? { swift.actions?.map { DBXSharingFileAction(swift: $0) } }
+    public var actions: Array<DBXSharingFileAction>? { swift.actions?.map { DBXSharingFileAction(swift: $0) } }
 
     @objc
-    public init(file: String, actions: [DBXSharingFileAction]?) {
-        self.swift = Sharing.GetFileMetadataArg(file: file, actions: actions?.map(\.swift))
+    public init(file: String, actions: Array<DBXSharingFileAction>?) {
+        self.swift = Sharing.GetFileMetadataArg(file: file, actions: actions?.map { $0.swift })
     }
 
     let swift: Sharing.GetFileMetadataArg
@@ -2980,6 +3062,7 @@ public class DBXSharingGetFileMetadataArg: NSObject {
     public init(swift: Sharing.GetFileMetadataArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -2990,15 +3073,15 @@ public class DBXSharingGetFileMetadataArg: NSObject {
 public class DBXSharingGetFileMetadataBatchArg: NSObject {
     /// The files to query.
     @objc
-    public var files: [String] { swift.files }
-    /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the  response's permissions
-    /// in SharedFileMetadata field describing the actions the  authenticated user can perform on the file.
+    public var files: Array<String> { swift.files }
+    /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the response's permissions
+    /// in SharedFileMetadata field describing the actions the authenticated user can perform on the file.
     @objc
-    public var actions: [DBXSharingFileAction]? { swift.actions?.map { DBXSharingFileAction(swift: $0) } }
+    public var actions: Array<DBXSharingFileAction>? { swift.actions?.map { DBXSharingFileAction(swift: $0) } }
 
     @objc
-    public init(files: [String], actions: [DBXSharingFileAction]?) {
-        self.swift = Sharing.GetFileMetadataBatchArg(files: files, actions: actions?.map(\.swift))
+    public init(files: Array<String>, actions: Array<DBXSharingFileAction>?) {
+        self.swift = Sharing.GetFileMetadataBatchArg(files: files, actions: actions?.map { $0.swift })
     }
 
     let swift: Sharing.GetFileMetadataBatchArg
@@ -3006,6 +3089,7 @@ public class DBXSharingGetFileMetadataBatchArg: NSObject {
     public init(swift: Sharing.GetFileMetadataBatchArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -3031,6 +3115,7 @@ public class DBXSharingGetFileMetadataBatchResult: NSObject {
     public init(swift: Sharing.GetFileMetadataBatchResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -3063,17 +3148,17 @@ public class DBXSharingGetFileMetadataError: NSObject {
 
     @objc
     public var asUserError: DBXSharingGetFileMetadataErrorUserError? {
-        self as? DBXSharingGetFileMetadataErrorUserError
+        return self as? DBXSharingGetFileMetadataErrorUserError
     }
 
     @objc
     public var asAccessError: DBXSharingGetFileMetadataErrorAccessError? {
-        self as? DBXSharingGetFileMetadataErrorAccessError
+        return self as? DBXSharingGetFileMetadataErrorAccessError
     }
 
     @objc
     public var asOther: DBXSharingGetFileMetadataErrorOther? {
-        self as? DBXSharingGetFileMetadataErrorOther
+        return self as? DBXSharingGetFileMetadataErrorOther
     }
 }
 
@@ -3085,7 +3170,7 @@ public class DBXSharingGetFileMetadataErrorUserError: DBXSharingGetFileMetadataE
 
     @objc
     public init(_ arg: DBXSharingSharingUserError) {
-        self.userError = arg
+        userError = arg
         let swift = Sharing.GetFileMetadataError.userError(arg.swift)
         super.init(swift: swift)
     }
@@ -3099,7 +3184,7 @@ public class DBXSharingGetFileMetadataErrorAccessError: DBXSharingGetFileMetadat
 
     @objc
     public init(_ arg: DBXSharingSharingFileAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.GetFileMetadataError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -3142,17 +3227,17 @@ public class DBXSharingGetFileMetadataIndividualResult: NSObject {
 
     @objc
     public var asMetadata: DBXSharingGetFileMetadataIndividualResultMetadata? {
-        self as? DBXSharingGetFileMetadataIndividualResultMetadata
+        return self as? DBXSharingGetFileMetadataIndividualResultMetadata
     }
 
     @objc
     public var asAccessError: DBXSharingGetFileMetadataIndividualResultAccessError? {
-        self as? DBXSharingGetFileMetadataIndividualResultAccessError
+        return self as? DBXSharingGetFileMetadataIndividualResultAccessError
     }
 
     @objc
     public var asOther: DBXSharingGetFileMetadataIndividualResultOther? {
-        self as? DBXSharingGetFileMetadataIndividualResultOther
+        return self as? DBXSharingGetFileMetadataIndividualResultOther
     }
 }
 
@@ -3164,7 +3249,7 @@ public class DBXSharingGetFileMetadataIndividualResultMetadata: DBXSharingGetFil
 
     @objc
     public init(_ arg: DBXSharingSharedFileMetadata) {
-        self.metadata = arg
+        metadata = arg
         let swift = Sharing.GetFileMetadataIndividualResult.metadata(arg.swift)
         super.init(swift: swift)
     }
@@ -3178,7 +3263,7 @@ public class DBXSharingGetFileMetadataIndividualResultAccessError: DBXSharingGet
 
     @objc
     public init(_ arg: DBXSharingSharingFileAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.GetFileMetadataIndividualResult.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -3200,15 +3285,15 @@ public class DBXSharingGetMetadataArgs: NSObject {
     /// The ID for the shared folder.
     @objc
     public var sharedFolderId: String { swift.sharedFolderId }
-    /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the  response's
-    /// permissions in SharedFolderMetadata field describing the actions the  authenticated user can perform on
+    /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the response's
+    /// permissions in SharedFolderMetadata field describing the actions the authenticated user can perform on
     /// the folder.
     @objc
-    public var actions: [DBXSharingFolderAction]? { swift.actions?.map { DBXSharingFolderAction(swift: $0) } }
+    public var actions: Array<DBXSharingFolderAction>? { swift.actions?.map { DBXSharingFolderAction(swift: $0) } }
 
     @objc
-    public init(sharedFolderId: String, actions: [DBXSharingFolderAction]?) {
-        self.swift = Sharing.GetMetadataArgs(sharedFolderId: sharedFolderId, actions: actions?.map(\.swift))
+    public init(sharedFolderId: String, actions: Array<DBXSharingFolderAction>?) {
+        self.swift = Sharing.GetMetadataArgs(sharedFolderId: sharedFolderId, actions: actions?.map { $0.swift })
     }
 
     let swift: Sharing.GetMetadataArgs
@@ -3216,6 +3301,7 @@ public class DBXSharingGetMetadataArgs: NSObject {
     public init(swift: Sharing.GetMetadataArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -3238,6 +3324,8 @@ public class DBXSharingSharedLinkError: NSObject {
             return DBXSharingSharedLinkErrorSharedLinkAccessDenied()
         case .unsupportedLinkType:
             return DBXSharingSharedLinkErrorUnsupportedLinkType()
+        case .unsupportedParameterField:
+            return DBXSharingSharedLinkErrorUnsupportedParameterField()
         case .other:
             return DBXSharingSharedLinkErrorOther()
         }
@@ -3248,22 +3336,27 @@ public class DBXSharingSharedLinkError: NSObject {
 
     @objc
     public var asSharedLinkNotFound: DBXSharingSharedLinkErrorSharedLinkNotFound? {
-        self as? DBXSharingSharedLinkErrorSharedLinkNotFound
+        return self as? DBXSharingSharedLinkErrorSharedLinkNotFound
     }
 
     @objc
     public var asSharedLinkAccessDenied: DBXSharingSharedLinkErrorSharedLinkAccessDenied? {
-        self as? DBXSharingSharedLinkErrorSharedLinkAccessDenied
+        return self as? DBXSharingSharedLinkErrorSharedLinkAccessDenied
     }
 
     @objc
     public var asUnsupportedLinkType: DBXSharingSharedLinkErrorUnsupportedLinkType? {
-        self as? DBXSharingSharedLinkErrorUnsupportedLinkType
+        return self as? DBXSharingSharedLinkErrorUnsupportedLinkType
+    }
+
+    @objc
+    public var asUnsupportedParameterField: DBXSharingSharedLinkErrorUnsupportedParameterField? {
+        return self as? DBXSharingSharedLinkErrorUnsupportedParameterField
     }
 
     @objc
     public var asOther: DBXSharingSharedLinkErrorOther? {
-        self as? DBXSharingSharedLinkErrorOther
+        return self as? DBXSharingSharedLinkErrorOther
     }
 }
 
@@ -3297,6 +3390,16 @@ public class DBXSharingSharedLinkErrorUnsupportedLinkType: DBXSharingSharedLinkE
     }
 }
 
+/// Private shared links do not support `path` or `link_password` parameter fields.
+@objc
+public class DBXSharingSharedLinkErrorUnsupportedParameterField: DBXSharingSharedLinkError {
+    @objc
+    public init() {
+        let swift = Sharing.SharedLinkError.unsupportedParameterField
+        super.init(swift: swift)
+    }
+}
+
 /// An unspecified error.
 @objc
 public class DBXSharingSharedLinkErrorOther: DBXSharingSharedLinkError {
@@ -3324,6 +3427,8 @@ public class DBXSharingGetSharedLinkFileError: NSObject {
             return DBXSharingGetSharedLinkFileErrorSharedLinkAccessDenied()
         case .unsupportedLinkType:
             return DBXSharingGetSharedLinkFileErrorUnsupportedLinkType()
+        case .unsupportedParameterField:
+            return DBXSharingGetSharedLinkFileErrorUnsupportedParameterField()
         case .other:
             return DBXSharingGetSharedLinkFileErrorOther()
         case .sharedLinkIsDirectory:
@@ -3336,27 +3441,32 @@ public class DBXSharingGetSharedLinkFileError: NSObject {
 
     @objc
     public var asSharedLinkNotFound: DBXSharingGetSharedLinkFileErrorSharedLinkNotFound? {
-        self as? DBXSharingGetSharedLinkFileErrorSharedLinkNotFound
+        return self as? DBXSharingGetSharedLinkFileErrorSharedLinkNotFound
     }
 
     @objc
     public var asSharedLinkAccessDenied: DBXSharingGetSharedLinkFileErrorSharedLinkAccessDenied? {
-        self as? DBXSharingGetSharedLinkFileErrorSharedLinkAccessDenied
+        return self as? DBXSharingGetSharedLinkFileErrorSharedLinkAccessDenied
     }
 
     @objc
     public var asUnsupportedLinkType: DBXSharingGetSharedLinkFileErrorUnsupportedLinkType? {
-        self as? DBXSharingGetSharedLinkFileErrorUnsupportedLinkType
+        return self as? DBXSharingGetSharedLinkFileErrorUnsupportedLinkType
+    }
+
+    @objc
+    public var asUnsupportedParameterField: DBXSharingGetSharedLinkFileErrorUnsupportedParameterField? {
+        return self as? DBXSharingGetSharedLinkFileErrorUnsupportedParameterField
     }
 
     @objc
     public var asOther: DBXSharingGetSharedLinkFileErrorOther? {
-        self as? DBXSharingGetSharedLinkFileErrorOther
+        return self as? DBXSharingGetSharedLinkFileErrorOther
     }
 
     @objc
     public var asSharedLinkIsDirectory: DBXSharingGetSharedLinkFileErrorSharedLinkIsDirectory? {
-        self as? DBXSharingGetSharedLinkFileErrorSharedLinkIsDirectory
+        return self as? DBXSharingGetSharedLinkFileErrorSharedLinkIsDirectory
     }
 }
 
@@ -3386,6 +3496,16 @@ public class DBXSharingGetSharedLinkFileErrorUnsupportedLinkType: DBXSharingGetS
     @objc
     public init() {
         let swift = Sharing.GetSharedLinkFileError.unsupportedLinkType
+        super.init(swift: swift)
+    }
+}
+
+/// Private shared links do not support `path` or `link_password` parameter fields.
+@objc
+public class DBXSharingGetSharedLinkFileErrorUnsupportedParameterField: DBXSharingGetSharedLinkFileError {
+    @objc
+    public init() {
+        let swift = Sharing.GetSharedLinkFileError.unsupportedParameterField
         super.init(swift: swift)
     }
 }
@@ -3435,6 +3555,7 @@ public class DBXSharingGetSharedLinkMetadataArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -3456,6 +3577,7 @@ public class DBXSharingGetSharedLinksArg: NSObject {
     public init(swift: Sharing.GetSharedLinksArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -3485,12 +3607,12 @@ public class DBXSharingGetSharedLinksError: NSObject {
 
     @objc
     public var asPath: DBXSharingGetSharedLinksErrorPath? {
-        self as? DBXSharingGetSharedLinksErrorPath
+        return self as? DBXSharingGetSharedLinksErrorPath
     }
 
     @objc
     public var asOther: DBXSharingGetSharedLinksErrorOther? {
-        self as? DBXSharingGetSharedLinksErrorOther
+        return self as? DBXSharingGetSharedLinksErrorOther
     }
 }
 
@@ -3502,7 +3624,7 @@ public class DBXSharingGetSharedLinksErrorPath: DBXSharingGetSharedLinksError {
 
     @objc
     public init(_ arg: String?) {
-        self.path = arg
+        path = arg
         let swift = Sharing.GetSharedLinksError.path(arg)
         super.init(swift: swift)
     }
@@ -3523,15 +3645,15 @@ public class DBXSharingGetSharedLinksErrorOther: DBXSharingGetSharedLinksError {
 public class DBXSharingGetSharedLinksResult: NSObject {
     /// Shared links applicable to the path argument.
     @objc
-    public var links: [DBXSharingLinkMetadata] {
+    public var links: Array<DBXSharingLinkMetadata> {
         swift.links.map {
-            DBXSharingLinkMetadata.wrapPreservingSubtypes(swift: $0)
+            return DBXSharingLinkMetadata.wrapPreservingSubtypes(swift: $0)
         }
     }
 
     @objc
-    public init(links: [DBXSharingLinkMetadata]) {
-        self.swift = Sharing.GetSharedLinksResult(links: links.map(\.swift))
+    public init(links: Array<DBXSharingLinkMetadata>) {
+        self.swift = Sharing.GetSharedLinksResult(links: links.map { $0.swift })
     }
 
     let swift: Sharing.GetSharedLinksResult
@@ -3540,15 +3662,16 @@ public class DBXSharingGetSharedLinksResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
 
-/// The information about a group. Groups is a way to manage a list of users  who need same access permission to the
+/// The information about a group. Groups is a way to manage a list of users who need same access permission to the
 /// shared folder.
 @objc
 public class DBXSharingGroupInfo: DBXTeamCommonGroupSummary {
-    /// The type of group.
+    /// Field is deprecated. The type of group.
     @objc
     public var groupType: DBXTeamCommonGroupType { DBXTeamCommonGroupType(swift: subSwift.groupType) }
     /// If the current user is a member of the group.
@@ -3562,28 +3685,8 @@ public class DBXSharingGroupInfo: DBXTeamCommonGroupSummary {
     public var sameTeam: NSNumber { subSwift.sameTeam as NSNumber }
 
     @objc
-    public init(
-        groupName: String,
-        groupId: String,
-        groupManagementType: DBXTeamCommonGroupManagementType,
-        groupType: DBXTeamCommonGroupType,
-        isMember: NSNumber,
-        isOwner: NSNumber,
-        sameTeam: NSNumber,
-        groupExternalId: String?,
-        memberCount: NSNumber?
-    ) {
-        let swift = Sharing.GroupInfo(
-            groupName: groupName,
-            groupId: groupId,
-            groupManagementType: groupManagementType.swift,
-            groupType: groupType.swift,
-            isMember: isMember.boolValue,
-            isOwner: isOwner.boolValue,
-            sameTeam: sameTeam.boolValue,
-            groupExternalId: groupExternalId,
-            memberCount: memberCount?.uint32Value
-        )
+    public init(groupName: String, groupId: String, groupManagementType: DBXTeamCommonGroupManagementType, groupType: DBXTeamCommonGroupType, isMember: NSNumber, isOwner: NSNumber, sameTeam: NSNumber, groupExternalId: String?, memberCount: NSNumber?) {
+        let swift = Sharing.GroupInfo(groupName: groupName, groupId: groupId, groupManagementType: groupManagementType.swift, groupType: groupType.swift, isMember: isMember.boolValue, isOwner: isOwner.boolValue, sameTeam: sameTeam.boolValue, groupExternalId: groupExternalId, memberCount: memberCount?.uint32Value)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -3594,6 +3697,7 @@ public class DBXSharingGroupInfo: DBXTeamCommonGroupSummary {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -3609,22 +3713,17 @@ public class DBXSharingMembershipInfo: NSObject {
     /// The permissions that requesting user has on this member. The set of permissions corresponds to the
     /// MemberActions in the request.
     @objc
-    public var permissions: [DBXSharingMemberPermission]? { swift.permissions?.map { DBXSharingMemberPermission(swift: $0) } }
-    /// Never set.
+    public var permissions: Array<DBXSharingMemberPermission>? { swift.permissions?.map { DBXSharingMemberPermission(swift: $0) } }
+    /// Field is deprecated. Never set.
     @objc
     public var initials: String? { swift.initials }
-    /// True if the member has access from a parent folder.
+    /// True if the member has access on a parent folder.
     @objc
     public var isInherited: NSNumber { swift.isInherited as NSNumber }
 
     @objc
-    public init(accessType: DBXSharingAccessLevel, permissions: [DBXSharingMemberPermission]?, initials: String?, isInherited: NSNumber) {
-        self.swift = Sharing.MembershipInfo(
-            accessType: accessType.swift,
-            permissions: permissions?.map(\.swift),
-            initials: initials,
-            isInherited: isInherited.boolValue
-        )
+    public init(accessType: DBXSharingAccessLevel, permissions: Array<DBXSharingMemberPermission>?, initials: String?, isInherited: NSNumber) {
+        self.swift = Sharing.MembershipInfo(accessType: accessType.swift, permissions: permissions?.map { $0.swift }, initials: initials, isInherited: isInherited.boolValue)
     }
 
     let swift: Sharing.MembershipInfo
@@ -3632,6 +3731,7 @@ public class DBXSharingMembershipInfo: NSObject {
     public init(swift: Sharing.MembershipInfo) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -3645,20 +3745,8 @@ public class DBXSharingGroupMembershipInfo: DBXSharingMembershipInfo {
     public var group: DBXSharingGroupInfo { DBXSharingGroupInfo(swift: subSwift.group) }
 
     @objc
-    public init(
-        accessType: DBXSharingAccessLevel,
-        group: DBXSharingGroupInfo,
-        permissions: [DBXSharingMemberPermission]?,
-        initials: String?,
-        isInherited: NSNumber
-    ) {
-        let swift = Sharing.GroupMembershipInfo(
-            accessType: accessType.swift,
-            group: group.subSwift,
-            permissions: permissions?.map(\.swift),
-            initials: initials,
-            isInherited: isInherited.boolValue
-        )
+    public init(accessType: DBXSharingAccessLevel, group: DBXSharingGroupInfo, permissions: Array<DBXSharingMemberPermission>?, initials: String?, isInherited: NSNumber) {
+        let swift = Sharing.GroupMembershipInfo(accessType: accessType.swift, group: group.subSwift, permissions: permissions?.map { $0.swift }, initials: initials, isInherited: isInherited.boolValue)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -3669,6 +3757,7 @@ public class DBXSharingGroupMembershipInfo: DBXSharingMembershipInfo {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -3696,6 +3785,7 @@ public class DBXSharingInsufficientPlan: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -3715,11 +3805,7 @@ public class DBXSharingInsufficientQuotaAmounts: NSObject {
 
     @objc
     public init(spaceNeeded: NSNumber, spaceShortage: NSNumber, spaceLeft: NSNumber) {
-        self.swift = Sharing.InsufficientQuotaAmounts(
-            spaceNeeded: spaceNeeded.uint64Value,
-            spaceShortage: spaceShortage.uint64Value,
-            spaceLeft: spaceLeft.uint64Value
-        )
+        self.swift = Sharing.InsufficientQuotaAmounts(spaceNeeded: spaceNeeded.uint64Value, spaceShortage: spaceShortage.uint64Value, spaceLeft: spaceLeft.uint64Value)
     }
 
     let swift: Sharing.InsufficientQuotaAmounts
@@ -3727,6 +3813,7 @@ public class DBXSharingInsufficientQuotaAmounts: NSObject {
     public init(swift: Sharing.InsufficientQuotaAmounts) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -3756,12 +3843,12 @@ public class DBXSharingInviteeInfo: NSObject {
 
     @objc
     public var asEmail: DBXSharingInviteeInfoEmail? {
-        self as? DBXSharingInviteeInfoEmail
+        return self as? DBXSharingInviteeInfoEmail
     }
 
     @objc
     public var asOther: DBXSharingInviteeInfoOther? {
-        self as? DBXSharingInviteeInfoOther
+        return self as? DBXSharingInviteeInfoOther
     }
 }
 
@@ -3773,7 +3860,7 @@ public class DBXSharingInviteeInfoEmail: DBXSharingInviteeInfo {
 
     @objc
     public init(_ arg: String) {
-        self.email = arg
+        email = arg
         let swift = Sharing.InviteeInfo.email(arg)
         super.init(swift: swift)
     }
@@ -3797,27 +3884,11 @@ public class DBXSharingInviteeMembershipInfo: DBXSharingMembershipInfo {
     public var invitee: DBXSharingInviteeInfo { DBXSharingInviteeInfo(swift: subSwift.invitee) }
     /// The user this invitation is tied to, if available.
     @objc
-    public var user: DBXSharingUserInfo? { guard let swift = subSwift.user else { return nil }
-        return DBXSharingUserInfo(swift: swift)
-    }
+    public var user: DBXSharingUserInfo? { guard let swift = subSwift.user else { return nil }; return DBXSharingUserInfo(swift: swift) }
 
     @objc
-    public init(
-        accessType: DBXSharingAccessLevel,
-        invitee: DBXSharingInviteeInfo,
-        permissions: [DBXSharingMemberPermission]?,
-        initials: String?,
-        isInherited: NSNumber,
-        user: DBXSharingUserInfo?
-    ) {
-        let swift = Sharing.InviteeMembershipInfo(
-            accessType: accessType.swift,
-            invitee: invitee.swift,
-            permissions: permissions?.map(\.swift),
-            initials: initials,
-            isInherited: isInherited.boolValue,
-            user: user?.swift
-        )
+    public init(accessType: DBXSharingAccessLevel, invitee: DBXSharingInviteeInfo, permissions: Array<DBXSharingMemberPermission>?, initials: String?, isInherited: NSNumber, user: DBXSharingUserInfo?) {
+        let swift = Sharing.InviteeMembershipInfo(accessType: accessType.swift, invitee: invitee.swift, permissions: permissions?.map { $0.swift }, initials: initials, isInherited: isInherited.boolValue, user: user?.swift)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -3828,6 +3899,7 @@ public class DBXSharingInviteeMembershipInfo: DBXSharingMembershipInfo {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -3863,22 +3935,22 @@ public class DBXSharingJobError: NSObject {
 
     @objc
     public var asUnshareFolderError: DBXSharingJobErrorUnshareFolderError? {
-        self as? DBXSharingJobErrorUnshareFolderError
+        return self as? DBXSharingJobErrorUnshareFolderError
     }
 
     @objc
     public var asRemoveFolderMemberError: DBXSharingJobErrorRemoveFolderMemberError? {
-        self as? DBXSharingJobErrorRemoveFolderMemberError
+        return self as? DBXSharingJobErrorRemoveFolderMemberError
     }
 
     @objc
     public var asRelinquishFolderMembershipError: DBXSharingJobErrorRelinquishFolderMembershipError? {
-        self as? DBXSharingJobErrorRelinquishFolderMembershipError
+        return self as? DBXSharingJobErrorRelinquishFolderMembershipError
     }
 
     @objc
     public var asOther: DBXSharingJobErrorOther? {
-        self as? DBXSharingJobErrorOther
+        return self as? DBXSharingJobErrorOther
     }
 }
 
@@ -3890,7 +3962,7 @@ public class DBXSharingJobErrorUnshareFolderError: DBXSharingJobError {
 
     @objc
     public init(_ arg: DBXSharingUnshareFolderError) {
-        self.unshareFolderError = arg
+        unshareFolderError = arg
         let swift = Sharing.JobError.unshareFolderError(arg.swift)
         super.init(swift: swift)
     }
@@ -3904,7 +3976,7 @@ public class DBXSharingJobErrorRemoveFolderMemberError: DBXSharingJobError {
 
     @objc
     public init(_ arg: DBXSharingRemoveFolderMemberError) {
-        self.removeFolderMemberError = arg
+        removeFolderMemberError = arg
         let swift = Sharing.JobError.removeFolderMemberError(arg.swift)
         super.init(swift: swift)
     }
@@ -3918,7 +3990,7 @@ public class DBXSharingJobErrorRelinquishFolderMembershipError: DBXSharingJobErr
 
     @objc
     public init(_ arg: DBXSharingRelinquishFolderMembershipError) {
-        self.relinquishFolderMembershipError = arg
+        relinquishFolderMembershipError = arg
         let swift = Sharing.JobError.relinquishFolderMembershipError(arg.swift)
         super.init(swift: swift)
     }
@@ -3960,17 +4032,17 @@ public class DBXSharingJobStatus: NSObject {
 
     @objc
     public var asInProgress: DBXSharingJobStatusInProgress? {
-        self as? DBXSharingJobStatusInProgress
+        return self as? DBXSharingJobStatusInProgress
     }
 
     @objc
     public var asComplete: DBXSharingJobStatusComplete? {
-        self as? DBXSharingJobStatusComplete
+        return self as? DBXSharingJobStatusComplete
     }
 
     @objc
     public var asFailed: DBXSharingJobStatusFailed? {
-        self as? DBXSharingJobStatusFailed
+        return self as? DBXSharingJobStatusFailed
     }
 }
 
@@ -4002,7 +4074,7 @@ public class DBXSharingJobStatusFailed: DBXSharingJobStatus {
 
     @objc
     public init(_ arg: DBXSharingJobError) {
-        self.failed = arg
+        failed = arg
         let swift = Sharing.JobStatus.failed(arg.swift)
         super.init(swift: swift)
     }
@@ -4033,17 +4105,17 @@ public class DBXSharingLinkAccessLevel: NSObject {
 
     @objc
     public var asViewer: DBXSharingLinkAccessLevelViewer? {
-        self as? DBXSharingLinkAccessLevelViewer
+        return self as? DBXSharingLinkAccessLevelViewer
     }
 
     @objc
     public var asEditor: DBXSharingLinkAccessLevelEditor? {
-        self as? DBXSharingLinkAccessLevelEditor
+        return self as? DBXSharingLinkAccessLevelEditor
     }
 
     @objc
     public var asOther: DBXSharingLinkAccessLevelOther? {
-        self as? DBXSharingLinkAccessLevelOther
+        return self as? DBXSharingLinkAccessLevelOther
     }
 }
 
@@ -4110,37 +4182,37 @@ public class DBXSharingLinkAction: NSObject {
 
     @objc
     public var asChangeAccessLevel: DBXSharingLinkActionChangeAccessLevel? {
-        self as? DBXSharingLinkActionChangeAccessLevel
+        return self as? DBXSharingLinkActionChangeAccessLevel
     }
 
     @objc
     public var asChangeAudience: DBXSharingLinkActionChangeAudience? {
-        self as? DBXSharingLinkActionChangeAudience
+        return self as? DBXSharingLinkActionChangeAudience
     }
 
     @objc
     public var asRemoveExpiry: DBXSharingLinkActionRemoveExpiry? {
-        self as? DBXSharingLinkActionRemoveExpiry
+        return self as? DBXSharingLinkActionRemoveExpiry
     }
 
     @objc
     public var asRemovePassword: DBXSharingLinkActionRemovePassword? {
-        self as? DBXSharingLinkActionRemovePassword
+        return self as? DBXSharingLinkActionRemovePassword
     }
 
     @objc
     public var asSetExpiry: DBXSharingLinkActionSetExpiry? {
-        self as? DBXSharingLinkActionSetExpiry
+        return self as? DBXSharingLinkActionSetExpiry
     }
 
     @objc
     public var asSetPassword: DBXSharingLinkActionSetPassword? {
-        self as? DBXSharingLinkActionSetPassword
+        return self as? DBXSharingLinkActionSetPassword
     }
 
     @objc
     public var asOther: DBXSharingLinkActionOther? {
-        self as? DBXSharingLinkActionOther
+        return self as? DBXSharingLinkActionOther
     }
 }
 
@@ -4245,32 +4317,32 @@ public class DBXSharingLinkAudience: NSObject {
 
     @objc
     public var asPublic_: DBXSharingLinkAudiencePublic_? {
-        self as? DBXSharingLinkAudiencePublic_
+        return self as? DBXSharingLinkAudiencePublic_
     }
 
     @objc
     public var asTeam: DBXSharingLinkAudienceTeam? {
-        self as? DBXSharingLinkAudienceTeam
+        return self as? DBXSharingLinkAudienceTeam
     }
 
     @objc
     public var asNoOne: DBXSharingLinkAudienceNoOne? {
-        self as? DBXSharingLinkAudienceNoOne
+        return self as? DBXSharingLinkAudienceNoOne
     }
 
     @objc
     public var asPassword: DBXSharingLinkAudiencePassword? {
-        self as? DBXSharingLinkAudiencePassword
+        return self as? DBXSharingLinkAudiencePassword
     }
 
     @objc
     public var asMembers: DBXSharingLinkAudienceMembers? {
-        self as? DBXSharingLinkAudienceMembers
+        return self as? DBXSharingLinkAudienceMembers
     }
 
     @objc
     public var asOther: DBXSharingLinkAudienceOther? {
-        self as? DBXSharingLinkAudienceOther
+        return self as? DBXSharingLinkAudienceOther
     }
 }
 
@@ -4295,8 +4367,8 @@ public class DBXSharingLinkAudienceTeam: DBXSharingLinkAudience {
 }
 
 /// The link can be used by no one. The link merely points the user to the content, and does not grant
-/// additional rights to the user. Members of the content who use this link can only access the content
-/// with their pre-existing access rights.
+        /// additional rights to the user. Members of the content who use this link can only access the content
+        /// with their pre-existing access rights.
 @objc
 public class DBXSharingLinkAudienceNoOne: DBXSharingLinkAudience {
     @objc
@@ -4306,8 +4378,8 @@ public class DBXSharingLinkAudienceNoOne: DBXSharingLinkAudience {
     }
 }
 
-/// Use `require_password` instead. A link-specific password is required to access the link. Login is not
-/// required.
+/// Field is deprecated. Use `require_password` instead. A link-specific password is required to access the
+        /// link. Login is not required.
 @objc
 public class DBXSharingLinkAudiencePassword: DBXSharingLinkAudience {
     @objc
@@ -4317,7 +4389,7 @@ public class DBXSharingLinkAudiencePassword: DBXSharingLinkAudience {
     }
 }
 
-/// Link is accessible only by members of the content.
+/// Field is deprecated. Link is accessible only by members of the content.
 @objc
 public class DBXSharingLinkAudienceMembers: DBXSharingLinkAudience {
     @objc
@@ -4370,37 +4442,37 @@ public class DBXSharingVisibilityPolicyDisallowedReason: NSObject {
 
     @objc
     public var asDeleteAndRecreate: DBXSharingVisibilityPolicyDisallowedReasonDeleteAndRecreate? {
-        self as? DBXSharingVisibilityPolicyDisallowedReasonDeleteAndRecreate
+        return self as? DBXSharingVisibilityPolicyDisallowedReasonDeleteAndRecreate
     }
 
     @objc
     public var asRestrictedBySharedFolder: DBXSharingVisibilityPolicyDisallowedReasonRestrictedBySharedFolder? {
-        self as? DBXSharingVisibilityPolicyDisallowedReasonRestrictedBySharedFolder
+        return self as? DBXSharingVisibilityPolicyDisallowedReasonRestrictedBySharedFolder
     }
 
     @objc
     public var asRestrictedByTeam: DBXSharingVisibilityPolicyDisallowedReasonRestrictedByTeam? {
-        self as? DBXSharingVisibilityPolicyDisallowedReasonRestrictedByTeam
+        return self as? DBXSharingVisibilityPolicyDisallowedReasonRestrictedByTeam
     }
 
     @objc
     public var asUserNotOnTeam: DBXSharingVisibilityPolicyDisallowedReasonUserNotOnTeam? {
-        self as? DBXSharingVisibilityPolicyDisallowedReasonUserNotOnTeam
+        return self as? DBXSharingVisibilityPolicyDisallowedReasonUserNotOnTeam
     }
 
     @objc
     public var asUserAccountType: DBXSharingVisibilityPolicyDisallowedReasonUserAccountType? {
-        self as? DBXSharingVisibilityPolicyDisallowedReasonUserAccountType
+        return self as? DBXSharingVisibilityPolicyDisallowedReasonUserAccountType
     }
 
     @objc
     public var asPermissionDenied: DBXSharingVisibilityPolicyDisallowedReasonPermissionDenied? {
-        self as? DBXSharingVisibilityPolicyDisallowedReasonPermissionDenied
+        return self as? DBXSharingVisibilityPolicyDisallowedReasonPermissionDenied
     }
 
     @objc
     public var asOther: DBXSharingVisibilityPolicyDisallowedReasonOther? {
-        self as? DBXSharingVisibilityPolicyDisallowedReasonOther
+        return self as? DBXSharingVisibilityPolicyDisallowedReasonOther
     }
 }
 
@@ -4415,7 +4487,7 @@ public class DBXSharingVisibilityPolicyDisallowedReasonDeleteAndRecreate: DBXSha
 }
 
 /// The parent shared folder restricts sharing of links outside the shared folder. To change the visibility
-/// policy, remove the restriction from the parent shared folder.
+        /// policy, remove the restriction from the parent shared folder.
 @objc
 public class DBXSharingVisibilityPolicyDisallowedReasonRestrictedBySharedFolder: DBXSharingVisibilityPolicyDisallowedReason {
     @objc
@@ -4508,37 +4580,37 @@ public class DBXSharingLinkAudienceDisallowedReason: NSObject {
 
     @objc
     public var asDeleteAndRecreate: DBXSharingLinkAudienceDisallowedReasonDeleteAndRecreate? {
-        self as? DBXSharingLinkAudienceDisallowedReasonDeleteAndRecreate
+        return self as? DBXSharingLinkAudienceDisallowedReasonDeleteAndRecreate
     }
 
     @objc
     public var asRestrictedBySharedFolder: DBXSharingLinkAudienceDisallowedReasonRestrictedBySharedFolder? {
-        self as? DBXSharingLinkAudienceDisallowedReasonRestrictedBySharedFolder
+        return self as? DBXSharingLinkAudienceDisallowedReasonRestrictedBySharedFolder
     }
 
     @objc
     public var asRestrictedByTeam: DBXSharingLinkAudienceDisallowedReasonRestrictedByTeam? {
-        self as? DBXSharingLinkAudienceDisallowedReasonRestrictedByTeam
+        return self as? DBXSharingLinkAudienceDisallowedReasonRestrictedByTeam
     }
 
     @objc
     public var asUserNotOnTeam: DBXSharingLinkAudienceDisallowedReasonUserNotOnTeam? {
-        self as? DBXSharingLinkAudienceDisallowedReasonUserNotOnTeam
+        return self as? DBXSharingLinkAudienceDisallowedReasonUserNotOnTeam
     }
 
     @objc
     public var asUserAccountType: DBXSharingLinkAudienceDisallowedReasonUserAccountType? {
-        self as? DBXSharingLinkAudienceDisallowedReasonUserAccountType
+        return self as? DBXSharingLinkAudienceDisallowedReasonUserAccountType
     }
 
     @objc
     public var asPermissionDenied: DBXSharingLinkAudienceDisallowedReasonPermissionDenied? {
-        self as? DBXSharingLinkAudienceDisallowedReasonPermissionDenied
+        return self as? DBXSharingLinkAudienceDisallowedReasonPermissionDenied
     }
 
     @objc
     public var asOther: DBXSharingLinkAudienceDisallowedReasonOther? {
-        self as? DBXSharingLinkAudienceDisallowedReasonOther
+        return self as? DBXSharingLinkAudienceDisallowedReasonOther
     }
 }
 
@@ -4553,7 +4625,7 @@ public class DBXSharingLinkAudienceDisallowedReasonDeleteAndRecreate: DBXSharing
 }
 
 /// The parent shared folder restricts sharing of links outside the shared folder. To change the visibility
-/// policy, remove the restriction from the parent shared folder.
+        /// policy, remove the restriction from the parent shared folder.
 @objc
 public class DBXSharingLinkAudienceDisallowedReasonRestrictedBySharedFolder: DBXSharingLinkAudienceDisallowedReason {
     @objc
@@ -4625,9 +4697,7 @@ public class DBXSharingLinkAudienceOption: NSObject {
     /// If allowed is false, this will provide the reason that the user is not permitted to set the visibility to
     /// this policy.
     @objc
-    public var disallowedReason: DBXSharingLinkAudienceDisallowedReason? { guard let swift = swift.disallowedReason else { return nil }
-        return DBXSharingLinkAudienceDisallowedReason(swift: swift)
-    }
+    public var disallowedReason: DBXSharingLinkAudienceDisallowedReason? { guard let swift = swift.disallowedReason else { return nil }; return DBXSharingLinkAudienceDisallowedReason(swift: swift) }
 
     @objc
     public init(audience: DBXSharingLinkAudience, allowed: NSNumber, disallowedReason: DBXSharingLinkAudienceDisallowedReason?) {
@@ -4639,6 +4709,7 @@ public class DBXSharingLinkAudienceOption: NSObject {
     public init(swift: Sharing.LinkAudienceOption) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -4670,17 +4741,17 @@ public class DBXSharingLinkExpiry: NSObject {
 
     @objc
     public var asRemoveExpiry: DBXSharingLinkExpiryRemoveExpiry? {
-        self as? DBXSharingLinkExpiryRemoveExpiry
+        return self as? DBXSharingLinkExpiryRemoveExpiry
     }
 
     @objc
     public var asSetExpiry: DBXSharingLinkExpirySetExpiry? {
-        self as? DBXSharingLinkExpirySetExpiry
+        return self as? DBXSharingLinkExpirySetExpiry
     }
 
     @objc
     public var asOther: DBXSharingLinkExpiryOther? {
-        self as? DBXSharingLinkExpiryOther
+        return self as? DBXSharingLinkExpiryOther
     }
 }
 
@@ -4702,7 +4773,7 @@ public class DBXSharingLinkExpirySetExpiry: DBXSharingLinkExpiry {
 
     @objc
     public init(_ arg: Date) {
-        self.setExpiry = arg
+        setExpiry = arg
         let swift = Sharing.LinkExpiry.setExpiry(arg)
         super.init(swift: swift)
     }
@@ -4744,17 +4815,17 @@ public class DBXSharingLinkPassword: NSObject {
 
     @objc
     public var asRemovePassword: DBXSharingLinkPasswordRemovePassword? {
-        self as? DBXSharingLinkPasswordRemovePassword
+        return self as? DBXSharingLinkPasswordRemovePassword
     }
 
     @objc
     public var asSetPassword: DBXSharingLinkPasswordSetPassword? {
-        self as? DBXSharingLinkPasswordSetPassword
+        return self as? DBXSharingLinkPasswordSetPassword
     }
 
     @objc
     public var asOther: DBXSharingLinkPasswordOther? {
-        self as? DBXSharingLinkPasswordOther
+        return self as? DBXSharingLinkPasswordOther
     }
 }
 
@@ -4776,7 +4847,7 @@ public class DBXSharingLinkPasswordSetPassword: DBXSharingLinkPassword {
 
     @objc
     public init(_ arg: String) {
-        self.setPassword = arg
+        setPassword = arg
         let swift = Sharing.LinkPassword.setPassword(arg)
         super.init(swift: swift)
     }
@@ -4803,9 +4874,7 @@ public class DBXSharingLinkPermission: NSObject {
     public var allow: NSNumber { swift.allow as NSNumber }
     /// (no description)
     @objc
-    public var reason: DBXSharingPermissionDeniedReason? { guard let swift = swift.reason else { return nil }
-        return DBXSharingPermissionDeniedReason(swift: swift)
-    }
+    public var reason: DBXSharingPermissionDeniedReason? { guard let swift = swift.reason else { return nil }; return DBXSharingPermissionDeniedReason(swift: swift) }
 
     @objc
     public init(action: DBXSharingLinkAction, allow: NSNumber, reason: DBXSharingPermissionDeniedReason?) {
@@ -4817,6 +4886,7 @@ public class DBXSharingLinkPermission: NSObject {
     public init(swift: Sharing.LinkPermission) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -4830,34 +4900,22 @@ public class DBXSharingLinkPermissions: NSObject {
     /// folder). This field is shown only if the caller has access to this info (the link's owner always has
     /// access to this data). For some links, an effective_audience value is returned instead.
     @objc
-    public var resolvedVisibility: DBXSharingResolvedVisibility? { guard let swift = swift.resolvedVisibility else { return nil }
-        return DBXSharingResolvedVisibility(swift: swift)
-    }
-
+    public var resolvedVisibility: DBXSharingResolvedVisibility? { guard let swift = swift.resolvedVisibility else { return nil }; return DBXSharingResolvedVisibility(swift: swift) }
     /// The shared link's requested visibility. This can be overridden by the team and shared folder policies. The
     /// final visibility, after considering these policies, can be found in resolvedVisibility. This is shown
     /// only if the caller is the link's owner and resolved_visibility is returned instead of
     /// effective_audience.
     @objc
-    public var requestedVisibility: DBXSharingRequestedVisibility? { guard let swift = swift.requestedVisibility else { return nil }
-        return DBXSharingRequestedVisibility(swift: swift)
-    }
-
+    public var requestedVisibility: DBXSharingRequestedVisibility? { guard let swift = swift.requestedVisibility else { return nil }; return DBXSharingRequestedVisibility(swift: swift) }
     /// Whether the caller can revoke the shared link.
     @objc
     public var canRevoke: NSNumber { swift.canRevoke as NSNumber }
     /// The failure reason for revoking the link. This field will only be present if the canRevoke is false.
     @objc
-    public var revokeFailureReason: DBXSharingSharedLinkAccessFailureReason? { guard let swift = swift.revokeFailureReason else { return nil }
-        return DBXSharingSharedLinkAccessFailureReason(swift: swift)
-    }
-
+    public var revokeFailureReason: DBXSharingSharedLinkAccessFailureReason? { guard let swift = swift.revokeFailureReason else { return nil }; return DBXSharingSharedLinkAccessFailureReason(swift: swift) }
     /// The type of audience who can benefit from the access level specified by the `link_access_level` field.
     @objc
-    public var effectiveAudience: DBXSharingLinkAudience? { guard let swift = swift.effectiveAudience else { return nil }
-        return DBXSharingLinkAudience(swift: swift)
-    }
-
+    public var effectiveAudience: DBXSharingLinkAudience? { guard let swift = swift.effectiveAudience else { return nil }; return DBXSharingLinkAudience(swift: swift) }
     /// The access level that the link will grant to its users. A link can grant additional rights to a user beyond
     /// their current access level. For example, if a user was invited as a viewer to a file, and then opens a
     /// link with `link_access_level` set to `editor`, then they will gain editor privileges. The
@@ -4865,13 +4923,10 @@ public class DBXSharingLinkPermissions: NSObject {
     /// particular, `link_access_level` does not take into account the API caller's current permissions to the
     /// content.
     @objc
-    public var linkAccessLevel: DBXSharingLinkAccessLevel? { guard let swift = swift.linkAccessLevel else { return nil }
-        return DBXSharingLinkAccessLevel(swift: swift)
-    }
-
+    public var linkAccessLevel: DBXSharingLinkAccessLevel? { guard let swift = swift.linkAccessLevel else { return nil }; return DBXSharingLinkAccessLevel(swift: swift) }
     /// A list of policies that the user might be able to set for the visibility.
     @objc
-    public var visibilityPolicies: [DBXSharingVisibilityPolicy] { swift.visibilityPolicies.map { DBXSharingVisibilityPolicy(swift: $0) } }
+    public var visibilityPolicies: Array<DBXSharingVisibilityPolicy> { swift.visibilityPolicies.map { DBXSharingVisibilityPolicy(swift: $0) } }
     /// Whether the user can set the expiry settings of the link. This refers to the ability to create a new expiry
     /// and modify an existing expiry.
     @objc
@@ -4890,15 +4945,16 @@ public class DBXSharingLinkPermissions: NSObject {
     /// restriction on the link.
     @objc
     public var canDisallowDownload: NSNumber { swift.canDisallowDownload as NSNumber }
-    /// Whether comments are enabled for the linked file. This takes the team commenting policy into account.
+    /// Field is deprecated. Whether comments are enabled for the linked file. This takes the team commenting policy
+    /// into account.
     @objc
     public var allowComments: NSNumber { swift.allowComments as NSNumber }
-    /// Whether the team has disabled commenting globally.
+    /// Field is deprecated. Whether the team has disabled commenting globally.
     @objc
     public var teamRestrictsComments: NSNumber { swift.teamRestrictsComments as NSNumber }
     /// A list of link audience options the user might be able to set as the new audience.
     @objc
-    public var audienceOptions: [DBXSharingLinkAudienceOption]? { swift.audienceOptions?.map { DBXSharingLinkAudienceOption(swift: $0) } }
+    public var audienceOptions: Array<DBXSharingLinkAudienceOption>? { swift.audienceOptions?.map { DBXSharingLinkAudienceOption(swift: $0) } }
     /// Whether the user can set a password for the link.
     @objc
     public var canSetPassword: NSNumber? { swift.canSetPassword as NSNumber? }
@@ -4911,50 +4967,30 @@ public class DBXSharingLinkPermissions: NSObject {
     /// Whether the user can use extended sharing controls, based on their account type.
     @objc
     public var canUseExtendedSharingControls: NSNumber? { swift.canUseExtendedSharingControls as NSNumber? }
+    /// Whether a user can save the content to their Dropbox account.
+    @objc
+    public var canSync: NSNumber? { swift.canSync as NSNumber? }
+    /// Whether the user can request access to the content.
+    @objc
+    public var canRequestAccess: NSNumber? { swift.canRequestAccess as NSNumber? }
+    /// Whether the updated externally available shared link must have password set. Not provided if the link is not
+    /// team owned.
+    @objc
+    public var enforceSharedLinkPasswordPolicy: DBXTeamPoliciesEnforceLinkPasswordPolicy? { guard let swift = swift.enforceSharedLinkPasswordPolicy else { return nil }; return DBXTeamPoliciesEnforceLinkPasswordPolicy(swift: swift) }
+    /// Existing owning team's policy for default number of days from today to link's expiration. Not provided if
+    /// the link is not team owned.
+    @objc
+    public var daysToExpirePolicy: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy? { guard let swift = swift.daysToExpirePolicy else { return nil }; return DBXTeamPoliciesDefaultLinkExpirationDaysPolicy(swift: swift) }
+    /// When owning team's policy changeSharedLinkExpirationPolicy is notAllowed in ChangeLinkExpirationPolicy, the
+    /// updated externally available shared link expiration value cannot be less strict than daysToExpirePolicy.
+    /// In this case daysToExpirePolicy is expected to be different from `none`. Not provided if the link is not
+    /// team owned.
+    @objc
+    public var changeSharedLinkExpirationPolicy: DBXSharingChangeLinkExpirationPolicy? { guard let swift = swift.changeSharedLinkExpirationPolicy else { return nil }; return DBXSharingChangeLinkExpirationPolicy(swift: swift) }
 
     @objc
-    public init(
-        canRevoke: NSNumber,
-        visibilityPolicies: [DBXSharingVisibilityPolicy],
-        canSetExpiry: NSNumber,
-        canRemoveExpiry: NSNumber,
-        allowDownload: NSNumber,
-        canAllowDownload: NSNumber,
-        canDisallowDownload: NSNumber,
-        allowComments: NSNumber,
-        teamRestrictsComments: NSNumber,
-        resolvedVisibility: DBXSharingResolvedVisibility?,
-        requestedVisibility: DBXSharingRequestedVisibility?,
-        revokeFailureReason: DBXSharingSharedLinkAccessFailureReason?,
-        effectiveAudience: DBXSharingLinkAudience?,
-        linkAccessLevel: DBXSharingLinkAccessLevel?,
-        audienceOptions: [DBXSharingLinkAudienceOption]?,
-        canSetPassword: NSNumber?,
-        canRemovePassword: NSNumber?,
-        requirePassword: NSNumber?,
-        canUseExtendedSharingControls: NSNumber?
-    ) {
-        self.swift = Sharing.LinkPermissions(
-            canRevoke: canRevoke.boolValue,
-            visibilityPolicies: visibilityPolicies.map(\.swift),
-            canSetExpiry: canSetExpiry.boolValue,
-            canRemoveExpiry: canRemoveExpiry.boolValue,
-            allowDownload: allowDownload.boolValue,
-            canAllowDownload: canAllowDownload.boolValue,
-            canDisallowDownload: canDisallowDownload.boolValue,
-            allowComments: allowComments.boolValue,
-            teamRestrictsComments: teamRestrictsComments.boolValue,
-            resolvedVisibility: resolvedVisibility?.swift,
-            requestedVisibility: requestedVisibility?.swift,
-            revokeFailureReason: revokeFailureReason?.swift,
-            effectiveAudience: effectiveAudience?.swift,
-            linkAccessLevel: linkAccessLevel?.swift,
-            audienceOptions: audienceOptions?.map(\.swift),
-            canSetPassword: canSetPassword?.boolValue,
-            canRemovePassword: canRemovePassword?.boolValue,
-            requirePassword: requirePassword?.boolValue,
-            canUseExtendedSharingControls: canUseExtendedSharingControls?.boolValue
-        )
+    public init(canRevoke: NSNumber, visibilityPolicies: Array<DBXSharingVisibilityPolicy>, canSetExpiry: NSNumber, canRemoveExpiry: NSNumber, allowDownload: NSNumber, canAllowDownload: NSNumber, canDisallowDownload: NSNumber, allowComments: NSNumber, teamRestrictsComments: NSNumber, resolvedVisibility: DBXSharingResolvedVisibility?, requestedVisibility: DBXSharingRequestedVisibility?, revokeFailureReason: DBXSharingSharedLinkAccessFailureReason?, effectiveAudience: DBXSharingLinkAudience?, linkAccessLevel: DBXSharingLinkAccessLevel?, audienceOptions: Array<DBXSharingLinkAudienceOption>?, canSetPassword: NSNumber?, canRemovePassword: NSNumber?, requirePassword: NSNumber?, canUseExtendedSharingControls: NSNumber?, canSync: NSNumber?, canRequestAccess: NSNumber?, enforceSharedLinkPasswordPolicy: DBXTeamPoliciesEnforceLinkPasswordPolicy?, daysToExpirePolicy: DBXTeamPoliciesDefaultLinkExpirationDaysPolicy?, changeSharedLinkExpirationPolicy: DBXSharingChangeLinkExpirationPolicy?) {
+        self.swift = Sharing.LinkPermissions(canRevoke: canRevoke.boolValue, visibilityPolicies: visibilityPolicies.map { $0.swift }, canSetExpiry: canSetExpiry.boolValue, canRemoveExpiry: canRemoveExpiry.boolValue, allowDownload: allowDownload.boolValue, canAllowDownload: canAllowDownload.boolValue, canDisallowDownload: canDisallowDownload.boolValue, allowComments: allowComments.boolValue, teamRestrictsComments: teamRestrictsComments.boolValue, resolvedVisibility: resolvedVisibility?.swift, requestedVisibility: requestedVisibility?.swift, revokeFailureReason: revokeFailureReason?.swift, effectiveAudience: effectiveAudience?.swift, linkAccessLevel: linkAccessLevel?.swift, audienceOptions: audienceOptions?.map { $0.swift }, canSetPassword: canSetPassword?.boolValue, canRemovePassword: canRemovePassword?.boolValue, requirePassword: requirePassword?.boolValue, canUseExtendedSharingControls: canUseExtendedSharingControls?.boolValue, canSync: canSync?.boolValue, canRequestAccess: canRequestAccess?.boolValue, enforceSharedLinkPasswordPolicy: enforceSharedLinkPasswordPolicy?.swift, daysToExpirePolicy: daysToExpirePolicy?.swift, changeSharedLinkExpirationPolicy: changeSharedLinkExpirationPolicy?.swift)
     }
 
     let swift: Sharing.LinkPermissions
@@ -4962,6 +4998,7 @@ public class DBXSharingLinkPermissions: NSObject {
     public init(swift: Sharing.LinkPermissions) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -4972,27 +5009,16 @@ public class DBXSharingLinkPermissions: NSObject {
 public class DBXSharingLinkSettings: NSObject {
     /// The access level on the link for this file. Currently, it only accepts 'viewer' and 'viewer_no_comment'.
     @objc
-    public var accessLevel: DBXSharingAccessLevel? { guard let swift = swift.accessLevel else { return nil }
-        return DBXSharingAccessLevel(swift: swift)
-    }
-
+    public var accessLevel: DBXSharingAccessLevel? { guard let swift = swift.accessLevel else { return nil }; return DBXSharingAccessLevel(swift: swift) }
     /// The type of audience on the link for this file.
     @objc
-    public var audience: DBXSharingLinkAudience? { guard let swift = swift.audience else { return nil }
-        return DBXSharingLinkAudience(swift: swift)
-    }
-
+    public var audience: DBXSharingLinkAudience? { guard let swift = swift.audience else { return nil }; return DBXSharingLinkAudience(swift: swift) }
     /// An expiry timestamp to set on a link.
     @objc
-    public var expiry: DBXSharingLinkExpiry? { guard let swift = swift.expiry else { return nil }
-        return DBXSharingLinkExpiry(swift: swift)
-    }
-
+    public var expiry: DBXSharingLinkExpiry? { guard let swift = swift.expiry else { return nil }; return DBXSharingLinkExpiry(swift: swift) }
     /// The password for the link.
     @objc
-    public var password: DBXSharingLinkPassword? { guard let swift = swift.password else { return nil }
-        return DBXSharingLinkPassword(swift: swift)
-    }
+    public var password: DBXSharingLinkPassword? { guard let swift = swift.password else { return nil }; return DBXSharingLinkPassword(swift: swift) }
 
     @objc
     public init(accessLevel: DBXSharingAccessLevel?, audience: DBXSharingLinkAudience?, expiry: DBXSharingLinkExpiry?, password: DBXSharingLinkPassword?) {
@@ -5004,6 +5030,7 @@ public class DBXSharingLinkSettings: NSObject {
     public init(swift: Sharing.LinkSettings) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5017,7 +5044,7 @@ public class DBXSharingListFileMembersArg: NSObject {
     public var file: String { swift.file }
     /// The actions for which to return permissions on a member.
     @objc
-    public var actions: [DBXSharingMemberAction]? { swift.actions?.map { DBXSharingMemberAction(swift: $0) } }
+    public var actions: Array<DBXSharingMemberAction>? { swift.actions?.map { DBXSharingMemberAction(swift: $0) } }
     /// Whether to include members who only have access from a parent shared folder.
     @objc
     public var includeInherited: NSNumber { swift.includeInherited as NSNumber }
@@ -5026,13 +5053,8 @@ public class DBXSharingListFileMembersArg: NSObject {
     public var limit: NSNumber { swift.limit as NSNumber }
 
     @objc
-    public init(file: String, actions: [DBXSharingMemberAction]?, includeInherited: NSNumber, limit: NSNumber) {
-        self.swift = Sharing.ListFileMembersArg(
-            file: file,
-            actions: actions?.map(\.swift),
-            includeInherited: includeInherited.boolValue,
-            limit: limit.uint32Value
-        )
+    public init(file: String, actions: Array<DBXSharingMemberAction>?, includeInherited: NSNumber, limit: NSNumber) {
+        self.swift = Sharing.ListFileMembersArg(file: file, actions: actions?.map { $0.swift }, includeInherited: includeInherited.boolValue, limit: limit.uint32Value)
     }
 
     let swift: Sharing.ListFileMembersArg
@@ -5040,6 +5062,7 @@ public class DBXSharingListFileMembersArg: NSObject {
     public init(swift: Sharing.ListFileMembersArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5050,13 +5073,13 @@ public class DBXSharingListFileMembersArg: NSObject {
 public class DBXSharingListFileMembersBatchArg: NSObject {
     /// Files for which to return members.
     @objc
-    public var files: [String] { swift.files }
-    /// Number of members to return max per query. Defaults to 10 if no limit is specified.
+    public var files: Array<String> { swift.files }
+    /// Number of members to return max per query. Defaults to 1000 if no limit is specified.
     @objc
     public var limit: NSNumber { swift.limit as NSNumber }
 
     @objc
-    public init(files: [String], limit: NSNumber) {
+    public init(files: Array<String>, limit: NSNumber) {
         self.swift = Sharing.ListFileMembersBatchArg(files: files, limit: limit.uint32Value)
     }
 
@@ -5065,6 +5088,7 @@ public class DBXSharingListFileMembersBatchArg: NSObject {
     public init(swift: Sharing.ListFileMembersBatchArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5091,6 +5115,7 @@ public class DBXSharingListFileMembersBatchResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -5112,6 +5137,7 @@ public class DBXSharingListFileMembersContinueArg: NSObject {
     public init(swift: Sharing.ListFileMembersContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5146,22 +5172,22 @@ public class DBXSharingListFileMembersContinueError: NSObject {
 
     @objc
     public var asUserError: DBXSharingListFileMembersContinueErrorUserError? {
-        self as? DBXSharingListFileMembersContinueErrorUserError
+        return self as? DBXSharingListFileMembersContinueErrorUserError
     }
 
     @objc
     public var asAccessError: DBXSharingListFileMembersContinueErrorAccessError? {
-        self as? DBXSharingListFileMembersContinueErrorAccessError
+        return self as? DBXSharingListFileMembersContinueErrorAccessError
     }
 
     @objc
     public var asInvalidCursor: DBXSharingListFileMembersContinueErrorInvalidCursor? {
-        self as? DBXSharingListFileMembersContinueErrorInvalidCursor
+        return self as? DBXSharingListFileMembersContinueErrorInvalidCursor
     }
 
     @objc
     public var asOther: DBXSharingListFileMembersContinueErrorOther? {
-        self as? DBXSharingListFileMembersContinueErrorOther
+        return self as? DBXSharingListFileMembersContinueErrorOther
     }
 }
 
@@ -5173,7 +5199,7 @@ public class DBXSharingListFileMembersContinueErrorUserError: DBXSharingListFile
 
     @objc
     public init(_ arg: DBXSharingSharingUserError) {
-        self.userError = arg
+        userError = arg
         let swift = Sharing.ListFileMembersContinueError.userError(arg.swift)
         super.init(swift: swift)
     }
@@ -5187,7 +5213,7 @@ public class DBXSharingListFileMembersContinueErrorAccessError: DBXSharingListFi
 
     @objc
     public init(_ arg: DBXSharingSharingFileAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.ListFileMembersContinueError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -5234,6 +5260,7 @@ public class DBXSharingListFileMembersCountResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -5265,17 +5292,17 @@ public class DBXSharingListFileMembersError: NSObject {
 
     @objc
     public var asUserError: DBXSharingListFileMembersErrorUserError? {
-        self as? DBXSharingListFileMembersErrorUserError
+        return self as? DBXSharingListFileMembersErrorUserError
     }
 
     @objc
     public var asAccessError: DBXSharingListFileMembersErrorAccessError? {
-        self as? DBXSharingListFileMembersErrorAccessError
+        return self as? DBXSharingListFileMembersErrorAccessError
     }
 
     @objc
     public var asOther: DBXSharingListFileMembersErrorOther? {
-        self as? DBXSharingListFileMembersErrorOther
+        return self as? DBXSharingListFileMembersErrorOther
     }
 }
 
@@ -5287,7 +5314,7 @@ public class DBXSharingListFileMembersErrorUserError: DBXSharingListFileMembersE
 
     @objc
     public init(_ arg: DBXSharingSharingUserError) {
-        self.userError = arg
+        userError = arg
         let swift = Sharing.ListFileMembersError.userError(arg.swift)
         super.init(swift: swift)
     }
@@ -5301,7 +5328,7 @@ public class DBXSharingListFileMembersErrorAccessError: DBXSharingListFileMember
 
     @objc
     public init(_ arg: DBXSharingSharingFileAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.ListFileMembersError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -5344,17 +5371,17 @@ public class DBXSharingListFileMembersIndividualResult: NSObject {
 
     @objc
     public var asResult: DBXSharingListFileMembersIndividualResultResult? {
-        self as? DBXSharingListFileMembersIndividualResultResult
+        return self as? DBXSharingListFileMembersIndividualResultResult
     }
 
     @objc
     public var asAccessError: DBXSharingListFileMembersIndividualResultAccessError? {
-        self as? DBXSharingListFileMembersIndividualResultAccessError
+        return self as? DBXSharingListFileMembersIndividualResultAccessError
     }
 
     @objc
     public var asOther: DBXSharingListFileMembersIndividualResultOther? {
-        self as? DBXSharingListFileMembersIndividualResultOther
+        return self as? DBXSharingListFileMembersIndividualResultOther
     }
 }
 
@@ -5366,7 +5393,7 @@ public class DBXSharingListFileMembersIndividualResultResult: DBXSharingListFile
 
     @objc
     public init(_ arg: DBXSharingListFileMembersCountResult) {
-        self.result = arg
+        result = arg
         let swift = Sharing.ListFileMembersIndividualResult.result(arg.swift)
         super.init(swift: swift)
     }
@@ -5380,7 +5407,7 @@ public class DBXSharingListFileMembersIndividualResultAccessError: DBXSharingLis
 
     @objc
     public init(_ arg: DBXSharingSharingFileAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.ListFileMembersIndividualResult.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -5402,14 +5429,14 @@ public class DBXSharingListFilesArg: NSObject {
     /// Number of files to return max per query. Defaults to 100 if no limit is specified.
     @objc
     public var limit: NSNumber { swift.limit as NSNumber }
-    /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the  response's permissions
-    /// in SharedFileMetadata field describing the actions the  authenticated user can perform on the file.
+    /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the response's permissions
+    /// in SharedFileMetadata field describing the actions the authenticated user can perform on the file.
     @objc
-    public var actions: [DBXSharingFileAction]? { swift.actions?.map { DBXSharingFileAction(swift: $0) } }
+    public var actions: Array<DBXSharingFileAction>? { swift.actions?.map { DBXSharingFileAction(swift: $0) } }
 
     @objc
-    public init(limit: NSNumber, actions: [DBXSharingFileAction]?) {
-        self.swift = Sharing.ListFilesArg(limit: limit.uint32Value, actions: actions?.map(\.swift))
+    public init(limit: NSNumber, actions: Array<DBXSharingFileAction>?) {
+        self.swift = Sharing.ListFilesArg(limit: limit.uint32Value, actions: actions?.map { $0.swift })
     }
 
     let swift: Sharing.ListFilesArg
@@ -5417,6 +5444,7 @@ public class DBXSharingListFilesArg: NSObject {
     public init(swift: Sharing.ListFilesArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5439,6 +5467,7 @@ public class DBXSharingListFilesContinueArg: NSObject {
     public init(swift: Sharing.ListFilesContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5470,17 +5499,17 @@ public class DBXSharingListFilesContinueError: NSObject {
 
     @objc
     public var asUserError: DBXSharingListFilesContinueErrorUserError? {
-        self as? DBXSharingListFilesContinueErrorUserError
+        return self as? DBXSharingListFilesContinueErrorUserError
     }
 
     @objc
     public var asInvalidCursor: DBXSharingListFilesContinueErrorInvalidCursor? {
-        self as? DBXSharingListFilesContinueErrorInvalidCursor
+        return self as? DBXSharingListFilesContinueErrorInvalidCursor
     }
 
     @objc
     public var asOther: DBXSharingListFilesContinueErrorOther? {
-        self as? DBXSharingListFilesContinueErrorOther
+        return self as? DBXSharingListFilesContinueErrorOther
     }
 }
 
@@ -5492,7 +5521,7 @@ public class DBXSharingListFilesContinueErrorUserError: DBXSharingListFilesConti
 
     @objc
     public init(_ arg: DBXSharingSharingUserError) {
-        self.userError = arg
+        userError = arg
         let swift = Sharing.ListFilesContinueError.userError(arg.swift)
         super.init(swift: swift)
     }
@@ -5523,14 +5552,14 @@ public class DBXSharingListFilesContinueErrorOther: DBXSharingListFilesContinueE
 public class DBXSharingListFilesResult: NSObject {
     /// Information about the files shared with current user.
     @objc
-    public var entries: [DBXSharingSharedFileMetadata] { swift.entries.map { DBXSharingSharedFileMetadata(swift: $0) } }
+    public var entries: Array<DBXSharingSharedFileMetadata> { swift.entries.map { DBXSharingSharedFileMetadata(swift: $0) } }
     /// Cursor used to obtain additional shared files.
     @objc
     public var cursor: String? { swift.cursor }
 
     @objc
-    public init(entries: [DBXSharingSharedFileMetadata], cursor: String?) {
-        self.swift = Sharing.ListFilesResult(entries: entries.map(\.swift), cursor: cursor)
+    public init(entries: Array<DBXSharingSharedFileMetadata>, cursor: String?) {
+        self.swift = Sharing.ListFilesResult(entries: entries.map { $0.swift }, cursor: cursor)
     }
 
     let swift: Sharing.ListFilesResult
@@ -5538,6 +5567,7 @@ public class DBXSharingListFilesResult: NSObject {
     public init(swift: Sharing.ListFilesResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5549,14 +5579,14 @@ public class DBXSharingListFolderMembersCursorArg: NSObject {
     /// This is a list indicating whether each returned member will include a boolean value allow in
     /// MemberPermission that describes whether the current user can perform the MemberAction on the member.
     @objc
-    public var actions: [DBXSharingMemberAction]? { swift.actions?.map { DBXSharingMemberAction(swift: $0) } }
+    public var actions: Array<DBXSharingMemberAction>? { swift.actions?.map { DBXSharingMemberAction(swift: $0) } }
     /// The maximum number of results that include members, groups and invitees to return per request.
     @objc
     public var limit: NSNumber { swift.limit as NSNumber }
 
     @objc
-    public init(actions: [DBXSharingMemberAction]?, limit: NSNumber) {
-        self.swift = Sharing.ListFolderMembersCursorArg(actions: actions?.map(\.swift), limit: limit.uint32Value)
+    public init(actions: Array<DBXSharingMemberAction>?, limit: NSNumber) {
+        self.swift = Sharing.ListFolderMembersCursorArg(actions: actions?.map { $0.swift }, limit: limit.uint32Value)
     }
 
     let swift: Sharing.ListFolderMembersCursorArg
@@ -5565,6 +5595,7 @@ public class DBXSharingListFolderMembersCursorArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -5572,13 +5603,18 @@ public class DBXSharingListFolderMembersCursorArg: NSObject {
 /// Objective-C compatible ListFolderMembersArgs struct
 @objc
 public class DBXSharingListFolderMembersArgs: DBXSharingListFolderMembersCursorArg {
-    /// The ID for the shared folder.
+    /// The ID for the shared folder. When path is provided, the folder ID will be extracted from the path instead.
     @objc
     public var sharedFolderId: String { subSwift.sharedFolderId }
+    /// Optional path to get inherited members. When omitted, uses shared_folder_id to return direct members. When
+    /// provided, extracts folder ID from this path and returns users who have access through parent shared
+    /// folder.
+    @objc
+    public var path: String? { subSwift.path }
 
     @objc
-    public init(sharedFolderId: String, actions: [DBXSharingMemberAction]?, limit: NSNumber) {
-        let swift = Sharing.ListFolderMembersArgs(sharedFolderId: sharedFolderId, actions: actions?.map(\.swift), limit: limit.uint32Value)
+    public init(sharedFolderId: String, actions: Array<DBXSharingMemberAction>?, limit: NSNumber, path: String?) {
+        let swift = Sharing.ListFolderMembersArgs(sharedFolderId: sharedFolderId, actions: actions?.map { $0.swift }, limit: limit.uint32Value, path: path)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -5589,6 +5625,7 @@ public class DBXSharingListFolderMembersArgs: DBXSharingListFolderMembersCursorA
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -5611,6 +5648,7 @@ public class DBXSharingListFolderMembersContinueArg: NSObject {
     public init(swift: Sharing.ListFolderMembersContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5642,17 +5680,17 @@ public class DBXSharingListFolderMembersContinueError: NSObject {
 
     @objc
     public var asAccessError: DBXSharingListFolderMembersContinueErrorAccessError? {
-        self as? DBXSharingListFolderMembersContinueErrorAccessError
+        return self as? DBXSharingListFolderMembersContinueErrorAccessError
     }
 
     @objc
     public var asInvalidCursor: DBXSharingListFolderMembersContinueErrorInvalidCursor? {
-        self as? DBXSharingListFolderMembersContinueErrorInvalidCursor
+        return self as? DBXSharingListFolderMembersContinueErrorInvalidCursor
     }
 
     @objc
     public var asOther: DBXSharingListFolderMembersContinueErrorOther? {
-        self as? DBXSharingListFolderMembersContinueErrorOther
+        return self as? DBXSharingListFolderMembersContinueErrorOther
     }
 }
 
@@ -5664,7 +5702,7 @@ public class DBXSharingListFolderMembersContinueErrorAccessError: DBXSharingList
 
     @objc
     public init(_ arg: DBXSharingSharedFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.ListFolderMembersContinueError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -5696,15 +5734,15 @@ public class DBXSharingListFoldersArgs: NSObject {
     /// The maximum number of results to return per request.
     @objc
     public var limit: NSNumber { swift.limit as NSNumber }
-    /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the  response's
-    /// permissions in SharedFolderMetadata field describing the actions the  authenticated user can perform on
+    /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the response's
+    /// permissions in SharedFolderMetadata field describing the actions the authenticated user can perform on
     /// the folder.
     @objc
-    public var actions: [DBXSharingFolderAction]? { swift.actions?.map { DBXSharingFolderAction(swift: $0) } }
+    public var actions: Array<DBXSharingFolderAction>? { swift.actions?.map { DBXSharingFolderAction(swift: $0) } }
 
     @objc
-    public init(limit: NSNumber, actions: [DBXSharingFolderAction]?) {
-        self.swift = Sharing.ListFoldersArgs(limit: limit.uint32Value, actions: actions?.map(\.swift))
+    public init(limit: NSNumber, actions: Array<DBXSharingFolderAction>?) {
+        self.swift = Sharing.ListFoldersArgs(limit: limit.uint32Value, actions: actions?.map { $0.swift })
     }
 
     let swift: Sharing.ListFoldersArgs
@@ -5712,6 +5750,7 @@ public class DBXSharingListFoldersArgs: NSObject {
     public init(swift: Sharing.ListFoldersArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5734,6 +5773,7 @@ public class DBXSharingListFoldersContinueArg: NSObject {
     public init(swift: Sharing.ListFoldersContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5762,12 +5802,12 @@ public class DBXSharingListFoldersContinueError: NSObject {
 
     @objc
     public var asInvalidCursor: DBXSharingListFoldersContinueErrorInvalidCursor? {
-        self as? DBXSharingListFoldersContinueErrorInvalidCursor
+        return self as? DBXSharingListFoldersContinueErrorInvalidCursor
     }
 
     @objc
     public var asOther: DBXSharingListFoldersContinueErrorOther? {
-        self as? DBXSharingListFoldersContinueErrorOther
+        return self as? DBXSharingListFoldersContinueErrorOther
     }
 }
 
@@ -5797,7 +5837,7 @@ public class DBXSharingListFoldersContinueErrorOther: DBXSharingListFoldersConti
 public class DBXSharingListFoldersResult: NSObject {
     /// List of all shared folders the authenticated user has access to.
     @objc
-    public var entries: [DBXSharingSharedFolderMetadata] { swift.entries.map { DBXSharingSharedFolderMetadata(swift: $0) } }
+    public var entries: Array<DBXSharingSharedFolderMetadata> { swift.entries.map { DBXSharingSharedFolderMetadata(swift: $0) } }
     /// Present if there are additional shared folders that have not been returned yet. Pass the cursor into the
     /// corresponding continue endpoint (either listFoldersContinue or listMountableFoldersContinue) to list
     /// additional folders.
@@ -5805,8 +5845,8 @@ public class DBXSharingListFoldersResult: NSObject {
     public var cursor: String? { swift.cursor }
 
     @objc
-    public init(entries: [DBXSharingSharedFolderMetadata], cursor: String?) {
-        self.swift = Sharing.ListFoldersResult(entries: entries.map(\.subSwift), cursor: cursor)
+    public init(entries: Array<DBXSharingSharedFolderMetadata>, cursor: String?) {
+        self.swift = Sharing.ListFoldersResult(entries: entries.map { $0.subSwift }, cursor: cursor)
     }
 
     let swift: Sharing.ListFoldersResult
@@ -5814,6 +5854,7 @@ public class DBXSharingListFoldersResult: NSObject {
     public init(swift: Sharing.ListFoldersResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5842,6 +5883,7 @@ public class DBXSharingListSharedLinksArg: NSObject {
     public init(swift: Sharing.ListSharedLinksArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5873,17 +5915,17 @@ public class DBXSharingListSharedLinksError: NSObject {
 
     @objc
     public var asPath: DBXSharingListSharedLinksErrorPath? {
-        self as? DBXSharingListSharedLinksErrorPath
+        return self as? DBXSharingListSharedLinksErrorPath
     }
 
     @objc
     public var asReset: DBXSharingListSharedLinksErrorReset? {
-        self as? DBXSharingListSharedLinksErrorReset
+        return self as? DBXSharingListSharedLinksErrorReset
     }
 
     @objc
     public var asOther: DBXSharingListSharedLinksErrorOther? {
-        self as? DBXSharingListSharedLinksErrorOther
+        return self as? DBXSharingListSharedLinksErrorOther
     }
 }
 
@@ -5895,7 +5937,7 @@ public class DBXSharingListSharedLinksErrorPath: DBXSharingListSharedLinksError 
 
     @objc
     public init(_ arg: DBXFilesLookupError) {
-        self.path = arg
+        path = arg
         let swift = Sharing.ListSharedLinksError.path(arg.swift)
         super.init(swift: swift)
     }
@@ -5926,12 +5968,11 @@ public class DBXSharingListSharedLinksErrorOther: DBXSharingListSharedLinksError
 public class DBXSharingListSharedLinksResult: NSObject {
     /// Shared links applicable to the path argument.
     @objc
-    public var links: [DBXSharingSharedLinkMetadata] {
+    public var links: Array<DBXSharingSharedLinkMetadata> {
         swift.links.map {
-            DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: $0)
+            return DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: $0)
         }
     }
-
     /// Is true if there are additional shared links that have not been returned yet. Pass the cursor into
     /// listSharedLinks to retrieve them.
     @objc
@@ -5942,8 +5983,8 @@ public class DBXSharingListSharedLinksResult: NSObject {
     public var cursor: String? { swift.cursor }
 
     @objc
-    public init(links: [DBXSharingSharedLinkMetadata], hasMore: NSNumber, cursor: String?) {
-        self.swift = Sharing.ListSharedLinksResult(links: links.map(\.swift), hasMore: hasMore.boolValue, cursor: cursor)
+    public init(links: Array<DBXSharingSharedLinkMetadata>, hasMore: NSNumber, cursor: String?) {
+        self.swift = Sharing.ListSharedLinksResult(links: links.map { $0.swift }, hasMore: hasMore.boolValue, cursor: cursor)
     }
 
     let swift: Sharing.ListSharedLinksResult
@@ -5951,6 +5992,7 @@ public class DBXSharingListSharedLinksResult: NSObject {
     public init(swift: Sharing.ListSharedLinksResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5961,21 +6003,18 @@ public class DBXSharingListSharedLinksResult: NSObject {
 public class DBXSharingMemberAccessLevelResult: NSObject {
     /// The member still has this level of access to the content through a parent folder.
     @objc
-    public var accessLevel: DBXSharingAccessLevel? { guard let swift = swift.accessLevel else { return nil }
-        return DBXSharingAccessLevel(swift: swift)
-    }
-
+    public var accessLevel: DBXSharingAccessLevel? { guard let swift = swift.accessLevel else { return nil }; return DBXSharingAccessLevel(swift: swift) }
     /// A localized string with additional information about why the user has this access level to the content.
     @objc
     public var warning: String? { swift.warning }
     /// The parent folders that a member has access to. The field is present if the user has access to the first
     /// parent folder where the member gains access.
     @objc
-    public var accessDetails: [DBXSharingParentFolderAccessInfo]? { swift.accessDetails?.map { DBXSharingParentFolderAccessInfo(swift: $0) } }
+    public var accessDetails: Array<DBXSharingParentFolderAccessInfo>? { swift.accessDetails?.map { DBXSharingParentFolderAccessInfo(swift: $0) } }
 
     @objc
-    public init(accessLevel: DBXSharingAccessLevel?, warning: String?, accessDetails: [DBXSharingParentFolderAccessInfo]?) {
-        self.swift = Sharing.MemberAccessLevelResult(accessLevel: accessLevel?.swift, warning: warning, accessDetails: accessDetails?.map(\.swift))
+    public init(accessLevel: DBXSharingAccessLevel?, warning: String?, accessDetails: Array<DBXSharingParentFolderAccessInfo>?) {
+        self.swift = Sharing.MemberAccessLevelResult(accessLevel: accessLevel?.swift, warning: warning, accessDetails: accessDetails?.map { $0.swift })
     }
 
     let swift: Sharing.MemberAccessLevelResult
@@ -5983,6 +6022,7 @@ public class DBXSharingMemberAccessLevelResult: NSObject {
     public init(swift: Sharing.MemberAccessLevelResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6021,37 +6061,37 @@ public class DBXSharingMemberAction: NSObject {
 
     @objc
     public var asLeaveACopy: DBXSharingMemberActionLeaveACopy? {
-        self as? DBXSharingMemberActionLeaveACopy
+        return self as? DBXSharingMemberActionLeaveACopy
     }
 
     @objc
     public var asMakeEditor: DBXSharingMemberActionMakeEditor? {
-        self as? DBXSharingMemberActionMakeEditor
+        return self as? DBXSharingMemberActionMakeEditor
     }
 
     @objc
     public var asMakeOwner: DBXSharingMemberActionMakeOwner? {
-        self as? DBXSharingMemberActionMakeOwner
+        return self as? DBXSharingMemberActionMakeOwner
     }
 
     @objc
     public var asMakeViewer: DBXSharingMemberActionMakeViewer? {
-        self as? DBXSharingMemberActionMakeViewer
+        return self as? DBXSharingMemberActionMakeViewer
     }
 
     @objc
     public var asMakeViewerNoComment: DBXSharingMemberActionMakeViewerNoComment? {
-        self as? DBXSharingMemberActionMakeViewerNoComment
+        return self as? DBXSharingMemberActionMakeViewerNoComment
     }
 
     @objc
     public var asRemove: DBXSharingMemberActionRemove? {
-        self as? DBXSharingMemberActionRemove
+        return self as? DBXSharingMemberActionRemove
     }
 
     @objc
     public var asOther: DBXSharingMemberActionOther? {
-        self as? DBXSharingMemberActionOther
+        return self as? DBXSharingMemberActionOther
     }
 }
 
@@ -6136,9 +6176,7 @@ public class DBXSharingMemberPermission: NSObject {
     public var allow: NSNumber { swift.allow as NSNumber }
     /// The reason why the user is denied the permission. Not present if the action is allowed.
     @objc
-    public var reason: DBXSharingPermissionDeniedReason? { guard let swift = swift.reason else { return nil }
-        return DBXSharingPermissionDeniedReason(swift: swift)
-    }
+    public var reason: DBXSharingPermissionDeniedReason? { guard let swift = swift.reason else { return nil }; return DBXSharingPermissionDeniedReason(swift: swift) }
 
     @objc
     public init(action: DBXSharingMemberAction, allow: NSNumber, reason: DBXSharingPermissionDeniedReason?) {
@@ -6150,6 +6188,7 @@ public class DBXSharingMemberPermission: NSObject {
     public init(swift: Sharing.MemberPermission) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6170,6 +6209,8 @@ public class DBXSharingMemberPolicy: NSObject {
             return DBXSharingMemberPolicyTeam()
         case .anyone:
             return DBXSharingMemberPolicyAnyone()
+        case .teamAndApproved:
+            return DBXSharingMemberPolicyTeamAndApproved()
         case .other:
             return DBXSharingMemberPolicyOther()
         }
@@ -6180,17 +6221,22 @@ public class DBXSharingMemberPolicy: NSObject {
 
     @objc
     public var asTeam: DBXSharingMemberPolicyTeam? {
-        self as? DBXSharingMemberPolicyTeam
+        return self as? DBXSharingMemberPolicyTeam
     }
 
     @objc
     public var asAnyone: DBXSharingMemberPolicyAnyone? {
-        self as? DBXSharingMemberPolicyAnyone
+        return self as? DBXSharingMemberPolicyAnyone
+    }
+
+    @objc
+    public var asTeamAndApproved: DBXSharingMemberPolicyTeamAndApproved? {
+        return self as? DBXSharingMemberPolicyTeamAndApproved
     }
 
     @objc
     public var asOther: DBXSharingMemberPolicyOther? {
-        self as? DBXSharingMemberPolicyOther
+        return self as? DBXSharingMemberPolicyOther
     }
 }
 
@@ -6210,6 +6256,16 @@ public class DBXSharingMemberPolicyAnyone: DBXSharingMemberPolicy {
     @objc
     public init() {
         let swift = Sharing.MemberPolicy.anyone
+        super.init(swift: swift)
+    }
+}
+
+/// Only a teammate and approved people can become a member.
+@objc
+public class DBXSharingMemberPolicyTeamAndApproved: DBXSharingMemberPolicy {
+    @objc
+    public init() {
+        let swift = Sharing.MemberPolicy.teamAndApproved
         super.init(swift: swift)
     }
 }
@@ -6251,17 +6307,17 @@ public class DBXSharingMemberSelector: NSObject {
 
     @objc
     public var asDropboxId: DBXSharingMemberSelectorDropboxId? {
-        self as? DBXSharingMemberSelectorDropboxId
+        return self as? DBXSharingMemberSelectorDropboxId
     }
 
     @objc
     public var asEmail: DBXSharingMemberSelectorEmail? {
-        self as? DBXSharingMemberSelectorEmail
+        return self as? DBXSharingMemberSelectorEmail
     }
 
     @objc
     public var asOther: DBXSharingMemberSelectorOther? {
-        self as? DBXSharingMemberSelectorOther
+        return self as? DBXSharingMemberSelectorOther
     }
 }
 
@@ -6273,7 +6329,7 @@ public class DBXSharingMemberSelectorDropboxId: DBXSharingMemberSelector {
 
     @objc
     public init(_ arg: String) {
-        self.dropboxId = arg
+        dropboxId = arg
         let swift = Sharing.MemberSelector.dropboxId(arg)
         super.init(swift: swift)
     }
@@ -6287,7 +6343,7 @@ public class DBXSharingMemberSelectorEmail: DBXSharingMemberSelector {
 
     @objc
     public init(_ arg: String) {
-        self.email = arg
+        email = arg
         let swift = Sharing.MemberSelector.email(arg)
         super.init(swift: swift)
     }
@@ -6327,6 +6383,7 @@ public class DBXSharingModifySharedLinkSettingsArgs: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -6348,6 +6405,8 @@ public class DBXSharingModifySharedLinkSettingsError: NSObject {
             return DBXSharingModifySharedLinkSettingsErrorSharedLinkAccessDenied()
         case .unsupportedLinkType:
             return DBXSharingModifySharedLinkSettingsErrorUnsupportedLinkType()
+        case .unsupportedParameterField:
+            return DBXSharingModifySharedLinkSettingsErrorUnsupportedParameterField()
         case .other:
             return DBXSharingModifySharedLinkSettingsErrorOther()
         case .settingsError(let swiftArg):
@@ -6363,32 +6422,37 @@ public class DBXSharingModifySharedLinkSettingsError: NSObject {
 
     @objc
     public var asSharedLinkNotFound: DBXSharingModifySharedLinkSettingsErrorSharedLinkNotFound? {
-        self as? DBXSharingModifySharedLinkSettingsErrorSharedLinkNotFound
+        return self as? DBXSharingModifySharedLinkSettingsErrorSharedLinkNotFound
     }
 
     @objc
     public var asSharedLinkAccessDenied: DBXSharingModifySharedLinkSettingsErrorSharedLinkAccessDenied? {
-        self as? DBXSharingModifySharedLinkSettingsErrorSharedLinkAccessDenied
+        return self as? DBXSharingModifySharedLinkSettingsErrorSharedLinkAccessDenied
     }
 
     @objc
     public var asUnsupportedLinkType: DBXSharingModifySharedLinkSettingsErrorUnsupportedLinkType? {
-        self as? DBXSharingModifySharedLinkSettingsErrorUnsupportedLinkType
+        return self as? DBXSharingModifySharedLinkSettingsErrorUnsupportedLinkType
+    }
+
+    @objc
+    public var asUnsupportedParameterField: DBXSharingModifySharedLinkSettingsErrorUnsupportedParameterField? {
+        return self as? DBXSharingModifySharedLinkSettingsErrorUnsupportedParameterField
     }
 
     @objc
     public var asOther: DBXSharingModifySharedLinkSettingsErrorOther? {
-        self as? DBXSharingModifySharedLinkSettingsErrorOther
+        return self as? DBXSharingModifySharedLinkSettingsErrorOther
     }
 
     @objc
     public var asSettingsError: DBXSharingModifySharedLinkSettingsErrorSettingsError? {
-        self as? DBXSharingModifySharedLinkSettingsErrorSettingsError
+        return self as? DBXSharingModifySharedLinkSettingsErrorSettingsError
     }
 
     @objc
     public var asEmailNotVerified: DBXSharingModifySharedLinkSettingsErrorEmailNotVerified? {
-        self as? DBXSharingModifySharedLinkSettingsErrorEmailNotVerified
+        return self as? DBXSharingModifySharedLinkSettingsErrorEmailNotVerified
     }
 }
 
@@ -6422,6 +6486,16 @@ public class DBXSharingModifySharedLinkSettingsErrorUnsupportedLinkType: DBXShar
     }
 }
 
+/// Private shared links do not support `path` or `link_password` parameter fields.
+@objc
+public class DBXSharingModifySharedLinkSettingsErrorUnsupportedParameterField: DBXSharingModifySharedLinkSettingsError {
+    @objc
+    public init() {
+        let swift = Sharing.ModifySharedLinkSettingsError.unsupportedParameterField
+        super.init(swift: swift)
+    }
+}
+
 /// An unspecified error.
 @objc
 public class DBXSharingModifySharedLinkSettingsErrorOther: DBXSharingModifySharedLinkSettingsError {
@@ -6440,14 +6514,14 @@ public class DBXSharingModifySharedLinkSettingsErrorSettingsError: DBXSharingMod
 
     @objc
     public init(_ arg: DBXSharingSharedLinkSettingsError) {
-        self.settingsError = arg
+        settingsError = arg
         let swift = Sharing.ModifySharedLinkSettingsError.settingsError(arg.swift)
         super.init(swift: swift)
     }
 }
 
 /// This user's email address is not verified. This functionality is only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXSharingModifySharedLinkSettingsErrorEmailNotVerified: DBXSharingModifySharedLinkSettingsError {
     @objc
@@ -6474,6 +6548,7 @@ public class DBXSharingMountFolderArg: NSObject {
     public init(swift: Sharing.MountFolderArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6504,6 +6579,8 @@ public class DBXSharingMountFolderError: NSObject {
             return DBXSharingMountFolderErrorNoPermission()
         case .notMountable:
             return DBXSharingMountFolderErrorNotMountable()
+        case .mustAutomount:
+            return DBXSharingMountFolderErrorMustAutomount()
         case .other:
             return DBXSharingMountFolderErrorOther()
         }
@@ -6514,37 +6591,42 @@ public class DBXSharingMountFolderError: NSObject {
 
     @objc
     public var asAccessError: DBXSharingMountFolderErrorAccessError? {
-        self as? DBXSharingMountFolderErrorAccessError
+        return self as? DBXSharingMountFolderErrorAccessError
     }
 
     @objc
     public var asInsideSharedFolder: DBXSharingMountFolderErrorInsideSharedFolder? {
-        self as? DBXSharingMountFolderErrorInsideSharedFolder
+        return self as? DBXSharingMountFolderErrorInsideSharedFolder
     }
 
     @objc
     public var asInsufficientQuota: DBXSharingMountFolderErrorInsufficientQuota? {
-        self as? DBXSharingMountFolderErrorInsufficientQuota
+        return self as? DBXSharingMountFolderErrorInsufficientQuota
     }
 
     @objc
     public var asAlreadyMounted: DBXSharingMountFolderErrorAlreadyMounted? {
-        self as? DBXSharingMountFolderErrorAlreadyMounted
+        return self as? DBXSharingMountFolderErrorAlreadyMounted
     }
 
     @objc
     public var asNoPermission: DBXSharingMountFolderErrorNoPermission? {
-        self as? DBXSharingMountFolderErrorNoPermission
+        return self as? DBXSharingMountFolderErrorNoPermission
     }
 
     @objc
     public var asNotMountable: DBXSharingMountFolderErrorNotMountable? {
-        self as? DBXSharingMountFolderErrorNotMountable
+        return self as? DBXSharingMountFolderErrorNotMountable
+    }
+
+    @objc
+    public var asMustAutomount: DBXSharingMountFolderErrorMustAutomount? {
+        return self as? DBXSharingMountFolderErrorMustAutomount
     }
 
     @objc
     public var asOther: DBXSharingMountFolderErrorOther? {
-        self as? DBXSharingMountFolderErrorOther
+        return self as? DBXSharingMountFolderErrorOther
     }
 }
 
@@ -6556,7 +6638,7 @@ public class DBXSharingMountFolderErrorAccessError: DBXSharingMountFolderError {
 
     @objc
     public init(_ arg: DBXSharingSharedFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.MountFolderError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -6580,7 +6662,7 @@ public class DBXSharingMountFolderErrorInsufficientQuota: DBXSharingMountFolderE
 
     @objc
     public init(_ arg: DBXSharingInsufficientQuotaAmounts) {
-        self.insufficientQuota = arg
+        insufficientQuota = arg
         let swift = Sharing.MountFolderError.insufficientQuota(arg.swift)
         super.init(swift: swift)
     }
@@ -6607,12 +6689,23 @@ public class DBXSharingMountFolderErrorNoPermission: DBXSharingMountFolderError 
 }
 
 /// The shared folder is not mountable. One example where this can occur is when the shared folder belongs
-/// within a team folder in the user's Dropbox.
+        /// within a team folder in the user's Dropbox.
 @objc
 public class DBXSharingMountFolderErrorNotMountable: DBXSharingMountFolderError {
     @objc
     public init() {
         let swift = Sharing.MountFolderError.notMountable
+        super.init(swift: swift)
+    }
+}
+
+/// The shared folder is not mountable by directly call APIs, instead the automounter is responsible for
+        /// mounting it.
+@objc
+public class DBXSharingMountFolderErrorMustAutomount: DBXSharingMountFolderError {
+    @objc
+    public init() {
+        let swift = Sharing.MountFolderError.mustAutomount
         super.init(swift: swift)
     }
 }
@@ -6638,14 +6731,14 @@ public class DBXSharingParentFolderAccessInfo: NSObject {
     public var sharedFolderId: String { swift.sharedFolderId }
     /// The user's permissions for the parent shared folder.
     @objc
-    public var permissions: [DBXSharingMemberPermission] { swift.permissions.map { DBXSharingMemberPermission(swift: $0) } }
+    public var permissions: Array<DBXSharingMemberPermission> { swift.permissions.map { DBXSharingMemberPermission(swift: $0) } }
     /// The full path to the parent shared folder relative to the acting user's root.
     @objc
     public var path: String { swift.path }
 
     @objc
-    public init(folderName: String, sharedFolderId: String, permissions: [DBXSharingMemberPermission], path: String) {
-        self.swift = Sharing.ParentFolderAccessInfo(folderName: folderName, sharedFolderId: sharedFolderId, permissions: permissions.map(\.swift), path: path)
+    public init(folderName: String, sharedFolderId: String, permissions: Array<DBXSharingMemberPermission>, path: String) {
+        self.swift = Sharing.ParentFolderAccessInfo(folderName: folderName, sharedFolderId: sharedFolderId, permissions: permissions.map { $0.swift }, path: path)
     }
 
     let swift: Sharing.ParentFolderAccessInfo
@@ -6653,6 +6746,7 @@ public class DBXSharingParentFolderAccessInfo: NSObject {
     public init(swift: Sharing.ParentFolderAccessInfo) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6678,6 +6772,7 @@ public class DBXSharingPathLinkMetadata: DBXSharingLinkMetadata {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -6706,12 +6801,12 @@ public class DBXSharingPendingUploadMode: NSObject {
 
     @objc
     public var asFile: DBXSharingPendingUploadModeFile? {
-        self as? DBXSharingPendingUploadModeFile
+        return self as? DBXSharingPendingUploadModeFile
     }
 
     @objc
     public var asFolder: DBXSharingPendingUploadModeFolder? {
-        self as? DBXSharingPendingUploadModeFolder
+        return self as? DBXSharingPendingUploadModeFolder
     }
 }
 
@@ -6787,82 +6882,82 @@ public class DBXSharingPermissionDeniedReason: NSObject {
 
     @objc
     public var asUserNotSameTeamAsOwner: DBXSharingPermissionDeniedReasonUserNotSameTeamAsOwner? {
-        self as? DBXSharingPermissionDeniedReasonUserNotSameTeamAsOwner
+        return self as? DBXSharingPermissionDeniedReasonUserNotSameTeamAsOwner
     }
 
     @objc
     public var asUserNotAllowedByOwner: DBXSharingPermissionDeniedReasonUserNotAllowedByOwner? {
-        self as? DBXSharingPermissionDeniedReasonUserNotAllowedByOwner
+        return self as? DBXSharingPermissionDeniedReasonUserNotAllowedByOwner
     }
 
     @objc
     public var asTargetIsIndirectMember: DBXSharingPermissionDeniedReasonTargetIsIndirectMember? {
-        self as? DBXSharingPermissionDeniedReasonTargetIsIndirectMember
+        return self as? DBXSharingPermissionDeniedReasonTargetIsIndirectMember
     }
 
     @objc
     public var asTargetIsOwner: DBXSharingPermissionDeniedReasonTargetIsOwner? {
-        self as? DBXSharingPermissionDeniedReasonTargetIsOwner
+        return self as? DBXSharingPermissionDeniedReasonTargetIsOwner
     }
 
     @objc
     public var asTargetIsSelf: DBXSharingPermissionDeniedReasonTargetIsSelf? {
-        self as? DBXSharingPermissionDeniedReasonTargetIsSelf
+        return self as? DBXSharingPermissionDeniedReasonTargetIsSelf
     }
 
     @objc
     public var asTargetNotActive: DBXSharingPermissionDeniedReasonTargetNotActive? {
-        self as? DBXSharingPermissionDeniedReasonTargetNotActive
+        return self as? DBXSharingPermissionDeniedReasonTargetNotActive
     }
 
     @objc
     public var asFolderIsLimitedTeamFolder: DBXSharingPermissionDeniedReasonFolderIsLimitedTeamFolder? {
-        self as? DBXSharingPermissionDeniedReasonFolderIsLimitedTeamFolder
+        return self as? DBXSharingPermissionDeniedReasonFolderIsLimitedTeamFolder
     }
 
     @objc
     public var asOwnerNotOnTeam: DBXSharingPermissionDeniedReasonOwnerNotOnTeam? {
-        self as? DBXSharingPermissionDeniedReasonOwnerNotOnTeam
+        return self as? DBXSharingPermissionDeniedReasonOwnerNotOnTeam
     }
 
     @objc
     public var asPermissionDenied: DBXSharingPermissionDeniedReasonPermissionDenied? {
-        self as? DBXSharingPermissionDeniedReasonPermissionDenied
+        return self as? DBXSharingPermissionDeniedReasonPermissionDenied
     }
 
     @objc
     public var asRestrictedByTeam: DBXSharingPermissionDeniedReasonRestrictedByTeam? {
-        self as? DBXSharingPermissionDeniedReasonRestrictedByTeam
+        return self as? DBXSharingPermissionDeniedReasonRestrictedByTeam
     }
 
     @objc
     public var asUserAccountType: DBXSharingPermissionDeniedReasonUserAccountType? {
-        self as? DBXSharingPermissionDeniedReasonUserAccountType
+        return self as? DBXSharingPermissionDeniedReasonUserAccountType
     }
 
     @objc
     public var asUserNotOnTeam: DBXSharingPermissionDeniedReasonUserNotOnTeam? {
-        self as? DBXSharingPermissionDeniedReasonUserNotOnTeam
+        return self as? DBXSharingPermissionDeniedReasonUserNotOnTeam
     }
 
     @objc
     public var asFolderIsInsideSharedFolder: DBXSharingPermissionDeniedReasonFolderIsInsideSharedFolder? {
-        self as? DBXSharingPermissionDeniedReasonFolderIsInsideSharedFolder
+        return self as? DBXSharingPermissionDeniedReasonFolderIsInsideSharedFolder
     }
 
     @objc
     public var asRestrictedByParentFolder: DBXSharingPermissionDeniedReasonRestrictedByParentFolder? {
-        self as? DBXSharingPermissionDeniedReasonRestrictedByParentFolder
+        return self as? DBXSharingPermissionDeniedReasonRestrictedByParentFolder
     }
 
     @objc
     public var asInsufficientPlan: DBXSharingPermissionDeniedReasonInsufficientPlan? {
-        self as? DBXSharingPermissionDeniedReasonInsufficientPlan
+        return self as? DBXSharingPermissionDeniedReasonInsufficientPlan
     }
 
     @objc
     public var asOther: DBXSharingPermissionDeniedReasonOther? {
-        self as? DBXSharingPermissionDeniedReasonOther
+        return self as? DBXSharingPermissionDeniedReasonOther
     }
 }
 
@@ -7014,7 +7109,7 @@ public class DBXSharingPermissionDeniedReasonInsufficientPlan: DBXSharingPermiss
 
     @objc
     public init(_ arg: DBXSharingInsufficientPlan) {
-        self.insufficientPlan = arg
+        insufficientPlan = arg
         let swift = Sharing.PermissionDeniedReason.insufficientPlan(arg.swift)
         super.init(swift: swift)
     }
@@ -7028,6 +7123,185 @@ public class DBXSharingPermissionDeniedReasonOther: DBXSharingPermissionDeniedRe
         let swift = Sharing.PermissionDeniedReason.other
         super.init(swift: swift)
     }
+}
+
+/// Removes all self-removable access from a file or folder. For folders: always relinquishes without keeping a
+/// local copy (leave_a_copy=false behavior). If you need control over keeping folder contents, use the
+/// relinquish_folder_membership endpoint instead.
+@objc
+public class DBXSharingRelinquishAccessArg: NSObject {
+    /// The id for the file or folder.
+    @objc
+    public var fileId: String { swift.fileId }
+
+    @objc
+    public init(fileId: String) {
+        self.swift = Sharing.RelinquishAccessArg(fileId: fileId)
+    }
+
+    let swift: Sharing.RelinquishAccessArg
+
+    public init(swift: Sharing.RelinquishAccessArg) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Error result for the relinquish_access endpoint.
+@objc
+public class DBXSharingRelinquishAccessError: NSObject {
+    let swift: Sharing.RelinquishAccessError
+
+    public init(swift: Sharing.RelinquishAccessError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Sharing.RelinquishAccessError) -> DBXSharingRelinquishAccessError {
+        switch swift {
+        case .invalidFileId:
+            return DBXSharingRelinquishAccessErrorInvalidFileId()
+        case .emailUnverified:
+            return DBXSharingRelinquishAccessErrorEmailUnverified()
+        case .owner:
+            return DBXSharingRelinquishAccessErrorOwner()
+        case .noExplicitAccess:
+            return DBXSharingRelinquishAccessErrorNoExplicitAccess()
+        case .teamFolder:
+            return DBXSharingRelinquishAccessErrorTeamFolder()
+        case .noPermission:
+            return DBXSharingRelinquishAccessErrorNoPermission()
+        case .other:
+            return DBXSharingRelinquishAccessErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asInvalidFileId: DBXSharingRelinquishAccessErrorInvalidFileId? {
+        return self as? DBXSharingRelinquishAccessErrorInvalidFileId
+    }
+
+    @objc
+    public var asEmailUnverified: DBXSharingRelinquishAccessErrorEmailUnverified? {
+        return self as? DBXSharingRelinquishAccessErrorEmailUnverified
+    }
+
+    @objc
+    public var asOwner: DBXSharingRelinquishAccessErrorOwner? {
+        return self as? DBXSharingRelinquishAccessErrorOwner
+    }
+
+    @objc
+    public var asNoExplicitAccess: DBXSharingRelinquishAccessErrorNoExplicitAccess? {
+        return self as? DBXSharingRelinquishAccessErrorNoExplicitAccess
+    }
+
+    @objc
+    public var asTeamFolder: DBXSharingRelinquishAccessErrorTeamFolder? {
+        return self as? DBXSharingRelinquishAccessErrorTeamFolder
+    }
+
+    @objc
+    public var asNoPermission: DBXSharingRelinquishAccessErrorNoPermission? {
+        return self as? DBXSharingRelinquishAccessErrorNoPermission
+    }
+
+    @objc
+    public var asOther: DBXSharingRelinquishAccessErrorOther? {
+        return self as? DBXSharingRelinquishAccessErrorOther
+    }
+}
+
+/// File or folder not found or has been deleted.
+@objc
+public class DBXSharingRelinquishAccessErrorInvalidFileId: DBXSharingRelinquishAccessError {
+    @objc
+    public init() {
+        let swift = Sharing.RelinquishAccessError.invalidFileId
+        super.init(swift: swift)
+    }
+}
+
+/// Caller's email address is not verified.
+@objc
+public class DBXSharingRelinquishAccessErrorEmailUnverified: DBXSharingRelinquishAccessError {
+    @objc
+    public init() {
+        let swift = Sharing.RelinquishAccessError.emailUnverified
+        super.init(swift: swift)
+    }
+}
+
+/// User is the owner of the file/folder.
+@objc
+public class DBXSharingRelinquishAccessErrorOwner: DBXSharingRelinquishAccessError {
+    @objc
+    public init() {
+        let swift = Sharing.RelinquishAccessError.owner
+        super.init(swift: swift)
+    }
+}
+
+/// User has only non-removable access — inherited from a parent folder or via group membership. Either way,
+        /// relinquish_access cannot remove the caller's access from this surface; the caller must take action
+        /// on the source of the access (e.g. leave the parent shared folder, or be removed from the group).
+@objc
+public class DBXSharingRelinquishAccessErrorNoExplicitAccess: DBXSharingRelinquishAccessError {
+    @objc
+    public init() {
+        let swift = Sharing.RelinquishAccessError.noExplicitAccess
+        super.init(swift: swift)
+    }
+}
+
+/// Team folder restrictions apply.
+@objc
+public class DBXSharingRelinquishAccessErrorTeamFolder: DBXSharingRelinquishAccessError {
+    @objc
+    public init() {
+        let swift = Sharing.RelinquishAccessError.teamFolder
+        super.init(swift: swift)
+    }
+}
+
+/// Caller does not have permission to perform this action. Generic fallback.
+@objc
+public class DBXSharingRelinquishAccessErrorNoPermission: DBXSharingRelinquishAccessError {
+    @objc
+    public init() {
+        let swift = Sharing.RelinquishAccessError.noPermission
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXSharingRelinquishAccessErrorOther: DBXSharingRelinquishAccessError {
+    @objc
+    public init() {
+        let swift = Sharing.RelinquishAccessError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Returns an empty response for the relinquish_access endpoint.
+@objc
+public class DBXSharingRelinquishAccessResult: NSObject {
+
+    let swift: Sharing.RelinquishAccessResult
+
+    public init(swift: Sharing.RelinquishAccessResult) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
 }
 
 /// Objective-C compatible RelinquishFileMembershipArg struct
@@ -7047,6 +7321,7 @@ public class DBXSharingRelinquishFileMembershipArg: NSObject {
     public init(swift: Sharing.RelinquishFileMembershipArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -7080,22 +7355,22 @@ public class DBXSharingRelinquishFileMembershipError: NSObject {
 
     @objc
     public var asAccessError: DBXSharingRelinquishFileMembershipErrorAccessError? {
-        self as? DBXSharingRelinquishFileMembershipErrorAccessError
+        return self as? DBXSharingRelinquishFileMembershipErrorAccessError
     }
 
     @objc
     public var asGroupAccess: DBXSharingRelinquishFileMembershipErrorGroupAccess? {
-        self as? DBXSharingRelinquishFileMembershipErrorGroupAccess
+        return self as? DBXSharingRelinquishFileMembershipErrorGroupAccess
     }
 
     @objc
     public var asNoPermission: DBXSharingRelinquishFileMembershipErrorNoPermission? {
-        self as? DBXSharingRelinquishFileMembershipErrorNoPermission
+        return self as? DBXSharingRelinquishFileMembershipErrorNoPermission
     }
 
     @objc
     public var asOther: DBXSharingRelinquishFileMembershipErrorOther? {
-        self as? DBXSharingRelinquishFileMembershipErrorOther
+        return self as? DBXSharingRelinquishFileMembershipErrorOther
     }
 }
 
@@ -7107,14 +7382,14 @@ public class DBXSharingRelinquishFileMembershipErrorAccessError: DBXSharingRelin
 
     @objc
     public init(_ arg: DBXSharingSharingFileAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.RelinquishFileMembershipError.accessError(arg.swift)
         super.init(swift: swift)
     }
 }
 
 /// The current user has access to the shared file via a group.  You can't relinquish membership to a file
-/// shared via groups.
+        /// shared via groups.
 @objc
 public class DBXSharingRelinquishFileMembershipErrorGroupAccess: DBXSharingRelinquishFileMembershipError {
     @objc
@@ -7166,6 +7441,7 @@ public class DBXSharingRelinquishFolderMembershipArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -7206,42 +7482,42 @@ public class DBXSharingRelinquishFolderMembershipError: NSObject {
 
     @objc
     public var asAccessError: DBXSharingRelinquishFolderMembershipErrorAccessError? {
-        self as? DBXSharingRelinquishFolderMembershipErrorAccessError
+        return self as? DBXSharingRelinquishFolderMembershipErrorAccessError
     }
 
     @objc
     public var asFolderOwner: DBXSharingRelinquishFolderMembershipErrorFolderOwner? {
-        self as? DBXSharingRelinquishFolderMembershipErrorFolderOwner
+        return self as? DBXSharingRelinquishFolderMembershipErrorFolderOwner
     }
 
     @objc
     public var asMounted: DBXSharingRelinquishFolderMembershipErrorMounted? {
-        self as? DBXSharingRelinquishFolderMembershipErrorMounted
+        return self as? DBXSharingRelinquishFolderMembershipErrorMounted
     }
 
     @objc
     public var asGroupAccess: DBXSharingRelinquishFolderMembershipErrorGroupAccess? {
-        self as? DBXSharingRelinquishFolderMembershipErrorGroupAccess
+        return self as? DBXSharingRelinquishFolderMembershipErrorGroupAccess
     }
 
     @objc
     public var asTeamFolder: DBXSharingRelinquishFolderMembershipErrorTeamFolder? {
-        self as? DBXSharingRelinquishFolderMembershipErrorTeamFolder
+        return self as? DBXSharingRelinquishFolderMembershipErrorTeamFolder
     }
 
     @objc
     public var asNoPermission: DBXSharingRelinquishFolderMembershipErrorNoPermission? {
-        self as? DBXSharingRelinquishFolderMembershipErrorNoPermission
+        return self as? DBXSharingRelinquishFolderMembershipErrorNoPermission
     }
 
     @objc
     public var asNoExplicitAccess: DBXSharingRelinquishFolderMembershipErrorNoExplicitAccess? {
-        self as? DBXSharingRelinquishFolderMembershipErrorNoExplicitAccess
+        return self as? DBXSharingRelinquishFolderMembershipErrorNoExplicitAccess
     }
 
     @objc
     public var asOther: DBXSharingRelinquishFolderMembershipErrorOther? {
-        self as? DBXSharingRelinquishFolderMembershipErrorOther
+        return self as? DBXSharingRelinquishFolderMembershipErrorOther
     }
 }
 
@@ -7253,14 +7529,14 @@ public class DBXSharingRelinquishFolderMembershipErrorAccessError: DBXSharingRel
 
     @objc
     public init(_ arg: DBXSharingSharedFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.RelinquishFolderMembershipError.accessError(arg.swift)
         super.init(swift: swift)
     }
 }
 
 /// The current user is the owner of the shared folder. Owners cannot relinquish membership to their own
-/// folders. Try unsharing or transferring ownership first.
+        /// folders. Try unsharing or transferring ownership first.
 @objc
 public class DBXSharingRelinquishFolderMembershipErrorFolderOwner: DBXSharingRelinquishFolderMembershipError {
     @objc
@@ -7281,7 +7557,7 @@ public class DBXSharingRelinquishFolderMembershipErrorMounted: DBXSharingRelinqu
 }
 
 /// The current user has access to the shared folder via a group.  You can't relinquish membership to folders
-/// shared via groups.
+        /// shared via groups.
 @objc
 public class DBXSharingRelinquishFolderMembershipErrorGroupAccess: DBXSharingRelinquishFolderMembershipError {
     @objc
@@ -7312,7 +7588,7 @@ public class DBXSharingRelinquishFolderMembershipErrorNoPermission: DBXSharingRe
 }
 
 /// The current user only has inherited access to the shared folder.  You can't relinquish inherited membership
-/// to folders.
+        /// to folders.
 @objc
 public class DBXSharingRelinquishFolderMembershipErrorNoExplicitAccess: DBXSharingRelinquishFolderMembershipError {
     @objc
@@ -7354,6 +7630,7 @@ public class DBXSharingRemoveFileMemberArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -7388,22 +7665,22 @@ public class DBXSharingRemoveFileMemberError: NSObject {
 
     @objc
     public var asUserError: DBXSharingRemoveFileMemberErrorUserError? {
-        self as? DBXSharingRemoveFileMemberErrorUserError
+        return self as? DBXSharingRemoveFileMemberErrorUserError
     }
 
     @objc
     public var asAccessError: DBXSharingRemoveFileMemberErrorAccessError? {
-        self as? DBXSharingRemoveFileMemberErrorAccessError
+        return self as? DBXSharingRemoveFileMemberErrorAccessError
     }
 
     @objc
     public var asNoExplicitAccess: DBXSharingRemoveFileMemberErrorNoExplicitAccess? {
-        self as? DBXSharingRemoveFileMemberErrorNoExplicitAccess
+        return self as? DBXSharingRemoveFileMemberErrorNoExplicitAccess
     }
 
     @objc
     public var asOther: DBXSharingRemoveFileMemberErrorOther? {
-        self as? DBXSharingRemoveFileMemberErrorOther
+        return self as? DBXSharingRemoveFileMemberErrorOther
     }
 }
 
@@ -7415,7 +7692,7 @@ public class DBXSharingRemoveFileMemberErrorUserError: DBXSharingRemoveFileMembe
 
     @objc
     public init(_ arg: DBXSharingSharingUserError) {
-        self.userError = arg
+        userError = arg
         let swift = Sharing.RemoveFileMemberError.userError(arg.swift)
         super.init(swift: swift)
     }
@@ -7429,14 +7706,14 @@ public class DBXSharingRemoveFileMemberErrorAccessError: DBXSharingRemoveFileMem
 
     @objc
     public init(_ arg: DBXSharingSharingFileAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.RemoveFileMemberError.accessError(arg.swift)
         super.init(swift: swift)
     }
 }
 
 /// This member does not have explicit access to the file and therefore cannot be removed. The return value is
-/// the access that a user might have to the file from a parent folder.
+        /// the access that a user might have to the file from a parent folder.
 @objc
 public class DBXSharingRemoveFileMemberErrorNoExplicitAccess: DBXSharingRemoveFileMemberError {
     @objc
@@ -7444,7 +7721,7 @@ public class DBXSharingRemoveFileMemberErrorNoExplicitAccess: DBXSharingRemoveFi
 
     @objc
     public init(_ arg: DBXSharingMemberAccessLevelResult) {
-        self.noExplicitAccess = arg
+        noExplicitAccess = arg
         let swift = Sharing.RemoveFileMemberError.noExplicitAccess(arg.swift)
         super.init(swift: swift)
     }
@@ -7485,6 +7762,7 @@ public class DBXSharingRemoveFolderMemberArg: NSObject {
     public init(swift: Sharing.RemoveFolderMemberArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -7527,42 +7805,42 @@ public class DBXSharingRemoveFolderMemberError: NSObject {
 
     @objc
     public var asAccessError: DBXSharingRemoveFolderMemberErrorAccessError? {
-        self as? DBXSharingRemoveFolderMemberErrorAccessError
+        return self as? DBXSharingRemoveFolderMemberErrorAccessError
     }
 
     @objc
     public var asMemberError: DBXSharingRemoveFolderMemberErrorMemberError? {
-        self as? DBXSharingRemoveFolderMemberErrorMemberError
+        return self as? DBXSharingRemoveFolderMemberErrorMemberError
     }
 
     @objc
     public var asFolderOwner: DBXSharingRemoveFolderMemberErrorFolderOwner? {
-        self as? DBXSharingRemoveFolderMemberErrorFolderOwner
+        return self as? DBXSharingRemoveFolderMemberErrorFolderOwner
     }
 
     @objc
     public var asGroupAccess: DBXSharingRemoveFolderMemberErrorGroupAccess? {
-        self as? DBXSharingRemoveFolderMemberErrorGroupAccess
+        return self as? DBXSharingRemoveFolderMemberErrorGroupAccess
     }
 
     @objc
     public var asTeamFolder: DBXSharingRemoveFolderMemberErrorTeamFolder? {
-        self as? DBXSharingRemoveFolderMemberErrorTeamFolder
+        return self as? DBXSharingRemoveFolderMemberErrorTeamFolder
     }
 
     @objc
     public var asNoPermission: DBXSharingRemoveFolderMemberErrorNoPermission? {
-        self as? DBXSharingRemoveFolderMemberErrorNoPermission
+        return self as? DBXSharingRemoveFolderMemberErrorNoPermission
     }
 
     @objc
     public var asTooManyFiles: DBXSharingRemoveFolderMemberErrorTooManyFiles? {
-        self as? DBXSharingRemoveFolderMemberErrorTooManyFiles
+        return self as? DBXSharingRemoveFolderMemberErrorTooManyFiles
     }
 
     @objc
     public var asOther: DBXSharingRemoveFolderMemberErrorOther? {
-        self as? DBXSharingRemoveFolderMemberErrorOther
+        return self as? DBXSharingRemoveFolderMemberErrorOther
     }
 }
 
@@ -7574,7 +7852,7 @@ public class DBXSharingRemoveFolderMemberErrorAccessError: DBXSharingRemoveFolde
 
     @objc
     public init(_ arg: DBXSharingSharedFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.RemoveFolderMemberError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -7588,14 +7866,14 @@ public class DBXSharingRemoveFolderMemberErrorMemberError: DBXSharingRemoveFolde
 
     @objc
     public init(_ arg: DBXSharingSharedFolderMemberError) {
-        self.memberError = arg
+        memberError = arg
         let swift = Sharing.RemoveFolderMemberError.memberError(arg.swift)
         super.init(swift: swift)
     }
 }
 
 /// The target user is the owner of the shared folder. You can't remove this user until ownership has been
-/// transferred to another member.
+        /// transferred to another member.
 @objc
 public class DBXSharingRemoveFolderMemberErrorFolderOwner: DBXSharingRemoveFolderMemberError {
     @objc
@@ -7636,7 +7914,7 @@ public class DBXSharingRemoveFolderMemberErrorNoPermission: DBXSharingRemoveFold
 }
 
 /// This shared folder has too many files for leaving a copy. You can still remove this user without leaving a
-/// copy.
+        /// copy.
 @objc
 public class DBXSharingRemoveFolderMemberErrorTooManyFiles: DBXSharingRemoveFolderMemberError {
     @objc
@@ -7683,17 +7961,17 @@ public class DBXSharingRemoveMemberJobStatus: NSObject {
 
     @objc
     public var asInProgress: DBXSharingRemoveMemberJobStatusInProgress? {
-        self as? DBXSharingRemoveMemberJobStatusInProgress
+        return self as? DBXSharingRemoveMemberJobStatusInProgress
     }
 
     @objc
     public var asComplete: DBXSharingRemoveMemberJobStatusComplete? {
-        self as? DBXSharingRemoveMemberJobStatusComplete
+        return self as? DBXSharingRemoveMemberJobStatusComplete
     }
 
     @objc
     public var asFailed: DBXSharingRemoveMemberJobStatusFailed? {
-        self as? DBXSharingRemoveMemberJobStatusFailed
+        return self as? DBXSharingRemoveMemberJobStatusFailed
     }
 }
 
@@ -7708,7 +7986,7 @@ public class DBXSharingRemoveMemberJobStatusInProgress: DBXSharingRemoveMemberJo
 }
 
 /// Removing the folder member has finished. The value is information about whether the member has another form
-/// of access.
+        /// of access.
 @objc
 public class DBXSharingRemoveMemberJobStatusComplete: DBXSharingRemoveMemberJobStatus {
     @objc
@@ -7716,7 +7994,7 @@ public class DBXSharingRemoveMemberJobStatusComplete: DBXSharingRemoveMemberJobS
 
     @objc
     public init(_ arg: DBXSharingMemberAccessLevelResult) {
-        self.complete = arg
+        complete = arg
         let swift = Sharing.RemoveMemberJobStatus.complete(arg.swift)
         super.init(swift: swift)
     }
@@ -7730,7 +8008,7 @@ public class DBXSharingRemoveMemberJobStatusFailed: DBXSharingRemoveMemberJobSta
 
     @objc
     public init(_ arg: DBXSharingRemoveFolderMemberError) {
-        self.failed = arg
+        failed = arg
         let swift = Sharing.RemoveMemberJobStatus.failed(arg.swift)
         super.init(swift: swift)
     }
@@ -7765,27 +8043,27 @@ public class DBXSharingRequestedLinkAccessLevel: NSObject {
 
     @objc
     public var asViewer: DBXSharingRequestedLinkAccessLevelViewer? {
-        self as? DBXSharingRequestedLinkAccessLevelViewer
+        return self as? DBXSharingRequestedLinkAccessLevelViewer
     }
 
     @objc
     public var asEditor: DBXSharingRequestedLinkAccessLevelEditor? {
-        self as? DBXSharingRequestedLinkAccessLevelEditor
+        return self as? DBXSharingRequestedLinkAccessLevelEditor
     }
 
     @objc
     public var asMax: DBXSharingRequestedLinkAccessLevelMax? {
-        self as? DBXSharingRequestedLinkAccessLevelMax
+        return self as? DBXSharingRequestedLinkAccessLevelMax
     }
 
     @objc
     public var asDefault_: DBXSharingRequestedLinkAccessLevelDefault_? {
-        self as? DBXSharingRequestedLinkAccessLevelDefault_
+        return self as? DBXSharingRequestedLinkAccessLevelDefault_
     }
 
     @objc
     public var asOther: DBXSharingRequestedLinkAccessLevelOther? {
-        self as? DBXSharingRequestedLinkAccessLevelOther
+        return self as? DBXSharingRequestedLinkAccessLevelOther
     }
 }
 
@@ -7800,7 +8078,7 @@ public class DBXSharingRequestedLinkAccessLevelViewer: DBXSharingRequestedLinkAc
 }
 
 /// Users who use the link can edit, view and comment on the content. Note not all file types support edit links
-/// yet.
+        /// yet.
 @objc
 public class DBXSharingRequestedLinkAccessLevelEditor: DBXSharingRequestedLinkAccessLevel {
     @objc
@@ -7858,6 +8136,7 @@ public class DBXSharingRevokeSharedLinkArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -7879,6 +8158,8 @@ public class DBXSharingRevokeSharedLinkError: NSObject {
             return DBXSharingRevokeSharedLinkErrorSharedLinkAccessDenied()
         case .unsupportedLinkType:
             return DBXSharingRevokeSharedLinkErrorUnsupportedLinkType()
+        case .unsupportedParameterField:
+            return DBXSharingRevokeSharedLinkErrorUnsupportedParameterField()
         case .other:
             return DBXSharingRevokeSharedLinkErrorOther()
         case .sharedLinkMalformed:
@@ -7891,27 +8172,32 @@ public class DBXSharingRevokeSharedLinkError: NSObject {
 
     @objc
     public var asSharedLinkNotFound: DBXSharingRevokeSharedLinkErrorSharedLinkNotFound? {
-        self as? DBXSharingRevokeSharedLinkErrorSharedLinkNotFound
+        return self as? DBXSharingRevokeSharedLinkErrorSharedLinkNotFound
     }
 
     @objc
     public var asSharedLinkAccessDenied: DBXSharingRevokeSharedLinkErrorSharedLinkAccessDenied? {
-        self as? DBXSharingRevokeSharedLinkErrorSharedLinkAccessDenied
+        return self as? DBXSharingRevokeSharedLinkErrorSharedLinkAccessDenied
     }
 
     @objc
     public var asUnsupportedLinkType: DBXSharingRevokeSharedLinkErrorUnsupportedLinkType? {
-        self as? DBXSharingRevokeSharedLinkErrorUnsupportedLinkType
+        return self as? DBXSharingRevokeSharedLinkErrorUnsupportedLinkType
+    }
+
+    @objc
+    public var asUnsupportedParameterField: DBXSharingRevokeSharedLinkErrorUnsupportedParameterField? {
+        return self as? DBXSharingRevokeSharedLinkErrorUnsupportedParameterField
     }
 
     @objc
     public var asOther: DBXSharingRevokeSharedLinkErrorOther? {
-        self as? DBXSharingRevokeSharedLinkErrorOther
+        return self as? DBXSharingRevokeSharedLinkErrorOther
     }
 
     @objc
     public var asSharedLinkMalformed: DBXSharingRevokeSharedLinkErrorSharedLinkMalformed? {
-        self as? DBXSharingRevokeSharedLinkErrorSharedLinkMalformed
+        return self as? DBXSharingRevokeSharedLinkErrorSharedLinkMalformed
     }
 }
 
@@ -7941,6 +8227,16 @@ public class DBXSharingRevokeSharedLinkErrorUnsupportedLinkType: DBXSharingRevok
     @objc
     public init() {
         let swift = Sharing.RevokeSharedLinkError.unsupportedLinkType
+        super.init(swift: swift)
+    }
+}
+
+/// Private shared links do not support `path` or `link_password` parameter fields.
+@objc
+public class DBXSharingRevokeSharedLinkErrorUnsupportedParameterField: DBXSharingRevokeSharedLinkError {
+    @objc
+    public init() {
+        let swift = Sharing.RevokeSharedLinkError.unsupportedParameterField
         super.init(swift: swift)
     }
 }
@@ -7986,6 +8282,7 @@ public class DBXSharingSetAccessInheritanceArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -8016,17 +8313,17 @@ public class DBXSharingSetAccessInheritanceError: NSObject {
 
     @objc
     public var asAccessError: DBXSharingSetAccessInheritanceErrorAccessError? {
-        self as? DBXSharingSetAccessInheritanceErrorAccessError
+        return self as? DBXSharingSetAccessInheritanceErrorAccessError
     }
 
     @objc
     public var asNoPermission: DBXSharingSetAccessInheritanceErrorNoPermission? {
-        self as? DBXSharingSetAccessInheritanceErrorNoPermission
+        return self as? DBXSharingSetAccessInheritanceErrorNoPermission
     }
 
     @objc
     public var asOther: DBXSharingSetAccessInheritanceErrorOther? {
-        self as? DBXSharingSetAccessInheritanceErrorOther
+        return self as? DBXSharingSetAccessInheritanceErrorOther
     }
 }
 
@@ -8038,7 +8335,7 @@ public class DBXSharingSetAccessInheritanceErrorAccessError: DBXSharingSetAccess
 
     @objc
     public init(_ arg: DBXSharingSharedFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.SetAccessInheritanceError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -8069,58 +8366,30 @@ public class DBXSharingSetAccessInheritanceErrorOther: DBXSharingSetAccessInheri
 public class DBXSharingShareFolderArgBase: NSObject {
     /// Who can add and remove members of this shared folder.
     @objc
-    public var aclUpdatePolicy: DBXSharingAclUpdatePolicy? { guard let swift = swift.aclUpdatePolicy else { return nil }
-        return DBXSharingAclUpdatePolicy(swift: swift)
-    }
-
+    public var aclUpdatePolicy: DBXSharingAclUpdatePolicy? { guard let swift = swift.aclUpdatePolicy else { return nil }; return DBXSharingAclUpdatePolicy(swift: swift) }
     /// Whether to force the share to happen asynchronously.
     @objc
     public var forceAsync: NSNumber { swift.forceAsync as NSNumber }
     /// Who can be a member of this shared folder. Only applicable if the current user is on a team.
     @objc
-    public var memberPolicy: DBXSharingMemberPolicy? { guard let swift = swift.memberPolicy else { return nil }
-        return DBXSharingMemberPolicy(swift: swift)
-    }
-
+    public var memberPolicy: DBXSharingMemberPolicy? { guard let swift = swift.memberPolicy else { return nil }; return DBXSharingMemberPolicy(swift: swift) }
     /// The path or the file id to the folder to share. If it does not exist, then a new one is created.
     @objc
     public var path: String { swift.path }
     /// The policy to apply to shared links created for content inside this shared folder.  The current user must be
     /// on a team to set this policy to members in SharedLinkPolicy.
     @objc
-    public var sharedLinkPolicy: DBXSharingSharedLinkPolicy? { guard let swift = swift.sharedLinkPolicy else { return nil }
-        return DBXSharingSharedLinkPolicy(swift: swift)
-    }
-
+    public var sharedLinkPolicy: DBXSharingSharedLinkPolicy? { guard let swift = swift.sharedLinkPolicy else { return nil }; return DBXSharingSharedLinkPolicy(swift: swift) }
     /// Who can enable/disable viewer info for this shared folder.
     @objc
-    public var viewerInfoPolicy: DBXSharingViewerInfoPolicy? { guard let swift = swift.viewerInfoPolicy else { return nil }
-        return DBXSharingViewerInfoPolicy(swift: swift)
-    }
-
+    public var viewerInfoPolicy: DBXSharingViewerInfoPolicy? { guard let swift = swift.viewerInfoPolicy else { return nil }; return DBXSharingViewerInfoPolicy(swift: swift) }
     /// The access inheritance settings for the folder.
     @objc
     public var accessInheritance: DBXSharingAccessInheritance { DBXSharingAccessInheritance(swift: swift.accessInheritance) }
 
     @objc
-    public init(
-        path: String,
-        aclUpdatePolicy: DBXSharingAclUpdatePolicy?,
-        forceAsync: NSNumber,
-        memberPolicy: DBXSharingMemberPolicy?,
-        sharedLinkPolicy: DBXSharingSharedLinkPolicy?,
-        viewerInfoPolicy: DBXSharingViewerInfoPolicy?,
-        accessInheritance: DBXSharingAccessInheritance
-    ) {
-        self.swift = Sharing.ShareFolderArgBase(
-            path: path,
-            aclUpdatePolicy: aclUpdatePolicy?.swift,
-            forceAsync: forceAsync.boolValue,
-            memberPolicy: memberPolicy?.swift,
-            sharedLinkPolicy: sharedLinkPolicy?.swift,
-            viewerInfoPolicy: viewerInfoPolicy?.swift,
-            accessInheritance: accessInheritance.swift
-        )
+    public init(path: String, aclUpdatePolicy: DBXSharingAclUpdatePolicy?, forceAsync: NSNumber, memberPolicy: DBXSharingMemberPolicy?, sharedLinkPolicy: DBXSharingSharedLinkPolicy?, viewerInfoPolicy: DBXSharingViewerInfoPolicy?, accessInheritance: DBXSharingAccessInheritance) {
+        self.swift = Sharing.ShareFolderArgBase(path: path, aclUpdatePolicy: aclUpdatePolicy?.swift, forceAsync: forceAsync.boolValue, memberPolicy: memberPolicy?.swift, sharedLinkPolicy: sharedLinkPolicy?.swift, viewerInfoPolicy: viewerInfoPolicy?.swift, accessInheritance: accessInheritance.swift)
     }
 
     let swift: Sharing.ShareFolderArgBase
@@ -8129,6 +8398,7 @@ public class DBXSharingShareFolderArgBase: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -8136,40 +8406,18 @@ public class DBXSharingShareFolderArgBase: NSObject {
 /// Objective-C compatible ShareFolderArg struct
 @objc
 public class DBXSharingShareFolderArg: DBXSharingShareFolderArgBase {
-    /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the  response's
-    /// permissions in SharedFolderMetadata field describing the actions the  authenticated user can perform on
+    /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the response's
+    /// permissions in SharedFolderMetadata field describing the actions the authenticated user can perform on
     /// the folder.
     @objc
-    public var actions: [DBXSharingFolderAction]? { subSwift.actions?.map { DBXSharingFolderAction(swift: $0) } }
+    public var actions: Array<DBXSharingFolderAction>? { subSwift.actions?.map { DBXSharingFolderAction(swift: $0) } }
     /// Settings on the link for this folder.
     @objc
-    public var linkSettings: DBXSharingLinkSettings? { guard let swift = subSwift.linkSettings else { return nil }
-        return DBXSharingLinkSettings(swift: swift)
-    }
+    public var linkSettings: DBXSharingLinkSettings? { guard let swift = subSwift.linkSettings else { return nil }; return DBXSharingLinkSettings(swift: swift) }
 
     @objc
-    public init(
-        path: String,
-        aclUpdatePolicy: DBXSharingAclUpdatePolicy?,
-        forceAsync: NSNumber,
-        memberPolicy: DBXSharingMemberPolicy?,
-        sharedLinkPolicy: DBXSharingSharedLinkPolicy?,
-        viewerInfoPolicy: DBXSharingViewerInfoPolicy?,
-        accessInheritance: DBXSharingAccessInheritance,
-        actions: [DBXSharingFolderAction]?,
-        linkSettings: DBXSharingLinkSettings?
-    ) {
-        let swift = Sharing.ShareFolderArg(
-            path: path,
-            aclUpdatePolicy: aclUpdatePolicy?.swift,
-            forceAsync: forceAsync.boolValue,
-            memberPolicy: memberPolicy?.swift,
-            sharedLinkPolicy: sharedLinkPolicy?.swift,
-            viewerInfoPolicy: viewerInfoPolicy?.swift,
-            accessInheritance: accessInheritance.swift,
-            actions: actions?.map(\.swift),
-            linkSettings: linkSettings?.swift
-        )
+    public init(path: String, aclUpdatePolicy: DBXSharingAclUpdatePolicy?, forceAsync: NSNumber, memberPolicy: DBXSharingMemberPolicy?, sharedLinkPolicy: DBXSharingSharedLinkPolicy?, viewerInfoPolicy: DBXSharingViewerInfoPolicy?, accessInheritance: DBXSharingAccessInheritance, actions: Array<DBXSharingFolderAction>?, linkSettings: DBXSharingLinkSettings?) {
+        let swift = Sharing.ShareFolderArg(path: path, aclUpdatePolicy: aclUpdatePolicy?.swift, forceAsync: forceAsync.boolValue, memberPolicy: memberPolicy?.swift, sharedLinkPolicy: sharedLinkPolicy?.swift, viewerInfoPolicy: viewerInfoPolicy?.swift, accessInheritance: accessInheritance.swift, actions: actions?.map { $0.swift }, linkSettings: linkSettings?.swift)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -8180,6 +8428,7 @@ public class DBXSharingShareFolderArg: DBXSharingShareFolderArgBase {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -8215,32 +8464,32 @@ public class DBXSharingShareFolderErrorBase: NSObject {
 
     @objc
     public var asEmailUnverified: DBXSharingShareFolderErrorBaseEmailUnverified? {
-        self as? DBXSharingShareFolderErrorBaseEmailUnverified
+        return self as? DBXSharingShareFolderErrorBaseEmailUnverified
     }
 
     @objc
     public var asBadPath: DBXSharingShareFolderErrorBaseBadPath? {
-        self as? DBXSharingShareFolderErrorBaseBadPath
+        return self as? DBXSharingShareFolderErrorBaseBadPath
     }
 
     @objc
     public var asTeamPolicyDisallowsMemberPolicy: DBXSharingShareFolderErrorBaseTeamPolicyDisallowsMemberPolicy? {
-        self as? DBXSharingShareFolderErrorBaseTeamPolicyDisallowsMemberPolicy
+        return self as? DBXSharingShareFolderErrorBaseTeamPolicyDisallowsMemberPolicy
     }
 
     @objc
     public var asDisallowedSharedLinkPolicy: DBXSharingShareFolderErrorBaseDisallowedSharedLinkPolicy? {
-        self as? DBXSharingShareFolderErrorBaseDisallowedSharedLinkPolicy
+        return self as? DBXSharingShareFolderErrorBaseDisallowedSharedLinkPolicy
     }
 
     @objc
     public var asOther: DBXSharingShareFolderErrorBaseOther? {
-        self as? DBXSharingShareFolderErrorBaseOther
+        return self as? DBXSharingShareFolderErrorBaseOther
     }
 }
 
 /// This user's email address is not verified. This functionality is only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXSharingShareFolderErrorBaseEmailUnverified: DBXSharingShareFolderErrorBase {
     @objc
@@ -8258,13 +8507,13 @@ public class DBXSharingShareFolderErrorBaseBadPath: DBXSharingShareFolderErrorBa
 
     @objc
     public init(_ arg: DBXSharingSharePathError) {
-        self.badPath = arg
+        badPath = arg
         let swift = Sharing.ShareFolderErrorBase.badPath(arg.swift)
         super.init(swift: swift)
     }
 }
 
-/// Team policy is more restrictive than memberPolicy in ShareFolderArg.
+/// Team policy or group sharing settings are more restrictive than memberPolicy in ShareFolderArg.
 @objc
 public class DBXSharingShareFolderErrorBaseTeamPolicyDisallowsMemberPolicy: DBXSharingShareFolderErrorBase {
     @objc
@@ -8326,37 +8575,37 @@ public class DBXSharingShareFolderError: NSObject {
 
     @objc
     public var asEmailUnverified: DBXSharingShareFolderErrorEmailUnverified? {
-        self as? DBXSharingShareFolderErrorEmailUnverified
+        return self as? DBXSharingShareFolderErrorEmailUnverified
     }
 
     @objc
     public var asBadPath: DBXSharingShareFolderErrorBadPath? {
-        self as? DBXSharingShareFolderErrorBadPath
+        return self as? DBXSharingShareFolderErrorBadPath
     }
 
     @objc
     public var asTeamPolicyDisallowsMemberPolicy: DBXSharingShareFolderErrorTeamPolicyDisallowsMemberPolicy? {
-        self as? DBXSharingShareFolderErrorTeamPolicyDisallowsMemberPolicy
+        return self as? DBXSharingShareFolderErrorTeamPolicyDisallowsMemberPolicy
     }
 
     @objc
     public var asDisallowedSharedLinkPolicy: DBXSharingShareFolderErrorDisallowedSharedLinkPolicy? {
-        self as? DBXSharingShareFolderErrorDisallowedSharedLinkPolicy
+        return self as? DBXSharingShareFolderErrorDisallowedSharedLinkPolicy
     }
 
     @objc
     public var asOther: DBXSharingShareFolderErrorOther? {
-        self as? DBXSharingShareFolderErrorOther
+        return self as? DBXSharingShareFolderErrorOther
     }
 
     @objc
     public var asNoPermission: DBXSharingShareFolderErrorNoPermission? {
-        self as? DBXSharingShareFolderErrorNoPermission
+        return self as? DBXSharingShareFolderErrorNoPermission
     }
 }
 
 /// This user's email address is not verified. This functionality is only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXSharingShareFolderErrorEmailUnverified: DBXSharingShareFolderError {
     @objc
@@ -8374,13 +8623,13 @@ public class DBXSharingShareFolderErrorBadPath: DBXSharingShareFolderError {
 
     @objc
     public init(_ arg: DBXSharingSharePathError) {
-        self.badPath = arg
+        badPath = arg
         let swift = Sharing.ShareFolderError.badPath(arg.swift)
         super.init(swift: swift)
     }
 }
 
-/// Team policy is more restrictive than memberPolicy in ShareFolderArg.
+/// Team policy or group sharing settings are more restrictive than memberPolicy in ShareFolderArg.
 @objc
 public class DBXSharingShareFolderErrorTeamPolicyDisallowsMemberPolicy: DBXSharingShareFolderError {
     @objc
@@ -8420,6 +8669,197 @@ public class DBXSharingShareFolderErrorNoPermission: DBXSharingShareFolderError 
     }
 }
 
+/// Objective-C compatible ShareFolderErrorBaseV2 union
+@objc
+public class DBXSharingShareFolderErrorBaseV2: NSObject {
+    let swift: Sharing.ShareFolderErrorBaseV2
+
+    public init(swift: Sharing.ShareFolderErrorBaseV2) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Sharing.ShareFolderErrorBaseV2) -> DBXSharingShareFolderErrorBaseV2 {
+        switch swift {
+        case .emailUnverified:
+            return DBXSharingShareFolderErrorBaseV2EmailUnverified()
+        case .teamPolicyDisallowsMemberPolicy:
+            return DBXSharingShareFolderErrorBaseV2TeamPolicyDisallowsMemberPolicy()
+        case .disallowedSharedLinkPolicy:
+            return DBXSharingShareFolderErrorBaseV2DisallowedSharedLinkPolicy()
+        case .other:
+            return DBXSharingShareFolderErrorBaseV2Other()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asEmailUnverified: DBXSharingShareFolderErrorBaseV2EmailUnverified? {
+        return self as? DBXSharingShareFolderErrorBaseV2EmailUnverified
+    }
+
+    @objc
+    public var asTeamPolicyDisallowsMemberPolicy: DBXSharingShareFolderErrorBaseV2TeamPolicyDisallowsMemberPolicy? {
+        return self as? DBXSharingShareFolderErrorBaseV2TeamPolicyDisallowsMemberPolicy
+    }
+
+    @objc
+    public var asDisallowedSharedLinkPolicy: DBXSharingShareFolderErrorBaseV2DisallowedSharedLinkPolicy? {
+        return self as? DBXSharingShareFolderErrorBaseV2DisallowedSharedLinkPolicy
+    }
+
+    @objc
+    public var asOther: DBXSharingShareFolderErrorBaseV2Other? {
+        return self as? DBXSharingShareFolderErrorBaseV2Other
+    }
+}
+
+/// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+@objc
+public class DBXSharingShareFolderErrorBaseV2EmailUnverified: DBXSharingShareFolderErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.ShareFolderErrorBaseV2.emailUnverified
+        super.init(swift: swift)
+    }
+}
+
+/// Team policy or group sharing settings are more restrictive than memberPolicy in ShareFolderArg.
+@objc
+public class DBXSharingShareFolderErrorBaseV2TeamPolicyDisallowsMemberPolicy: DBXSharingShareFolderErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.ShareFolderErrorBaseV2.teamPolicyDisallowsMemberPolicy
+        super.init(swift: swift)
+    }
+}
+
+/// The current user's account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
+@objc
+public class DBXSharingShareFolderErrorBaseV2DisallowedSharedLinkPolicy: DBXSharingShareFolderErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.ShareFolderErrorBaseV2.disallowedSharedLinkPolicy
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXSharingShareFolderErrorBaseV2Other: DBXSharingShareFolderErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.ShareFolderErrorBaseV2.other
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible ShareFolderErrorV2 union
+@objc
+public class DBXSharingShareFolderErrorV2: NSObject {
+    let swift: Sharing.ShareFolderErrorV2
+
+    public init(swift: Sharing.ShareFolderErrorV2) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Sharing.ShareFolderErrorV2) -> DBXSharingShareFolderErrorV2 {
+        switch swift {
+        case .emailUnverified:
+            return DBXSharingShareFolderErrorV2EmailUnverified()
+        case .teamPolicyDisallowsMemberPolicy:
+            return DBXSharingShareFolderErrorV2TeamPolicyDisallowsMemberPolicy()
+        case .disallowedSharedLinkPolicy:
+            return DBXSharingShareFolderErrorV2DisallowedSharedLinkPolicy()
+        case .other:
+            return DBXSharingShareFolderErrorV2Other()
+        case .noPermission:
+            return DBXSharingShareFolderErrorV2NoPermission()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asEmailUnverified: DBXSharingShareFolderErrorV2EmailUnverified? {
+        return self as? DBXSharingShareFolderErrorV2EmailUnverified
+    }
+
+    @objc
+    public var asTeamPolicyDisallowsMemberPolicy: DBXSharingShareFolderErrorV2TeamPolicyDisallowsMemberPolicy? {
+        return self as? DBXSharingShareFolderErrorV2TeamPolicyDisallowsMemberPolicy
+    }
+
+    @objc
+    public var asDisallowedSharedLinkPolicy: DBXSharingShareFolderErrorV2DisallowedSharedLinkPolicy? {
+        return self as? DBXSharingShareFolderErrorV2DisallowedSharedLinkPolicy
+    }
+
+    @objc
+    public var asOther: DBXSharingShareFolderErrorV2Other? {
+        return self as? DBXSharingShareFolderErrorV2Other
+    }
+
+    @objc
+    public var asNoPermission: DBXSharingShareFolderErrorV2NoPermission? {
+        return self as? DBXSharingShareFolderErrorV2NoPermission
+    }
+}
+
+/// This user's email address is not verified. This functionality is only available on accounts with a verified
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+@objc
+public class DBXSharingShareFolderErrorV2EmailUnverified: DBXSharingShareFolderErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.ShareFolderErrorV2.emailUnverified
+        super.init(swift: swift)
+    }
+}
+
+/// Team policy or group sharing settings are more restrictive than memberPolicy in ShareFolderArg.
+@objc
+public class DBXSharingShareFolderErrorV2TeamPolicyDisallowsMemberPolicy: DBXSharingShareFolderErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.ShareFolderErrorV2.teamPolicyDisallowsMemberPolicy
+        super.init(swift: swift)
+    }
+}
+
+/// The current user's account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
+@objc
+public class DBXSharingShareFolderErrorV2DisallowedSharedLinkPolicy: DBXSharingShareFolderErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.ShareFolderErrorV2.disallowedSharedLinkPolicy
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXSharingShareFolderErrorV2Other: DBXSharingShareFolderErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.ShareFolderErrorV2.other
+        super.init(swift: swift)
+    }
+}
+
+/// The current user does not have permission to perform this action.
+@objc
+public class DBXSharingShareFolderErrorV2NoPermission: DBXSharingShareFolderErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.ShareFolderErrorV2.noPermission
+        super.init(swift: swift)
+    }
+}
+
 /// Objective-C compatible ShareFolderJobStatus union
 @objc
 public class DBXSharingShareFolderJobStatus: NSObject {
@@ -8447,17 +8887,17 @@ public class DBXSharingShareFolderJobStatus: NSObject {
 
     @objc
     public var asInProgress: DBXSharingShareFolderJobStatusInProgress? {
-        self as? DBXSharingShareFolderJobStatusInProgress
+        return self as? DBXSharingShareFolderJobStatusInProgress
     }
 
     @objc
     public var asComplete: DBXSharingShareFolderJobStatusComplete? {
-        self as? DBXSharingShareFolderJobStatusComplete
+        return self as? DBXSharingShareFolderJobStatusComplete
     }
 
     @objc
     public var asFailed: DBXSharingShareFolderJobStatusFailed? {
-        self as? DBXSharingShareFolderJobStatusFailed
+        return self as? DBXSharingShareFolderJobStatusFailed
     }
 }
 
@@ -8479,7 +8919,7 @@ public class DBXSharingShareFolderJobStatusComplete: DBXSharingShareFolderJobSta
 
     @objc
     public init(_ arg: DBXSharingSharedFolderMetadata) {
-        self.complete = arg
+        complete = arg
         let swift = Sharing.ShareFolderJobStatus.complete(arg.subSwift)
         super.init(swift: swift)
     }
@@ -8493,7 +8933,7 @@ public class DBXSharingShareFolderJobStatusFailed: DBXSharingShareFolderJobStatu
 
     @objc
     public init(_ arg: DBXSharingShareFolderError) {
-        self.failed = arg
+        failed = arg
         let swift = Sharing.ShareFolderJobStatus.failed(arg.swift)
         super.init(swift: swift)
     }
@@ -8524,17 +8964,17 @@ public class DBXSharingShareFolderLaunch: NSObject {
 
     @objc
     public var asAsyncJobId: DBXSharingShareFolderLaunchAsyncJobId? {
-        self as? DBXSharingShareFolderLaunchAsyncJobId
+        return self as? DBXSharingShareFolderLaunchAsyncJobId
     }
 
     @objc
     public var asComplete: DBXSharingShareFolderLaunchComplete? {
-        self as? DBXSharingShareFolderLaunchComplete
+        return self as? DBXSharingShareFolderLaunchComplete
     }
 }
 
 /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
-/// the status of the asynchronous job.
+        /// the status of the asynchronous job.
 @objc
 public class DBXSharingShareFolderLaunchAsyncJobId: DBXSharingShareFolderLaunch {
     @objc
@@ -8542,7 +8982,7 @@ public class DBXSharingShareFolderLaunchAsyncJobId: DBXSharingShareFolderLaunch 
 
     @objc
     public init(_ arg: String) {
-        self.asyncJobId = arg
+        asyncJobId = arg
         let swift = Sharing.ShareFolderLaunch.asyncJobId(arg)
         super.init(swift: swift)
     }
@@ -8556,7 +8996,7 @@ public class DBXSharingShareFolderLaunchComplete: DBXSharingShareFolderLaunch {
 
     @objc
     public init(_ arg: DBXSharingSharedFolderMetadata) {
-        self.complete = arg
+        complete = arg
         let swift = Sharing.ShareFolderLaunch.complete(arg.subSwift)
         super.init(swift: swift)
     }
@@ -8616,87 +9056,87 @@ public class DBXSharingSharePathError: NSObject {
 
     @objc
     public var asIsFile: DBXSharingSharePathErrorIsFile? {
-        self as? DBXSharingSharePathErrorIsFile
+        return self as? DBXSharingSharePathErrorIsFile
     }
 
     @objc
     public var asInsideSharedFolder: DBXSharingSharePathErrorInsideSharedFolder? {
-        self as? DBXSharingSharePathErrorInsideSharedFolder
+        return self as? DBXSharingSharePathErrorInsideSharedFolder
     }
 
     @objc
     public var asContainsSharedFolder: DBXSharingSharePathErrorContainsSharedFolder? {
-        self as? DBXSharingSharePathErrorContainsSharedFolder
+        return self as? DBXSharingSharePathErrorContainsSharedFolder
     }
 
     @objc
     public var asContainsAppFolder: DBXSharingSharePathErrorContainsAppFolder? {
-        self as? DBXSharingSharePathErrorContainsAppFolder
+        return self as? DBXSharingSharePathErrorContainsAppFolder
     }
 
     @objc
     public var asContainsTeamFolder: DBXSharingSharePathErrorContainsTeamFolder? {
-        self as? DBXSharingSharePathErrorContainsTeamFolder
+        return self as? DBXSharingSharePathErrorContainsTeamFolder
     }
 
     @objc
     public var asIsAppFolder: DBXSharingSharePathErrorIsAppFolder? {
-        self as? DBXSharingSharePathErrorIsAppFolder
+        return self as? DBXSharingSharePathErrorIsAppFolder
     }
 
     @objc
     public var asInsideAppFolder: DBXSharingSharePathErrorInsideAppFolder? {
-        self as? DBXSharingSharePathErrorInsideAppFolder
+        return self as? DBXSharingSharePathErrorInsideAppFolder
     }
 
     @objc
     public var asIsPublicFolder: DBXSharingSharePathErrorIsPublicFolder? {
-        self as? DBXSharingSharePathErrorIsPublicFolder
+        return self as? DBXSharingSharePathErrorIsPublicFolder
     }
 
     @objc
     public var asInsidePublicFolder: DBXSharingSharePathErrorInsidePublicFolder? {
-        self as? DBXSharingSharePathErrorInsidePublicFolder
+        return self as? DBXSharingSharePathErrorInsidePublicFolder
     }
 
     @objc
     public var asAlreadyShared: DBXSharingSharePathErrorAlreadyShared? {
-        self as? DBXSharingSharePathErrorAlreadyShared
+        return self as? DBXSharingSharePathErrorAlreadyShared
     }
 
     @objc
     public var asInvalidPath: DBXSharingSharePathErrorInvalidPath? {
-        self as? DBXSharingSharePathErrorInvalidPath
+        return self as? DBXSharingSharePathErrorInvalidPath
     }
 
     @objc
     public var asIsOsxPackage: DBXSharingSharePathErrorIsOsxPackage? {
-        self as? DBXSharingSharePathErrorIsOsxPackage
+        return self as? DBXSharingSharePathErrorIsOsxPackage
     }
 
     @objc
     public var asInsideOsxPackage: DBXSharingSharePathErrorInsideOsxPackage? {
-        self as? DBXSharingSharePathErrorInsideOsxPackage
+        return self as? DBXSharingSharePathErrorInsideOsxPackage
     }
 
     @objc
     public var asIsVault: DBXSharingSharePathErrorIsVault? {
-        self as? DBXSharingSharePathErrorIsVault
+        return self as? DBXSharingSharePathErrorIsVault
     }
 
     @objc
     public var asIsVaultLocked: DBXSharingSharePathErrorIsVaultLocked? {
-        self as? DBXSharingSharePathErrorIsVaultLocked
+        return self as? DBXSharingSharePathErrorIsVaultLocked
     }
 
     @objc
     public var asIsFamily: DBXSharingSharePathErrorIsFamily? {
-        self as? DBXSharingSharePathErrorIsFamily
+        return self as? DBXSharingSharePathErrorIsFamily
     }
 
     @objc
     public var asOther: DBXSharingSharePathErrorOther? {
-        self as? DBXSharingSharePathErrorOther
+        return self as? DBXSharingSharePathErrorOther
     }
 }
 
@@ -8798,7 +9238,7 @@ public class DBXSharingSharePathErrorAlreadyShared: DBXSharingSharePathError {
 
     @objc
     public init(_ arg: DBXSharingSharedFolderMetadata) {
-        self.alreadyShared = arg
+        alreadyShared = arg
         let swift = Sharing.SharePathError.alreadyShared(arg.subSwift)
         super.init(swift: swift)
     }
@@ -8874,43 +9314,610 @@ public class DBXSharingSharePathErrorOther: DBXSharingSharePathError {
     }
 }
 
+/// Objective-C compatible SharePathErrorBaseV2 union
+@objc
+public class DBXSharingSharePathErrorBaseV2: NSObject {
+    let swift: Sharing.SharePathErrorBaseV2
+
+    public init(swift: Sharing.SharePathErrorBaseV2) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Sharing.SharePathErrorBaseV2) -> DBXSharingSharePathErrorBaseV2 {
+        switch swift {
+        case .isFile:
+            return DBXSharingSharePathErrorBaseV2IsFile()
+        case .insideSharedFolder:
+            return DBXSharingSharePathErrorBaseV2InsideSharedFolder()
+        case .containsSharedFolder:
+            return DBXSharingSharePathErrorBaseV2ContainsSharedFolder()
+        case .containsTeamFolder:
+            return DBXSharingSharePathErrorBaseV2ContainsTeamFolder()
+        case .isAppFolder:
+            return DBXSharingSharePathErrorBaseV2IsAppFolder()
+        case .insideAppFolder:
+            return DBXSharingSharePathErrorBaseV2InsideAppFolder()
+        case .isPublicFolder:
+            return DBXSharingSharePathErrorBaseV2IsPublicFolder()
+        case .insidePublicFolder:
+            return DBXSharingSharePathErrorBaseV2InsidePublicFolder()
+        case .alreadyShared(let swiftArg):
+            let arg = DBXSharingSharedFolderMetadata(swift: swiftArg)
+            return DBXSharingSharePathErrorBaseV2AlreadyShared(arg)
+        case .invalidPath:
+            return DBXSharingSharePathErrorBaseV2InvalidPath()
+        case .isOsxPackage:
+            return DBXSharingSharePathErrorBaseV2IsOsxPackage()
+        case .insideOsxPackage:
+            return DBXSharingSharePathErrorBaseV2InsideOsxPackage()
+        case .isVault:
+            return DBXSharingSharePathErrorBaseV2IsVault()
+        case .isVaultLocked:
+            return DBXSharingSharePathErrorBaseV2IsVaultLocked()
+        case .other:
+            return DBXSharingSharePathErrorBaseV2Other()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asIsFile: DBXSharingSharePathErrorBaseV2IsFile? {
+        return self as? DBXSharingSharePathErrorBaseV2IsFile
+    }
+
+    @objc
+    public var asInsideSharedFolder: DBXSharingSharePathErrorBaseV2InsideSharedFolder? {
+        return self as? DBXSharingSharePathErrorBaseV2InsideSharedFolder
+    }
+
+    @objc
+    public var asContainsSharedFolder: DBXSharingSharePathErrorBaseV2ContainsSharedFolder? {
+        return self as? DBXSharingSharePathErrorBaseV2ContainsSharedFolder
+    }
+
+    @objc
+    public var asContainsTeamFolder: DBXSharingSharePathErrorBaseV2ContainsTeamFolder? {
+        return self as? DBXSharingSharePathErrorBaseV2ContainsTeamFolder
+    }
+
+    @objc
+    public var asIsAppFolder: DBXSharingSharePathErrorBaseV2IsAppFolder? {
+        return self as? DBXSharingSharePathErrorBaseV2IsAppFolder
+    }
+
+    @objc
+    public var asInsideAppFolder: DBXSharingSharePathErrorBaseV2InsideAppFolder? {
+        return self as? DBXSharingSharePathErrorBaseV2InsideAppFolder
+    }
+
+    @objc
+    public var asIsPublicFolder: DBXSharingSharePathErrorBaseV2IsPublicFolder? {
+        return self as? DBXSharingSharePathErrorBaseV2IsPublicFolder
+    }
+
+    @objc
+    public var asInsidePublicFolder: DBXSharingSharePathErrorBaseV2InsidePublicFolder? {
+        return self as? DBXSharingSharePathErrorBaseV2InsidePublicFolder
+    }
+
+    @objc
+    public var asAlreadyShared: DBXSharingSharePathErrorBaseV2AlreadyShared? {
+        return self as? DBXSharingSharePathErrorBaseV2AlreadyShared
+    }
+
+    @objc
+    public var asInvalidPath: DBXSharingSharePathErrorBaseV2InvalidPath? {
+        return self as? DBXSharingSharePathErrorBaseV2InvalidPath
+    }
+
+    @objc
+    public var asIsOsxPackage: DBXSharingSharePathErrorBaseV2IsOsxPackage? {
+        return self as? DBXSharingSharePathErrorBaseV2IsOsxPackage
+    }
+
+    @objc
+    public var asInsideOsxPackage: DBXSharingSharePathErrorBaseV2InsideOsxPackage? {
+        return self as? DBXSharingSharePathErrorBaseV2InsideOsxPackage
+    }
+
+    @objc
+    public var asIsVault: DBXSharingSharePathErrorBaseV2IsVault? {
+        return self as? DBXSharingSharePathErrorBaseV2IsVault
+    }
+
+    @objc
+    public var asIsVaultLocked: DBXSharingSharePathErrorBaseV2IsVaultLocked? {
+        return self as? DBXSharingSharePathErrorBaseV2IsVaultLocked
+    }
+
+    @objc
+    public var asOther: DBXSharingSharePathErrorBaseV2Other? {
+        return self as? DBXSharingSharePathErrorBaseV2Other
+    }
+}
+
+/// A file is at the specified path.
+@objc
+public class DBXSharingSharePathErrorBaseV2IsFile: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.isFile
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing a folder inside a shared folder.
+@objc
+public class DBXSharingSharePathErrorBaseV2InsideSharedFolder: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.insideSharedFolder
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support shared folders that contain shared folders.
+@objc
+public class DBXSharingSharePathErrorBaseV2ContainsSharedFolder: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.containsSharedFolder
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support shared folders that contain team folders.
+@objc
+public class DBXSharingSharePathErrorBaseV2ContainsTeamFolder: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.containsTeamFolder
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing an app folder.
+@objc
+public class DBXSharingSharePathErrorBaseV2IsAppFolder: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.isAppFolder
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing a folder inside an app folder.
+@objc
+public class DBXSharingSharePathErrorBaseV2InsideAppFolder: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.insideAppFolder
+        super.init(swift: swift)
+    }
+}
+
+/// A public folder can't be shared this way. Use a public link instead.
+@objc
+public class DBXSharingSharePathErrorBaseV2IsPublicFolder: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.isPublicFolder
+        super.init(swift: swift)
+    }
+}
+
+/// A folder inside a public folder can't be shared this way. Use a public link instead.
+@objc
+public class DBXSharingSharePathErrorBaseV2InsidePublicFolder: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.insidePublicFolder
+        super.init(swift: swift)
+    }
+}
+
+/// Folder is already shared. Contains metadata about the existing shared folder.
+@objc
+public class DBXSharingSharePathErrorBaseV2AlreadyShared: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public var alreadyShared: DBXSharingSharedFolderMetadata
+
+    @objc
+    public init(_ arg: DBXSharingSharedFolderMetadata) {
+        alreadyShared = arg
+        let swift = Sharing.SharePathErrorBaseV2.alreadyShared(arg.subSwift)
+        super.init(swift: swift)
+    }
+}
+
+/// Path is not valid.
+@objc
+public class DBXSharingSharePathErrorBaseV2InvalidPath: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.invalidPath
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing a Mac OS X package.
+@objc
+public class DBXSharingSharePathErrorBaseV2IsOsxPackage: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.isOsxPackage
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing a folder inside a Mac OS X package.
+@objc
+public class DBXSharingSharePathErrorBaseV2InsideOsxPackage: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.insideOsxPackage
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing the Vault folder.
+@objc
+public class DBXSharingSharePathErrorBaseV2IsVault: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.isVault
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing a folder inside a locked Vault.
+@objc
+public class DBXSharingSharePathErrorBaseV2IsVaultLocked: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.isVaultLocked
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXSharingSharePathErrorBaseV2Other: DBXSharingSharePathErrorBaseV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorBaseV2.other
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible SharePathErrorV2 union
+@objc
+public class DBXSharingSharePathErrorV2: NSObject {
+    let swift: Sharing.SharePathErrorV2
+
+    public init(swift: Sharing.SharePathErrorV2) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Sharing.SharePathErrorV2) -> DBXSharingSharePathErrorV2 {
+        switch swift {
+        case .isFile:
+            return DBXSharingSharePathErrorV2IsFile()
+        case .insideSharedFolder:
+            return DBXSharingSharePathErrorV2InsideSharedFolder()
+        case .containsSharedFolder:
+            return DBXSharingSharePathErrorV2ContainsSharedFolder()
+        case .containsTeamFolder:
+            return DBXSharingSharePathErrorV2ContainsTeamFolder()
+        case .isAppFolder:
+            return DBXSharingSharePathErrorV2IsAppFolder()
+        case .insideAppFolder:
+            return DBXSharingSharePathErrorV2InsideAppFolder()
+        case .isPublicFolder:
+            return DBXSharingSharePathErrorV2IsPublicFolder()
+        case .insidePublicFolder:
+            return DBXSharingSharePathErrorV2InsidePublicFolder()
+        case .alreadyShared(let swiftArg):
+            let arg = DBXSharingSharedFolderMetadata(swift: swiftArg)
+            return DBXSharingSharePathErrorV2AlreadyShared(arg)
+        case .invalidPath:
+            return DBXSharingSharePathErrorV2InvalidPath()
+        case .isOsxPackage:
+            return DBXSharingSharePathErrorV2IsOsxPackage()
+        case .insideOsxPackage:
+            return DBXSharingSharePathErrorV2InsideOsxPackage()
+        case .isVault:
+            return DBXSharingSharePathErrorV2IsVault()
+        case .isVaultLocked:
+            return DBXSharingSharePathErrorV2IsVaultLocked()
+        case .other:
+            return DBXSharingSharePathErrorV2Other()
+        case .isFamily:
+            return DBXSharingSharePathErrorV2IsFamily()
+        case .containsAppFolder:
+            return DBXSharingSharePathErrorV2ContainsAppFolder()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asIsFile: DBXSharingSharePathErrorV2IsFile? {
+        return self as? DBXSharingSharePathErrorV2IsFile
+    }
+
+    @objc
+    public var asInsideSharedFolder: DBXSharingSharePathErrorV2InsideSharedFolder? {
+        return self as? DBXSharingSharePathErrorV2InsideSharedFolder
+    }
+
+    @objc
+    public var asContainsSharedFolder: DBXSharingSharePathErrorV2ContainsSharedFolder? {
+        return self as? DBXSharingSharePathErrorV2ContainsSharedFolder
+    }
+
+    @objc
+    public var asContainsTeamFolder: DBXSharingSharePathErrorV2ContainsTeamFolder? {
+        return self as? DBXSharingSharePathErrorV2ContainsTeamFolder
+    }
+
+    @objc
+    public var asIsAppFolder: DBXSharingSharePathErrorV2IsAppFolder? {
+        return self as? DBXSharingSharePathErrorV2IsAppFolder
+    }
+
+    @objc
+    public var asInsideAppFolder: DBXSharingSharePathErrorV2InsideAppFolder? {
+        return self as? DBXSharingSharePathErrorV2InsideAppFolder
+    }
+
+    @objc
+    public var asIsPublicFolder: DBXSharingSharePathErrorV2IsPublicFolder? {
+        return self as? DBXSharingSharePathErrorV2IsPublicFolder
+    }
+
+    @objc
+    public var asInsidePublicFolder: DBXSharingSharePathErrorV2InsidePublicFolder? {
+        return self as? DBXSharingSharePathErrorV2InsidePublicFolder
+    }
+
+    @objc
+    public var asAlreadyShared: DBXSharingSharePathErrorV2AlreadyShared? {
+        return self as? DBXSharingSharePathErrorV2AlreadyShared
+    }
+
+    @objc
+    public var asInvalidPath: DBXSharingSharePathErrorV2InvalidPath? {
+        return self as? DBXSharingSharePathErrorV2InvalidPath
+    }
+
+    @objc
+    public var asIsOsxPackage: DBXSharingSharePathErrorV2IsOsxPackage? {
+        return self as? DBXSharingSharePathErrorV2IsOsxPackage
+    }
+
+    @objc
+    public var asInsideOsxPackage: DBXSharingSharePathErrorV2InsideOsxPackage? {
+        return self as? DBXSharingSharePathErrorV2InsideOsxPackage
+    }
+
+    @objc
+    public var asIsVault: DBXSharingSharePathErrorV2IsVault? {
+        return self as? DBXSharingSharePathErrorV2IsVault
+    }
+
+    @objc
+    public var asIsVaultLocked: DBXSharingSharePathErrorV2IsVaultLocked? {
+        return self as? DBXSharingSharePathErrorV2IsVaultLocked
+    }
+
+    @objc
+    public var asOther: DBXSharingSharePathErrorV2Other? {
+        return self as? DBXSharingSharePathErrorV2Other
+    }
+
+    @objc
+    public var asIsFamily: DBXSharingSharePathErrorV2IsFamily? {
+        return self as? DBXSharingSharePathErrorV2IsFamily
+    }
+
+    @objc
+    public var asContainsAppFolder: DBXSharingSharePathErrorV2ContainsAppFolder? {
+        return self as? DBXSharingSharePathErrorV2ContainsAppFolder
+    }
+}
+
+/// A file is at the specified path.
+@objc
+public class DBXSharingSharePathErrorV2IsFile: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.isFile
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing a folder inside a shared folder.
+@objc
+public class DBXSharingSharePathErrorV2InsideSharedFolder: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.insideSharedFolder
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support shared folders that contain shared folders.
+@objc
+public class DBXSharingSharePathErrorV2ContainsSharedFolder: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.containsSharedFolder
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support shared folders that contain team folders.
+@objc
+public class DBXSharingSharePathErrorV2ContainsTeamFolder: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.containsTeamFolder
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing an app folder.
+@objc
+public class DBXSharingSharePathErrorV2IsAppFolder: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.isAppFolder
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing a folder inside an app folder.
+@objc
+public class DBXSharingSharePathErrorV2InsideAppFolder: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.insideAppFolder
+        super.init(swift: swift)
+    }
+}
+
+/// A public folder can't be shared this way. Use a public link instead.
+@objc
+public class DBXSharingSharePathErrorV2IsPublicFolder: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.isPublicFolder
+        super.init(swift: swift)
+    }
+}
+
+/// A folder inside a public folder can't be shared this way. Use a public link instead.
+@objc
+public class DBXSharingSharePathErrorV2InsidePublicFolder: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.insidePublicFolder
+        super.init(swift: swift)
+    }
+}
+
+/// Folder is already shared. Contains metadata about the existing shared folder.
+@objc
+public class DBXSharingSharePathErrorV2AlreadyShared: DBXSharingSharePathErrorV2 {
+    @objc
+    public var alreadyShared: DBXSharingSharedFolderMetadata
+
+    @objc
+    public init(_ arg: DBXSharingSharedFolderMetadata) {
+        alreadyShared = arg
+        let swift = Sharing.SharePathErrorV2.alreadyShared(arg.subSwift)
+        super.init(swift: swift)
+    }
+}
+
+/// Path is not valid.
+@objc
+public class DBXSharingSharePathErrorV2InvalidPath: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.invalidPath
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing a Mac OS X package.
+@objc
+public class DBXSharingSharePathErrorV2IsOsxPackage: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.isOsxPackage
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing a folder inside a Mac OS X package.
+@objc
+public class DBXSharingSharePathErrorV2InsideOsxPackage: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.insideOsxPackage
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing the Vault folder.
+@objc
+public class DBXSharingSharePathErrorV2IsVault: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.isVault
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing a folder inside a locked Vault.
+@objc
+public class DBXSharingSharePathErrorV2IsVaultLocked: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.isVaultLocked
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXSharingSharePathErrorV2Other: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.other
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support sharing the Family folder.
+@objc
+public class DBXSharingSharePathErrorV2IsFamily: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.isFamily
+        super.init(swift: swift)
+    }
+}
+
+/// We do not support shared folders that contain app folders.
+@objc
+public class DBXSharingSharePathErrorV2ContainsAppFolder: DBXSharingSharePathErrorV2 {
+    @objc
+    public init() {
+        let swift = Sharing.SharePathErrorV2.containsAppFolder
+        super.init(swift: swift)
+    }
+}
+
 /// Metadata of a shared link for a file or folder.
 @objc
 public class DBXSharingSharedContentLinkMetadata: DBXSharingSharedContentLinkMetadataBase {
     /// The content inside this folder with link audience different than this folder's. This is only returned when
     /// an endpoint that returns metadata for a single shared folder is called, e.g. /get_folder_metadata.
     @objc
-    public var audienceExceptions: DBXSharingAudienceExceptions? { guard let swift = subSwift.audienceExceptions else { return nil }
-        return DBXSharingAudienceExceptions(swift: swift)
-    }
-
+    public var audienceExceptions: DBXSharingAudienceExceptions? { guard let swift = subSwift.audienceExceptions else { return nil }; return DBXSharingAudienceExceptions(swift: swift) }
     /// The URL of the link.
     @objc
     public var url: String { subSwift.url }
 
     @objc
-    public init(
-        audienceOptions: [DBXSharingLinkAudience],
-        currentAudience: DBXSharingLinkAudience,
-        linkPermissions: [DBXSharingLinkPermission],
-        passwordProtected: NSNumber,
-        url: String,
-        accessLevel: DBXSharingAccessLevel?,
-        audienceRestrictingSharedFolder: DBXSharingAudienceRestrictingSharedFolder?,
-        expiry: Date?,
-        audienceExceptions: DBXSharingAudienceExceptions?
-    ) {
-        let swift = Sharing.SharedContentLinkMetadata(
-            audienceOptions: audienceOptions.map(\.swift),
-            currentAudience: currentAudience.swift,
-            linkPermissions: linkPermissions.map(\.swift),
-            passwordProtected: passwordProtected.boolValue,
-            url: url,
-            accessLevel: accessLevel?.swift,
-            audienceRestrictingSharedFolder: audienceRestrictingSharedFolder?.swift,
-            expiry: expiry,
-            audienceExceptions: audienceExceptions?.swift
-        )
+    public init(audienceOptions: Array<DBXSharingLinkAudience>, currentAudience: DBXSharingLinkAudience, linkPermissions: Array<DBXSharingLinkPermission>, passwordProtected: NSNumber, url: String, accessLevel: DBXSharingAccessLevel?, audienceRestrictingSharedFolder: DBXSharingAudienceRestrictingSharedFolder?, expiry: Date?, audienceExceptions: DBXSharingAudienceExceptions?) {
+        let swift = Sharing.SharedContentLinkMetadata(audienceOptions: audienceOptions.map { $0.swift }, currentAudience: currentAudience.swift, linkPermissions: linkPermissions.map { $0.swift }, passwordProtected: passwordProtected.boolValue, url: url, accessLevel: accessLevel?.swift, audienceRestrictingSharedFolder: audienceRestrictingSharedFolder?.swift, expiry: expiry, audienceExceptions: audienceExceptions?.swift)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -8922,6 +9929,7 @@ public class DBXSharingSharedContentLinkMetadata: DBXSharingSharedContentLinkMet
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
 }
@@ -8932,31 +9940,21 @@ public class DBXSharingSharedContentLinkMetadata: DBXSharingSharedContentLinkMet
 public class DBXSharingSharedFileMembers: NSObject {
     /// The list of user members of the shared file.
     @objc
-    public var users: [DBXSharingUserFileMembershipInfo] { swift.users.map { DBXSharingUserFileMembershipInfo(swift: $0) } }
+    public var users: Array<DBXSharingUserFileMembershipInfo> { swift.users.map { DBXSharingUserFileMembershipInfo(swift: $0) } }
     /// The list of group members of the shared file.
     @objc
-    public var groups: [DBXSharingGroupMembershipInfo] { swift.groups.map { DBXSharingGroupMembershipInfo(swift: $0) } }
+    public var groups: Array<DBXSharingGroupMembershipInfo> { swift.groups.map { DBXSharingGroupMembershipInfo(swift: $0) } }
     /// The list of invited members of a file, but have not logged in and claimed this.
     @objc
-    public var invitees: [DBXSharingInviteeMembershipInfo] { swift.invitees.map { DBXSharingInviteeMembershipInfo(swift: $0) } }
+    public var invitees: Array<DBXSharingInviteeMembershipInfo> { swift.invitees.map { DBXSharingInviteeMembershipInfo(swift: $0) } }
     /// Present if there are additional shared file members that have not been returned yet. Pass the cursor into
     /// listFileMembersContinue to list additional members.
     @objc
     public var cursor: String? { swift.cursor }
 
     @objc
-    public init(
-        users: [DBXSharingUserFileMembershipInfo],
-        groups: [DBXSharingGroupMembershipInfo],
-        invitees: [DBXSharingInviteeMembershipInfo],
-        cursor: String?
-    ) {
-        self.swift = Sharing.SharedFileMembers(
-            users: users.map(\.subSubSwift),
-            groups: groups.map(\.subSwift),
-            invitees: invitees.map(\.subSwift),
-            cursor: cursor
-        )
+    public init(users: Array<DBXSharingUserFileMembershipInfo>, groups: Array<DBXSharingGroupMembershipInfo>, invitees: Array<DBXSharingInviteeMembershipInfo>, cursor: String?) {
+        self.swift = Sharing.SharedFileMembers(users: users.map { $0.subSubSwift }, groups: groups.map { $0.subSwift }, invitees: invitees.map { $0.subSwift }, cursor: cursor)
     }
 
     let swift: Sharing.SharedFileMembers
@@ -8964,6 +9962,7 @@ public class DBXSharingSharedFileMembers: NSObject {
     public init(swift: Sharing.SharedFileMembers) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -8974,40 +9973,28 @@ public class DBXSharingSharedFileMembers: NSObject {
 public class DBXSharingSharedFileMetadata: NSObject {
     /// The current user's access level for this shared file.
     @objc
-    public var accessType: DBXSharingAccessLevel? { guard let swift = swift.accessType else { return nil }
-        return DBXSharingAccessLevel(swift: swift)
-    }
-
+    public var accessType: DBXSharingAccessLevel? { guard let swift = swift.accessType else { return nil }; return DBXSharingAccessLevel(swift: swift) }
     /// The ID of the file.
     @objc
     public var id: String { swift.id }
     /// The expected metadata of the link associated for the file when it is first shared. Absent if the link
     /// already exists. This is for an unreleased feature so it may not be returned yet.
     @objc
-    public var expectedLinkMetadata: DBXSharingExpectedSharedContentLinkMetadata? { guard let swift = swift.expectedLinkMetadata else { return nil }
-        return DBXSharingExpectedSharedContentLinkMetadata(swift: swift)
-    }
-
+    public var expectedLinkMetadata: DBXSharingExpectedSharedContentLinkMetadata? { guard let swift = swift.expectedLinkMetadata else { return nil }; return DBXSharingExpectedSharedContentLinkMetadata(swift: swift) }
     /// The metadata of the link associated for the file. This is for an unreleased feature so it may not be
     /// returned yet.
     @objc
-    public var linkMetadata: DBXSharingSharedContentLinkMetadata? { guard let swift = swift.linkMetadata else { return nil }
-        return DBXSharingSharedContentLinkMetadata(swift: swift)
-    }
-
+    public var linkMetadata: DBXSharingSharedContentLinkMetadata? { guard let swift = swift.linkMetadata else { return nil }; return DBXSharingSharedContentLinkMetadata(swift: swift) }
     /// The name of this file.
     @objc
     public var name: String { swift.name }
     /// The display names of the users that own the file. If the file is part of a team folder, the display names of
     /// the team admins are also included. Absent if the owner display names cannot be fetched.
     @objc
-    public var ownerDisplayNames: [String]? { swift.ownerDisplayNames }
+    public var ownerDisplayNames: Array<String>? { swift.ownerDisplayNames }
     /// The team that owns the file. This field is not present if the file is not owned by a team.
     @objc
-    public var ownerTeam: DBXUsersTeam? { guard let swift = swift.ownerTeam else { return nil }
-        return DBXUsersTeam(swift: swift)
-    }
-
+    public var ownerTeam: DBXUsersTeam? { guard let swift = swift.ownerTeam else { return nil }; return DBXUsersTeam(swift: swift) }
     /// The ID of the parent shared folder. This field is present only if the file is contained within a shared
     /// folder.
     @objc
@@ -9023,7 +10010,7 @@ public class DBXSharingSharedFileMetadata: NSObject {
     /// The sharing permissions that requesting user has on this file. This corresponds to the entries given in
     /// actions in GetFileMetadataBatchArg or actions in GetFileMetadataArg.
     @objc
-    public var permissions: [DBXSharingFilePermission]? { swift.permissions?.map { DBXSharingFilePermission(swift: $0) } }
+    public var permissions: Array<DBXSharingFilePermission>? { swift.permissions?.map { DBXSharingFilePermission(swift: $0) } }
     /// Policies governing this shared file.
     @objc
     public var policy: DBXSharingFolderPolicy { DBXSharingFolderPolicy(swift: swift.policy) }
@@ -9037,38 +10024,8 @@ public class DBXSharingSharedFileMetadata: NSObject {
     public var timeInvited: Date? { swift.timeInvited }
 
     @objc
-    public init(
-        id: String,
-        name: String,
-        policy: DBXSharingFolderPolicy,
-        previewUrl: String,
-        accessType: DBXSharingAccessLevel?,
-        expectedLinkMetadata: DBXSharingExpectedSharedContentLinkMetadata?,
-        linkMetadata: DBXSharingSharedContentLinkMetadata?,
-        ownerDisplayNames: [String]?,
-        ownerTeam: DBXUsersTeam?,
-        parentSharedFolderId: String?,
-        pathDisplay: String?,
-        pathLower: String?,
-        permissions: [DBXSharingFilePermission]?,
-        timeInvited: Date?
-    ) {
-        self.swift = Sharing.SharedFileMetadata(
-            id: id,
-            name: name,
-            policy: policy.swift,
-            previewUrl: previewUrl,
-            accessType: accessType?.swift,
-            expectedLinkMetadata: expectedLinkMetadata?.subSwift,
-            linkMetadata: linkMetadata?.subSwift,
-            ownerDisplayNames: ownerDisplayNames,
-            ownerTeam: ownerTeam?.swift,
-            parentSharedFolderId: parentSharedFolderId,
-            pathDisplay: pathDisplay,
-            pathLower: pathLower,
-            permissions: permissions?.map(\.swift),
-            timeInvited: timeInvited
-        )
+    public init(id: String, name: String, policy: DBXSharingFolderPolicy, previewUrl: String, accessType: DBXSharingAccessLevel?, expectedLinkMetadata: DBXSharingExpectedSharedContentLinkMetadata?, linkMetadata: DBXSharingSharedContentLinkMetadata?, ownerDisplayNames: Array<String>?, ownerTeam: DBXUsersTeam?, parentSharedFolderId: String?, pathDisplay: String?, pathLower: String?, permissions: Array<DBXSharingFilePermission>?, timeInvited: Date?) {
+        self.swift = Sharing.SharedFileMetadata(id: id, name: name, policy: policy.swift, previewUrl: previewUrl, accessType: accessType?.swift, expectedLinkMetadata: expectedLinkMetadata?.subSwift, linkMetadata: linkMetadata?.subSwift, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam?.swift, parentSharedFolderId: parentSharedFolderId, pathDisplay: pathDisplay, pathLower: pathLower, permissions: permissions?.map { $0.swift }, timeInvited: timeInvited)
     }
 
     let swift: Sharing.SharedFileMetadata
@@ -9076,6 +10033,7 @@ public class DBXSharingSharedFileMetadata: NSObject {
     public init(swift: Sharing.SharedFileMetadata) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -9112,32 +10070,32 @@ public class DBXSharingSharedFolderAccessError: NSObject {
 
     @objc
     public var asInvalidId: DBXSharingSharedFolderAccessErrorInvalidId? {
-        self as? DBXSharingSharedFolderAccessErrorInvalidId
+        return self as? DBXSharingSharedFolderAccessErrorInvalidId
     }
 
     @objc
     public var asNotAMember: DBXSharingSharedFolderAccessErrorNotAMember? {
-        self as? DBXSharingSharedFolderAccessErrorNotAMember
+        return self as? DBXSharingSharedFolderAccessErrorNotAMember
     }
 
     @objc
     public var asInvalidMember: DBXSharingSharedFolderAccessErrorInvalidMember? {
-        self as? DBXSharingSharedFolderAccessErrorInvalidMember
+        return self as? DBXSharingSharedFolderAccessErrorInvalidMember
     }
 
     @objc
     public var asEmailUnverified: DBXSharingSharedFolderAccessErrorEmailUnverified? {
-        self as? DBXSharingSharedFolderAccessErrorEmailUnverified
+        return self as? DBXSharingSharedFolderAccessErrorEmailUnverified
     }
 
     @objc
     public var asUnmounted: DBXSharingSharedFolderAccessErrorUnmounted? {
-        self as? DBXSharingSharedFolderAccessErrorUnmounted
+        return self as? DBXSharingSharedFolderAccessErrorUnmounted
     }
 
     @objc
     public var asOther: DBXSharingSharedFolderAccessErrorOther? {
-        self as? DBXSharingSharedFolderAccessErrorOther
+        return self as? DBXSharingSharedFolderAccessErrorOther
     }
 }
 
@@ -9171,7 +10129,7 @@ public class DBXSharingSharedFolderAccessErrorInvalidMember: DBXSharingSharedFol
     }
 }
 
-/// Never set.
+/// Field is deprecated. Never set.
 @objc
 public class DBXSharingSharedFolderAccessErrorEmailUnverified: DBXSharingSharedFolderAccessError {
     @objc
@@ -9229,22 +10187,22 @@ public class DBXSharingSharedFolderMemberError: NSObject {
 
     @objc
     public var asInvalidDropboxId: DBXSharingSharedFolderMemberErrorInvalidDropboxId? {
-        self as? DBXSharingSharedFolderMemberErrorInvalidDropboxId
+        return self as? DBXSharingSharedFolderMemberErrorInvalidDropboxId
     }
 
     @objc
     public var asNotAMember: DBXSharingSharedFolderMemberErrorNotAMember? {
-        self as? DBXSharingSharedFolderMemberErrorNotAMember
+        return self as? DBXSharingSharedFolderMemberErrorNotAMember
     }
 
     @objc
     public var asNoExplicitAccess: DBXSharingSharedFolderMemberErrorNoExplicitAccess? {
-        self as? DBXSharingSharedFolderMemberErrorNoExplicitAccess
+        return self as? DBXSharingSharedFolderMemberErrorNoExplicitAccess
     }
 
     @objc
     public var asOther: DBXSharingSharedFolderMemberErrorOther? {
-        self as? DBXSharingSharedFolderMemberErrorOther
+        return self as? DBXSharingSharedFolderMemberErrorOther
     }
 }
 
@@ -9276,7 +10234,7 @@ public class DBXSharingSharedFolderMemberErrorNoExplicitAccess: DBXSharingShared
 
     @objc
     public init(_ arg: DBXSharingMemberAccessLevelResult) {
-        self.noExplicitAccess = arg
+        noExplicitAccess = arg
         let swift = Sharing.SharedFolderMemberError.noExplicitAccess(arg.swift)
         super.init(swift: swift)
     }
@@ -9297,26 +10255,21 @@ public class DBXSharingSharedFolderMemberErrorOther: DBXSharingSharedFolderMembe
 public class DBXSharingSharedFolderMembers: NSObject {
     /// The list of user members of the shared folder.
     @objc
-    public var users: [DBXSharingUserMembershipInfo] { swift.users.map { DBXSharingUserMembershipInfo(swift: $0) } }
+    public var users: Array<DBXSharingUserMembershipInfo> { swift.users.map { DBXSharingUserMembershipInfo(swift: $0) } }
     /// The list of group members of the shared folder.
     @objc
-    public var groups: [DBXSharingGroupMembershipInfo] { swift.groups.map { DBXSharingGroupMembershipInfo(swift: $0) } }
+    public var groups: Array<DBXSharingGroupMembershipInfo> { swift.groups.map { DBXSharingGroupMembershipInfo(swift: $0) } }
     /// The list of invitees to the shared folder.
     @objc
-    public var invitees: [DBXSharingInviteeMembershipInfo] { swift.invitees.map { DBXSharingInviteeMembershipInfo(swift: $0) } }
+    public var invitees: Array<DBXSharingInviteeMembershipInfo> { swift.invitees.map { DBXSharingInviteeMembershipInfo(swift: $0) } }
     /// Present if there are additional shared folder members that have not been returned yet. Pass the cursor into
     /// listFolderMembersContinue to list additional members.
     @objc
     public var cursor: String? { swift.cursor }
 
     @objc
-    public init(users: [DBXSharingUserMembershipInfo], groups: [DBXSharingGroupMembershipInfo], invitees: [DBXSharingInviteeMembershipInfo], cursor: String?) {
-        self.swift = Sharing.SharedFolderMembers(
-            users: users.map(\.subSwift),
-            groups: groups.map(\.subSwift),
-            invitees: invitees.map(\.subSwift),
-            cursor: cursor
-        )
+    public init(users: Array<DBXSharingUserMembershipInfo>, groups: Array<DBXSharingGroupMembershipInfo>, invitees: Array<DBXSharingInviteeMembershipInfo>, cursor: String?) {
+        self.swift = Sharing.SharedFolderMembers(users: users.map { $0.subSwift }, groups: groups.map { $0.subSwift }, invitees: invitees.map { $0.subSwift }, cursor: cursor)
     }
 
     let swift: Sharing.SharedFolderMembers
@@ -9324,6 +10277,7 @@ public class DBXSharingSharedFolderMembers: NSObject {
     public init(swift: Sharing.SharedFolderMembers) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -9344,13 +10298,10 @@ public class DBXSharingSharedFolderMetadataBase: NSObject {
     /// The display names of the users that own the folder. If the folder is part of a team folder, the display
     /// names of the team admins are also included. Absent if the owner display names cannot be fetched.
     @objc
-    public var ownerDisplayNames: [String]? { swift.ownerDisplayNames }
+    public var ownerDisplayNames: Array<String>? { swift.ownerDisplayNames }
     /// The team that owns the folder. This field is not present if the folder is not owned by a team.
     @objc
-    public var ownerTeam: DBXUsersTeam? { guard let swift = swift.ownerTeam else { return nil }
-        return DBXUsersTeam(swift: swift)
-    }
-
+    public var ownerTeam: DBXUsersTeam? { guard let swift = swift.ownerTeam else { return nil }; return DBXUsersTeam(swift: swift) }
     /// The ID of the parent shared folder. This field is present only if the folder is contained within another
     /// shared folder.
     @objc
@@ -9366,28 +10317,8 @@ public class DBXSharingSharedFolderMetadataBase: NSObject {
     public var parentFolderName: String? { swift.parentFolderName }
 
     @objc
-    public init(
-        accessType: DBXSharingAccessLevel,
-        isInsideTeamFolder: NSNumber,
-        isTeamFolder: NSNumber,
-        ownerDisplayNames: [String]?,
-        ownerTeam: DBXUsersTeam?,
-        parentSharedFolderId: String?,
-        pathDisplay: String?,
-        pathLower: String?,
-        parentFolderName: String?
-    ) {
-        self.swift = Sharing.SharedFolderMetadataBase(
-            accessType: accessType.swift,
-            isInsideTeamFolder: isInsideTeamFolder.boolValue,
-            isTeamFolder: isTeamFolder.boolValue,
-            ownerDisplayNames: ownerDisplayNames,
-            ownerTeam: ownerTeam?.swift,
-            parentSharedFolderId: parentSharedFolderId,
-            pathDisplay: pathDisplay,
-            pathLower: pathLower,
-            parentFolderName: parentFolderName
-        )
+    public init(accessType: DBXSharingAccessLevel, isInsideTeamFolder: NSNumber, isTeamFolder: NSNumber, ownerDisplayNames: Array<String>?, ownerTeam: DBXUsersTeam?, parentSharedFolderId: String?, pathDisplay: String?, pathLower: String?, parentFolderName: String?) {
+        self.swift = Sharing.SharedFolderMetadataBase(accessType: accessType.swift, isInsideTeamFolder: isInsideTeamFolder.boolValue, isTeamFolder: isTeamFolder.boolValue, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam?.swift, parentSharedFolderId: parentSharedFolderId, pathDisplay: pathDisplay, pathLower: pathLower, parentFolderName: parentFolderName)
     }
 
     let swift: Sharing.SharedFolderMetadataBase
@@ -9395,6 +10326,7 @@ public class DBXSharingSharedFolderMetadataBase: NSObject {
     public init(swift: Sharing.SharedFolderMetadataBase) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -9406,17 +10338,14 @@ public class DBXSharingSharedFolderMetadata: DBXSharingSharedFolderMetadataBase 
     /// The metadata of the shared content link to this shared folder. Absent if there is no link on the folder.
     /// This is for an unreleased feature so it may not be returned yet.
     @objc
-    public var linkMetadata: DBXSharingSharedContentLinkMetadata? { guard let swift = subSwift.linkMetadata else { return nil }
-        return DBXSharingSharedContentLinkMetadata(swift: swift)
-    }
-
+    public var linkMetadata: DBXSharingSharedContentLinkMetadata? { guard let swift = subSwift.linkMetadata else { return nil }; return DBXSharingSharedContentLinkMetadata(swift: swift) }
     /// The name of the this shared folder.
     @objc
     public var name: String { subSwift.name }
     /// Actions the current user may perform on the folder and its contents. The set of permissions corresponds to
     /// the FolderActions in the request.
     @objc
-    public var permissions: [DBXSharingFolderPermission]? { subSwift.permissions?.map { DBXSharingFolderPermission(swift: $0) } }
+    public var permissions: Array<DBXSharingFolderPermission>? { subSwift.permissions?.map { DBXSharingFolderPermission(swift: $0) } }
     /// Policies governing this shared folder.
     @objc
     public var policy: DBXSharingFolderPolicy { DBXSharingFolderPolicy(swift: subSwift.policy) }
@@ -9432,46 +10361,13 @@ public class DBXSharingSharedFolderMetadata: DBXSharingSharedFolderMetadataBase 
     /// Whether the folder inherits its members from its parent.
     @objc
     public var accessInheritance: DBXSharingAccessInheritance { DBXSharingAccessInheritance(swift: subSwift.accessInheritance) }
+    /// The ID of the content.
+    @objc
+    public var folderId: String? { subSwift.folderId }
 
     @objc
-    public init(
-        accessType: DBXSharingAccessLevel,
-        isInsideTeamFolder: NSNumber,
-        isTeamFolder: NSNumber,
-        name: String,
-        policy: DBXSharingFolderPolicy,
-        previewUrl: String,
-        sharedFolderId: String,
-        timeInvited: Date,
-        ownerDisplayNames: [String]?,
-        ownerTeam: DBXUsersTeam?,
-        parentSharedFolderId: String?,
-        pathDisplay: String?,
-        pathLower: String?,
-        parentFolderName: String?,
-        linkMetadata: DBXSharingSharedContentLinkMetadata?,
-        permissions: [DBXSharingFolderPermission]?,
-        accessInheritance: DBXSharingAccessInheritance
-    ) {
-        let swift = Sharing.SharedFolderMetadata(
-            accessType: accessType.swift,
-            isInsideTeamFolder: isInsideTeamFolder.boolValue,
-            isTeamFolder: isTeamFolder.boolValue,
-            name: name,
-            policy: policy.swift,
-            previewUrl: previewUrl,
-            sharedFolderId: sharedFolderId,
-            timeInvited: timeInvited,
-            ownerDisplayNames: ownerDisplayNames,
-            ownerTeam: ownerTeam?.swift,
-            parentSharedFolderId: parentSharedFolderId,
-            pathDisplay: pathDisplay,
-            pathLower: pathLower,
-            parentFolderName: parentFolderName,
-            linkMetadata: linkMetadata?.subSwift,
-            permissions: permissions?.map(\.swift),
-            accessInheritance: accessInheritance.swift
-        )
+    public init(accessType: DBXSharingAccessLevel, isInsideTeamFolder: NSNumber, isTeamFolder: NSNumber, name: String, policy: DBXSharingFolderPolicy, previewUrl: String, sharedFolderId: String, timeInvited: Date, ownerDisplayNames: Array<String>?, ownerTeam: DBXUsersTeam?, parentSharedFolderId: String?, pathDisplay: String?, pathLower: String?, parentFolderName: String?, linkMetadata: DBXSharingSharedContentLinkMetadata?, permissions: Array<DBXSharingFolderPermission>?, accessInheritance: DBXSharingAccessInheritance, folderId: String?) {
+        let swift = Sharing.SharedFolderMetadata(accessType: accessType.swift, isInsideTeamFolder: isInsideTeamFolder.boolValue, isTeamFolder: isTeamFolder.boolValue, name: name, policy: policy.swift, previewUrl: previewUrl, sharedFolderId: sharedFolderId, timeInvited: timeInvited, ownerDisplayNames: ownerDisplayNames, ownerTeam: ownerTeam?.swift, parentSharedFolderId: parentSharedFolderId, pathDisplay: pathDisplay, pathLower: pathLower, parentFolderName: parentFolderName, linkMetadata: linkMetadata?.subSwift, permissions: permissions?.map { $0.swift }, accessInheritance: accessInheritance.swift, folderId: folderId)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -9482,6 +10378,7 @@ public class DBXSharingSharedFolderMetadata: DBXSharingSharedFolderMetadataBase 
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -9518,32 +10415,32 @@ public class DBXSharingSharedLinkAccessFailureReason: NSObject {
 
     @objc
     public var asLoginRequired: DBXSharingSharedLinkAccessFailureReasonLoginRequired? {
-        self as? DBXSharingSharedLinkAccessFailureReasonLoginRequired
+        return self as? DBXSharingSharedLinkAccessFailureReasonLoginRequired
     }
 
     @objc
     public var asEmailVerifyRequired: DBXSharingSharedLinkAccessFailureReasonEmailVerifyRequired? {
-        self as? DBXSharingSharedLinkAccessFailureReasonEmailVerifyRequired
+        return self as? DBXSharingSharedLinkAccessFailureReasonEmailVerifyRequired
     }
 
     @objc
     public var asPasswordRequired: DBXSharingSharedLinkAccessFailureReasonPasswordRequired? {
-        self as? DBXSharingSharedLinkAccessFailureReasonPasswordRequired
+        return self as? DBXSharingSharedLinkAccessFailureReasonPasswordRequired
     }
 
     @objc
     public var asTeamOnly: DBXSharingSharedLinkAccessFailureReasonTeamOnly? {
-        self as? DBXSharingSharedLinkAccessFailureReasonTeamOnly
+        return self as? DBXSharingSharedLinkAccessFailureReasonTeamOnly
     }
 
     @objc
     public var asOwnerOnly: DBXSharingSharedLinkAccessFailureReasonOwnerOnly? {
-        self as? DBXSharingSharedLinkAccessFailureReasonOwnerOnly
+        return self as? DBXSharingSharedLinkAccessFailureReasonOwnerOnly
     }
 
     @objc
     public var asOther: DBXSharingSharedLinkAccessFailureReasonOther? {
-        self as? DBXSharingSharedLinkAccessFailureReasonOther
+        return self as? DBXSharingSharedLinkAccessFailureReasonOther
     }
 }
 
@@ -9558,7 +10455,7 @@ public class DBXSharingSharedLinkAccessFailureReasonLoginRequired: DBXSharingSha
 }
 
 /// This user's email address is not verified. This functionality is only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXSharingSharedLinkAccessFailureReasonEmailVerifyRequired: DBXSharingSharedLinkAccessFailureReason {
     @objc
@@ -9632,12 +10529,12 @@ public class DBXSharingSharedLinkAlreadyExistsMetadata: NSObject {
 
     @objc
     public var asMetadata: DBXSharingSharedLinkAlreadyExistsMetadataMetadata? {
-        self as? DBXSharingSharedLinkAlreadyExistsMetadataMetadata
+        return self as? DBXSharingSharedLinkAlreadyExistsMetadataMetadata
     }
 
     @objc
     public var asOther: DBXSharingSharedLinkAlreadyExistsMetadataOther? {
-        self as? DBXSharingSharedLinkAlreadyExistsMetadataOther
+        return self as? DBXSharingSharedLinkAlreadyExistsMetadataOther
     }
 }
 
@@ -9649,7 +10546,7 @@ public class DBXSharingSharedLinkAlreadyExistsMetadataMetadata: DBXSharingShared
 
     @objc
     public init(_ arg: DBXSharingSharedLinkMetadata) {
-        self.metadata = arg
+        metadata = arg
         let swift = Sharing.SharedLinkAlreadyExistsMetadata.metadata(arg.swift)
         super.init(swift: swift)
     }
@@ -9661,6 +10558,109 @@ public class DBXSharingSharedLinkAlreadyExistsMetadataOther: DBXSharingSharedLin
     @objc
     public init() {
         let swift = Sharing.SharedLinkAlreadyExistsMetadata.other
+        super.init(swift: swift)
+    }
+}
+
+/// The potential errors for a call to get_shared_link_metadata.
+@objc
+public class DBXSharingSharedLinkMetadataError: NSObject {
+    let swift: Sharing.SharedLinkMetadataError
+
+    public init(swift: Sharing.SharedLinkMetadataError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Sharing.SharedLinkMetadataError) -> DBXSharingSharedLinkMetadataError {
+        switch swift {
+        case .sharedLinkNotFound:
+            return DBXSharingSharedLinkMetadataErrorSharedLinkNotFound()
+        case .sharedLinkAccessDenied:
+            return DBXSharingSharedLinkMetadataErrorSharedLinkAccessDenied()
+        case .unsupportedLinkType:
+            return DBXSharingSharedLinkMetadataErrorUnsupportedLinkType()
+        case .unsupportedParameterField:
+            return DBXSharingSharedLinkMetadataErrorUnsupportedParameterField()
+        case .other:
+            return DBXSharingSharedLinkMetadataErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asSharedLinkNotFound: DBXSharingSharedLinkMetadataErrorSharedLinkNotFound? {
+        return self as? DBXSharingSharedLinkMetadataErrorSharedLinkNotFound
+    }
+
+    @objc
+    public var asSharedLinkAccessDenied: DBXSharingSharedLinkMetadataErrorSharedLinkAccessDenied? {
+        return self as? DBXSharingSharedLinkMetadataErrorSharedLinkAccessDenied
+    }
+
+    @objc
+    public var asUnsupportedLinkType: DBXSharingSharedLinkMetadataErrorUnsupportedLinkType? {
+        return self as? DBXSharingSharedLinkMetadataErrorUnsupportedLinkType
+    }
+
+    @objc
+    public var asUnsupportedParameterField: DBXSharingSharedLinkMetadataErrorUnsupportedParameterField? {
+        return self as? DBXSharingSharedLinkMetadataErrorUnsupportedParameterField
+    }
+
+    @objc
+    public var asOther: DBXSharingSharedLinkMetadataErrorOther? {
+        return self as? DBXSharingSharedLinkMetadataErrorOther
+    }
+}
+
+/// The shared link wasn't found.
+@objc
+public class DBXSharingSharedLinkMetadataErrorSharedLinkNotFound: DBXSharingSharedLinkMetadataError {
+    @objc
+    public init() {
+        let swift = Sharing.SharedLinkMetadataError.sharedLinkNotFound
+        super.init(swift: swift)
+    }
+}
+
+/// The caller is not allowed to access this shared link.
+@objc
+public class DBXSharingSharedLinkMetadataErrorSharedLinkAccessDenied: DBXSharingSharedLinkMetadataError {
+    @objc
+    public init() {
+        let swift = Sharing.SharedLinkMetadataError.sharedLinkAccessDenied
+        super.init(swift: swift)
+    }
+}
+
+/// This type of link is not supported; use files instead.
+@objc
+public class DBXSharingSharedLinkMetadataErrorUnsupportedLinkType: DBXSharingSharedLinkMetadataError {
+    @objc
+    public init() {
+        let swift = Sharing.SharedLinkMetadataError.unsupportedLinkType
+        super.init(swift: swift)
+    }
+}
+
+/// Private shared links do not support `path` or `link_password` parameter fields.
+@objc
+public class DBXSharingSharedLinkMetadataErrorUnsupportedParameterField: DBXSharingSharedLinkMetadataError {
+    @objc
+    public init() {
+        let swift = Sharing.SharedLinkMetadataError.unsupportedParameterField
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXSharingSharedLinkMetadataErrorOther: DBXSharingSharedLinkMetadataError {
+    @objc
+    public init() {
+        let swift = Sharing.SharedLinkMetadataError.other
         super.init(swift: swift)
     }
 }
@@ -9692,22 +10692,22 @@ public class DBXSharingSharedLinkPolicy: NSObject {
 
     @objc
     public var asAnyone: DBXSharingSharedLinkPolicyAnyone? {
-        self as? DBXSharingSharedLinkPolicyAnyone
+        return self as? DBXSharingSharedLinkPolicyAnyone
     }
 
     @objc
     public var asTeam: DBXSharingSharedLinkPolicyTeam? {
-        self as? DBXSharingSharedLinkPolicyTeam
+        return self as? DBXSharingSharedLinkPolicyTeam
     }
 
     @objc
     public var asMembers: DBXSharingSharedLinkPolicyMembers? {
-        self as? DBXSharingSharedLinkPolicyMembers
+        return self as? DBXSharingSharedLinkPolicyMembers
     }
 
     @objc
     public var asOther: DBXSharingSharedLinkPolicyOther? {
-        self as? DBXSharingSharedLinkPolicyOther
+        return self as? DBXSharingSharedLinkPolicyOther
     }
 }
 
@@ -9721,7 +10721,7 @@ public class DBXSharingSharedLinkPolicyAnyone: DBXSharingSharedLinkPolicy {
     }
 }
 
-/// Links can be shared with anyone on the same team as the owner.
+/// Field is deprecated. Links can be shared with anyone on the same team as the owner.
 @objc
 public class DBXSharingSharedLinkPolicyTeam: DBXSharingSharedLinkPolicy {
     @objc
@@ -9768,46 +10768,21 @@ public class DBXSharingSharedLinkSettings: NSObject {
     /// shared folder policies to determine the final effective audience type in the `effective_audience` field
     /// of `LinkPermissions.
     @objc
-    public var audience: DBXSharingLinkAudience? { guard let swift = swift.audience else { return nil }
-        return DBXSharingLinkAudience(swift: swift)
-    }
-
+    public var audience: DBXSharingLinkAudience? { guard let swift = swift.audience else { return nil }; return DBXSharingLinkAudience(swift: swift) }
     /// Requested access level you want the audience to gain from this link. Note, modifying access level for an
     /// existing link is not supported.
     @objc
-    public var access: DBXSharingRequestedLinkAccessLevel? { guard let swift = swift.access else { return nil }
-        return DBXSharingRequestedLinkAccessLevel(swift: swift)
-    }
-
-    /// Use audience instead.  The requested access for this shared link.
+    public var access: DBXSharingRequestedLinkAccessLevel? { guard let swift = swift.access else { return nil }; return DBXSharingRequestedLinkAccessLevel(swift: swift) }
+    /// Field is deprecated. Use audience instead.  The requested access for this shared link.
     @objc
-    public var requestedVisibility: DBXSharingRequestedVisibility? { guard let swift = swift.requestedVisibility else { return nil }
-        return DBXSharingRequestedVisibility(swift: swift)
-    }
-
+    public var requestedVisibility: DBXSharingRequestedVisibility? { guard let swift = swift.requestedVisibility else { return nil }; return DBXSharingRequestedVisibility(swift: swift) }
     /// Boolean flag to allow or not download capabilities for shared links.
     @objc
     public var allowDownload: NSNumber? { swift.allowDownload as NSNumber? }
 
     @objc
-    public init(
-        requirePassword: NSNumber?,
-        linkPassword: String?,
-        expires: Date?,
-        audience: DBXSharingLinkAudience?,
-        access: DBXSharingRequestedLinkAccessLevel?,
-        requestedVisibility: DBXSharingRequestedVisibility?,
-        allowDownload: NSNumber?
-    ) {
-        self.swift = Sharing.SharedLinkSettings(
-            requirePassword: requirePassword?.boolValue,
-            linkPassword: linkPassword,
-            expires: expires,
-            audience: audience?.swift,
-            access: access?.swift,
-            requestedVisibility: requestedVisibility?.swift,
-            allowDownload: allowDownload?.boolValue
-        )
+    public init(requirePassword: NSNumber?, linkPassword: String?, expires: Date?, audience: DBXSharingLinkAudience?, access: DBXSharingRequestedLinkAccessLevel?, requestedVisibility: DBXSharingRequestedVisibility?, allowDownload: NSNumber?) {
+        self.swift = Sharing.SharedLinkSettings(requirePassword: requirePassword?.boolValue, linkPassword: linkPassword, expires: expires, audience: audience?.swift, access: access?.swift, requestedVisibility: requestedVisibility?.swift, allowDownload: allowDownload?.boolValue)
     }
 
     let swift: Sharing.SharedLinkSettings
@@ -9815,6 +10790,7 @@ public class DBXSharingSharedLinkSettings: NSObject {
     public init(swift: Sharing.SharedLinkSettings) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -9843,18 +10819,18 @@ public class DBXSharingSharedLinkSettingsError: NSObject {
 
     @objc
     public var asInvalidSettings: DBXSharingSharedLinkSettingsErrorInvalidSettings? {
-        self as? DBXSharingSharedLinkSettingsErrorInvalidSettings
+        return self as? DBXSharingSharedLinkSettingsErrorInvalidSettings
     }
 
     @objc
     public var asNotAuthorized: DBXSharingSharedLinkSettingsErrorNotAuthorized? {
-        self as? DBXSharingSharedLinkSettingsErrorNotAuthorized
+        return self as? DBXSharingSharedLinkSettingsErrorNotAuthorized
     }
 }
 
 /// The given settings are invalid (for example, all attributes of the SharedLinkSettings are empty, the
-/// requested visibility is password in RequestedVisibility but the linkPassword in SharedLinkSettings
-/// is missing, expires in SharedLinkSettings is set to the past, etc.).
+        /// requested visibility is password in RequestedVisibility but the linkPassword in SharedLinkSettings
+        /// is missing, expires in SharedLinkSettings is set to the past, etc.).
 @objc
 public class DBXSharingSharedLinkSettingsErrorInvalidSettings: DBXSharingSharedLinkSettingsError {
     @objc
@@ -9865,8 +10841,8 @@ public class DBXSharingSharedLinkSettingsErrorInvalidSettings: DBXSharingSharedL
 }
 
 /// User is not allowed to modify the settings of this link. Note that basic users can only set public_ in
-/// RequestedVisibility as the requestedVisibility in SharedLinkSettings and cannot set expires in
-/// SharedLinkSettings.
+        /// RequestedVisibility as the requestedVisibility in SharedLinkSettings and cannot set expires in
+        /// SharedLinkSettings.
 @objc
 public class DBXSharingSharedLinkSettingsErrorNotAuthorized: DBXSharingSharedLinkSettingsError {
     @objc
@@ -9907,32 +10883,32 @@ public class DBXSharingSharingFileAccessError: NSObject {
 
     @objc
     public var asNoPermission: DBXSharingSharingFileAccessErrorNoPermission? {
-        self as? DBXSharingSharingFileAccessErrorNoPermission
+        return self as? DBXSharingSharingFileAccessErrorNoPermission
     }
 
     @objc
     public var asInvalidFile: DBXSharingSharingFileAccessErrorInvalidFile? {
-        self as? DBXSharingSharingFileAccessErrorInvalidFile
+        return self as? DBXSharingSharingFileAccessErrorInvalidFile
     }
 
     @objc
     public var asIsFolder: DBXSharingSharingFileAccessErrorIsFolder? {
-        self as? DBXSharingSharingFileAccessErrorIsFolder
+        return self as? DBXSharingSharingFileAccessErrorIsFolder
     }
 
     @objc
     public var asInsidePublicFolder: DBXSharingSharingFileAccessErrorInsidePublicFolder? {
-        self as? DBXSharingSharingFileAccessErrorInsidePublicFolder
+        return self as? DBXSharingSharingFileAccessErrorInsidePublicFolder
     }
 
     @objc
     public var asInsideOsxPackage: DBXSharingSharingFileAccessErrorInsideOsxPackage? {
-        self as? DBXSharingSharingFileAccessErrorInsideOsxPackage
+        return self as? DBXSharingSharingFileAccessErrorInsideOsxPackage
     }
 
     @objc
     public var asOther: DBXSharingSharingFileAccessErrorOther? {
-        self as? DBXSharingSharingFileAccessErrorOther
+        return self as? DBXSharingSharingFileAccessErrorOther
     }
 }
 
@@ -10019,17 +10995,17 @@ public class DBXSharingSharingUserError: NSObject {
 
     @objc
     public var asEmailUnverified: DBXSharingSharingUserErrorEmailUnverified? {
-        self as? DBXSharingSharingUserErrorEmailUnverified
+        return self as? DBXSharingSharingUserErrorEmailUnverified
     }
 
     @objc
     public var asOther: DBXSharingSharingUserErrorOther? {
-        self as? DBXSharingSharingUserErrorOther
+        return self as? DBXSharingSharingUserErrorOther
     }
 }
 
 /// This user's email address is not verified. This functionality is only available on accounts with a verified
-/// email address. Users can verify their email address here https://www.dropbox.com/help/317.
+        /// email address. Users can verify their email address here https://www.dropbox.com/help/317.
 @objc
 public class DBXSharingSharingUserErrorEmailUnverified: DBXSharingSharingUserError {
     @objc
@@ -10074,6 +11050,7 @@ public class DBXSharingTeamMemberInfo: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -10098,6 +11075,7 @@ public class DBXSharingTransferFolderArg: NSObject {
     public init(swift: Sharing.TransferFolderArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -10139,42 +11117,42 @@ public class DBXSharingTransferFolderError: NSObject {
 
     @objc
     public var asAccessError: DBXSharingTransferFolderErrorAccessError? {
-        self as? DBXSharingTransferFolderErrorAccessError
+        return self as? DBXSharingTransferFolderErrorAccessError
     }
 
     @objc
     public var asInvalidDropboxId: DBXSharingTransferFolderErrorInvalidDropboxId? {
-        self as? DBXSharingTransferFolderErrorInvalidDropboxId
+        return self as? DBXSharingTransferFolderErrorInvalidDropboxId
     }
 
     @objc
     public var asNewOwnerNotAMember: DBXSharingTransferFolderErrorNewOwnerNotAMember? {
-        self as? DBXSharingTransferFolderErrorNewOwnerNotAMember
+        return self as? DBXSharingTransferFolderErrorNewOwnerNotAMember
     }
 
     @objc
     public var asNewOwnerUnmounted: DBXSharingTransferFolderErrorNewOwnerUnmounted? {
-        self as? DBXSharingTransferFolderErrorNewOwnerUnmounted
+        return self as? DBXSharingTransferFolderErrorNewOwnerUnmounted
     }
 
     @objc
     public var asNewOwnerEmailUnverified: DBXSharingTransferFolderErrorNewOwnerEmailUnverified? {
-        self as? DBXSharingTransferFolderErrorNewOwnerEmailUnverified
+        return self as? DBXSharingTransferFolderErrorNewOwnerEmailUnverified
     }
 
     @objc
     public var asTeamFolder: DBXSharingTransferFolderErrorTeamFolder? {
-        self as? DBXSharingTransferFolderErrorTeamFolder
+        return self as? DBXSharingTransferFolderErrorTeamFolder
     }
 
     @objc
     public var asNoPermission: DBXSharingTransferFolderErrorNoPermission? {
-        self as? DBXSharingTransferFolderErrorNoPermission
+        return self as? DBXSharingTransferFolderErrorNoPermission
     }
 
     @objc
     public var asOther: DBXSharingTransferFolderErrorOther? {
-        self as? DBXSharingTransferFolderErrorOther
+        return self as? DBXSharingTransferFolderErrorOther
     }
 }
 
@@ -10186,7 +11164,7 @@ public class DBXSharingTransferFolderErrorAccessError: DBXSharingTransferFolderE
 
     @objc
     public init(_ arg: DBXSharingSharedFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.TransferFolderError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -10223,8 +11201,8 @@ public class DBXSharingTransferFolderErrorNewOwnerUnmounted: DBXSharingTransferF
 }
 
 /// The new designated owner's email address is not verified. This functionality is only available on accounts
-/// with a verified email address. Users can verify their email address here
-/// https://www.dropbox.com/help/317.
+        /// with a verified email address. Users can verify their email address here
+        /// https://www.dropbox.com/help/317.
 @objc
 public class DBXSharingTransferFolderErrorNewOwnerEmailUnverified: DBXSharingTransferFolderError {
     @objc
@@ -10282,6 +11260,7 @@ public class DBXSharingUnmountFolderArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -10314,22 +11293,22 @@ public class DBXSharingUnmountFolderError: NSObject {
 
     @objc
     public var asAccessError: DBXSharingUnmountFolderErrorAccessError? {
-        self as? DBXSharingUnmountFolderErrorAccessError
+        return self as? DBXSharingUnmountFolderErrorAccessError
     }
 
     @objc
     public var asNoPermission: DBXSharingUnmountFolderErrorNoPermission? {
-        self as? DBXSharingUnmountFolderErrorNoPermission
+        return self as? DBXSharingUnmountFolderErrorNoPermission
     }
 
     @objc
     public var asNotUnmountable: DBXSharingUnmountFolderErrorNotUnmountable? {
-        self as? DBXSharingUnmountFolderErrorNotUnmountable
+        return self as? DBXSharingUnmountFolderErrorNotUnmountable
     }
 
     @objc
     public var asOther: DBXSharingUnmountFolderErrorOther? {
-        self as? DBXSharingUnmountFolderErrorOther
+        return self as? DBXSharingUnmountFolderErrorOther
     }
 }
 
@@ -10341,7 +11320,7 @@ public class DBXSharingUnmountFolderErrorAccessError: DBXSharingUnmountFolderErr
 
     @objc
     public init(_ arg: DBXSharingSharedFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.UnmountFolderError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -10358,7 +11337,7 @@ public class DBXSharingUnmountFolderErrorNoPermission: DBXSharingUnmountFolderEr
 }
 
 /// The shared folder can't be unmounted. One example where this can occur is when the shared folder's parent
-/// folder is also a shared folder that resides in the current user's Dropbox.
+        /// folder is also a shared folder that resides in the current user's Dropbox.
 @objc
 public class DBXSharingUnmountFolderErrorNotUnmountable: DBXSharingUnmountFolderError {
     @objc
@@ -10396,6 +11375,7 @@ public class DBXSharingUnshareFileArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -10427,17 +11407,17 @@ public class DBXSharingUnshareFileError: NSObject {
 
     @objc
     public var asUserError: DBXSharingUnshareFileErrorUserError? {
-        self as? DBXSharingUnshareFileErrorUserError
+        return self as? DBXSharingUnshareFileErrorUserError
     }
 
     @objc
     public var asAccessError: DBXSharingUnshareFileErrorAccessError? {
-        self as? DBXSharingUnshareFileErrorAccessError
+        return self as? DBXSharingUnshareFileErrorAccessError
     }
 
     @objc
     public var asOther: DBXSharingUnshareFileErrorOther? {
-        self as? DBXSharingUnshareFileErrorOther
+        return self as? DBXSharingUnshareFileErrorOther
     }
 }
 
@@ -10449,7 +11429,7 @@ public class DBXSharingUnshareFileErrorUserError: DBXSharingUnshareFileError {
 
     @objc
     public init(_ arg: DBXSharingSharingUserError) {
-        self.userError = arg
+        userError = arg
         let swift = Sharing.UnshareFileError.userError(arg.swift)
         super.init(swift: swift)
     }
@@ -10463,7 +11443,7 @@ public class DBXSharingUnshareFileErrorAccessError: DBXSharingUnshareFileError {
 
     @objc
     public init(_ arg: DBXSharingSharingFileAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.UnshareFileError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -10501,6 +11481,7 @@ public class DBXSharingUnshareFolderArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -10535,27 +11516,27 @@ public class DBXSharingUnshareFolderError: NSObject {
 
     @objc
     public var asAccessError: DBXSharingUnshareFolderErrorAccessError? {
-        self as? DBXSharingUnshareFolderErrorAccessError
+        return self as? DBXSharingUnshareFolderErrorAccessError
     }
 
     @objc
     public var asTeamFolder: DBXSharingUnshareFolderErrorTeamFolder? {
-        self as? DBXSharingUnshareFolderErrorTeamFolder
+        return self as? DBXSharingUnshareFolderErrorTeamFolder
     }
 
     @objc
     public var asNoPermission: DBXSharingUnshareFolderErrorNoPermission? {
-        self as? DBXSharingUnshareFolderErrorNoPermission
+        return self as? DBXSharingUnshareFolderErrorNoPermission
     }
 
     @objc
     public var asTooManyFiles: DBXSharingUnshareFolderErrorTooManyFiles? {
-        self as? DBXSharingUnshareFolderErrorTooManyFiles
+        return self as? DBXSharingUnshareFolderErrorTooManyFiles
     }
 
     @objc
     public var asOther: DBXSharingUnshareFolderErrorOther? {
-        self as? DBXSharingUnshareFolderErrorOther
+        return self as? DBXSharingUnshareFolderErrorOther
     }
 }
 
@@ -10567,7 +11548,7 @@ public class DBXSharingUnshareFolderErrorAccessError: DBXSharingUnshareFolderErr
 
     @objc
     public init(_ arg: DBXSharingSharedFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.UnshareFolderError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -10637,8 +11618,133 @@ public class DBXSharingUpdateFileMemberArgs: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
+}
+
+/// Arguments for updateFilePolicy.
+@objc
+public class DBXSharingUpdateFilePolicyArg: NSObject {
+    /// File that we are changing the policy for.
+    @objc
+    public var file: String { swift.file }
+    /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the response's permissions
+    /// in SharedFileMetadata field describing the actions the authenticated user can perform on the file.
+    @objc
+    public var actions: Array<DBXSharingFileAction>? { swift.actions?.map { DBXSharingFileAction(swift: $0) } }
+    /// Field is deprecated. Settings on the link for the file.
+    @objc
+    public var linkSettings: DBXSharingLinkSettings? { guard let swift = swift.linkSettings else { return nil }; return DBXSharingLinkSettings(swift: swift) }
+    /// The presence and seen state policy on the file.
+    @objc
+    public var viewerInfoPolicy: DBXSharingViewerInfoPolicy? { guard let swift = swift.viewerInfoPolicy else { return nil }; return DBXSharingViewerInfoPolicy(swift: swift) }
+
+    @objc
+    public init(file: String, actions: Array<DBXSharingFileAction>?, linkSettings: DBXSharingLinkSettings?, viewerInfoPolicy: DBXSharingViewerInfoPolicy?) {
+        self.swift = Sharing.UpdateFilePolicyArg(file: file, actions: actions?.map { $0.swift }, linkSettings: linkSettings?.swift, viewerInfoPolicy: viewerInfoPolicy?.swift)
+    }
+
+    let swift: Sharing.UpdateFilePolicyArg
+
+    public init(swift: Sharing.UpdateFilePolicyArg) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Error result for updateFilePolicy.
+@objc
+public class DBXSharingUpdateFilePolicyError: NSObject {
+    let swift: Sharing.UpdateFilePolicyError
+
+    public init(swift: Sharing.UpdateFilePolicyError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Sharing.UpdateFilePolicyError) -> DBXSharingUpdateFilePolicyError {
+        switch swift {
+        case .accessError(let swiftArg):
+            let arg = DBXSharingSharingFileAccessError(swift: swiftArg)
+            return DBXSharingUpdateFilePolicyErrorAccessError(arg)
+        case .invalidFileSettings:
+            return DBXSharingUpdateFilePolicyErrorInvalidFileSettings()
+        case .noPermission:
+            return DBXSharingUpdateFilePolicyErrorNoPermission()
+        case .other:
+            return DBXSharingUpdateFilePolicyErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asAccessError: DBXSharingUpdateFilePolicyErrorAccessError? {
+        return self as? DBXSharingUpdateFilePolicyErrorAccessError
+    }
+
+    @objc
+    public var asInvalidFileSettings: DBXSharingUpdateFilePolicyErrorInvalidFileSettings? {
+        return self as? DBXSharingUpdateFilePolicyErrorInvalidFileSettings
+    }
+
+    @objc
+    public var asNoPermission: DBXSharingUpdateFilePolicyErrorNoPermission? {
+        return self as? DBXSharingUpdateFilePolicyErrorNoPermission
+    }
+
+    @objc
+    public var asOther: DBXSharingUpdateFilePolicyErrorOther? {
+        return self as? DBXSharingUpdateFilePolicyErrorOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXSharingUpdateFilePolicyErrorAccessError: DBXSharingUpdateFilePolicyError {
+    @objc
+    public var accessError: DBXSharingSharingFileAccessError
+
+    @objc
+    public init(_ arg: DBXSharingSharingFileAccessError) {
+        accessError = arg
+        let swift = Sharing.UpdateFilePolicyError.accessError(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// The file settings are invalid.
+@objc
+public class DBXSharingUpdateFilePolicyErrorInvalidFileSettings: DBXSharingUpdateFilePolicyError {
+    @objc
+    public init() {
+        let swift = Sharing.UpdateFilePolicyError.invalidFileSettings
+        super.init(swift: swift)
+    }
+}
+
+/// The current user does not have permission to perform this action.
+@objc
+public class DBXSharingUpdateFilePolicyErrorNoPermission: DBXSharingUpdateFilePolicyError {
+    @objc
+    public init() {
+        let swift = Sharing.UpdateFilePolicyError.noPermission
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXSharingUpdateFilePolicyErrorOther: DBXSharingUpdateFilePolicyError {
+    @objc
+    public init() {
+        let swift = Sharing.UpdateFilePolicyError.other
+        super.init(swift: swift)
+    }
 }
 
 /// Objective-C compatible UpdateFolderMemberArg struct
@@ -10664,6 +11770,7 @@ public class DBXSharingUpdateFolderMemberArg: NSObject {
     public init(swift: Sharing.UpdateFolderMemberArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -10703,32 +11810,32 @@ public class DBXSharingUpdateFolderMemberError: NSObject {
 
     @objc
     public var asAccessError: DBXSharingUpdateFolderMemberErrorAccessError? {
-        self as? DBXSharingUpdateFolderMemberErrorAccessError
+        return self as? DBXSharingUpdateFolderMemberErrorAccessError
     }
 
     @objc
     public var asMemberError: DBXSharingUpdateFolderMemberErrorMemberError? {
-        self as? DBXSharingUpdateFolderMemberErrorMemberError
+        return self as? DBXSharingUpdateFolderMemberErrorMemberError
     }
 
     @objc
     public var asNoExplicitAccess: DBXSharingUpdateFolderMemberErrorNoExplicitAccess? {
-        self as? DBXSharingUpdateFolderMemberErrorNoExplicitAccess
+        return self as? DBXSharingUpdateFolderMemberErrorNoExplicitAccess
     }
 
     @objc
     public var asInsufficientPlan: DBXSharingUpdateFolderMemberErrorInsufficientPlan? {
-        self as? DBXSharingUpdateFolderMemberErrorInsufficientPlan
+        return self as? DBXSharingUpdateFolderMemberErrorInsufficientPlan
     }
 
     @objc
     public var asNoPermission: DBXSharingUpdateFolderMemberErrorNoPermission? {
-        self as? DBXSharingUpdateFolderMemberErrorNoPermission
+        return self as? DBXSharingUpdateFolderMemberErrorNoPermission
     }
 
     @objc
     public var asOther: DBXSharingUpdateFolderMemberErrorOther? {
-        self as? DBXSharingUpdateFolderMemberErrorOther
+        return self as? DBXSharingUpdateFolderMemberErrorOther
     }
 }
 
@@ -10740,7 +11847,7 @@ public class DBXSharingUpdateFolderMemberErrorAccessError: DBXSharingUpdateFolde
 
     @objc
     public init(_ arg: DBXSharingSharedFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.UpdateFolderMemberError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -10754,14 +11861,14 @@ public class DBXSharingUpdateFolderMemberErrorMemberError: DBXSharingUpdateFolde
 
     @objc
     public init(_ arg: DBXSharingSharedFolderMemberError) {
-        self.memberError = arg
+        memberError = arg
         let swift = Sharing.UpdateFolderMemberError.memberError(arg.swift)
         super.init(swift: swift)
     }
 }
 
 /// If updating the access type required the member to be added to the shared folder and there was an error when
-/// adding the member.
+        /// adding the member.
 @objc
 public class DBXSharingUpdateFolderMemberErrorNoExplicitAccess: DBXSharingUpdateFolderMemberError {
     @objc
@@ -10769,15 +11876,15 @@ public class DBXSharingUpdateFolderMemberErrorNoExplicitAccess: DBXSharingUpdate
 
     @objc
     public init(_ arg: DBXSharingAddFolderMemberError) {
-        self.noExplicitAccess = arg
+        noExplicitAccess = arg
         let swift = Sharing.UpdateFolderMemberError.noExplicitAccess(arg.swift)
         super.init(swift: swift)
     }
 }
 
 /// The current user's account doesn't support this action. An example of this is when downgrading a member from
-/// editor to viewer. This action can only be performed by users that have upgraded to a Pro or Business
-/// plan.
+        /// editor to viewer. This action can only be performed by users that have upgraded to a Pro or Business
+        /// plan.
 @objc
 public class DBXSharingUpdateFolderMemberErrorInsufficientPlan: DBXSharingUpdateFolderMemberError {
     @objc
@@ -10815,60 +11922,29 @@ public class DBXSharingUpdateFolderPolicyArg: NSObject {
     public var sharedFolderId: String { swift.sharedFolderId }
     /// Who can be a member of this shared folder. Only applicable if the current user is on a team.
     @objc
-    public var memberPolicy: DBXSharingMemberPolicy? { guard let swift = swift.memberPolicy else { return nil }
-        return DBXSharingMemberPolicy(swift: swift)
-    }
-
+    public var memberPolicy: DBXSharingMemberPolicy? { guard let swift = swift.memberPolicy else { return nil }; return DBXSharingMemberPolicy(swift: swift) }
     /// Who can add and remove members of this shared folder.
     @objc
-    public var aclUpdatePolicy: DBXSharingAclUpdatePolicy? { guard let swift = swift.aclUpdatePolicy else { return nil }
-        return DBXSharingAclUpdatePolicy(swift: swift)
-    }
-
+    public var aclUpdatePolicy: DBXSharingAclUpdatePolicy? { guard let swift = swift.aclUpdatePolicy else { return nil }; return DBXSharingAclUpdatePolicy(swift: swift) }
     /// Who can enable/disable viewer info for this shared folder.
     @objc
-    public var viewerInfoPolicy: DBXSharingViewerInfoPolicy? { guard let swift = swift.viewerInfoPolicy else { return nil }
-        return DBXSharingViewerInfoPolicy(swift: swift)
-    }
-
+    public var viewerInfoPolicy: DBXSharingViewerInfoPolicy? { guard let swift = swift.viewerInfoPolicy else { return nil }; return DBXSharingViewerInfoPolicy(swift: swift) }
     /// The policy to apply to shared links created for content inside this shared folder. The current user must be
     /// on a team to set this policy to members in SharedLinkPolicy.
     @objc
-    public var sharedLinkPolicy: DBXSharingSharedLinkPolicy? { guard let swift = swift.sharedLinkPolicy else { return nil }
-        return DBXSharingSharedLinkPolicy(swift: swift)
-    }
-
+    public var sharedLinkPolicy: DBXSharingSharedLinkPolicy? { guard let swift = swift.sharedLinkPolicy else { return nil }; return DBXSharingSharedLinkPolicy(swift: swift) }
     /// Settings on the link for this folder.
     @objc
-    public var linkSettings: DBXSharingLinkSettings? { guard let swift = swift.linkSettings else { return nil }
-        return DBXSharingLinkSettings(swift: swift)
-    }
-
-    /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the  response's
-    /// permissions in SharedFolderMetadata field describing the actions the  authenticated user can perform on
+    public var linkSettings: DBXSharingLinkSettings? { guard let swift = swift.linkSettings else { return nil }; return DBXSharingLinkSettings(swift: swift) }
+    /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the response's
+    /// permissions in SharedFolderMetadata field describing the actions the authenticated user can perform on
     /// the folder.
     @objc
-    public var actions: [DBXSharingFolderAction]? { swift.actions?.map { DBXSharingFolderAction(swift: $0) } }
+    public var actions: Array<DBXSharingFolderAction>? { swift.actions?.map { DBXSharingFolderAction(swift: $0) } }
 
     @objc
-    public init(
-        sharedFolderId: String,
-        memberPolicy: DBXSharingMemberPolicy?,
-        aclUpdatePolicy: DBXSharingAclUpdatePolicy?,
-        viewerInfoPolicy: DBXSharingViewerInfoPolicy?,
-        sharedLinkPolicy: DBXSharingSharedLinkPolicy?,
-        linkSettings: DBXSharingLinkSettings?,
-        actions: [DBXSharingFolderAction]?
-    ) {
-        self.swift = Sharing.UpdateFolderPolicyArg(
-            sharedFolderId: sharedFolderId,
-            memberPolicy: memberPolicy?.swift,
-            aclUpdatePolicy: aclUpdatePolicy?.swift,
-            viewerInfoPolicy: viewerInfoPolicy?.swift,
-            sharedLinkPolicy: sharedLinkPolicy?.swift,
-            linkSettings: linkSettings?.swift,
-            actions: actions?.map(\.swift)
-        )
+    public init(sharedFolderId: String, memberPolicy: DBXSharingMemberPolicy?, aclUpdatePolicy: DBXSharingAclUpdatePolicy?, viewerInfoPolicy: DBXSharingViewerInfoPolicy?, sharedLinkPolicy: DBXSharingSharedLinkPolicy?, linkSettings: DBXSharingLinkSettings?, actions: Array<DBXSharingFolderAction>?) {
+        self.swift = Sharing.UpdateFolderPolicyArg(sharedFolderId: sharedFolderId, memberPolicy: memberPolicy?.swift, aclUpdatePolicy: aclUpdatePolicy?.swift, viewerInfoPolicy: viewerInfoPolicy?.swift, sharedLinkPolicy: sharedLinkPolicy?.swift, linkSettings: linkSettings?.swift, actions: actions?.map { $0.swift })
     }
 
     let swift: Sharing.UpdateFolderPolicyArg
@@ -10876,6 +11952,7 @@ public class DBXSharingUpdateFolderPolicyArg: NSObject {
     public init(swift: Sharing.UpdateFolderPolicyArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -10915,37 +11992,37 @@ public class DBXSharingUpdateFolderPolicyError: NSObject {
 
     @objc
     public var asAccessError: DBXSharingUpdateFolderPolicyErrorAccessError? {
-        self as? DBXSharingUpdateFolderPolicyErrorAccessError
+        return self as? DBXSharingUpdateFolderPolicyErrorAccessError
     }
 
     @objc
     public var asNotOnTeam: DBXSharingUpdateFolderPolicyErrorNotOnTeam? {
-        self as? DBXSharingUpdateFolderPolicyErrorNotOnTeam
+        return self as? DBXSharingUpdateFolderPolicyErrorNotOnTeam
     }
 
     @objc
     public var asTeamPolicyDisallowsMemberPolicy: DBXSharingUpdateFolderPolicyErrorTeamPolicyDisallowsMemberPolicy? {
-        self as? DBXSharingUpdateFolderPolicyErrorTeamPolicyDisallowsMemberPolicy
+        return self as? DBXSharingUpdateFolderPolicyErrorTeamPolicyDisallowsMemberPolicy
     }
 
     @objc
     public var asDisallowedSharedLinkPolicy: DBXSharingUpdateFolderPolicyErrorDisallowedSharedLinkPolicy? {
-        self as? DBXSharingUpdateFolderPolicyErrorDisallowedSharedLinkPolicy
+        return self as? DBXSharingUpdateFolderPolicyErrorDisallowedSharedLinkPolicy
     }
 
     @objc
     public var asNoPermission: DBXSharingUpdateFolderPolicyErrorNoPermission? {
-        self as? DBXSharingUpdateFolderPolicyErrorNoPermission
+        return self as? DBXSharingUpdateFolderPolicyErrorNoPermission
     }
 
     @objc
     public var asTeamFolder: DBXSharingUpdateFolderPolicyErrorTeamFolder? {
-        self as? DBXSharingUpdateFolderPolicyErrorTeamFolder
+        return self as? DBXSharingUpdateFolderPolicyErrorTeamFolder
     }
 
     @objc
     public var asOther: DBXSharingUpdateFolderPolicyErrorOther? {
-        self as? DBXSharingUpdateFolderPolicyErrorOther
+        return self as? DBXSharingUpdateFolderPolicyErrorOther
     }
 }
 
@@ -10957,7 +12034,7 @@ public class DBXSharingUpdateFolderPolicyErrorAccessError: DBXSharingUpdateFolde
 
     @objc
     public init(_ arg: DBXSharingSharedFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Sharing.UpdateFolderPolicyError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -10973,7 +12050,7 @@ public class DBXSharingUpdateFolderPolicyErrorNotOnTeam: DBXSharingUpdateFolderP
     }
 }
 
-/// Team policy is more restrictive than memberPolicy in ShareFolderArg.
+/// Team policy or group sharing settings are more restrictive than memberPolicy in ShareFolderArg.
 @objc
 public class DBXSharingUpdateFolderPolicyErrorTeamPolicyDisallowsMemberPolicy: DBXSharingUpdateFolderPolicyError {
     @objc
@@ -11031,20 +12108,8 @@ public class DBXSharingUserMembershipInfo: DBXSharingMembershipInfo {
     public var user: DBXSharingUserInfo { DBXSharingUserInfo(swift: subSwift.user) }
 
     @objc
-    public init(
-        accessType: DBXSharingAccessLevel,
-        user: DBXSharingUserInfo,
-        permissions: [DBXSharingMemberPermission]?,
-        initials: String?,
-        isInherited: NSNumber
-    ) {
-        let swift = Sharing.UserMembershipInfo(
-            accessType: accessType.swift,
-            user: user.swift,
-            permissions: permissions?.map(\.swift),
-            initials: initials,
-            isInherited: isInherited.boolValue
-        )
+    public init(accessType: DBXSharingAccessLevel, user: DBXSharingUserInfo, permissions: Array<DBXSharingMemberPermission>?, initials: String?, isInherited: NSNumber) {
+        let swift = Sharing.UserMembershipInfo(accessType: accessType.swift, user: user.swift, permissions: permissions?.map { $0.swift }, initials: initials, isInherited: isInherited.boolValue)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -11055,6 +12120,7 @@ public class DBXSharingUserMembershipInfo: DBXSharingMembershipInfo {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -11069,29 +12135,11 @@ public class DBXSharingUserFileMembershipInfo: DBXSharingUserMembershipInfo {
     public var timeLastSeen: Date? { subSubSwift.timeLastSeen }
     /// The platform on which the user has last seen the content, or unknown.
     @objc
-    public var platformType: DBXSeenStatePlatformType? { guard let swift = subSubSwift.platformType else { return nil }
-        return DBXSeenStatePlatformType(swift: swift)
-    }
+    public var platformType: DBXSeenStatePlatformType? { guard let swift = subSubSwift.platformType else { return nil }; return DBXSeenStatePlatformType(swift: swift) }
 
     @objc
-    public init(
-        accessType: DBXSharingAccessLevel,
-        user: DBXSharingUserInfo,
-        permissions: [DBXSharingMemberPermission]?,
-        initials: String?,
-        isInherited: NSNumber,
-        timeLastSeen: Date?,
-        platformType: DBXSeenStatePlatformType?
-    ) {
-        let swift = Sharing.UserFileMembershipInfo(
-            accessType: accessType.swift,
-            user: user.swift,
-            permissions: permissions?.map(\.swift),
-            initials: initials,
-            isInherited: isInherited.boolValue,
-            timeLastSeen: timeLastSeen,
-            platformType: platformType?.swift
-        )
+    public init(accessType: DBXSharingAccessLevel, user: DBXSharingUserInfo, permissions: Array<DBXSharingMemberPermission>?, initials: String?, isInherited: NSNumber, timeLastSeen: Date?, platformType: DBXSeenStatePlatformType?) {
+        let swift = Sharing.UserFileMembershipInfo(accessType: accessType.swift, user: user.swift, permissions: permissions?.map { $0.swift }, initials: initials, isInherited: isInherited.boolValue, timeLastSeen: timeLastSeen, platformType: platformType?.swift)
         self.subSubSwift = swift
         super.init(swift: swift)
     }
@@ -11102,6 +12150,7 @@ public class DBXSharingUserFileMembershipInfo: DBXSharingUserMembershipInfo {
         self.subSubSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -11137,6 +12186,7 @@ public class DBXSharingUserInfo: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -11166,17 +12216,17 @@ public class DBXSharingViewerInfoPolicy: NSObject {
 
     @objc
     public var asEnabled: DBXSharingViewerInfoPolicyEnabled? {
-        self as? DBXSharingViewerInfoPolicyEnabled
+        return self as? DBXSharingViewerInfoPolicyEnabled
     }
 
     @objc
     public var asDisabled: DBXSharingViewerInfoPolicyDisabled? {
-        self as? DBXSharingViewerInfoPolicyDisabled
+        return self as? DBXSharingViewerInfoPolicyDisabled
     }
 
     @objc
     public var asOther: DBXSharingViewerInfoPolicyOther? {
-        self as? DBXSharingViewerInfoPolicyOther
+        return self as? DBXSharingViewerInfoPolicyOther
     }
 }
 
@@ -11242,32 +12292,32 @@ public class DBXSharingVisibility: NSObject {
 
     @objc
     public var asPublic_: DBXSharingVisibilityPublic_? {
-        self as? DBXSharingVisibilityPublic_
+        return self as? DBXSharingVisibilityPublic_
     }
 
     @objc
     public var asTeamOnly: DBXSharingVisibilityTeamOnly? {
-        self as? DBXSharingVisibilityTeamOnly
+        return self as? DBXSharingVisibilityTeamOnly
     }
 
     @objc
     public var asPassword: DBXSharingVisibilityPassword? {
-        self as? DBXSharingVisibilityPassword
+        return self as? DBXSharingVisibilityPassword
     }
 
     @objc
     public var asTeamAndPassword: DBXSharingVisibilityTeamAndPassword? {
-        self as? DBXSharingVisibilityTeamAndPassword
+        return self as? DBXSharingVisibilityTeamAndPassword
     }
 
     @objc
     public var asSharedFolderOnly: DBXSharingVisibilitySharedFolderOnly? {
-        self as? DBXSharingVisibilitySharedFolderOnly
+        return self as? DBXSharingVisibilitySharedFolderOnly
     }
 
     @objc
     public var asOther: DBXSharingVisibilityOther? {
-        self as? DBXSharingVisibilityOther
+        return self as? DBXSharingVisibilityOther
     }
 }
 
@@ -11348,23 +12398,11 @@ public class DBXSharingVisibilityPolicy: NSObject {
     /// If allowed is false, this will provide the reason that the user is not permitted to set the visibility to
     /// this policy.
     @objc
-    public var disallowedReason: DBXSharingVisibilityPolicyDisallowedReason? { guard let swift = swift.disallowedReason else { return nil }
-        return DBXSharingVisibilityPolicyDisallowedReason(swift: swift)
-    }
+    public var disallowedReason: DBXSharingVisibilityPolicyDisallowedReason? { guard let swift = swift.disallowedReason else { return nil }; return DBXSharingVisibilityPolicyDisallowedReason(swift: swift) }
 
     @objc
-    public init(
-        policy: DBXSharingRequestedVisibility,
-        resolvedPolicy: DBXSharingAlphaResolvedVisibility,
-        allowed: NSNumber,
-        disallowedReason: DBXSharingVisibilityPolicyDisallowedReason?
-    ) {
-        self.swift = Sharing.VisibilityPolicy(
-            policy: policy.swift,
-            resolvedPolicy: resolvedPolicy.swift,
-            allowed: allowed.boolValue,
-            disallowedReason: disallowedReason?.swift
-        )
+    public init(policy: DBXSharingRequestedVisibility, resolvedPolicy: DBXSharingAlphaResolvedVisibility, allowed: NSNumber, disallowedReason: DBXSharingVisibilityPolicyDisallowedReason?) {
+        self.swift = Sharing.VisibilityPolicy(policy: policy.swift, resolvedPolicy: resolvedPolicy.swift, allowed: allowed.boolValue, disallowedReason: disallowedReason?.swift)
     }
 
     let swift: Sharing.VisibilityPolicy
@@ -11373,6 +12411,8 @@ public class DBXSharingVisibilityPolicy: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
+

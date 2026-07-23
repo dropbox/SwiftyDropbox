@@ -16,14 +16,14 @@ public class DBXFilePropertiesAddPropertiesArg: NSObject {
     /// A unique identifier for the file or folder.
     @objc
     public var path: String { swift.path }
-    /// The property groups which are to be added to a Dropbox file. No two groups in the input should  refer to the
+    /// The property groups which are to be added to a Dropbox file. No two groups in the input should refer to the
     /// same template.
     @objc
-    public var propertyGroups: [DBXFilePropertiesPropertyGroup] { swift.propertyGroups.map { DBXFilePropertiesPropertyGroup(swift: $0) } }
+    public var propertyGroups: Array<DBXFilePropertiesPropertyGroup> { swift.propertyGroups.map { DBXFilePropertiesPropertyGroup(swift: $0) } }
 
     @objc
-    public init(path: String, propertyGroups: [DBXFilePropertiesPropertyGroup]) {
-        self.swift = FileProperties.AddPropertiesArg(path: path, propertyGroups: propertyGroups.map(\.swift))
+    public init(path: String, propertyGroups: Array<DBXFilePropertiesPropertyGroup>) {
+        self.swift = FileProperties.AddPropertiesArg(path: path, propertyGroups: propertyGroups.map { $0.swift })
     }
 
     let swift: FileProperties.AddPropertiesArg
@@ -31,6 +31,7 @@ public class DBXFilePropertiesAddPropertiesArg: NSObject {
     public init(swift: FileProperties.AddPropertiesArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -62,17 +63,17 @@ public class DBXFilePropertiesTemplateError: NSObject {
 
     @objc
     public var asTemplateNotFound: DBXFilePropertiesTemplateErrorTemplateNotFound? {
-        self as? DBXFilePropertiesTemplateErrorTemplateNotFound
+        return self as? DBXFilePropertiesTemplateErrorTemplateNotFound
     }
 
     @objc
     public var asRestrictedContent: DBXFilePropertiesTemplateErrorRestrictedContent? {
-        self as? DBXFilePropertiesTemplateErrorRestrictedContent
+        return self as? DBXFilePropertiesTemplateErrorRestrictedContent
     }
 
     @objc
     public var asOther: DBXFilePropertiesTemplateErrorOther? {
-        self as? DBXFilePropertiesTemplateErrorOther
+        return self as? DBXFilePropertiesTemplateErrorOther
     }
 }
 
@@ -84,7 +85,7 @@ public class DBXFilePropertiesTemplateErrorTemplateNotFound: DBXFilePropertiesTe
 
     @objc
     public init(_ arg: String) {
-        self.templateNotFound = arg
+        templateNotFound = arg
         let swift = FileProperties.TemplateError.templateNotFound(arg)
         super.init(swift: swift)
     }
@@ -141,27 +142,27 @@ public class DBXFilePropertiesPropertiesError: NSObject {
 
     @objc
     public var asTemplateNotFound: DBXFilePropertiesPropertiesErrorTemplateNotFound? {
-        self as? DBXFilePropertiesPropertiesErrorTemplateNotFound
+        return self as? DBXFilePropertiesPropertiesErrorTemplateNotFound
     }
 
     @objc
     public var asRestrictedContent: DBXFilePropertiesPropertiesErrorRestrictedContent? {
-        self as? DBXFilePropertiesPropertiesErrorRestrictedContent
+        return self as? DBXFilePropertiesPropertiesErrorRestrictedContent
     }
 
     @objc
     public var asOther: DBXFilePropertiesPropertiesErrorOther? {
-        self as? DBXFilePropertiesPropertiesErrorOther
+        return self as? DBXFilePropertiesPropertiesErrorOther
     }
 
     @objc
     public var asPath: DBXFilePropertiesPropertiesErrorPath? {
-        self as? DBXFilePropertiesPropertiesErrorPath
+        return self as? DBXFilePropertiesPropertiesErrorPath
     }
 
     @objc
     public var asUnsupportedFolder: DBXFilePropertiesPropertiesErrorUnsupportedFolder? {
-        self as? DBXFilePropertiesPropertiesErrorUnsupportedFolder
+        return self as? DBXFilePropertiesPropertiesErrorUnsupportedFolder
     }
 }
 
@@ -173,7 +174,7 @@ public class DBXFilePropertiesPropertiesErrorTemplateNotFound: DBXFileProperties
 
     @objc
     public init(_ arg: String) {
-        self.templateNotFound = arg
+        templateNotFound = arg
         let swift = FileProperties.PropertiesError.templateNotFound(arg)
         super.init(swift: swift)
     }
@@ -207,7 +208,7 @@ public class DBXFilePropertiesPropertiesErrorPath: DBXFilePropertiesPropertiesEr
 
     @objc
     public init(_ arg: DBXFilePropertiesLookupError) {
-        self.path = arg
+        path = arg
         let swift = FileProperties.PropertiesError.path(arg.swift)
         super.init(swift: swift)
     }
@@ -260,42 +261,42 @@ public class DBXFilePropertiesInvalidPropertyGroupError: NSObject {
 
     @objc
     public var asTemplateNotFound: DBXFilePropertiesInvalidPropertyGroupErrorTemplateNotFound? {
-        self as? DBXFilePropertiesInvalidPropertyGroupErrorTemplateNotFound
+        return self as? DBXFilePropertiesInvalidPropertyGroupErrorTemplateNotFound
     }
 
     @objc
     public var asRestrictedContent: DBXFilePropertiesInvalidPropertyGroupErrorRestrictedContent? {
-        self as? DBXFilePropertiesInvalidPropertyGroupErrorRestrictedContent
+        return self as? DBXFilePropertiesInvalidPropertyGroupErrorRestrictedContent
     }
 
     @objc
     public var asOther: DBXFilePropertiesInvalidPropertyGroupErrorOther? {
-        self as? DBXFilePropertiesInvalidPropertyGroupErrorOther
+        return self as? DBXFilePropertiesInvalidPropertyGroupErrorOther
     }
 
     @objc
     public var asPath: DBXFilePropertiesInvalidPropertyGroupErrorPath? {
-        self as? DBXFilePropertiesInvalidPropertyGroupErrorPath
+        return self as? DBXFilePropertiesInvalidPropertyGroupErrorPath
     }
 
     @objc
     public var asUnsupportedFolder: DBXFilePropertiesInvalidPropertyGroupErrorUnsupportedFolder? {
-        self as? DBXFilePropertiesInvalidPropertyGroupErrorUnsupportedFolder
+        return self as? DBXFilePropertiesInvalidPropertyGroupErrorUnsupportedFolder
     }
 
     @objc
     public var asPropertyFieldTooLarge: DBXFilePropertiesInvalidPropertyGroupErrorPropertyFieldTooLarge? {
-        self as? DBXFilePropertiesInvalidPropertyGroupErrorPropertyFieldTooLarge
+        return self as? DBXFilePropertiesInvalidPropertyGroupErrorPropertyFieldTooLarge
     }
 
     @objc
     public var asDoesNotFitTemplate: DBXFilePropertiesInvalidPropertyGroupErrorDoesNotFitTemplate? {
-        self as? DBXFilePropertiesInvalidPropertyGroupErrorDoesNotFitTemplate
+        return self as? DBXFilePropertiesInvalidPropertyGroupErrorDoesNotFitTemplate
     }
 
     @objc
     public var asDuplicatePropertyGroups: DBXFilePropertiesInvalidPropertyGroupErrorDuplicatePropertyGroups? {
-        self as? DBXFilePropertiesInvalidPropertyGroupErrorDuplicatePropertyGroups
+        return self as? DBXFilePropertiesInvalidPropertyGroupErrorDuplicatePropertyGroups
     }
 }
 
@@ -307,7 +308,7 @@ public class DBXFilePropertiesInvalidPropertyGroupErrorTemplateNotFound: DBXFile
 
     @objc
     public init(_ arg: String) {
-        self.templateNotFound = arg
+        templateNotFound = arg
         let swift = FileProperties.InvalidPropertyGroupError.templateNotFound(arg)
         super.init(swift: swift)
     }
@@ -341,7 +342,7 @@ public class DBXFilePropertiesInvalidPropertyGroupErrorPath: DBXFilePropertiesIn
 
     @objc
     public init(_ arg: DBXFilePropertiesLookupError) {
-        self.path = arg
+        path = arg
         let swift = FileProperties.InvalidPropertyGroupError.path(arg.swift)
         super.init(swift: swift)
     }
@@ -426,47 +427,47 @@ public class DBXFilePropertiesAddPropertiesError: NSObject {
 
     @objc
     public var asTemplateNotFound: DBXFilePropertiesAddPropertiesErrorTemplateNotFound? {
-        self as? DBXFilePropertiesAddPropertiesErrorTemplateNotFound
+        return self as? DBXFilePropertiesAddPropertiesErrorTemplateNotFound
     }
 
     @objc
     public var asRestrictedContent: DBXFilePropertiesAddPropertiesErrorRestrictedContent? {
-        self as? DBXFilePropertiesAddPropertiesErrorRestrictedContent
+        return self as? DBXFilePropertiesAddPropertiesErrorRestrictedContent
     }
 
     @objc
     public var asOther: DBXFilePropertiesAddPropertiesErrorOther? {
-        self as? DBXFilePropertiesAddPropertiesErrorOther
+        return self as? DBXFilePropertiesAddPropertiesErrorOther
     }
 
     @objc
     public var asPath: DBXFilePropertiesAddPropertiesErrorPath? {
-        self as? DBXFilePropertiesAddPropertiesErrorPath
+        return self as? DBXFilePropertiesAddPropertiesErrorPath
     }
 
     @objc
     public var asUnsupportedFolder: DBXFilePropertiesAddPropertiesErrorUnsupportedFolder? {
-        self as? DBXFilePropertiesAddPropertiesErrorUnsupportedFolder
+        return self as? DBXFilePropertiesAddPropertiesErrorUnsupportedFolder
     }
 
     @objc
     public var asPropertyFieldTooLarge: DBXFilePropertiesAddPropertiesErrorPropertyFieldTooLarge? {
-        self as? DBXFilePropertiesAddPropertiesErrorPropertyFieldTooLarge
+        return self as? DBXFilePropertiesAddPropertiesErrorPropertyFieldTooLarge
     }
 
     @objc
     public var asDoesNotFitTemplate: DBXFilePropertiesAddPropertiesErrorDoesNotFitTemplate? {
-        self as? DBXFilePropertiesAddPropertiesErrorDoesNotFitTemplate
+        return self as? DBXFilePropertiesAddPropertiesErrorDoesNotFitTemplate
     }
 
     @objc
     public var asDuplicatePropertyGroups: DBXFilePropertiesAddPropertiesErrorDuplicatePropertyGroups? {
-        self as? DBXFilePropertiesAddPropertiesErrorDuplicatePropertyGroups
+        return self as? DBXFilePropertiesAddPropertiesErrorDuplicatePropertyGroups
     }
 
     @objc
     public var asPropertyGroupAlreadyExists: DBXFilePropertiesAddPropertiesErrorPropertyGroupAlreadyExists? {
-        self as? DBXFilePropertiesAddPropertiesErrorPropertyGroupAlreadyExists
+        return self as? DBXFilePropertiesAddPropertiesErrorPropertyGroupAlreadyExists
     }
 }
 
@@ -478,7 +479,7 @@ public class DBXFilePropertiesAddPropertiesErrorTemplateNotFound: DBXFilePropert
 
     @objc
     public init(_ arg: String) {
-        self.templateNotFound = arg
+        templateNotFound = arg
         let swift = FileProperties.AddPropertiesError.templateNotFound(arg)
         super.init(swift: swift)
     }
@@ -512,7 +513,7 @@ public class DBXFilePropertiesAddPropertiesErrorPath: DBXFilePropertiesAddProper
 
     @objc
     public init(_ arg: DBXFilePropertiesLookupError) {
-        self.path = arg
+        path = arg
         let swift = FileProperties.AddPropertiesError.path(arg.swift)
         super.init(swift: swift)
     }
@@ -580,11 +581,11 @@ public class DBXFilePropertiesPropertyGroupTemplate: NSObject {
     /// Definitions of the property fields associated with this template. There can be up to 32 properties in a
     /// single template.
     @objc
-    public var fields: [DBXFilePropertiesPropertyFieldTemplate] { swift.fields.map { DBXFilePropertiesPropertyFieldTemplate(swift: $0) } }
+    public var fields: Array<DBXFilePropertiesPropertyFieldTemplate> { swift.fields.map { DBXFilePropertiesPropertyFieldTemplate(swift: $0) } }
 
     @objc
-    public init(name: String, description_: String, fields: [DBXFilePropertiesPropertyFieldTemplate]) {
-        self.swift = FileProperties.PropertyGroupTemplate(name: name, description_: description_, fields: fields.map(\.swift))
+    public init(name: String, description_: String, fields: Array<DBXFilePropertiesPropertyFieldTemplate>) {
+        self.swift = FileProperties.PropertyGroupTemplate(name: name, description_: description_, fields: fields.map { $0.swift })
     }
 
     let swift: FileProperties.PropertyGroupTemplate
@@ -593,6 +594,7 @@ public class DBXFilePropertiesPropertyGroupTemplate: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -600,12 +602,14 @@ public class DBXFilePropertiesPropertyGroupTemplate: NSObject {
 /// Objective-C compatible AddTemplateArg struct
 @objc
 public class DBXFilePropertiesAddTemplateArg: DBXFilePropertiesPropertyGroupTemplate {
+
     let subSwift: FileProperties.AddTemplateArg
 
     public init(swift: FileProperties.AddTemplateArg) {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -629,6 +633,7 @@ public class DBXFilePropertiesAddTemplateResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -651,6 +656,7 @@ public class DBXFilePropertiesGetTemplateArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -658,12 +664,14 @@ public class DBXFilePropertiesGetTemplateArg: NSObject {
 /// Objective-C compatible GetTemplateResult struct
 @objc
 public class DBXFilePropertiesGetTemplateResult: DBXFilePropertiesPropertyGroupTemplate {
+
     let subSwift: FileProperties.GetTemplateResult
 
     public init(swift: FileProperties.GetTemplateResult) {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -674,10 +682,10 @@ public class DBXFilePropertiesGetTemplateResult: DBXFilePropertiesPropertyGroupT
 public class DBXFilePropertiesListTemplateResult: NSObject {
     /// List of identifiers for templates added by  See templatesAddForUser or templatesAddForTeam.
     @objc
-    public var templateIds: [String] { swift.templateIds }
+    public var templateIds: Array<String> { swift.templateIds }
 
     @objc
-    public init(templateIds: [String]) {
+    public init(templateIds: Array<String>) {
         self.swift = FileProperties.ListTemplateResult(templateIds: templateIds)
     }
 
@@ -686,6 +694,7 @@ public class DBXFilePropertiesListTemplateResult: NSObject {
     public init(swift: FileProperties.ListTemplateResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -714,12 +723,12 @@ public class DBXFilePropertiesLogicalOperator: NSObject {
 
     @objc
     public var asOrOperator: DBXFilePropertiesLogicalOperatorOrOperator? {
-        self as? DBXFilePropertiesLogicalOperatorOrOperator
+        return self as? DBXFilePropertiesLogicalOperatorOrOperator
     }
 
     @objc
     public var asOther: DBXFilePropertiesLogicalOperatorOther? {
-        self as? DBXFilePropertiesLogicalOperatorOther
+        return self as? DBXFilePropertiesLogicalOperatorOther
     }
 }
 
@@ -766,12 +775,12 @@ public class DBXFilePropertiesLookUpPropertiesError: NSObject {
 
     @objc
     public var asPropertyGroupNotFound: DBXFilePropertiesLookUpPropertiesErrorPropertyGroupNotFound? {
-        self as? DBXFilePropertiesLookUpPropertiesErrorPropertyGroupNotFound
+        return self as? DBXFilePropertiesLookUpPropertiesErrorPropertyGroupNotFound
     }
 
     @objc
     public var asOther: DBXFilePropertiesLookUpPropertiesErrorOther? {
-        self as? DBXFilePropertiesLookUpPropertiesErrorOther
+        return self as? DBXFilePropertiesLookUpPropertiesErrorOther
     }
 }
 
@@ -827,32 +836,32 @@ public class DBXFilePropertiesLookupError: NSObject {
 
     @objc
     public var asMalformedPath: DBXFilePropertiesLookupErrorMalformedPath? {
-        self as? DBXFilePropertiesLookupErrorMalformedPath
+        return self as? DBXFilePropertiesLookupErrorMalformedPath
     }
 
     @objc
     public var asNotFound: DBXFilePropertiesLookupErrorNotFound? {
-        self as? DBXFilePropertiesLookupErrorNotFound
+        return self as? DBXFilePropertiesLookupErrorNotFound
     }
 
     @objc
     public var asNotFile: DBXFilePropertiesLookupErrorNotFile? {
-        self as? DBXFilePropertiesLookupErrorNotFile
+        return self as? DBXFilePropertiesLookupErrorNotFile
     }
 
     @objc
     public var asNotFolder: DBXFilePropertiesLookupErrorNotFolder? {
-        self as? DBXFilePropertiesLookupErrorNotFolder
+        return self as? DBXFilePropertiesLookupErrorNotFolder
     }
 
     @objc
     public var asRestrictedContent: DBXFilePropertiesLookupErrorRestrictedContent? {
-        self as? DBXFilePropertiesLookupErrorRestrictedContent
+        return self as? DBXFilePropertiesLookupErrorRestrictedContent
     }
 
     @objc
     public var asOther: DBXFilePropertiesLookupErrorOther? {
-        self as? DBXFilePropertiesLookupErrorOther
+        return self as? DBXFilePropertiesLookupErrorOther
     }
 }
 
@@ -864,7 +873,7 @@ public class DBXFilePropertiesLookupErrorMalformedPath: DBXFilePropertiesLookupE
 
     @objc
     public init(_ arg: String) {
-        self.malformedPath = arg
+        malformedPath = arg
         let swift = FileProperties.LookupError.malformedPath(arg)
         super.init(swift: swift)
     }
@@ -901,7 +910,7 @@ public class DBXFilePropertiesLookupErrorNotFolder: DBXFilePropertiesLookupError
 }
 
 /// The file cannot be transferred because the content is restricted. For example, we might restrict a file due
-/// to legal requirements.
+        /// to legal requirements.
 @objc
 public class DBXFilePropertiesLookupErrorRestrictedContent: DBXFilePropertiesLookupError {
     @objc
@@ -955,37 +964,37 @@ public class DBXFilePropertiesModifyTemplateError: NSObject {
 
     @objc
     public var asTemplateNotFound: DBXFilePropertiesModifyTemplateErrorTemplateNotFound? {
-        self as? DBXFilePropertiesModifyTemplateErrorTemplateNotFound
+        return self as? DBXFilePropertiesModifyTemplateErrorTemplateNotFound
     }
 
     @objc
     public var asRestrictedContent: DBXFilePropertiesModifyTemplateErrorRestrictedContent? {
-        self as? DBXFilePropertiesModifyTemplateErrorRestrictedContent
+        return self as? DBXFilePropertiesModifyTemplateErrorRestrictedContent
     }
 
     @objc
     public var asOther: DBXFilePropertiesModifyTemplateErrorOther? {
-        self as? DBXFilePropertiesModifyTemplateErrorOther
+        return self as? DBXFilePropertiesModifyTemplateErrorOther
     }
 
     @objc
     public var asConflictingPropertyNames: DBXFilePropertiesModifyTemplateErrorConflictingPropertyNames? {
-        self as? DBXFilePropertiesModifyTemplateErrorConflictingPropertyNames
+        return self as? DBXFilePropertiesModifyTemplateErrorConflictingPropertyNames
     }
 
     @objc
     public var asTooManyProperties: DBXFilePropertiesModifyTemplateErrorTooManyProperties? {
-        self as? DBXFilePropertiesModifyTemplateErrorTooManyProperties
+        return self as? DBXFilePropertiesModifyTemplateErrorTooManyProperties
     }
 
     @objc
     public var asTooManyTemplates: DBXFilePropertiesModifyTemplateErrorTooManyTemplates? {
-        self as? DBXFilePropertiesModifyTemplateErrorTooManyTemplates
+        return self as? DBXFilePropertiesModifyTemplateErrorTooManyTemplates
     }
 
     @objc
     public var asTemplateAttributeTooLarge: DBXFilePropertiesModifyTemplateErrorTemplateAttributeTooLarge? {
-        self as? DBXFilePropertiesModifyTemplateErrorTemplateAttributeTooLarge
+        return self as? DBXFilePropertiesModifyTemplateErrorTemplateAttributeTooLarge
     }
 }
 
@@ -997,7 +1006,7 @@ public class DBXFilePropertiesModifyTemplateErrorTemplateNotFound: DBXFileProper
 
     @objc
     public init(_ arg: String) {
-        self.templateNotFound = arg
+        templateNotFound = arg
         let swift = FileProperties.ModifyTemplateError.templateNotFound(arg)
         super.init(swift: swift)
     }
@@ -1069,14 +1078,14 @@ public class DBXFilePropertiesOverwritePropertyGroupArg: NSObject {
     /// A unique identifier for the file or folder.
     @objc
     public var path: String { swift.path }
-    /// The property groups "snapshot" updates to force apply. No two groups in the input should  refer to the same
+    /// The property groups "snapshot" updates to force apply. No two groups in the input should refer to the same
     /// template.
     @objc
-    public var propertyGroups: [DBXFilePropertiesPropertyGroup] { swift.propertyGroups.map { DBXFilePropertiesPropertyGroup(swift: $0) } }
+    public var propertyGroups: Array<DBXFilePropertiesPropertyGroup> { swift.propertyGroups.map { DBXFilePropertiesPropertyGroup(swift: $0) } }
 
     @objc
-    public init(path: String, propertyGroups: [DBXFilePropertiesPropertyGroup]) {
-        self.swift = FileProperties.OverwritePropertyGroupArg(path: path, propertyGroups: propertyGroups.map(\.swift))
+    public init(path: String, propertyGroups: Array<DBXFilePropertiesPropertyGroup>) {
+        self.swift = FileProperties.OverwritePropertyGroupArg(path: path, propertyGroups: propertyGroups.map { $0.swift })
     }
 
     let swift: FileProperties.OverwritePropertyGroupArg
@@ -1084,6 +1093,7 @@ public class DBXFilePropertiesOverwritePropertyGroupArg: NSObject {
     public init(swift: FileProperties.OverwritePropertyGroupArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1094,14 +1104,14 @@ public class DBXFilePropertiesOverwritePropertyGroupArg: NSObject {
 public class DBXFilePropertiesPropertiesSearchArg: NSObject {
     /// Queries to search.
     @objc
-    public var queries: [DBXFilePropertiesPropertiesSearchQuery] { swift.queries.map { DBXFilePropertiesPropertiesSearchQuery(swift: $0) } }
+    public var queries: Array<DBXFilePropertiesPropertiesSearchQuery> { swift.queries.map { DBXFilePropertiesPropertiesSearchQuery(swift: $0) } }
     /// Filter results to contain only properties associated with these template IDs.
     @objc
     public var templateFilter: DBXFilePropertiesTemplateFilter { DBXFilePropertiesTemplateFilter(swift: swift.templateFilter) }
 
     @objc
-    public init(queries: [DBXFilePropertiesPropertiesSearchQuery], templateFilter: DBXFilePropertiesTemplateFilter) {
-        self.swift = FileProperties.PropertiesSearchArg(queries: queries.map(\.swift), templateFilter: templateFilter.swift)
+    public init(queries: Array<DBXFilePropertiesPropertiesSearchQuery>, templateFilter: DBXFilePropertiesTemplateFilter) {
+        self.swift = FileProperties.PropertiesSearchArg(queries: queries.map { $0.swift }, templateFilter: templateFilter.swift)
     }
 
     let swift: FileProperties.PropertiesSearchArg
@@ -1109,6 +1119,7 @@ public class DBXFilePropertiesPropertiesSearchArg: NSObject {
     public init(swift: FileProperties.PropertiesSearchArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1131,6 +1142,7 @@ public class DBXFilePropertiesPropertiesSearchContinueArg: NSObject {
     public init(swift: FileProperties.PropertiesSearchContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1159,12 +1171,12 @@ public class DBXFilePropertiesPropertiesSearchContinueError: NSObject {
 
     @objc
     public var asReset: DBXFilePropertiesPropertiesSearchContinueErrorReset? {
-        self as? DBXFilePropertiesPropertiesSearchContinueErrorReset
+        return self as? DBXFilePropertiesPropertiesSearchContinueErrorReset
     }
 
     @objc
     public var asOther: DBXFilePropertiesPropertiesSearchContinueErrorOther? {
-        self as? DBXFilePropertiesPropertiesSearchContinueErrorOther
+        return self as? DBXFilePropertiesPropertiesSearchContinueErrorOther
     }
 }
 
@@ -1212,12 +1224,12 @@ public class DBXFilePropertiesPropertiesSearchError: NSObject {
 
     @objc
     public var asPropertyGroupLookup: DBXFilePropertiesPropertiesSearchErrorPropertyGroupLookup? {
-        self as? DBXFilePropertiesPropertiesSearchErrorPropertyGroupLookup
+        return self as? DBXFilePropertiesPropertiesSearchErrorPropertyGroupLookup
     }
 
     @objc
     public var asOther: DBXFilePropertiesPropertiesSearchErrorOther? {
-        self as? DBXFilePropertiesPropertiesSearchErrorOther
+        return self as? DBXFilePropertiesPropertiesSearchErrorOther
     }
 }
 
@@ -1229,7 +1241,7 @@ public class DBXFilePropertiesPropertiesSearchErrorPropertyGroupLookup: DBXFileP
 
     @objc
     public init(_ arg: DBXFilePropertiesLookUpPropertiesError) {
-        self.propertyGroupLookup = arg
+        propertyGroupLookup = arg
         let swift = FileProperties.PropertiesSearchError.propertyGroupLookup(arg.swift)
         super.init(swift: swift)
     }
@@ -1259,11 +1271,11 @@ public class DBXFilePropertiesPropertiesSearchMatch: NSObject {
     public var isDeleted: NSNumber { swift.isDeleted as NSNumber }
     /// List of custom property groups associated with the file.
     @objc
-    public var propertyGroups: [DBXFilePropertiesPropertyGroup] { swift.propertyGroups.map { DBXFilePropertiesPropertyGroup(swift: $0) } }
+    public var propertyGroups: Array<DBXFilePropertiesPropertyGroup> { swift.propertyGroups.map { DBXFilePropertiesPropertyGroup(swift: $0) } }
 
     @objc
-    public init(id: String, path: String, isDeleted: NSNumber, propertyGroups: [DBXFilePropertiesPropertyGroup]) {
-        self.swift = FileProperties.PropertiesSearchMatch(id: id, path: path, isDeleted: isDeleted.boolValue, propertyGroups: propertyGroups.map(\.swift))
+    public init(id: String, path: String, isDeleted: NSNumber, propertyGroups: Array<DBXFilePropertiesPropertyGroup>) {
+        self.swift = FileProperties.PropertiesSearchMatch(id: id, path: path, isDeleted: isDeleted.boolValue, propertyGroups: propertyGroups.map { $0.swift })
     }
 
     let swift: FileProperties.PropertiesSearchMatch
@@ -1271,6 +1283,7 @@ public class DBXFilePropertiesPropertiesSearchMatch: NSObject {
     public init(swift: FileProperties.PropertiesSearchMatch) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1300,12 +1313,12 @@ public class DBXFilePropertiesPropertiesSearchMode: NSObject {
 
     @objc
     public var asFieldName: DBXFilePropertiesPropertiesSearchModeFieldName? {
-        self as? DBXFilePropertiesPropertiesSearchModeFieldName
+        return self as? DBXFilePropertiesPropertiesSearchModeFieldName
     }
 
     @objc
     public var asOther: DBXFilePropertiesPropertiesSearchModeOther? {
-        self as? DBXFilePropertiesPropertiesSearchModeOther
+        return self as? DBXFilePropertiesPropertiesSearchModeOther
     }
 }
 
@@ -1317,7 +1330,7 @@ public class DBXFilePropertiesPropertiesSearchModeFieldName: DBXFilePropertiesPr
 
     @objc
     public init(_ arg: String) {
-        self.fieldName = arg
+        fieldName = arg
         let swift = FileProperties.PropertiesSearchMode.fieldName(arg)
         super.init(swift: swift)
     }
@@ -1357,6 +1370,7 @@ public class DBXFilePropertiesPropertiesSearchQuery: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -1366,15 +1380,15 @@ public class DBXFilePropertiesPropertiesSearchQuery: NSObject {
 public class DBXFilePropertiesPropertiesSearchResult: NSObject {
     /// A list (possibly empty) of matches for the query.
     @objc
-    public var matches: [DBXFilePropertiesPropertiesSearchMatch] { swift.matches.map { DBXFilePropertiesPropertiesSearchMatch(swift: $0) } }
+    public var matches: Array<DBXFilePropertiesPropertiesSearchMatch> { swift.matches.map { DBXFilePropertiesPropertiesSearchMatch(swift: $0) } }
     /// Pass the cursor into propertiesSearchContinue to continue to receive search results. Cursor will be null
     /// when there are no more results.
     @objc
     public var cursor: String? { swift.cursor }
 
     @objc
-    public init(matches: [DBXFilePropertiesPropertiesSearchMatch], cursor: String?) {
-        self.swift = FileProperties.PropertiesSearchResult(matches: matches.map(\.swift), cursor: cursor)
+    public init(matches: Array<DBXFilePropertiesPropertiesSearchMatch>, cursor: String?) {
+        self.swift = FileProperties.PropertiesSearchResult(matches: matches.map { $0.swift }, cursor: cursor)
     }
 
     let swift: FileProperties.PropertiesSearchResult
@@ -1382,6 +1396,7 @@ public class DBXFilePropertiesPropertiesSearchResult: NSObject {
     public init(swift: FileProperties.PropertiesSearchResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1409,6 +1424,7 @@ public class DBXFilePropertiesPropertyField: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -1422,8 +1438,7 @@ public class DBXFilePropertiesPropertyFieldTemplate: NSObject {
     /// Description of the property field. Property field descriptions can be up to 1024 bytes.
     @objc
     public var description_: String { swift.description_ }
-    /// Data type of the value of this property field. This type will be enforced upon property creation and
-    /// modifications.
+    /// (no description)
     @objc
     public var type: DBXFilePropertiesPropertyType { DBXFilePropertiesPropertyType(swift: swift.type) }
 
@@ -1437,6 +1452,7 @@ public class DBXFilePropertiesPropertyFieldTemplate: NSObject {
     public init(swift: FileProperties.PropertyFieldTemplate) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1452,11 +1468,11 @@ public class DBXFilePropertiesPropertyGroup: NSObject {
     public var templateId: String { swift.templateId }
     /// The actual properties associated with the template. There can be up to 32 property types per template.
     @objc
-    public var fields: [DBXFilePropertiesPropertyField] { swift.fields.map { DBXFilePropertiesPropertyField(swift: $0) } }
+    public var fields: Array<DBXFilePropertiesPropertyField> { swift.fields.map { DBXFilePropertiesPropertyField(swift: $0) } }
 
     @objc
-    public init(templateId: String, fields: [DBXFilePropertiesPropertyField]) {
-        self.swift = FileProperties.PropertyGroup(templateId: templateId, fields: fields.map(\.swift))
+    public init(templateId: String, fields: Array<DBXFilePropertiesPropertyField>) {
+        self.swift = FileProperties.PropertyGroup(templateId: templateId, fields: fields.map { $0.swift })
     }
 
     let swift: FileProperties.PropertyGroup
@@ -1465,27 +1481,28 @@ public class DBXFilePropertiesPropertyGroup: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
 
-/// Objective-C compatible PropertyGroupUpdate struct
+/// Property routes
 @objc
 public class DBXFilePropertiesPropertyGroupUpdate: NSObject {
     /// A unique identifier for a property template.
     @objc
     public var templateId: String { swift.templateId }
     /// Property fields to update. If the property field already exists, it is updated. If the property field
-    /// doesn't exist, the property group is added.
+    /// doesn't exist, it will be created as long as the property group already exists.
     @objc
-    public var addOrUpdateFields: [DBXFilePropertiesPropertyField]? { swift.addOrUpdateFields?.map { DBXFilePropertiesPropertyField(swift: $0) } }
+    public var addOrUpdateFields: Array<DBXFilePropertiesPropertyField>? { swift.addOrUpdateFields?.map { DBXFilePropertiesPropertyField(swift: $0) } }
     /// Property fields to remove (by name), provided they exist.
     @objc
-    public var removeFields: [String]? { swift.removeFields }
+    public var removeFields: Array<String>? { swift.removeFields }
 
     @objc
-    public init(templateId: String, addOrUpdateFields: [DBXFilePropertiesPropertyField]?, removeFields: [String]?) {
-        self.swift = FileProperties.PropertyGroupUpdate(templateId: templateId, addOrUpdateFields: addOrUpdateFields?.map(\.swift), removeFields: removeFields)
+    public init(templateId: String, addOrUpdateFields: Array<DBXFilePropertiesPropertyField>?, removeFields: Array<String>?) {
+        self.swift = FileProperties.PropertyGroupUpdate(templateId: templateId, addOrUpdateFields: addOrUpdateFields?.map { $0.swift }, removeFields: removeFields)
     }
 
     let swift: FileProperties.PropertyGroupUpdate
@@ -1493,6 +1510,7 @@ public class DBXFilePropertiesPropertyGroupUpdate: NSObject {
     public init(swift: FileProperties.PropertyGroupUpdate) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1521,12 +1539,12 @@ public class DBXFilePropertiesPropertyType: NSObject {
 
     @objc
     public var asString_: DBXFilePropertiesPropertyTypeString_? {
-        self as? DBXFilePropertiesPropertyTypeString_
+        return self as? DBXFilePropertiesPropertyTypeString_
     }
 
     @objc
     public var asOther: DBXFilePropertiesPropertyTypeOther? {
-        self as? DBXFilePropertiesPropertyTypeOther
+        return self as? DBXFilePropertiesPropertyTypeOther
     }
 }
 
@@ -1558,10 +1576,10 @@ public class DBXFilePropertiesRemovePropertiesArg: NSObject {
     public var path: String { swift.path }
     /// A list of identifiers for a template created by templatesAddForUser or templatesAddForTeam.
     @objc
-    public var propertyTemplateIds: [String] { swift.propertyTemplateIds }
+    public var propertyTemplateIds: Array<String> { swift.propertyTemplateIds }
 
     @objc
-    public init(path: String, propertyTemplateIds: [String]) {
+    public init(path: String, propertyTemplateIds: Array<String>) {
         self.swift = FileProperties.RemovePropertiesArg(path: path, propertyTemplateIds: propertyTemplateIds)
     }
 
@@ -1570,6 +1588,7 @@ public class DBXFilePropertiesRemovePropertiesArg: NSObject {
     public init(swift: FileProperties.RemovePropertiesArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1609,32 +1628,32 @@ public class DBXFilePropertiesRemovePropertiesError: NSObject {
 
     @objc
     public var asTemplateNotFound: DBXFilePropertiesRemovePropertiesErrorTemplateNotFound? {
-        self as? DBXFilePropertiesRemovePropertiesErrorTemplateNotFound
+        return self as? DBXFilePropertiesRemovePropertiesErrorTemplateNotFound
     }
 
     @objc
     public var asRestrictedContent: DBXFilePropertiesRemovePropertiesErrorRestrictedContent? {
-        self as? DBXFilePropertiesRemovePropertiesErrorRestrictedContent
+        return self as? DBXFilePropertiesRemovePropertiesErrorRestrictedContent
     }
 
     @objc
     public var asOther: DBXFilePropertiesRemovePropertiesErrorOther? {
-        self as? DBXFilePropertiesRemovePropertiesErrorOther
+        return self as? DBXFilePropertiesRemovePropertiesErrorOther
     }
 
     @objc
     public var asPath: DBXFilePropertiesRemovePropertiesErrorPath? {
-        self as? DBXFilePropertiesRemovePropertiesErrorPath
+        return self as? DBXFilePropertiesRemovePropertiesErrorPath
     }
 
     @objc
     public var asUnsupportedFolder: DBXFilePropertiesRemovePropertiesErrorUnsupportedFolder? {
-        self as? DBXFilePropertiesRemovePropertiesErrorUnsupportedFolder
+        return self as? DBXFilePropertiesRemovePropertiesErrorUnsupportedFolder
     }
 
     @objc
     public var asPropertyGroupLookup: DBXFilePropertiesRemovePropertiesErrorPropertyGroupLookup? {
-        self as? DBXFilePropertiesRemovePropertiesErrorPropertyGroupLookup
+        return self as? DBXFilePropertiesRemovePropertiesErrorPropertyGroupLookup
     }
 }
 
@@ -1646,7 +1665,7 @@ public class DBXFilePropertiesRemovePropertiesErrorTemplateNotFound: DBXFileProp
 
     @objc
     public init(_ arg: String) {
-        self.templateNotFound = arg
+        templateNotFound = arg
         let swift = FileProperties.RemovePropertiesError.templateNotFound(arg)
         super.init(swift: swift)
     }
@@ -1680,7 +1699,7 @@ public class DBXFilePropertiesRemovePropertiesErrorPath: DBXFilePropertiesRemove
 
     @objc
     public init(_ arg: DBXFilePropertiesLookupError) {
-        self.path = arg
+        path = arg
         let swift = FileProperties.RemovePropertiesError.path(arg.swift)
         super.init(swift: swift)
     }
@@ -1704,7 +1723,7 @@ public class DBXFilePropertiesRemovePropertiesErrorPropertyGroupLookup: DBXFileP
 
     @objc
     public init(_ arg: DBXFilePropertiesLookUpPropertiesError) {
-        self.propertyGroupLookup = arg
+        propertyGroupLookup = arg
         let swift = FileProperties.RemovePropertiesError.propertyGroupLookup(arg.swift)
         super.init(swift: swift)
     }
@@ -1727,6 +1746,7 @@ public class DBXFilePropertiesRemoveTemplateArg: NSObject {
     public init(swift: FileProperties.RemoveTemplateArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1756,12 +1776,12 @@ public class DBXFilePropertiesTemplateFilterBase: NSObject {
 
     @objc
     public var asFilterSome: DBXFilePropertiesTemplateFilterBaseFilterSome? {
-        self as? DBXFilePropertiesTemplateFilterBaseFilterSome
+        return self as? DBXFilePropertiesTemplateFilterBaseFilterSome
     }
 
     @objc
     public var asOther: DBXFilePropertiesTemplateFilterBaseOther? {
-        self as? DBXFilePropertiesTemplateFilterBaseOther
+        return self as? DBXFilePropertiesTemplateFilterBaseOther
     }
 }
 
@@ -1769,11 +1789,11 @@ public class DBXFilePropertiesTemplateFilterBase: NSObject {
 @objc
 public class DBXFilePropertiesTemplateFilterBaseFilterSome: DBXFilePropertiesTemplateFilterBase {
     @objc
-    public var filterSome: [String]
+    public var filterSome: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.filterSome = arg
+    public init(_ arg: Array<String>) {
+        filterSome = arg
         let swift = FileProperties.TemplateFilterBase.filterSome(arg)
         super.init(swift: swift)
     }
@@ -1815,17 +1835,17 @@ public class DBXFilePropertiesTemplateFilter: NSObject {
 
     @objc
     public var asFilterSome: DBXFilePropertiesTemplateFilterFilterSome? {
-        self as? DBXFilePropertiesTemplateFilterFilterSome
+        return self as? DBXFilePropertiesTemplateFilterFilterSome
     }
 
     @objc
     public var asOther: DBXFilePropertiesTemplateFilterOther? {
-        self as? DBXFilePropertiesTemplateFilterOther
+        return self as? DBXFilePropertiesTemplateFilterOther
     }
 
     @objc
     public var asFilterNone: DBXFilePropertiesTemplateFilterFilterNone? {
-        self as? DBXFilePropertiesTemplateFilterFilterNone
+        return self as? DBXFilePropertiesTemplateFilterFilterNone
     }
 }
 
@@ -1833,11 +1853,11 @@ public class DBXFilePropertiesTemplateFilter: NSObject {
 @objc
 public class DBXFilePropertiesTemplateFilterFilterSome: DBXFilePropertiesTemplateFilter {
     @objc
-    public var filterSome: [String]
+    public var filterSome: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.filterSome = arg
+    public init(_ arg: Array<String>) {
+        filterSome = arg
         let swift = FileProperties.TemplateFilter.filterSome(arg)
         super.init(swift: swift)
     }
@@ -1888,17 +1908,17 @@ public class DBXFilePropertiesTemplateOwnerType: NSObject {
 
     @objc
     public var asUser: DBXFilePropertiesTemplateOwnerTypeUser? {
-        self as? DBXFilePropertiesTemplateOwnerTypeUser
+        return self as? DBXFilePropertiesTemplateOwnerTypeUser
     }
 
     @objc
     public var asTeam: DBXFilePropertiesTemplateOwnerTypeTeam? {
-        self as? DBXFilePropertiesTemplateOwnerTypeTeam
+        return self as? DBXFilePropertiesTemplateOwnerTypeTeam
     }
 
     @objc
     public var asOther: DBXFilePropertiesTemplateOwnerTypeOther? {
-        self as? DBXFilePropertiesTemplateOwnerTypeOther
+        return self as? DBXFilePropertiesTemplateOwnerTypeOther
     }
 }
 
@@ -1940,13 +1960,11 @@ public class DBXFilePropertiesUpdatePropertiesArg: NSObject {
     public var path: String { swift.path }
     /// The property groups "delta" updates to apply.
     @objc
-    public var updatePropertyGroups: [DBXFilePropertiesPropertyGroupUpdate] {
-        swift.updatePropertyGroups.map { DBXFilePropertiesPropertyGroupUpdate(swift: $0) }
-    }
+    public var updatePropertyGroups: Array<DBXFilePropertiesPropertyGroupUpdate> { swift.updatePropertyGroups.map { DBXFilePropertiesPropertyGroupUpdate(swift: $0) } }
 
     @objc
-    public init(path: String, updatePropertyGroups: [DBXFilePropertiesPropertyGroupUpdate]) {
-        self.swift = FileProperties.UpdatePropertiesArg(path: path, updatePropertyGroups: updatePropertyGroups.map(\.swift))
+    public init(path: String, updatePropertyGroups: Array<DBXFilePropertiesPropertyGroupUpdate>) {
+        self.swift = FileProperties.UpdatePropertiesArg(path: path, updatePropertyGroups: updatePropertyGroups.map { $0.swift })
     }
 
     let swift: FileProperties.UpdatePropertiesArg
@@ -1954,6 +1972,7 @@ public class DBXFilePropertiesUpdatePropertiesArg: NSObject {
     public init(swift: FileProperties.UpdatePropertiesArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1999,47 +2018,47 @@ public class DBXFilePropertiesUpdatePropertiesError: NSObject {
 
     @objc
     public var asTemplateNotFound: DBXFilePropertiesUpdatePropertiesErrorTemplateNotFound? {
-        self as? DBXFilePropertiesUpdatePropertiesErrorTemplateNotFound
+        return self as? DBXFilePropertiesUpdatePropertiesErrorTemplateNotFound
     }
 
     @objc
     public var asRestrictedContent: DBXFilePropertiesUpdatePropertiesErrorRestrictedContent? {
-        self as? DBXFilePropertiesUpdatePropertiesErrorRestrictedContent
+        return self as? DBXFilePropertiesUpdatePropertiesErrorRestrictedContent
     }
 
     @objc
     public var asOther: DBXFilePropertiesUpdatePropertiesErrorOther? {
-        self as? DBXFilePropertiesUpdatePropertiesErrorOther
+        return self as? DBXFilePropertiesUpdatePropertiesErrorOther
     }
 
     @objc
     public var asPath: DBXFilePropertiesUpdatePropertiesErrorPath? {
-        self as? DBXFilePropertiesUpdatePropertiesErrorPath
+        return self as? DBXFilePropertiesUpdatePropertiesErrorPath
     }
 
     @objc
     public var asUnsupportedFolder: DBXFilePropertiesUpdatePropertiesErrorUnsupportedFolder? {
-        self as? DBXFilePropertiesUpdatePropertiesErrorUnsupportedFolder
+        return self as? DBXFilePropertiesUpdatePropertiesErrorUnsupportedFolder
     }
 
     @objc
     public var asPropertyFieldTooLarge: DBXFilePropertiesUpdatePropertiesErrorPropertyFieldTooLarge? {
-        self as? DBXFilePropertiesUpdatePropertiesErrorPropertyFieldTooLarge
+        return self as? DBXFilePropertiesUpdatePropertiesErrorPropertyFieldTooLarge
     }
 
     @objc
     public var asDoesNotFitTemplate: DBXFilePropertiesUpdatePropertiesErrorDoesNotFitTemplate? {
-        self as? DBXFilePropertiesUpdatePropertiesErrorDoesNotFitTemplate
+        return self as? DBXFilePropertiesUpdatePropertiesErrorDoesNotFitTemplate
     }
 
     @objc
     public var asDuplicatePropertyGroups: DBXFilePropertiesUpdatePropertiesErrorDuplicatePropertyGroups? {
-        self as? DBXFilePropertiesUpdatePropertiesErrorDuplicatePropertyGroups
+        return self as? DBXFilePropertiesUpdatePropertiesErrorDuplicatePropertyGroups
     }
 
     @objc
     public var asPropertyGroupLookup: DBXFilePropertiesUpdatePropertiesErrorPropertyGroupLookup? {
-        self as? DBXFilePropertiesUpdatePropertiesErrorPropertyGroupLookup
+        return self as? DBXFilePropertiesUpdatePropertiesErrorPropertyGroupLookup
     }
 }
 
@@ -2051,7 +2070,7 @@ public class DBXFilePropertiesUpdatePropertiesErrorTemplateNotFound: DBXFileProp
 
     @objc
     public init(_ arg: String) {
-        self.templateNotFound = arg
+        templateNotFound = arg
         let swift = FileProperties.UpdatePropertiesError.templateNotFound(arg)
         super.init(swift: swift)
     }
@@ -2085,7 +2104,7 @@ public class DBXFilePropertiesUpdatePropertiesErrorPath: DBXFilePropertiesUpdate
 
     @objc
     public init(_ arg: DBXFilePropertiesLookupError) {
-        self.path = arg
+        path = arg
         let swift = FileProperties.UpdatePropertiesError.path(arg.swift)
         super.init(swift: swift)
     }
@@ -2139,7 +2158,7 @@ public class DBXFilePropertiesUpdatePropertiesErrorPropertyGroupLookup: DBXFileP
 
     @objc
     public init(_ arg: DBXFilePropertiesLookUpPropertiesError) {
-        self.propertyGroupLookup = arg
+        propertyGroupLookup = arg
         let swift = FileProperties.UpdatePropertiesError.propertyGroupLookup(arg.swift)
         super.init(swift: swift)
     }
@@ -2160,11 +2179,11 @@ public class DBXFilePropertiesUpdateTemplateArg: NSObject {
     /// Property field templates to be added to the group template. There can be up to 32 properties in a single
     /// template.
     @objc
-    public var addFields: [DBXFilePropertiesPropertyFieldTemplate]? { swift.addFields?.map { DBXFilePropertiesPropertyFieldTemplate(swift: $0) } }
+    public var addFields: Array<DBXFilePropertiesPropertyFieldTemplate>? { swift.addFields?.map { DBXFilePropertiesPropertyFieldTemplate(swift: $0) } }
 
     @objc
-    public init(templateId: String, name: String?, description_: String?, addFields: [DBXFilePropertiesPropertyFieldTemplate]?) {
-        self.swift = FileProperties.UpdateTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields?.map(\.swift))
+    public init(templateId: String, name: String?, description_: String?, addFields: Array<DBXFilePropertiesPropertyFieldTemplate>?) {
+        self.swift = FileProperties.UpdateTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields?.map { $0.swift })
     }
 
     let swift: FileProperties.UpdateTemplateArg
@@ -2172,6 +2191,7 @@ public class DBXFilePropertiesUpdateTemplateArg: NSObject {
     public init(swift: FileProperties.UpdateTemplateArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -2195,6 +2215,8 @@ public class DBXFilePropertiesUpdateTemplateResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
+

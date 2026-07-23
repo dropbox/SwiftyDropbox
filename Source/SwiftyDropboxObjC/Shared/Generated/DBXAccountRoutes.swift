@@ -19,6 +19,57 @@ public class DBXAccountRoutes: NSObject {
 
     public let client: DBXDropboxTransportClient
 
+    /// Deletes the current user's profile photo.
+    ///
+    /// - scope: account_info.write
+    ///
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Account.DeleteProfilePhotoResult` object on
+    /// success or a `Account.DeleteProfilePhotoError` object on failure.
+    @objc
+    @discardableResult public func deleteProfilePhoto() -> DBXAccountDeleteProfilePhotoRpcRequest {
+        let swift = swift.deleteProfilePhoto()
+        return DBXAccountDeleteProfilePhotoRpcRequest(swift: swift)
+    }
+
+    /// This lovely endpoint gets the account photo of a given user.
+    ///
+    /// - scope: account_info.read
+    ///
+    /// - parameter dbxAccountId: Encoded ID of the user. Must start either with 'dbid:' or 'dbaphid:'.
+    /// - parameter size: A string representing the size of the photo.
+    /// - parameter circleCrop: True if the photo should be cropped and false otherwise.
+    /// - parameter expectAccountPhoto: True if we expect account photo to exist.
+    /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
+    /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
+    /// an NSError will be thrown).
+    /// - parameter destination: The location to write the download to.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Account.AccountPhotoGetResult` object on
+    /// success or a `Account.AccountPhotoGetError` object on failure.
+    @objc
+    @discardableResult public func getPhotoURL(dbxAccountId: String, size: String, circleCrop: NSNumber, expectAccountPhoto: NSNumber, overwrite: Bool, destination: URL) -> DBXAccountGetPhotoDownloadRequestFile {
+        let swift = swift.getPhoto(dbxAccountId: dbxAccountId, size: size, circleCrop: circleCrop.boolValue, expectAccountPhoto: expectAccountPhoto.boolValue, overwrite: overwrite, destination: destination)
+        return DBXAccountGetPhotoDownloadRequestFile(swift: swift)
+    }
+
+    /// This lovely endpoint gets the account photo of a given user.
+    ///
+    /// - scope: account_info.read
+    ///
+    /// - parameter dbxAccountId: Encoded ID of the user. Must start either with 'dbid:' or 'dbaphid:'.
+    /// - parameter size: A string representing the size of the photo.
+    /// - parameter circleCrop: True if the photo should be cropped and false otherwise.
+    /// - parameter expectAccountPhoto: True if we expect account photo to exist.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Account.AccountPhotoGetResult` object on
+    /// success or a `Account.AccountPhotoGetError` object on failure.
+    @objc
+    @discardableResult public func getPhoto(dbxAccountId: String, size: String, circleCrop: NSNumber, expectAccountPhoto: NSNumber) -> DBXAccountGetPhotoDownloadRequestMemory {
+        let swift = swift.getPhoto(dbxAccountId: dbxAccountId, size: size, circleCrop: circleCrop.boolValue, expectAccountPhoto: expectAccountPhoto.boolValue)
+        return DBXAccountGetPhotoDownloadRequestMemory(swift: swift)
+    }
+
     /// Sets a user's profile photo.
     ///
     /// - scope: account_info.write
@@ -32,7 +83,229 @@ public class DBXAccountRoutes: NSObject {
         let swift = swift.setProfilePhoto(photo: photo.swift)
         return DBXAccountSetProfilePhotoRpcRequest(swift: swift)
     }
+
 }
+
+
+@objc
+public class DBXAccountDeleteProfilePhotoRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Account.DeleteProfilePhotoResultSerializer, Account.DeleteProfilePhotoErrorSerializer>
+
+    init(swift: RpcRequest<Account.DeleteProfilePhotoResultSerializer, Account.DeleteProfilePhotoErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXAccountDeleteProfilePhotoResult?, DBXAccountDeleteProfilePhotoError?, DBXCallError?) -> Void
+    ) -> Self {
+        self.response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXAccountDeleteProfilePhotoResult?, DBXAccountDeleteProfilePhotoError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAccountDeleteProfilePhotoError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAccountDeleteProfilePhotoError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXAccountDeleteProfilePhotoResult? = nil
+            if let swift = result {
+                objc = DBXAccountDeleteProfilePhotoResult(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+
+@objc
+public class DBXAccountGetPhotoDownloadRequestFile: NSObject, DBXRequest {
+    var swift: DownloadRequestFile<Account.AccountPhotoGetResultSerializer, Account.AccountPhotoGetErrorSerializer>
+
+    init(swift: DownloadRequestFile<Account.AccountPhotoGetResultSerializer, Account.AccountPhotoGetErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXAccountAccountPhotoGetResult?, URL?, DBXAccountAccountPhotoGetError?, DBXCallError?) -> Void
+    ) -> Self {
+        self.response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXAccountAccountPhotoGetResult?, URL?, DBXAccountAccountPhotoGetError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAccountAccountPhotoGetError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAccountAccountPhotoGetError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXAccountAccountPhotoGetResult? = nil
+            var destination: URL? = nil
+            if let swift = result {
+                objc = DBXAccountAccountPhotoGetResult(swift: swift.0)
+                destination = swift.1
+            }
+            completionHandler(objc, destination, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
+        swift.progress(progressHandler)
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+
+@objc
+public class DBXAccountGetPhotoDownloadRequestMemory: NSObject, DBXRequest {
+    var swift: DownloadRequestMemory<Account.AccountPhotoGetResultSerializer, Account.AccountPhotoGetErrorSerializer>
+
+    init(swift: DownloadRequestMemory<Account.AccountPhotoGetResultSerializer, Account.AccountPhotoGetErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXAccountAccountPhotoGetResult?, Data?, DBXAccountAccountPhotoGetError?, DBXCallError?) -> Void
+    ) -> Self {
+        self.response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXAccountAccountPhotoGetResult?, Data?, DBXAccountAccountPhotoGetError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAccountAccountPhotoGetError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAccountAccountPhotoGetError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXAccountAccountPhotoGetResult? = nil
+            var destination: Data? = nil
+            if let swift = result {
+                objc = DBXAccountAccountPhotoGetResult(swift: swift.0)
+                destination = swift.1
+            }
+            completionHandler(objc, destination, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
+        swift.progress(progressHandler)
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
 
 @objc
 public class DBXAccountSetProfilePhotoRpcRequest: NSObject, DBXRequest {
@@ -46,7 +319,7 @@ public class DBXAccountSetProfilePhotoRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXAccountSetProfilePhotoResult?, DBXAccountSetProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -66,7 +339,7 @@ public class DBXAccountSetProfilePhotoRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXAccountSetProfilePhotoResult?
+            var objc: DBXAccountSetProfilePhotoResult? = nil
             if let swift = result {
                 objc = DBXAccountSetProfilePhotoResult(swift: swift)
             }
@@ -100,3 +373,4 @@ public class DBXAccountSetProfilePhotoRpcRequest: NSObject, DBXRequest {
         swift.cancel()
     }
 }
+

@@ -15,10 +15,10 @@ import SwiftyDropbox
 public class DBXContactsDeleteManualContactsArg: NSObject {
     /// List of manually added contacts to be deleted.
     @objc
-    public var emailAddresses: [String] { swift.emailAddresses }
+    public var emailAddresses: Array<String> { swift.emailAddresses }
 
     @objc
-    public init(emailAddresses: [String]) {
+    public init(emailAddresses: Array<String>) {
         self.swift = Contacts.DeleteManualContactsArg(emailAddresses: emailAddresses)
     }
 
@@ -27,6 +27,7 @@ public class DBXContactsDeleteManualContactsArg: NSObject {
     public init(swift: Contacts.DeleteManualContactsArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -56,25 +57,25 @@ public class DBXContactsDeleteManualContactsError: NSObject {
 
     @objc
     public var asContactsNotFound: DBXContactsDeleteManualContactsErrorContactsNotFound? {
-        self as? DBXContactsDeleteManualContactsErrorContactsNotFound
+        return self as? DBXContactsDeleteManualContactsErrorContactsNotFound
     }
 
     @objc
     public var asOther: DBXContactsDeleteManualContactsErrorOther? {
-        self as? DBXContactsDeleteManualContactsErrorOther
+        return self as? DBXContactsDeleteManualContactsErrorOther
     }
 }
 
 /// Can't delete contacts from this list. Make sure the list only has manually added contacts. The deletion was
-/// cancelled.
+        /// cancelled.
 @objc
 public class DBXContactsDeleteManualContactsErrorContactsNotFound: DBXContactsDeleteManualContactsError {
     @objc
-    public var contactsNotFound: [String]
+    public var contactsNotFound: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.contactsNotFound = arg
+    public init(_ arg: Array<String>) {
+        contactsNotFound = arg
         let swift = Contacts.DeleteManualContactsError.contactsNotFound(arg)
         super.init(swift: swift)
     }
@@ -89,3 +90,4 @@ public class DBXContactsDeleteManualContactsErrorOther: DBXContactsDeleteManualC
         super.init(swift: swift)
     }
 }
+

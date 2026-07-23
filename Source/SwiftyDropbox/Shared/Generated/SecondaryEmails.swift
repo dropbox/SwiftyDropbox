@@ -32,26 +32,25 @@ public class SecondaryEmails {
             }
         }
     }
-
     public class SecondaryEmailSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: SecondaryEmail) throws -> JSON {
             let output = [
-                "email": try Serialization._StringSerializer.serialize(value.email),
-                "is_verified": try Serialization._BoolSerializer.serialize(value.isVerified),
+            "email": try Serialization._StringSerializer.serialize(value.email),
+            "is_verified": try Serialization._BoolSerializer.serialize(value.isVerified),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> SecondaryEmail {
             switch json {
-            case .dictionary(let dict):
-                let email = try Serialization._StringSerializer.deserialize(dict["email"] ?? .null)
-                let isVerified = try Serialization._BoolSerializer.deserialize(dict["is_verified"] ?? .null)
-                return SecondaryEmail(email: email, isVerified: isVerified)
-            default:
-                throw JSONSerializerError.deserializeError(type: SecondaryEmail.self, json: json)
+                case .dictionary(let dict):
+                    let email = try Serialization._StringSerializer.deserialize(dict["email"] ?? .null)
+                    let isVerified = try Serialization._BoolSerializer.deserialize(dict["is_verified"] ?? .null)
+                    return SecondaryEmail(email: email, isVerified: isVerified)
+                default:
+                    throw JSONSerializerError.deserializeError(type: SecondaryEmail.self, json: json)
             }
         }
     }
+
 }

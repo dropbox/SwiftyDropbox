@@ -35,14 +35,7 @@ public class DBXUsersAccount: NSObject {
 
     @objc
     public init(accountId: String, name: DBXUsersName, email: String, emailVerified: NSNumber, disabled: NSNumber, profilePhotoUrl: String?) {
-        self.swift = Users.Account(
-            accountId: accountId,
-            name: name.swift,
-            email: email,
-            emailVerified: emailVerified.boolValue,
-            disabled: disabled.boolValue,
-            profilePhotoUrl: profilePhotoUrl
-        )
+        self.swift = Users.Account(accountId: accountId, name: name.swift, email: email, emailVerified: emailVerified.boolValue, disabled: disabled.boolValue, profilePhotoUrl: profilePhotoUrl)
     }
 
     let swift: Users.Account
@@ -50,6 +43,7 @@ public class DBXUsersAccount: NSObject {
     public init(swift: Users.Account) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -68,26 +62,8 @@ public class DBXUsersBasicAccount: DBXUsersAccount {
     public var teamMemberId: String? { subSwift.teamMemberId }
 
     @objc
-    public init(
-        accountId: String,
-        name: DBXUsersName,
-        email: String,
-        emailVerified: NSNumber,
-        disabled: NSNumber,
-        isTeammate: NSNumber,
-        profilePhotoUrl: String?,
-        teamMemberId: String?
-    ) {
-        let swift = Users.BasicAccount(
-            accountId: accountId,
-            name: name.swift,
-            email: email,
-            emailVerified: emailVerified.boolValue,
-            disabled: disabled.boolValue,
-            isTeammate: isTeammate.boolValue,
-            profilePhotoUrl: profilePhotoUrl,
-            teamMemberId: teamMemberId
-        )
+    public init(accountId: String, name: DBXUsersName, email: String, emailVerified: NSNumber, disabled: NSNumber, isTeammate: NSNumber, profilePhotoUrl: String?, teamMemberId: String?) {
+        let swift = Users.BasicAccount(accountId: accountId, name: name.swift, email: email, emailVerified: emailVerified.boolValue, disabled: disabled.boolValue, isTeammate: isTeammate.boolValue, profilePhotoUrl: profilePhotoUrl, teamMemberId: teamMemberId)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -99,8 +75,67 @@ public class DBXUsersBasicAccount: DBXUsersAccount {
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
+}
+
+/// The value for distinctMemberHome in UserFeature.
+@objc
+public class DBXUsersDistinctMemberHomeValue: NSObject {
+    let swift: Users.DistinctMemberHomeValue
+
+    public init(swift: Users.DistinctMemberHomeValue) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Users.DistinctMemberHomeValue) -> DBXUsersDistinctMemberHomeValue {
+        switch swift {
+        case .enabled(let swiftArg):
+            let arg = NSNumber(value: swiftArg)
+            return DBXUsersDistinctMemberHomeValueEnabled(arg)
+        case .other:
+            return DBXUsersDistinctMemberHomeValueOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asEnabled: DBXUsersDistinctMemberHomeValueEnabled? {
+        return self as? DBXUsersDistinctMemberHomeValueEnabled
+    }
+
+    @objc
+    public var asOther: DBXUsersDistinctMemberHomeValueOther? {
+        return self as? DBXUsersDistinctMemberHomeValueOther
+    }
+}
+
+/// When this value is True, the user have distinct home and root ns. When the value is False the user's home ns
+        /// and root ns are the same.
+@objc
+public class DBXUsersDistinctMemberHomeValueEnabled: DBXUsersDistinctMemberHomeValue {
+    @objc
+    public var enabled: NSNumber
+
+    @objc
+    public init(_ arg: NSNumber) {
+        enabled = arg
+        let swift = Users.DistinctMemberHomeValue.enabled(arg.boolValue)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXUsersDistinctMemberHomeValueOther: DBXUsersDistinctMemberHomeValue {
+    @objc
+    public init() {
+        let swift = Users.DistinctMemberHomeValue.other
+        super.init(swift: swift)
+    }
 }
 
 /// The value for fileLocking in UserFeature.
@@ -127,17 +162,17 @@ public class DBXUsersFileLockingValue: NSObject {
 
     @objc
     public var asEnabled: DBXUsersFileLockingValueEnabled? {
-        self as? DBXUsersFileLockingValueEnabled
+        return self as? DBXUsersFileLockingValueEnabled
     }
 
     @objc
     public var asOther: DBXUsersFileLockingValueOther? {
-        self as? DBXUsersFileLockingValueOther
+        return self as? DBXUsersFileLockingValueOther
     }
 }
 
 /// When this value is True, the user can lock files in shared directories. When the value is False the user can
-/// unlock the files they have locked or request to unlock files locked by others.
+        /// unlock the files they have locked or request to unlock files locked by others.
 @objc
 public class DBXUsersFileLockingValueEnabled: DBXUsersFileLockingValue {
     @objc
@@ -145,7 +180,7 @@ public class DBXUsersFileLockingValueEnabled: DBXUsersFileLockingValue {
 
     @objc
     public init(_ arg: NSNumber) {
-        self.enabled = arg
+        enabled = arg
         let swift = Users.FileLockingValue.enabled(arg.boolValue)
         super.init(swift: swift)
     }
@@ -177,10 +212,7 @@ public class DBXUsersFullAccount: DBXUsersAccount {
     public var referralLink: String { subSwift.referralLink }
     /// If this account is a member of a team, information about that team.
     @objc
-    public var team: DBXUsersFullTeam? { guard let swift = subSwift.team else { return nil }
-        return DBXUsersFullTeam(swift: swift)
-    }
-
+    public var team: DBXUsersFullTeam? { guard let swift = subSwift.team else { return nil }; return DBXUsersFullTeam(swift: swift) }
     /// This account's unique team member id. This field will only be present if team is present.
     @objc
     public var teamMemberId: String? { subSwift.teamMemberId }
@@ -194,42 +226,12 @@ public class DBXUsersFullAccount: DBXUsersAccount {
     /// The root info for this account.
     @objc
     public var rootInfo: DBXCommonRootInfo {
-        DBXCommonRootInfo.wrapPreservingSubtypes(swift: subSwift.rootInfo)
+        return DBXCommonRootInfo.wrapPreservingSubtypes(swift: subSwift.rootInfo)
     }
 
     @objc
-    public init(
-        accountId: String,
-        name: DBXUsersName,
-        email: String,
-        emailVerified: NSNumber,
-        disabled: NSNumber,
-        locale: String,
-        referralLink: String,
-        isPaired: NSNumber,
-        accountType: DBXUsersCommonAccountType,
-        rootInfo: DBXCommonRootInfo,
-        profilePhotoUrl: String?,
-        country: String?,
-        team: DBXUsersFullTeam?,
-        teamMemberId: String?
-    ) {
-        let swift = Users.FullAccount(
-            accountId: accountId,
-            name: name.swift,
-            email: email,
-            emailVerified: emailVerified.boolValue,
-            disabled: disabled.boolValue,
-            locale: locale,
-            referralLink: referralLink,
-            isPaired: isPaired.boolValue,
-            accountType: accountType.swift,
-            rootInfo: rootInfo.swift,
-            profilePhotoUrl: profilePhotoUrl,
-            country: country,
-            team: team?.subSwift,
-            teamMemberId: teamMemberId
-        )
+    public init(accountId: String, name: DBXUsersName, email: String, emailVerified: NSNumber, disabled: NSNumber, locale: String, referralLink: String, isPaired: NSNumber, accountType: DBXUsersCommonAccountType, rootInfo: DBXCommonRootInfo, profilePhotoUrl: String?, country: String?, team: DBXUsersFullTeam?, teamMemberId: String?) {
+        let swift = Users.FullAccount(accountId: accountId, name: name.swift, email: email, emailVerified: emailVerified.boolValue, disabled: disabled.boolValue, locale: locale, referralLink: referralLink, isPaired: isPaired.boolValue, accountType: accountType.swift, rootInfo: rootInfo.swift, profilePhotoUrl: profilePhotoUrl, country: country, team: team?.subSwift, teamMemberId: teamMemberId)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -240,6 +242,7 @@ public class DBXUsersFullAccount: DBXUsersAccount {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -266,6 +269,7 @@ public class DBXUsersTeam: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -279,10 +283,13 @@ public class DBXUsersFullTeam: DBXUsersTeam {
     /// Team policy governing the use of the Office Add-In.
     @objc
     public var officeAddinPolicy: DBXTeamPoliciesOfficeAddInPolicy { DBXTeamPoliciesOfficeAddInPolicy(swift: subSwift.officeAddinPolicy) }
+    /// Team policy governing whether members can edit team folders at the top level of the team space.
+    @objc
+    public var topLevelContentPolicy: DBXTeamPoliciesTopLevelContentPolicy { DBXTeamPoliciesTopLevelContentPolicy(swift: subSwift.topLevelContentPolicy) }
 
     @objc
-    public init(id: String, name: String, sharingPolicies: DBXTeamPoliciesTeamSharingPolicies, officeAddinPolicy: DBXTeamPoliciesOfficeAddInPolicy) {
-        let swift = Users.FullTeam(id: id, name: name, sharingPolicies: sharingPolicies.swift, officeAddinPolicy: officeAddinPolicy.swift)
+    public init(id: String, name: String, sharingPolicies: DBXTeamPoliciesTeamSharingPolicies, officeAddinPolicy: DBXTeamPoliciesOfficeAddInPolicy, topLevelContentPolicy: DBXTeamPoliciesTopLevelContentPolicy) {
+        let swift = Users.FullTeam(id: id, name: name, sharingPolicies: sharingPolicies.swift, officeAddinPolicy: officeAddinPolicy.swift, topLevelContentPolicy: topLevelContentPolicy.swift)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -293,6 +300,7 @@ public class DBXUsersFullTeam: DBXUsersTeam {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -316,6 +324,7 @@ public class DBXUsersGetAccountArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -325,10 +334,10 @@ public class DBXUsersGetAccountArg: NSObject {
 public class DBXUsersGetAccountBatchArg: NSObject {
     /// List of user account identifiers.  Should not contain any duplicate account IDs.
     @objc
-    public var accountIds: [String] { swift.accountIds }
+    public var accountIds: Array<String> { swift.accountIds }
 
     @objc
-    public init(accountIds: [String]) {
+    public init(accountIds: Array<String>) {
         self.swift = Users.GetAccountBatchArg(accountIds: accountIds)
     }
 
@@ -337,6 +346,7 @@ public class DBXUsersGetAccountBatchArg: NSObject {
     public init(swift: Users.GetAccountBatchArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -366,12 +376,12 @@ public class DBXUsersGetAccountBatchError: NSObject {
 
     @objc
     public var asNoAccount: DBXUsersGetAccountBatchErrorNoAccount? {
-        self as? DBXUsersGetAccountBatchErrorNoAccount
+        return self as? DBXUsersGetAccountBatchErrorNoAccount
     }
 
     @objc
     public var asOther: DBXUsersGetAccountBatchErrorOther? {
-        self as? DBXUsersGetAccountBatchErrorOther
+        return self as? DBXUsersGetAccountBatchErrorOther
     }
 }
 
@@ -383,7 +393,7 @@ public class DBXUsersGetAccountBatchErrorNoAccount: DBXUsersGetAccountBatchError
 
     @objc
     public init(_ arg: String) {
-        self.noAccount = arg
+        noAccount = arg
         let swift = Users.GetAccountBatchError.noAccount(arg)
         super.init(swift: swift)
     }
@@ -422,12 +432,12 @@ public class DBXUsersGetAccountError: NSObject {
 
     @objc
     public var asNoAccount: DBXUsersGetAccountErrorNoAccount? {
-        self as? DBXUsersGetAccountErrorNoAccount
+        return self as? DBXUsersGetAccountErrorNoAccount
     }
 
     @objc
     public var asOther: DBXUsersGetAccountErrorOther? {
-        self as? DBXUsersGetAccountErrorOther
+        return self as? DBXUsersGetAccountErrorOther
     }
 }
 
@@ -469,6 +479,7 @@ public class DBXUsersIndividualSpaceAllocation: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -504,6 +515,7 @@ public class DBXUsersName: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -532,18 +544,18 @@ public class DBXUsersPaperAsFilesValue: NSObject {
 
     @objc
     public var asEnabled: DBXUsersPaperAsFilesValueEnabled? {
-        self as? DBXUsersPaperAsFilesValueEnabled
+        return self as? DBXUsersPaperAsFilesValueEnabled
     }
 
     @objc
     public var asOther: DBXUsersPaperAsFilesValueOther? {
-        self as? DBXUsersPaperAsFilesValueOther
+        return self as? DBXUsersPaperAsFilesValueOther
     }
 }
 
 /// When this value is true, the user's Paper docs are accessible in Dropbox with the .paper extension and must
-/// be accessed via the /files endpoints.  When this value is false, the user's Paper docs are stored
-/// separate from Dropbox files and folders and should be accessed via the /paper endpoints.
+        /// be accessed via the /files endpoints.  When this value is false, the user's Paper docs are stored
+        /// separate from Dropbox files and folders and should be accessed via the /paper endpoints.
 @objc
 public class DBXUsersPaperAsFilesValueEnabled: DBXUsersPaperAsFilesValue {
     @objc
@@ -551,7 +563,7 @@ public class DBXUsersPaperAsFilesValueEnabled: DBXUsersPaperAsFilesValue {
 
     @objc
     public init(_ arg: NSNumber) {
-        self.enabled = arg
+        enabled = arg
         let swift = Users.PaperAsFilesValue.enabled(arg.boolValue)
         super.init(swift: swift)
     }
@@ -594,17 +606,17 @@ public class DBXUsersSpaceAllocation: NSObject {
 
     @objc
     public var asIndividual: DBXUsersSpaceAllocationIndividual? {
-        self as? DBXUsersSpaceAllocationIndividual
+        return self as? DBXUsersSpaceAllocationIndividual
     }
 
     @objc
     public var asTeam: DBXUsersSpaceAllocationTeam? {
-        self as? DBXUsersSpaceAllocationTeam
+        return self as? DBXUsersSpaceAllocationTeam
     }
 
     @objc
     public var asOther: DBXUsersSpaceAllocationOther? {
-        self as? DBXUsersSpaceAllocationOther
+        return self as? DBXUsersSpaceAllocationOther
     }
 }
 
@@ -616,7 +628,7 @@ public class DBXUsersSpaceAllocationIndividual: DBXUsersSpaceAllocation {
 
     @objc
     public init(_ arg: DBXUsersIndividualSpaceAllocation) {
-        self.individual = arg
+        individual = arg
         let swift = Users.SpaceAllocation.individual(arg.swift)
         super.init(swift: swift)
     }
@@ -630,7 +642,7 @@ public class DBXUsersSpaceAllocationTeam: DBXUsersSpaceAllocation {
 
     @objc
     public init(_ arg: DBXUsersTeamSpaceAllocation) {
-        self.team = arg
+        team = arg
         let swift = Users.SpaceAllocation.team(arg.swift)
         super.init(swift: swift)
     }
@@ -667,8 +679,67 @@ public class DBXUsersSpaceUsage: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
+}
+
+/// The value for teamSharedDropbox in UserFeature.
+@objc
+public class DBXUsersTeamSharedDropboxValue: NSObject {
+    let swift: Users.TeamSharedDropboxValue
+
+    public init(swift: Users.TeamSharedDropboxValue) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Users.TeamSharedDropboxValue) -> DBXUsersTeamSharedDropboxValue {
+        switch swift {
+        case .enabled(let swiftArg):
+            let arg = NSNumber(value: swiftArg)
+            return DBXUsersTeamSharedDropboxValueEnabled(arg)
+        case .other:
+            return DBXUsersTeamSharedDropboxValueOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asEnabled: DBXUsersTeamSharedDropboxValueEnabled? {
+        return self as? DBXUsersTeamSharedDropboxValueEnabled
+    }
+
+    @objc
+    public var asOther: DBXUsersTeamSharedDropboxValueOther? {
+        return self as? DBXUsersTeamSharedDropboxValueOther
+    }
+}
+
+/// When this value is True, the user have a shared team root. When the value is False the user have distinct
+        /// root.
+@objc
+public class DBXUsersTeamSharedDropboxValueEnabled: DBXUsersTeamSharedDropboxValue {
+    @objc
+    public var enabled: NSNumber
+
+    @objc
+    public init(_ arg: NSNumber) {
+        enabled = arg
+        let swift = Users.TeamSharedDropboxValue.enabled(arg.boolValue)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXUsersTeamSharedDropboxValueOther: DBXUsersTeamSharedDropboxValue {
+    @objc
+    public init() {
+        let swift = Users.TeamSharedDropboxValue.other
+        super.init(swift: swift)
+    }
 }
 
 /// Objective-C compatible TeamSpaceAllocation struct
@@ -692,20 +763,8 @@ public class DBXUsersTeamSpaceAllocation: NSObject {
     public var userWithinTeamSpaceUsedCached: NSNumber { swift.userWithinTeamSpaceUsedCached as NSNumber }
 
     @objc
-    public init(
-        used: NSNumber,
-        allocated: NSNumber,
-        userWithinTeamSpaceAllocated: NSNumber,
-        userWithinTeamSpaceLimitType: DBXTeamCommonMemberSpaceLimitType,
-        userWithinTeamSpaceUsedCached: NSNumber
-    ) {
-        self.swift = Users.TeamSpaceAllocation(
-            used: used.uint64Value,
-            allocated: allocated.uint64Value,
-            userWithinTeamSpaceAllocated: userWithinTeamSpaceAllocated.uint64Value,
-            userWithinTeamSpaceLimitType: userWithinTeamSpaceLimitType.swift,
-            userWithinTeamSpaceUsedCached: userWithinTeamSpaceUsedCached.uint64Value
-        )
+    public init(used: NSNumber, allocated: NSNumber, userWithinTeamSpaceAllocated: NSNumber, userWithinTeamSpaceLimitType: DBXTeamCommonMemberSpaceLimitType, userWithinTeamSpaceUsedCached: NSNumber) {
+        self.swift = Users.TeamSpaceAllocation(used: used.uint64Value, allocated: allocated.uint64Value, userWithinTeamSpaceAllocated: userWithinTeamSpaceAllocated.uint64Value, userWithinTeamSpaceLimitType: userWithinTeamSpaceLimitType.swift, userWithinTeamSpaceUsedCached: userWithinTeamSpaceUsedCached.uint64Value)
     }
 
     let swift: Users.TeamSpaceAllocation
@@ -713,6 +772,7 @@ public class DBXUsersTeamSpaceAllocation: NSObject {
     public init(swift: Users.TeamSpaceAllocation) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -733,6 +793,10 @@ public class DBXUsersUserFeature: NSObject {
             return DBXUsersUserFeaturePaperAsFiles()
         case .fileLocking:
             return DBXUsersUserFeatureFileLocking()
+        case .teamSharedDropbox:
+            return DBXUsersUserFeatureTeamSharedDropbox()
+        case .distinctMemberHome:
+            return DBXUsersUserFeatureDistinctMemberHome()
         case .other:
             return DBXUsersUserFeatureOther()
         }
@@ -743,17 +807,27 @@ public class DBXUsersUserFeature: NSObject {
 
     @objc
     public var asPaperAsFiles: DBXUsersUserFeaturePaperAsFiles? {
-        self as? DBXUsersUserFeaturePaperAsFiles
+        return self as? DBXUsersUserFeaturePaperAsFiles
     }
 
     @objc
     public var asFileLocking: DBXUsersUserFeatureFileLocking? {
-        self as? DBXUsersUserFeatureFileLocking
+        return self as? DBXUsersUserFeatureFileLocking
+    }
+
+    @objc
+    public var asTeamSharedDropbox: DBXUsersUserFeatureTeamSharedDropbox? {
+        return self as? DBXUsersUserFeatureTeamSharedDropbox
+    }
+
+    @objc
+    public var asDistinctMemberHome: DBXUsersUserFeatureDistinctMemberHome? {
+        return self as? DBXUsersUserFeatureDistinctMemberHome
     }
 
     @objc
     public var asOther: DBXUsersUserFeatureOther? {
-        self as? DBXUsersUserFeatureOther
+        return self as? DBXUsersUserFeatureOther
     }
 }
 
@@ -773,6 +847,27 @@ public class DBXUsersUserFeatureFileLocking: DBXUsersUserFeature {
     @objc
     public init() {
         let swift = Users.UserFeature.fileLocking
+        super.init(swift: swift)
+    }
+}
+
+/// This feature contains information about whether or not the user is part of a team with a shared team root.
+@objc
+public class DBXUsersUserFeatureTeamSharedDropbox: DBXUsersUserFeature {
+    @objc
+    public init() {
+        let swift = Users.UserFeature.teamSharedDropbox
+        super.init(swift: swift)
+    }
+}
+
+/// This feature contains information about whether or not the user's home namespace is distinct from their root
+        /// namespace.
+@objc
+public class DBXUsersUserFeatureDistinctMemberHome: DBXUsersUserFeature {
+    @objc
+    public init() {
+        let swift = Users.UserFeature.distinctMemberHome
         super.init(swift: swift)
     }
 }
@@ -804,6 +899,12 @@ public class DBXUsersUserFeatureValue: NSObject {
         case .fileLocking(let swiftArg):
             let arg = DBXUsersFileLockingValue(swift: swiftArg)
             return DBXUsersUserFeatureValueFileLocking(arg)
+        case .teamSharedDropbox(let swiftArg):
+            let arg = DBXUsersTeamSharedDropboxValue(swift: swiftArg)
+            return DBXUsersUserFeatureValueTeamSharedDropbox(arg)
+        case .distinctMemberHome(let swiftArg):
+            let arg = DBXUsersDistinctMemberHomeValue(swift: swiftArg)
+            return DBXUsersUserFeatureValueDistinctMemberHome(arg)
         case .other:
             return DBXUsersUserFeatureValueOther()
         }
@@ -814,17 +915,27 @@ public class DBXUsersUserFeatureValue: NSObject {
 
     @objc
     public var asPaperAsFiles: DBXUsersUserFeatureValuePaperAsFiles? {
-        self as? DBXUsersUserFeatureValuePaperAsFiles
+        return self as? DBXUsersUserFeatureValuePaperAsFiles
     }
 
     @objc
     public var asFileLocking: DBXUsersUserFeatureValueFileLocking? {
-        self as? DBXUsersUserFeatureValueFileLocking
+        return self as? DBXUsersUserFeatureValueFileLocking
+    }
+
+    @objc
+    public var asTeamSharedDropbox: DBXUsersUserFeatureValueTeamSharedDropbox? {
+        return self as? DBXUsersUserFeatureValueTeamSharedDropbox
+    }
+
+    @objc
+    public var asDistinctMemberHome: DBXUsersUserFeatureValueDistinctMemberHome? {
+        return self as? DBXUsersUserFeatureValueDistinctMemberHome
     }
 
     @objc
     public var asOther: DBXUsersUserFeatureValueOther? {
-        self as? DBXUsersUserFeatureValueOther
+        return self as? DBXUsersUserFeatureValueOther
     }
 }
 
@@ -836,7 +947,7 @@ public class DBXUsersUserFeatureValuePaperAsFiles: DBXUsersUserFeatureValue {
 
     @objc
     public init(_ arg: DBXUsersPaperAsFilesValue) {
-        self.paperAsFiles = arg
+        paperAsFiles = arg
         let swift = Users.UserFeatureValue.paperAsFiles(arg.swift)
         super.init(swift: swift)
     }
@@ -850,8 +961,36 @@ public class DBXUsersUserFeatureValueFileLocking: DBXUsersUserFeatureValue {
 
     @objc
     public init(_ arg: DBXUsersFileLockingValue) {
-        self.fileLocking = arg
+        fileLocking = arg
         let swift = Users.UserFeatureValue.fileLocking(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXUsersUserFeatureValueTeamSharedDropbox: DBXUsersUserFeatureValue {
+    @objc
+    public var teamSharedDropbox: DBXUsersTeamSharedDropboxValue
+
+    @objc
+    public init(_ arg: DBXUsersTeamSharedDropboxValue) {
+        teamSharedDropbox = arg
+        let swift = Users.UserFeatureValue.teamSharedDropbox(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXUsersUserFeatureValueDistinctMemberHome: DBXUsersUserFeatureValue {
+    @objc
+    public var distinctMemberHome: DBXUsersDistinctMemberHomeValue
+
+    @objc
+    public init(_ arg: DBXUsersDistinctMemberHomeValue) {
+        distinctMemberHome = arg
+        let swift = Users.UserFeatureValue.distinctMemberHome(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -872,11 +1011,11 @@ public class DBXUsersUserFeaturesGetValuesBatchArg: NSObject {
     /// A list of features in UserFeature. If the list is empty, this route will return
     /// UserFeaturesGetValuesBatchError.
     @objc
-    public var features: [DBXUsersUserFeature] { swift.features.map { DBXUsersUserFeature(swift: $0) } }
+    public var features: Array<DBXUsersUserFeature> { swift.features.map { DBXUsersUserFeature(swift: $0) } }
 
     @objc
-    public init(features: [DBXUsersUserFeature]) {
-        self.swift = Users.UserFeaturesGetValuesBatchArg(features: features.map(\.swift))
+    public init(features: Array<DBXUsersUserFeature>) {
+        self.swift = Users.UserFeaturesGetValuesBatchArg(features: features.map { $0.swift })
     }
 
     let swift: Users.UserFeaturesGetValuesBatchArg
@@ -884,6 +1023,7 @@ public class DBXUsersUserFeaturesGetValuesBatchArg: NSObject {
     public init(swift: Users.UserFeaturesGetValuesBatchArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -912,12 +1052,12 @@ public class DBXUsersUserFeaturesGetValuesBatchError: NSObject {
 
     @objc
     public var asEmptyFeaturesList: DBXUsersUserFeaturesGetValuesBatchErrorEmptyFeaturesList? {
-        self as? DBXUsersUserFeaturesGetValuesBatchErrorEmptyFeaturesList
+        return self as? DBXUsersUserFeaturesGetValuesBatchErrorEmptyFeaturesList
     }
 
     @objc
     public var asOther: DBXUsersUserFeaturesGetValuesBatchErrorOther? {
-        self as? DBXUsersUserFeaturesGetValuesBatchErrorOther
+        return self as? DBXUsersUserFeaturesGetValuesBatchErrorOther
     }
 }
 
@@ -946,11 +1086,11 @@ public class DBXUsersUserFeaturesGetValuesBatchErrorOther: DBXUsersUserFeaturesG
 public class DBXUsersUserFeaturesGetValuesBatchResult: NSObject {
     /// (no description)
     @objc
-    public var values: [DBXUsersUserFeatureValue] { swift.values.map { DBXUsersUserFeatureValue(swift: $0) } }
+    public var values: Array<DBXUsersUserFeatureValue> { swift.values.map { DBXUsersUserFeatureValue(swift: $0) } }
 
     @objc
-    public init(values: [DBXUsersUserFeatureValue]) {
-        self.swift = Users.UserFeaturesGetValuesBatchResult(values: values.map(\.swift))
+    public init(values: Array<DBXUsersUserFeatureValue>) {
+        self.swift = Users.UserFeaturesGetValuesBatchResult(values: values.map { $0.swift })
     }
 
     let swift: Users.UserFeaturesGetValuesBatchResult
@@ -959,6 +1099,8 @@ public class DBXUsersUserFeaturesGetValuesBatchResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
+

@@ -40,6 +40,9 @@ public class DBXDropboxBase: NSObject {
     /// Routes within the paper namespace. See DBPaperRoutes for details.
     @objc
     public var paper: DBXPaperRoutes!
+    /// Routes within the riviera namespace. See DBRivieraRoutes for details.
+    @objc
+    public var riviera: DBXRivieraRoutes!
     /// Routes within the sharing namespace. See DBSharingRoutes for details.
     @objc
     public var sharing: DBXSharingRoutes!
@@ -67,6 +70,7 @@ public class DBXDropboxBase: NSObject {
         self.files = DBXFilesRoutes(swift: swift.files)
         self.openid = DBXOpenidRoutes(swift: swift.openid)
         self.paper = DBXPaperRoutes(swift: swift.paper)
+        self.riviera = DBXRivieraRoutes(swift: swift.riviera)
         self.sharing = DBXSharingRoutes(swift: swift.sharing)
         self.teamLog = DBXTeamLogRoutes(swift: swift.teamLog)
         self.users = DBXUsersRoutes(swift: swift.users)

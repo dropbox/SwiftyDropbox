@@ -42,11 +42,13 @@ public class DBXContactsRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Contacts.DeleteManualContactsError` object on failure.
     @objc
-    @discardableResult public func deleteManualContactsBatch(emailAddresses: [String]) -> DBXContactsDeleteManualContactsBatchRpcRequest {
+    @discardableResult public func deleteManualContactsBatch(emailAddresses: Array<String>) -> DBXContactsDeleteManualContactsBatchRpcRequest {
         let swift = swift.deleteManualContactsBatch(emailAddresses: emailAddresses)
         return DBXContactsDeleteManualContactsBatchRpcRequest(swift: swift)
     }
+
 }
+
 
 @objc
 public class DBXContactsDeleteManualContactsRpcRequest: NSObject, DBXRequest {
@@ -60,7 +62,7 @@ public class DBXContactsDeleteManualContactsRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -68,7 +70,7 @@ public class DBXContactsDeleteManualContactsRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             completionHandler(error?.objc)
         }
         return self
@@ -100,6 +102,7 @@ public class DBXContactsDeleteManualContactsRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXContactsDeleteManualContactsBatchRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Contacts.DeleteManualContactsErrorSerializer>
@@ -112,7 +115,7 @@ public class DBXContactsDeleteManualContactsBatchRpcRequest: NSObject, DBXReques
     @discardableResult public func response(
         completionHandler: @escaping (DBXContactsDeleteManualContactsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -120,7 +123,7 @@ public class DBXContactsDeleteManualContactsBatchRpcRequest: NSObject, DBXReques
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXContactsDeleteManualContactsError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXContactsDeleteManualContactsError?
             var callError: DBXCallError?
             switch error {
@@ -162,3 +165,4 @@ public class DBXContactsDeleteManualContactsBatchRpcRequest: NSObject, DBXReques
         swift.cancel()
     }
 }
+

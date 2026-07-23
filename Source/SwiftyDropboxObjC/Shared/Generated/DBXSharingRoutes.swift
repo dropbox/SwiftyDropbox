@@ -30,27 +30,16 @@ public class DBXSharingRoutes: NSObject {
     /// - parameter quiet: Whether added members should be notified via email and device notifications of their
     /// invitation.
     /// - parameter accessLevel: AccessLevel union object, describing what access level we want to give new members.
-    /// - parameter addMessageAsComment: If the custom message should be added as a comment on the file.
+    /// - parameter addMessageAsComment: If the custom message should be added as a comment on the file. Only meant for
+    /// Paper files.
+    /// - parameter fpSealedResult: Field is only returned for "internal" callers. The FingerprintJS Sealed Client
+    /// Result value
     ///
     /// - returns: Through the response callback, the caller will receive a `Array<Sharing.FileMemberActionResult>`
     /// object on success or a `Sharing.AddFileMemberError` object on failure.
     @objc
-    @discardableResult public func addFileMember(
-        file: String,
-        members: [DBXSharingMemberSelector],
-        customMessage: String?,
-        quiet: NSNumber,
-        accessLevel: DBXSharingAccessLevel,
-        addMessageAsComment: NSNumber
-    ) -> DBXSharingAddFileMemberRpcRequest {
-        let swift = swift.addFileMember(
-            file: file,
-            members: members.map(\.swift),
-            customMessage: customMessage,
-            quiet: quiet.boolValue,
-            accessLevel: accessLevel.swift,
-            addMessageAsComment: addMessageAsComment.boolValue
-        )
+    @discardableResult public func addFileMember(file: String, members: Array<DBXSharingMemberSelector>, customMessage: String?, quiet: NSNumber, accessLevel: DBXSharingAccessLevel?, addMessageAsComment: NSNumber, fpSealedResult: String?) -> DBXSharingAddFileMemberRpcRequest {
+        let swift = swift.addFileMember(file: file, members: members.map { $0.swift }, customMessage: customMessage, quiet: quiet.boolValue, accessLevel: accessLevel?.swift, addMessageAsComment: addMessageAsComment.boolValue, fpSealedResult: fpSealedResult)
         return DBXSharingAddFileMemberRpcRequest(swift: swift)
     }
 
@@ -61,8 +50,8 @@ public class DBXSharingRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Array<Sharing.FileMemberActionResult>`
     /// object on success or a `Sharing.AddFileMemberError` object on failure.
     @objc
-    @discardableResult public func addFileMember(file: String, members: [DBXSharingMemberSelector]) -> DBXSharingAddFileMemberRpcRequest {
-        let swift = swift.addFileMember(file: file, members: members.map(\.swift))
+    @discardableResult public func addFileMember(file: String, members: Array<DBXSharingMemberSelector>) -> DBXSharingAddFileMemberRpcRequest {
+        let swift = swift.addFileMember(file: file, members: members.map { $0.swift })
         return DBXSharingAddFileMemberRpcRequest(swift: swift)
     }
 
@@ -77,17 +66,14 @@ public class DBXSharingRoutes: NSObject {
     /// folder.
     /// - parameter quiet: Whether added members should be notified via email and device notifications of their invite.
     /// - parameter customMessage: Optional message to display to added members in their invitation.
+    /// - parameter fpSealedResult: Field is only returned for "internal" callers. The FingerprintJS Sealed Client
+    /// Result value
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.AddFolderMemberError` object on failure.
     @objc
-    @discardableResult public func addFolderMember(
-        sharedFolderId: String,
-        members: [DBXSharingAddMember],
-        quiet: NSNumber,
-        customMessage: String?
-    ) -> DBXSharingAddFolderMemberRpcRequest {
-        let swift = swift.addFolderMember(sharedFolderId: sharedFolderId, members: members.map(\.swift), quiet: quiet.boolValue, customMessage: customMessage)
+    @discardableResult public func addFolderMember(sharedFolderId: String, members: Array<DBXSharingAddMember>, quiet: NSNumber, customMessage: String?, fpSealedResult: String?) -> DBXSharingAddFolderMemberRpcRequest {
+        let swift = swift.addFolderMember(sharedFolderId: sharedFolderId, members: members.map { $0.swift }, quiet: quiet.boolValue, customMessage: customMessage, fpSealedResult: fpSealedResult)
         return DBXSharingAddFolderMemberRpcRequest(swift: swift)
     }
 
@@ -100,8 +86,8 @@ public class DBXSharingRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.AddFolderMemberError` object on failure.
     @objc
-    @discardableResult public func addFolderMember(sharedFolderId: String, members: [DBXSharingAddMember]) -> DBXSharingAddFolderMemberRpcRequest {
-        let swift = swift.addFolderMember(sharedFolderId: sharedFolderId, members: members.map(\.swift))
+    @discardableResult public func addFolderMember(sharedFolderId: String, members: Array<DBXSharingAddMember>) -> DBXSharingAddFolderMemberRpcRequest {
+        let swift = swift.addFolderMember(sharedFolderId: sharedFolderId, members: members.map { $0.swift })
         return DBXSharingAddFolderMemberRpcRequest(swift: swift)
     }
 
@@ -150,9 +136,9 @@ public class DBXSharingRoutes: NSObject {
         return DBXSharingCheckShareJobStatusRpcRequest(swift: swift)
     }
 
-    /// Create a shared link with custom settings. If no settings are given then the default visibility is public_ in
-    /// RequestedVisibility (The resolved visibility, though, may depend on other aspects such as team and shared
-    /// folder settings).
+    /// Create a shared link with custom settings. If no settings are given then the default visibility is
+    /// RequestedVisibility.public (The resolved visibility, though, may depend on other aspects such as team and
+    /// shared folder settings).
     ///
     /// - scope: sharing.write
     ///
@@ -162,17 +148,14 @@ public class DBXSharingRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.CreateSharedLinkWithSettingsError` object on failure.
     @objc
-    @discardableResult public func createSharedLinkWithSettings(
-        path: String,
-        settings: DBXSharingSharedLinkSettings?
-    ) -> DBXSharingCreateSharedLinkWithSettingsRpcRequest {
+    @discardableResult public func createSharedLinkWithSettings(path: String, settings: DBXSharingSharedLinkSettings?) -> DBXSharingCreateSharedLinkWithSettingsRpcRequest {
         let swift = swift.createSharedLinkWithSettings(path: path, settings: settings?.swift)
         return DBXSharingCreateSharedLinkWithSettingsRpcRequest(swift: swift)
     }
 
-    /// Create a shared link with custom settings. If no settings are given then the default visibility is public_ in
-    /// RequestedVisibility (The resolved visibility, though, may depend on other aspects such as team and shared
-    /// folder settings).
+    /// Create a shared link with custom settings. If no settings are given then the default visibility is
+    /// RequestedVisibility.public (The resolved visibility, though, may depend on other aspects such as team and
+    /// shared folder settings).
     ///
     /// - scope: sharing.write
     ///
@@ -190,14 +173,14 @@ public class DBXSharingRoutes: NSObject {
     ///
     /// - parameter file: The file to query.
     /// - parameter actions: A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
-    /// response's permissions in SharedFileMetadata field describing the actions the  authenticated user can
-    /// perform on the file.
+    /// response's permissions in SharedFileMetadata field describing the actions the authenticated user can perform
+    /// on the file.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFileMetadata` object on
     /// success or a `Sharing.GetFileMetadataError` object on failure.
     @objc
-    @discardableResult public func getFileMetadata(file: String, actions: [DBXSharingFileAction]?) -> DBXSharingGetFileMetadataRpcRequest {
-        let swift = swift.getFileMetadata(file: file, actions: actions?.map(\.swift))
+    @discardableResult public func getFileMetadata(file: String, actions: Array<DBXSharingFileAction>?) -> DBXSharingGetFileMetadataRpcRequest {
+        let swift = swift.getFileMetadata(file: file, actions: actions?.map { $0.swift })
         return DBXSharingGetFileMetadataRpcRequest(swift: swift)
     }
 
@@ -219,14 +202,14 @@ public class DBXSharingRoutes: NSObject {
     ///
     /// - parameter files: The files to query.
     /// - parameter actions: A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
-    /// response's permissions in SharedFileMetadata field describing the actions the  authenticated user can
-    /// perform on the file.
+    /// response's permissions in SharedFileMetadata field describing the actions the authenticated user can perform
+    /// on the file.
     ///
     /// - returns: Through the response callback, the caller will receive a `Array<Sharing.GetFileMetadataBatchResult>`
     /// object on success or a `Sharing.SharingUserError` object on failure.
     @objc
-    @discardableResult public func getFileMetadataBatch(files: [String], actions: [DBXSharingFileAction]?) -> DBXSharingGetFileMetadataBatchRpcRequest {
-        let swift = swift.getFileMetadataBatch(files: files, actions: actions?.map(\.swift))
+    @discardableResult public func getFileMetadataBatch(files: Array<String>, actions: Array<DBXSharingFileAction>?) -> DBXSharingGetFileMetadataBatchRpcRequest {
+        let swift = swift.getFileMetadataBatch(files: files, actions: actions?.map { $0.swift })
         return DBXSharingGetFileMetadataBatchRpcRequest(swift: swift)
     }
 
@@ -237,7 +220,7 @@ public class DBXSharingRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Array<Sharing.GetFileMetadataBatchResult>`
     /// object on success or a `Sharing.SharingUserError` object on failure.
     @objc
-    @discardableResult public func getFileMetadataBatch(files: [String]) -> DBXSharingGetFileMetadataBatchRpcRequest {
+    @discardableResult public func getFileMetadataBatch(files: Array<String>) -> DBXSharingGetFileMetadataBatchRpcRequest {
         let swift = swift.getFileMetadataBatch(files: files)
         return DBXSharingGetFileMetadataBatchRpcRequest(swift: swift)
     }
@@ -248,14 +231,14 @@ public class DBXSharingRoutes: NSObject {
     ///
     /// - parameter sharedFolderId: The ID for the shared folder.
     /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can
+    /// response's permissions in SharedFolderMetadata field describing the actions the authenticated user can
     /// perform on the folder.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMetadata` object on
     /// success or a `Sharing.SharedFolderAccessError` object on failure.
     @objc
-    @discardableResult public func getFolderMetadata(sharedFolderId: String, actions: [DBXSharingFolderAction]?) -> DBXSharingGetFolderMetadataRpcRequest {
-        let swift = swift.getFolderMetadata(sharedFolderId: sharedFolderId, actions: actions?.map(\.swift))
+    @discardableResult public func getFolderMetadata(sharedFolderId: String, actions: Array<DBXSharingFolderAction>?) -> DBXSharingGetFolderMetadataRpcRequest {
+        let swift = swift.getFolderMetadata(sharedFolderId: sharedFolderId, actions: actions?.map { $0.swift })
         return DBXSharingGetFolderMetadataRpcRequest(swift: swift)
     }
 
@@ -271,7 +254,8 @@ public class DBXSharingRoutes: NSObject {
         return DBXSharingGetFolderMetadataRpcRequest(swift: swift)
     }
 
-    /// Download the shared link's file from a user's Dropbox.
+    /// Download the shared link's file from a user's Dropbox. This is a download-style endpoint that returns the file
+    /// content.
     ///
     /// - scope: sharing.read
     ///
@@ -287,18 +271,13 @@ public class DBXSharingRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.GetSharedLinkFileError` object on failure.
     @objc
-    @discardableResult public func getSharedLinkFileURL(
-        url: String,
-        path: String?,
-        linkPassword: String?,
-        overwrite: Bool,
-        destination: URL
-    ) -> DBXSharingGetSharedLinkFileDownloadRequestFile {
+    @discardableResult public func getSharedLinkFileURL(url: String, path: String?, linkPassword: String?, overwrite: Bool, destination: URL) -> DBXSharingGetSharedLinkFileDownloadRequestFile {
         let swift = swift.getSharedLinkFile(url: url, path: path, linkPassword: linkPassword, overwrite: overwrite, destination: destination)
         return DBXSharingGetSharedLinkFileDownloadRequestFile(swift: swift)
     }
 
-    /// Download the shared link's file from a user's Dropbox.
+    /// Download the shared link's file from a user's Dropbox. This is a download-style endpoint that returns the file
+    /// content.
     ///
     /// - scope: sharing.read
     ///
@@ -310,7 +289,8 @@ public class DBXSharingRoutes: NSObject {
         return DBXSharingGetSharedLinkFileDownloadRequestFile(swift: swift)
     }
 
-    /// Download the shared link's file from a user's Dropbox.
+    /// Download the shared link's file from a user's Dropbox. This is a download-style endpoint that returns the file
+    /// content.
     ///
     /// - scope: sharing.read
     ///
@@ -327,7 +307,8 @@ public class DBXSharingRoutes: NSObject {
         return DBXSharingGetSharedLinkFileDownloadRequestMemory(swift: swift)
     }
 
-    /// Download the shared link's file from a user's Dropbox.
+    /// Download the shared link's file from a user's Dropbox. This is a download-style endpoint that returns the file
+    /// content.
     ///
     /// - scope: sharing.read
     ///
@@ -349,7 +330,7 @@ public class DBXSharingRoutes: NSObject {
     /// - parameter linkPassword: If the shared link has a password, this parameter can be used.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
-    /// success or a `Sharing.SharedLinkError` object on failure.
+    /// success or a `Sharing.SharedLinkMetadataError` object on failure.
     @objc
     @discardableResult public func getSharedLinkMetadata(url: String, path: String?, linkPassword: String?) -> DBXSharingGetSharedLinkMetadataRpcRequest {
         let swift = swift.getSharedLinkMetadata(url: url, path: path, linkPassword: linkPassword)
@@ -361,7 +342,7 @@ public class DBXSharingRoutes: NSObject {
     /// - scope: sharing.read
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
-    /// success or a `Sharing.SharedLinkError` object on failure.
+    /// success or a `Sharing.SharedLinkMetadataError` object on failure.
     @objc
     @discardableResult public func getSharedLinkMetadata(url: String) -> DBXSharingGetSharedLinkMetadataRpcRequest {
         let swift = swift.getSharedLinkMetadata(url: url)
@@ -380,13 +361,8 @@ public class DBXSharingRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFileMembers` object on
     /// success or a `Sharing.ListFileMembersError` object on failure.
     @objc
-    @discardableResult public func listFileMembers(
-        file: String,
-        actions: [DBXSharingMemberAction]?,
-        includeInherited: NSNumber,
-        limit: NSNumber
-    ) -> DBXSharingListFileMembersRpcRequest {
-        let swift = swift.listFileMembers(file: file, actions: actions?.map(\.swift), includeInherited: includeInherited.boolValue, limit: limit.uint32Value)
+    @discardableResult public func listFileMembers(file: String, actions: Array<DBXSharingMemberAction>?, includeInherited: NSNumber, limit: NSNumber) -> DBXSharingListFileMembersRpcRequest {
+        let swift = swift.listFileMembers(file: file, actions: actions?.map { $0.swift }, includeInherited: includeInherited.boolValue, limit: limit.uint32Value)
         return DBXSharingListFileMembersRpcRequest(swift: swift)
     }
 
@@ -410,12 +386,12 @@ public class DBXSharingRoutes: NSObject {
     /// - scope: sharing.read
     ///
     /// - parameter files: Files for which to return members.
-    /// - parameter limit: Number of members to return max per query. Defaults to 10 if no limit is specified.
+    /// - parameter limit: Number of members to return max per query. Defaults to 1000 if no limit is specified.
     ///
     /// - returns: Through the response callback, the caller will receive a `Array<Sharing.ListFileMembersBatchResult>`
     /// object on success or a `Sharing.SharingUserError` object on failure.
     @objc
-    @discardableResult public func listFileMembersBatch(files: [String], limit: NSNumber) -> DBXSharingListFileMembersBatchRpcRequest {
+    @discardableResult public func listFileMembersBatch(files: Array<String>, limit: NSNumber) -> DBXSharingListFileMembersBatchRpcRequest {
         let swift = swift.listFileMembersBatch(files: files, limit: limit.uint32Value)
         return DBXSharingListFileMembersBatchRpcRequest(swift: swift)
     }
@@ -430,7 +406,7 @@ public class DBXSharingRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Array<Sharing.ListFileMembersBatchResult>`
     /// object on success or a `Sharing.SharingUserError` object on failure.
     @objc
-    @discardableResult public func listFileMembersBatch(files: [String]) -> DBXSharingListFileMembersBatchRpcRequest {
+    @discardableResult public func listFileMembersBatch(files: Array<String>) -> DBXSharingListFileMembersBatchRpcRequest {
         let swift = swift.listFileMembersBatch(files: files)
         return DBXSharingListFileMembersBatchRpcRequest(swift: swift)
     }
@@ -455,17 +431,17 @@ public class DBXSharingRoutes: NSObject {
     ///
     /// - scope: sharing.read
     ///
-    /// - parameter sharedFolderId: The ID for the shared folder.
+    /// - parameter sharedFolderId: The ID for the shared folder. When path is provided, the folder ID will be extracted
+    /// from the path instead.
+    /// - parameter path: Optional path to get inherited members. When omitted, uses shared_folder_id to return direct
+    /// members. When provided, extracts folder ID from this path and returns users who have access through parent
+    /// shared folder.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMembers` object on
     /// success or a `Sharing.SharedFolderAccessError` object on failure.
     @objc
-    @discardableResult public func listFolderMembers(
-        sharedFolderId: String,
-        actions: [DBXSharingMemberAction]?,
-        limit: NSNumber
-    ) -> DBXSharingListFolderMembersRpcRequest {
-        let swift = swift.listFolderMembers(sharedFolderId: sharedFolderId, actions: actions?.map(\.swift), limit: limit.uint32Value)
+    @discardableResult public func listFolderMembers(sharedFolderId: String, actions: Array<DBXSharingMemberAction>?, limit: NSNumber, path: String?) -> DBXSharingListFolderMembersRpcRequest {
+        let swift = swift.listFolderMembers(sharedFolderId: sharedFolderId, actions: actions?.map { $0.swift }, limit: limit.uint32Value, path: path)
         return DBXSharingListFolderMembersRpcRequest(swift: swift)
     }
 
@@ -501,14 +477,14 @@ public class DBXSharingRoutes: NSObject {
     ///
     /// - parameter limit: The maximum number of results to return per request.
     /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can
+    /// response's permissions in SharedFolderMetadata field describing the actions the authenticated user can
     /// perform on the folder.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
     /// success or a `Void` object on failure.
     @objc
-    @discardableResult public func listFolders(limit: NSNumber, actions: [DBXSharingFolderAction]?) -> DBXSharingListFoldersRpcRequest {
-        let swift = swift.listFolders(limit: limit.uint32Value, actions: actions?.map(\.swift))
+    @discardableResult public func listFolders(limit: NSNumber, actions: Array<DBXSharingFolderAction>?) -> DBXSharingListFoldersRpcRequest {
+        let swift = swift.listFolders(limit: limit.uint32Value, actions: actions?.map { $0.swift })
         return DBXSharingListFoldersRpcRequest(swift: swift)
     }
 
@@ -545,14 +521,14 @@ public class DBXSharingRoutes: NSObject {
     ///
     /// - parameter limit: The maximum number of results to return per request.
     /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can
+    /// response's permissions in SharedFolderMetadata field describing the actions the authenticated user can
     /// perform on the folder.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
     /// success or a `Void` object on failure.
     @objc
-    @discardableResult public func listMountableFolders(limit: NSNumber, actions: [DBXSharingFolderAction]?) -> DBXSharingListMountableFoldersRpcRequest {
-        let swift = swift.listMountableFolders(limit: limit.uint32Value, actions: actions?.map(\.swift))
+    @discardableResult public func listMountableFolders(limit: NSNumber, actions: Array<DBXSharingFolderAction>?) -> DBXSharingListMountableFoldersRpcRequest {
+        let swift = swift.listMountableFolders(limit: limit.uint32Value, actions: actions?.map { $0.swift })
         return DBXSharingListMountableFoldersRpcRequest(swift: swift)
     }
 
@@ -583,26 +559,24 @@ public class DBXSharingRoutes: NSObject {
         return DBXSharingListMountableFoldersContinueRpcRequest(swift: swift)
     }
 
-    /// Returns a list of all files shared with current user.  Does not include files the user has received via shared
-    /// folders, and does  not include unclaimed invitations.
+    /// Returns a list of all files shared with current user.
     ///
     /// - scope: sharing.read
     ///
     /// - parameter limit: Number of files to return max per query. Defaults to 100 if no limit is specified.
     /// - parameter actions: A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
-    /// response's permissions in SharedFileMetadata field describing the actions the  authenticated user can
-    /// perform on the file.
+    /// response's permissions in SharedFileMetadata field describing the actions the authenticated user can perform
+    /// on the file.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.ListFilesResult` object on success
     /// or a `Sharing.SharingUserError` object on failure.
     @objc
-    @discardableResult public func listReceivedFiles(limit: NSNumber, actions: [DBXSharingFileAction]?) -> DBXSharingListReceivedFilesRpcRequest {
-        let swift = swift.listReceivedFiles(limit: limit.uint32Value, actions: actions?.map(\.swift))
+    @discardableResult public func listReceivedFiles(limit: NSNumber, actions: Array<DBXSharingFileAction>?) -> DBXSharingListReceivedFilesRpcRequest {
+        let swift = swift.listReceivedFiles(limit: limit.uint32Value, actions: actions?.map { $0.swift })
         return DBXSharingListReceivedFilesRpcRequest(swift: swift)
     }
 
-    /// Returns a list of all files shared with current user.  Does not include files the user has received via shared
-    /// folders, and does  not include unclaimed invitations.
+    /// Returns a list of all files shared with current user.
     ///
     /// - scope: sharing.read
     ///
@@ -630,11 +604,10 @@ public class DBXSharingRoutes: NSObject {
 
     /// List shared links of this user. If no path is given, returns a list of all shared links for the current user.
     /// For members of business teams using team space and member folders, returns all shared links in the team
-    /// member's home folder unless the team space ID is specified in the request header. For more information,
-    /// refer to the Namespace Guide https://www.dropbox.com/developers/reference/namespace-guide. If a non-empty
-    /// path is given, returns a list of all shared links that allow access to the given path - direct links to the
-    /// given path and links to parent folders of the given path. Links to parent folders can be suppressed by
-    /// setting direct_only to true.
+    /// member's home folder unless the team space ID is specified in the request header. If a non-empty path is
+    /// given, returns a list of all shared links that allow access to the given path - direct links to the given
+    /// path and links to parent folders of the given path. Links to parent folders can be suppressed by setting
+    /// direct_only to true.
     ///
     /// - scope: sharing.read
     ///
@@ -652,11 +625,10 @@ public class DBXSharingRoutes: NSObject {
 
     /// List shared links of this user. If no path is given, returns a list of all shared links for the current user.
     /// For members of business teams using team space and member folders, returns all shared links in the team
-    /// member's home folder unless the team space ID is specified in the request header. For more information,
-    /// refer to the Namespace Guide https://www.dropbox.com/developers/reference/namespace-guide. If a non-empty
-    /// path is given, returns a list of all shared links that allow access to the given path - direct links to the
-    /// given path and links to parent folders of the given path. Links to parent folders can be suppressed by
-    /// setting direct_only to true.
+    /// member's home folder unless the team space ID is specified in the request header. If a non-empty path is
+    /// given, returns a list of all shared links that allow access to the given path - direct links to the given
+    /// path and links to parent folders of the given path. Links to parent folders can be suppressed by setting
+    /// direct_only to true.
     ///
     /// - scope: sharing.read
     ///
@@ -669,9 +641,9 @@ public class DBXSharingRoutes: NSObject {
     }
 
     /// Modify the shared link's settings. If the requested visibility conflict with the shared links policy of the team
-    /// or the shared folder (in case the linked file is part of a shared folder) then the resolvedVisibility in
-    /// LinkPermissions of the returned SharedLinkMetadata will reflect the actual visibility of the shared link and
-    /// the requestedVisibility in LinkPermissions will reflect the requested visibility.
+    /// or the shared folder (in case the linked file is part of a shared folder) then the
+    /// LinkPermissions.resolved_visibility of the returned SharedLinkMetadata will reflect the actual visibility of
+    /// the shared link and the LinkPermissions.requested_visibility will reflect the requested visibility.
     ///
     /// - scope: sharing.write
     ///
@@ -682,29 +654,22 @@ public class DBXSharingRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.ModifySharedLinkSettingsError` object on failure.
     @objc
-    @discardableResult public func modifySharedLinkSettings(
-        url: String,
-        settings: DBXSharingSharedLinkSettings,
-        removeExpiration: NSNumber
-    ) -> DBXSharingModifySharedLinkSettingsRpcRequest {
+    @discardableResult public func modifySharedLinkSettings(url: String, settings: DBXSharingSharedLinkSettings, removeExpiration: NSNumber) -> DBXSharingModifySharedLinkSettingsRpcRequest {
         let swift = swift.modifySharedLinkSettings(url: url, settings: settings.swift, removeExpiration: removeExpiration.boolValue)
         return DBXSharingModifySharedLinkSettingsRpcRequest(swift: swift)
     }
 
     /// Modify the shared link's settings. If the requested visibility conflict with the shared links policy of the team
-    /// or the shared folder (in case the linked file is part of a shared folder) then the resolvedVisibility in
-    /// LinkPermissions of the returned SharedLinkMetadata will reflect the actual visibility of the shared link and
-    /// the requestedVisibility in LinkPermissions will reflect the requested visibility.
+    /// or the shared folder (in case the linked file is part of a shared folder) then the
+    /// LinkPermissions.resolved_visibility of the returned SharedLinkMetadata will reflect the actual visibility of
+    /// the shared link and the LinkPermissions.requested_visibility will reflect the requested visibility.
     ///
     /// - scope: sharing.write
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.ModifySharedLinkSettingsError` object on failure.
     @objc
-    @discardableResult public func modifySharedLinkSettings(
-        url: String,
-        settings: DBXSharingSharedLinkSettings
-    ) -> DBXSharingModifySharedLinkSettingsRpcRequest {
+    @discardableResult public func modifySharedLinkSettings(url: String, settings: DBXSharingSharedLinkSettings) -> DBXSharingModifySharedLinkSettingsRpcRequest {
         let swift = swift.modifySharedLinkSettings(url: url, settings: settings.swift)
         return DBXSharingModifySharedLinkSettingsRpcRequest(swift: swift)
     }
@@ -724,8 +689,22 @@ public class DBXSharingRoutes: NSObject {
         return DBXSharingMountFolderRpcRequest(swift: swift)
     }
 
-    /// The current user relinquishes their membership in the designated file. Note that the current user may still have
-    /// inherited access to this file through the parent folder.
+    /// Removes all self-removable access from a file or folder for the current user. Best-effort and idempotent:
+    /// attempts to drop link-visitor associations and explicit ACL membership.
+    ///
+    /// - scope: private:sharing.write
+    ///
+    /// - parameter fileId: The id for the file or folder.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Sharing.RelinquishAccessResult` object on
+    /// success or a `Sharing.RelinquishAccessError` object on failure.
+    @objc
+    @discardableResult public func relinquishAccess(fileId: String) -> DBXSharingRelinquishAccessRpcRequest {
+        let swift = swift.relinquishAccess(fileId: fileId)
+        return DBXSharingRelinquishAccessRpcRequest(swift: swift)
+    }
+
+    /// The current user relinquishes their membership in the designated file.
     ///
     /// - scope: sharing.write
     ///
@@ -800,18 +779,14 @@ public class DBXSharingRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Sharing.RemoveFolderMemberError` object on failure.
     @objc
-    @discardableResult public func removeFolderMember(
-        sharedFolderId: String,
-        member: DBXSharingMemberSelector,
-        leaveACopy: NSNumber
-    ) -> DBXSharingRemoveFolderMemberRpcRequest {
+    @discardableResult public func removeFolderMember(sharedFolderId: String, member: DBXSharingMemberSelector, leaveACopy: NSNumber) -> DBXSharingRemoveFolderMemberRpcRequest {
         let swift = swift.removeFolderMember(sharedFolderId: sharedFolderId, member: member.swift, leaveACopy: leaveACopy.boolValue)
         return DBXSharingRemoveFolderMemberRpcRequest(swift: swift)
     }
 
     /// Revoke a shared link. Note that even after revoking a shared link to a file, the file may be accessible if there
     /// are shared links leading to any of the file parent folders. To list all shared links that enable access to a
-    /// specific file, you can use the listSharedLinks with the file as the path in ListSharedLinksArg argument.
+    /// specific file, you can use the list_shared_links with the file as the ListSharedLinksArg.path argument.
     ///
     /// - scope: sharing.write
     ///
@@ -837,10 +812,7 @@ public class DBXSharingRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Sharing.ShareFolderLaunch` object on
     /// success or a `Sharing.SetAccessInheritanceError` object on failure.
     @objc
-    @discardableResult public func setAccessInheritance(
-        sharedFolderId: String,
-        accessInheritance: DBXSharingAccessInheritance
-    ) -> DBXSharingSetAccessInheritanceRpcRequest {
+    @discardableResult public func setAccessInheritance(sharedFolderId: String, accessInheritance: DBXSharingAccessInheritance) -> DBXSharingSetAccessInheritanceRpcRequest {
         let swift = swift.setAccessInheritance(sharedFolderId: sharedFolderId, accessInheritance: accessInheritance.swift)
         return DBXSharingSetAccessInheritanceRpcRequest(swift: swift)
     }
@@ -867,35 +839,15 @@ public class DBXSharingRoutes: NSObject {
     /// - scope: sharing.write
     ///
     /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can
+    /// response's permissions in SharedFolderMetadata field describing the actions the authenticated user can
     /// perform on the folder.
     /// - parameter linkSettings: Settings on the link for this folder.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.ShareFolderLaunch` object on
     /// success or a `Sharing.ShareFolderError` object on failure.
     @objc
-    @discardableResult public func shareFolder(
-        path: String,
-        aclUpdatePolicy: DBXSharingAclUpdatePolicy?,
-        forceAsync: NSNumber,
-        memberPolicy: DBXSharingMemberPolicy?,
-        sharedLinkPolicy: DBXSharingSharedLinkPolicy?,
-        viewerInfoPolicy: DBXSharingViewerInfoPolicy?,
-        accessInheritance: DBXSharingAccessInheritance,
-        actions: [DBXSharingFolderAction]?,
-        linkSettings: DBXSharingLinkSettings?
-    ) -> DBXSharingShareFolderRpcRequest {
-        let swift = swift.shareFolder(
-            path: path,
-            aclUpdatePolicy: aclUpdatePolicy?.swift,
-            forceAsync: forceAsync.boolValue,
-            memberPolicy: memberPolicy?.swift,
-            sharedLinkPolicy: sharedLinkPolicy?.swift,
-            viewerInfoPolicy: viewerInfoPolicy?.swift,
-            accessInheritance: accessInheritance.swift,
-            actions: actions?.map(\.swift),
-            linkSettings: linkSettings?.swift
-        )
+    @discardableResult public func shareFolder(path: String, aclUpdatePolicy: DBXSharingAclUpdatePolicy?, forceAsync: NSNumber, memberPolicy: DBXSharingMemberPolicy?, sharedLinkPolicy: DBXSharingSharedLinkPolicy?, viewerInfoPolicy: DBXSharingViewerInfoPolicy?, accessInheritance: DBXSharingAccessInheritance, actions: Array<DBXSharingFolderAction>?, linkSettings: DBXSharingLinkSettings?) -> DBXSharingShareFolderRpcRequest {
+        let swift = swift.shareFolder(path: path, aclUpdatePolicy: aclUpdatePolicy?.swift, forceAsync: forceAsync.boolValue, memberPolicy: memberPolicy?.swift, sharedLinkPolicy: sharedLinkPolicy?.swift, viewerInfoPolicy: viewerInfoPolicy?.swift, accessInheritance: accessInheritance.swift, actions: actions?.map { $0.swift }, linkSettings: linkSettings?.swift)
         return DBXSharingShareFolderRpcRequest(swift: swift)
     }
 
@@ -958,8 +910,9 @@ public class DBXSharingRoutes: NSObject {
         return DBXSharingUnshareFileRpcRequest(swift: swift)
     }
 
-    /// Allows a shared folder owner to unshare the folder. You'll need to call checkJobStatus to determine if the
-    /// action has completed successfully.
+    /// Allows a shared folder owner to unshare the folder. Unshare will not work in following cases: The shared folder
+    /// contains shared folders OR the shared folder is inside another shared folder. You'll need to call
+    /// checkJobStatus to determine if the action has completed successfully.
     ///
     /// - scope: sharing.write
     ///
@@ -976,8 +929,9 @@ public class DBXSharingRoutes: NSObject {
         return DBXSharingUnshareFolderRpcRequest(swift: swift)
     }
 
-    /// Allows a shared folder owner to unshare the folder. You'll need to call checkJobStatus to determine if the
-    /// action has completed successfully.
+    /// Allows a shared folder owner to unshare the folder. Unshare will not work in following cases: The shared folder
+    /// contains shared folders OR the shared folder is inside another shared folder. You'll need to call
+    /// checkJobStatus to determine if the action has completed successfully.
     ///
     /// - scope: sharing.write
     ///
@@ -1000,13 +954,40 @@ public class DBXSharingRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Sharing.MemberAccessLevelResult` object on
     /// success or a `Sharing.FileMemberActionError` object on failure.
     @objc
-    @discardableResult public func updateFileMember(
-        file: String,
-        member: DBXSharingMemberSelector,
-        accessLevel: DBXSharingAccessLevel
-    ) -> DBXSharingUpdateFileMemberRpcRequest {
+    @discardableResult public func updateFileMember(file: String, member: DBXSharingMemberSelector, accessLevel: DBXSharingAccessLevel) -> DBXSharingUpdateFileMemberRpcRequest {
         let swift = swift.updateFileMember(file: file, member: member.swift, accessLevel: accessLevel.swift)
         return DBXSharingUpdateFileMemberRpcRequest(swift: swift)
+    }
+
+    /// Update the viewer info policy of a file.
+    ///
+    /// - scope: sharing.write
+    ///
+    /// - parameter file: File that we are changing the policy for.
+    /// - parameter actions: A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
+    /// response's permissions in SharedFileMetadata field describing the actions the authenticated user can perform
+    /// on the file.
+    /// - parameter linkSettings: Field is deprecated. Settings on the link for the file.
+    /// - parameter viewerInfoPolicy: The presence and seen state policy on the file.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFileMetadata` object on
+    /// success or a `Sharing.UpdateFilePolicyError` object on failure.
+    @objc
+    @discardableResult public func updateFilePolicy(file: String, actions: Array<DBXSharingFileAction>?, linkSettings: DBXSharingLinkSettings?, viewerInfoPolicy: DBXSharingViewerInfoPolicy?) -> DBXSharingUpdateFilePolicyRpcRequest {
+        let swift = swift.updateFilePolicy(file: file, actions: actions?.map { $0.swift }, linkSettings: linkSettings?.swift, viewerInfoPolicy: viewerInfoPolicy?.swift)
+        return DBXSharingUpdateFilePolicyRpcRequest(swift: swift)
+    }
+
+    /// Update the viewer info policy of a file.
+    ///
+    /// - scope: sharing.write
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFileMetadata` object on
+    /// success or a `Sharing.UpdateFilePolicyError` object on failure.
+    @objc
+    @discardableResult public func updateFilePolicy(file: String) -> DBXSharingUpdateFilePolicyRpcRequest {
+        let swift = swift.updateFilePolicy(file: file)
+        return DBXSharingUpdateFilePolicyRpcRequest(swift: swift)
     }
 
     /// Allows an owner or editor of a shared folder to update another member's permissions.
@@ -1021,11 +1002,7 @@ public class DBXSharingRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Sharing.MemberAccessLevelResult` object on
     /// success or a `Sharing.UpdateFolderMemberError` object on failure.
     @objc
-    @discardableResult public func updateFolderMember(
-        sharedFolderId: String,
-        member: DBXSharingMemberSelector,
-        accessLevel: DBXSharingAccessLevel
-    ) -> DBXSharingUpdateFolderMemberRpcRequest {
+    @discardableResult public func updateFolderMember(sharedFolderId: String, member: DBXSharingMemberSelector, accessLevel: DBXSharingAccessLevel) -> DBXSharingUpdateFolderMemberRpcRequest {
         let swift = swift.updateFolderMember(sharedFolderId: sharedFolderId, member: member.swift, accessLevel: accessLevel.swift)
         return DBXSharingUpdateFolderMemberRpcRequest(swift: swift)
     }
@@ -1044,30 +1021,14 @@ public class DBXSharingRoutes: NSObject {
     /// The current user must be on a team to set this policy to members in SharedLinkPolicy.
     /// - parameter linkSettings: Settings on the link for this folder.
     /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can
+    /// response's permissions in SharedFolderMetadata field describing the actions the authenticated user can
     /// perform on the folder.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMetadata` object on
     /// success or a `Sharing.UpdateFolderPolicyError` object on failure.
     @objc
-    @discardableResult public func updateFolderPolicy(
-        sharedFolderId: String,
-        memberPolicy: DBXSharingMemberPolicy?,
-        aclUpdatePolicy: DBXSharingAclUpdatePolicy?,
-        viewerInfoPolicy: DBXSharingViewerInfoPolicy?,
-        sharedLinkPolicy: DBXSharingSharedLinkPolicy?,
-        linkSettings: DBXSharingLinkSettings?,
-        actions: [DBXSharingFolderAction]?
-    ) -> DBXSharingUpdateFolderPolicyRpcRequest {
-        let swift = swift.updateFolderPolicy(
-            sharedFolderId: sharedFolderId,
-            memberPolicy: memberPolicy?.swift,
-            aclUpdatePolicy: aclUpdatePolicy?.swift,
-            viewerInfoPolicy: viewerInfoPolicy?.swift,
-            sharedLinkPolicy: sharedLinkPolicy?.swift,
-            linkSettings: linkSettings?.swift,
-            actions: actions?.map(\.swift)
-        )
+    @discardableResult public func updateFolderPolicy(sharedFolderId: String, memberPolicy: DBXSharingMemberPolicy?, aclUpdatePolicy: DBXSharingAclUpdatePolicy?, viewerInfoPolicy: DBXSharingViewerInfoPolicy?, sharedLinkPolicy: DBXSharingSharedLinkPolicy?, linkSettings: DBXSharingLinkSettings?, actions: Array<DBXSharingFolderAction>?) -> DBXSharingUpdateFolderPolicyRpcRequest {
+        let swift = swift.updateFolderPolicy(sharedFolderId: sharedFolderId, memberPolicy: memberPolicy?.swift, aclUpdatePolicy: aclUpdatePolicy?.swift, viewerInfoPolicy: viewerInfoPolicy?.swift, sharedLinkPolicy: sharedLinkPolicy?.swift, linkSettings: linkSettings?.swift, actions: actions?.map { $0.swift })
         return DBXSharingUpdateFolderPolicyRpcRequest(swift: swift)
     }
 
@@ -1083,7 +1044,9 @@ public class DBXSharingRoutes: NSObject {
         let swift = swift.updateFolderPolicy(sharedFolderId: sharedFolderId)
         return DBXSharingUpdateFolderPolicyRpcRequest(swift: swift)
     }
+
 }
+
 
 @objc
 public class DBXSharingAddFileMemberRpcRequest: NSObject, DBXRequest {
@@ -1095,15 +1058,15 @@ public class DBXSharingAddFileMemberRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping ([DBXSharingFileMemberActionResult]?, DBXSharingAddFileMemberError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXSharingFileMemberActionResult>?, DBXSharingAddFileMemberError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping ([DBXSharingFileMemberActionResult]?, DBXSharingAddFileMemberError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXSharingFileMemberActionResult>?, DBXSharingAddFileMemberError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
             var routeError: DBXSharingAddFileMemberError?
@@ -1117,7 +1080,7 @@ public class DBXSharingAddFileMemberRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: [DBXSharingFileMemberActionResult]?
+            var objc: Array<DBXSharingFileMemberActionResult>? = nil
             if let swift = result {
                 objc = swift.map { DBXSharingFileMemberActionResult(swift: $0) }
             }
@@ -1152,6 +1115,7 @@ public class DBXSharingAddFileMemberRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingAddFolderMemberRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Sharing.AddFolderMemberErrorSerializer>
@@ -1164,7 +1128,7 @@ public class DBXSharingAddFolderMemberRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingAddFolderMemberError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1172,7 +1136,7 @@ public class DBXSharingAddFolderMemberRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingAddFolderMemberError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXSharingAddFolderMemberError?
             var callError: DBXCallError?
             switch error {
@@ -1215,6 +1179,7 @@ public class DBXSharingAddFolderMemberRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingCheckJobStatusRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.JobStatusSerializer, Async.PollErrorSerializer>
@@ -1227,7 +1192,7 @@ public class DBXSharingCheckJobStatusRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1247,7 +1212,7 @@ public class DBXSharingCheckJobStatusRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingJobStatus?
+            var objc: DBXSharingJobStatus? = nil
             if let swift = result {
                 objc = DBXSharingJobStatus.factory(swift: swift)
             }
@@ -1282,6 +1247,7 @@ public class DBXSharingCheckJobStatusRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingCheckRemoveMemberJobStatusRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.RemoveMemberJobStatusSerializer, Async.PollErrorSerializer>
@@ -1294,7 +1260,7 @@ public class DBXSharingCheckRemoveMemberJobStatusRpcRequest: NSObject, DBXReques
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingRemoveMemberJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1314,7 +1280,7 @@ public class DBXSharingCheckRemoveMemberJobStatusRpcRequest: NSObject, DBXReques
                 callError = error?.objc
             }
 
-            var objc: DBXSharingRemoveMemberJobStatus?
+            var objc: DBXSharingRemoveMemberJobStatus? = nil
             if let swift = result {
                 objc = DBXSharingRemoveMemberJobStatus.factory(swift: swift)
             }
@@ -1349,6 +1315,7 @@ public class DBXSharingCheckRemoveMemberJobStatusRpcRequest: NSObject, DBXReques
     }
 }
 
+
 @objc
 public class DBXSharingCheckShareJobStatusRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.ShareFolderJobStatusSerializer, Async.PollErrorSerializer>
@@ -1361,7 +1328,7 @@ public class DBXSharingCheckShareJobStatusRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingShareFolderJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1381,7 +1348,7 @@ public class DBXSharingCheckShareJobStatusRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingShareFolderJobStatus?
+            var objc: DBXSharingShareFolderJobStatus? = nil
             if let swift = result {
                 objc = DBXSharingShareFolderJobStatus.factory(swift: swift)
             }
@@ -1416,6 +1383,7 @@ public class DBXSharingCheckShareJobStatusRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingCreateSharedLinkRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.PathLinkMetadataSerializer, Sharing.CreateSharedLinkErrorSerializer>
@@ -1428,7 +1396,7 @@ public class DBXSharingCreateSharedLinkRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingPathLinkMetadata?, DBXSharingCreateSharedLinkError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1448,7 +1416,7 @@ public class DBXSharingCreateSharedLinkRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingPathLinkMetadata?
+            var objc: DBXSharingPathLinkMetadata? = nil
             if let swift = result {
                 objc = DBXSharingPathLinkMetadata(swift: swift)
             }
@@ -1483,6 +1451,7 @@ public class DBXSharingCreateSharedLinkRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingCreateSharedLinkWithSettingsRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.CreateSharedLinkWithSettingsErrorSerializer>
@@ -1495,7 +1464,7 @@ public class DBXSharingCreateSharedLinkWithSettingsRpcRequest: NSObject, DBXRequ
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingSharedLinkMetadata?, DBXSharingCreateSharedLinkWithSettingsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1515,7 +1484,7 @@ public class DBXSharingCreateSharedLinkWithSettingsRpcRequest: NSObject, DBXRequ
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedLinkMetadata?
+            var objc: DBXSharingSharedLinkMetadata? = nil
             if let swift = result {
                 objc = DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: swift)
             }
@@ -1550,6 +1519,7 @@ public class DBXSharingCreateSharedLinkWithSettingsRpcRequest: NSObject, DBXRequ
     }
 }
 
+
 @objc
 public class DBXSharingGetFileMetadataRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.SharedFileMetadataSerializer, Sharing.GetFileMetadataErrorSerializer>
@@ -1562,7 +1532,7 @@ public class DBXSharingGetFileMetadataRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingSharedFileMetadata?, DBXSharingGetFileMetadataError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1582,7 +1552,7 @@ public class DBXSharingGetFileMetadataRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedFileMetadata?
+            var objc: DBXSharingSharedFileMetadata? = nil
             if let swift = result {
                 objc = DBXSharingSharedFileMetadata(swift: swift)
             }
@@ -1617,6 +1587,7 @@ public class DBXSharingGetFileMetadataRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingGetFileMetadataBatchRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<ArraySerializer<Sharing.GetFileMetadataBatchResultSerializer>, Sharing.SharingUserErrorSerializer>
@@ -1627,15 +1598,15 @@ public class DBXSharingGetFileMetadataBatchRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping ([DBXSharingGetFileMetadataBatchResult]?, DBXSharingSharingUserError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXSharingGetFileMetadataBatchResult>?, DBXSharingSharingUserError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping ([DBXSharingGetFileMetadataBatchResult]?, DBXSharingSharingUserError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXSharingGetFileMetadataBatchResult>?, DBXSharingSharingUserError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
             var routeError: DBXSharingSharingUserError?
@@ -1649,7 +1620,7 @@ public class DBXSharingGetFileMetadataBatchRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: [DBXSharingGetFileMetadataBatchResult]?
+            var objc: Array<DBXSharingGetFileMetadataBatchResult>? = nil
             if let swift = result {
                 objc = swift.map { DBXSharingGetFileMetadataBatchResult(swift: $0) }
             }
@@ -1684,6 +1655,7 @@ public class DBXSharingGetFileMetadataBatchRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingGetFolderMetadataRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.SharedFolderAccessErrorSerializer>
@@ -1696,7 +1668,7 @@ public class DBXSharingGetFolderMetadataRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingSharedFolderMetadata?, DBXSharingSharedFolderAccessError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1716,7 +1688,7 @@ public class DBXSharingGetFolderMetadataRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedFolderMetadata?
+            var objc: DBXSharingSharedFolderMetadata? = nil
             if let swift = result {
                 objc = DBXSharingSharedFolderMetadata(swift: swift)
             }
@@ -1751,6 +1723,7 @@ public class DBXSharingGetFolderMetadataRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingGetSharedLinkFileDownloadRequestFile: NSObject, DBXRequest {
     var swift: DownloadRequestFile<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer>
@@ -1763,7 +1736,7 @@ public class DBXSharingGetSharedLinkFileDownloadRequestFile: NSObject, DBXReques
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingSharedLinkMetadata?, URL?, DBXSharingGetSharedLinkFileError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1783,8 +1756,8 @@ public class DBXSharingGetSharedLinkFileDownloadRequestFile: NSObject, DBXReques
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedLinkMetadata?
-            var destination: URL?
+            var objc: DBXSharingSharedLinkMetadata? = nil
+            var destination: URL? = nil
             if let swift = result {
                 objc = DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: swift.0)
                 destination = swift.1
@@ -1825,6 +1798,7 @@ public class DBXSharingGetSharedLinkFileDownloadRequestFile: NSObject, DBXReques
         swift.cancel()
     }
 }
+
 
 @objc
 public class DBXSharingGetSharedLinkFileDownloadRequestMemory: NSObject, DBXRequest {
@@ -1838,7 +1812,7 @@ public class DBXSharingGetSharedLinkFileDownloadRequestMemory: NSObject, DBXRequ
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingSharedLinkMetadata?, Data?, DBXSharingGetSharedLinkFileError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1858,8 +1832,8 @@ public class DBXSharingGetSharedLinkFileDownloadRequestMemory: NSObject, DBXRequ
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedLinkMetadata?
-            var destination: Data?
+            var objc: DBXSharingSharedLinkMetadata? = nil
+            var destination: Data? = nil
             if let swift = result {
                 objc = DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: swift.0)
                 destination = swift.1
@@ -1901,39 +1875,40 @@ public class DBXSharingGetSharedLinkFileDownloadRequestMemory: NSObject, DBXRequ
     }
 }
 
+
 @objc
 public class DBXSharingGetSharedLinkMetadataRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.SharedLinkErrorSerializer>
+    var swift: RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.SharedLinkMetadataErrorSerializer>
 
-    init(swift: RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.SharedLinkErrorSerializer>) {
+    init(swift: RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.SharedLinkMetadataErrorSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXSharingSharedLinkMetadata?, DBXSharingSharedLinkError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXSharingSharedLinkMetadata?, DBXSharingSharedLinkMetadataError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXSharingSharedLinkMetadata?, DBXSharingSharedLinkError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXSharingSharedLinkMetadata?, DBXSharingSharedLinkMetadataError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var routeError: DBXSharingSharedLinkError?
+            var routeError: DBXSharingSharedLinkMetadataError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXSharingSharedLinkError(swift: box.unboxed)
+                routeError = DBXSharingSharedLinkMetadataError(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedLinkMetadata?
+            var objc: DBXSharingSharedLinkMetadata? = nil
             if let swift = result {
                 objc = DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: swift)
             }
@@ -1968,6 +1943,7 @@ public class DBXSharingGetSharedLinkMetadataRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingGetSharedLinksRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.GetSharedLinksResultSerializer, Sharing.GetSharedLinksErrorSerializer>
@@ -1980,7 +1956,7 @@ public class DBXSharingGetSharedLinksRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingGetSharedLinksResult?, DBXSharingGetSharedLinksError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2000,7 +1976,7 @@ public class DBXSharingGetSharedLinksRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingGetSharedLinksResult?
+            var objc: DBXSharingGetSharedLinksResult? = nil
             if let swift = result {
                 objc = DBXSharingGetSharedLinksResult(swift: swift)
             }
@@ -2035,6 +2011,7 @@ public class DBXSharingGetSharedLinksRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingListFileMembersRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.SharedFileMembersSerializer, Sharing.ListFileMembersErrorSerializer>
@@ -2047,7 +2024,7 @@ public class DBXSharingListFileMembersRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingSharedFileMembers?, DBXSharingListFileMembersError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2067,7 +2044,7 @@ public class DBXSharingListFileMembersRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedFileMembers?
+            var objc: DBXSharingSharedFileMembers? = nil
             if let swift = result {
                 objc = DBXSharingSharedFileMembers(swift: swift)
             }
@@ -2102,6 +2079,7 @@ public class DBXSharingListFileMembersRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingListFileMembersBatchRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<ArraySerializer<Sharing.ListFileMembersBatchResultSerializer>, Sharing.SharingUserErrorSerializer>
@@ -2112,15 +2090,15 @@ public class DBXSharingListFileMembersBatchRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping ([DBXSharingListFileMembersBatchResult]?, DBXSharingSharingUserError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXSharingListFileMembersBatchResult>?, DBXSharingSharingUserError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping ([DBXSharingListFileMembersBatchResult]?, DBXSharingSharingUserError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXSharingListFileMembersBatchResult>?, DBXSharingSharingUserError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
             var routeError: DBXSharingSharingUserError?
@@ -2134,7 +2112,7 @@ public class DBXSharingListFileMembersBatchRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: [DBXSharingListFileMembersBatchResult]?
+            var objc: Array<DBXSharingListFileMembersBatchResult>? = nil
             if let swift = result {
                 objc = swift.map { DBXSharingListFileMembersBatchResult(swift: $0) }
             }
@@ -2169,6 +2147,7 @@ public class DBXSharingListFileMembersBatchRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingListFileMembersContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.SharedFileMembersSerializer, Sharing.ListFileMembersContinueErrorSerializer>
@@ -2181,7 +2160,7 @@ public class DBXSharingListFileMembersContinueRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingSharedFileMembers?, DBXSharingListFileMembersContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2201,7 +2180,7 @@ public class DBXSharingListFileMembersContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedFileMembers?
+            var objc: DBXSharingSharedFileMembers? = nil
             if let swift = result {
                 objc = DBXSharingSharedFileMembers(swift: swift)
             }
@@ -2236,6 +2215,7 @@ public class DBXSharingListFileMembersContinueRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingListFolderMembersRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.SharedFolderMembersSerializer, Sharing.SharedFolderAccessErrorSerializer>
@@ -2248,7 +2228,7 @@ public class DBXSharingListFolderMembersRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingSharedFolderMembers?, DBXSharingSharedFolderAccessError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2268,7 +2248,7 @@ public class DBXSharingListFolderMembersRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedFolderMembers?
+            var objc: DBXSharingSharedFolderMembers? = nil
             if let swift = result {
                 objc = DBXSharingSharedFolderMembers(swift: swift)
             }
@@ -2303,6 +2283,7 @@ public class DBXSharingListFolderMembersRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingListFolderMembersContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.SharedFolderMembersSerializer, Sharing.ListFolderMembersContinueErrorSerializer>
@@ -2315,7 +2296,7 @@ public class DBXSharingListFolderMembersContinueRpcRequest: NSObject, DBXRequest
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingSharedFolderMembers?, DBXSharingListFolderMembersContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2335,7 +2316,7 @@ public class DBXSharingListFolderMembersContinueRpcRequest: NSObject, DBXRequest
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedFolderMembers?
+            var objc: DBXSharingSharedFolderMembers? = nil
             if let swift = result {
                 objc = DBXSharingSharedFolderMembers(swift: swift)
             }
@@ -2370,6 +2351,7 @@ public class DBXSharingListFolderMembersContinueRpcRequest: NSObject, DBXRequest
     }
 }
 
+
 @objc
 public class DBXSharingListFoldersRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer>
@@ -2382,7 +2364,7 @@ public class DBXSharingListFoldersRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingListFoldersResult?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2391,7 +2373,7 @@ public class DBXSharingListFoldersRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXSharingListFoldersResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXSharingListFoldersResult?
+            var objc: DBXSharingListFoldersResult? = nil
             if let swift = result {
                 objc = DBXSharingListFoldersResult(swift: swift)
             }
@@ -2425,6 +2407,7 @@ public class DBXSharingListFoldersRpcRequest: NSObject, DBXRequest {
         swift.cancel()
     }
 }
+
 
 @objc
 public class DBXSharingListFoldersContinueRpcRequest: NSObject, DBXRequest {
@@ -2438,7 +2421,7 @@ public class DBXSharingListFoldersContinueRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingListFoldersResult?, DBXSharingListFoldersContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2458,7 +2441,7 @@ public class DBXSharingListFoldersContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingListFoldersResult?
+            var objc: DBXSharingListFoldersResult? = nil
             if let swift = result {
                 objc = DBXSharingListFoldersResult(swift: swift)
             }
@@ -2493,6 +2476,7 @@ public class DBXSharingListFoldersContinueRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingListMountableFoldersRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer>
@@ -2505,7 +2489,7 @@ public class DBXSharingListMountableFoldersRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingListFoldersResult?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2514,7 +2498,7 @@ public class DBXSharingListMountableFoldersRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXSharingListFoldersResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXSharingListFoldersResult?
+            var objc: DBXSharingListFoldersResult? = nil
             if let swift = result {
                 objc = DBXSharingListFoldersResult(swift: swift)
             }
@@ -2549,6 +2533,7 @@ public class DBXSharingListMountableFoldersRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingListMountableFoldersContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.ListFoldersResultSerializer, Sharing.ListFoldersContinueErrorSerializer>
@@ -2561,7 +2546,7 @@ public class DBXSharingListMountableFoldersContinueRpcRequest: NSObject, DBXRequ
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingListFoldersResult?, DBXSharingListFoldersContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2581,7 +2566,7 @@ public class DBXSharingListMountableFoldersContinueRpcRequest: NSObject, DBXRequ
                 callError = error?.objc
             }
 
-            var objc: DBXSharingListFoldersResult?
+            var objc: DBXSharingListFoldersResult? = nil
             if let swift = result {
                 objc = DBXSharingListFoldersResult(swift: swift)
             }
@@ -2616,6 +2601,7 @@ public class DBXSharingListMountableFoldersContinueRpcRequest: NSObject, DBXRequ
     }
 }
 
+
 @objc
 public class DBXSharingListReceivedFilesRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.ListFilesResultSerializer, Sharing.SharingUserErrorSerializer>
@@ -2628,7 +2614,7 @@ public class DBXSharingListReceivedFilesRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingListFilesResult?, DBXSharingSharingUserError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2648,7 +2634,7 @@ public class DBXSharingListReceivedFilesRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingListFilesResult?
+            var objc: DBXSharingListFilesResult? = nil
             if let swift = result {
                 objc = DBXSharingListFilesResult(swift: swift)
             }
@@ -2683,6 +2669,7 @@ public class DBXSharingListReceivedFilesRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingListReceivedFilesContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.ListFilesResultSerializer, Sharing.ListFilesContinueErrorSerializer>
@@ -2695,7 +2682,7 @@ public class DBXSharingListReceivedFilesContinueRpcRequest: NSObject, DBXRequest
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingListFilesResult?, DBXSharingListFilesContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2715,7 +2702,7 @@ public class DBXSharingListReceivedFilesContinueRpcRequest: NSObject, DBXRequest
                 callError = error?.objc
             }
 
-            var objc: DBXSharingListFilesResult?
+            var objc: DBXSharingListFilesResult? = nil
             if let swift = result {
                 objc = DBXSharingListFilesResult(swift: swift)
             }
@@ -2750,6 +2737,7 @@ public class DBXSharingListReceivedFilesContinueRpcRequest: NSObject, DBXRequest
     }
 }
 
+
 @objc
 public class DBXSharingListSharedLinksRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.ListSharedLinksResultSerializer, Sharing.ListSharedLinksErrorSerializer>
@@ -2762,7 +2750,7 @@ public class DBXSharingListSharedLinksRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingListSharedLinksResult?, DBXSharingListSharedLinksError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2782,7 +2770,7 @@ public class DBXSharingListSharedLinksRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingListSharedLinksResult?
+            var objc: DBXSharingListSharedLinksResult? = nil
             if let swift = result {
                 objc = DBXSharingListSharedLinksResult(swift: swift)
             }
@@ -2817,6 +2805,7 @@ public class DBXSharingListSharedLinksRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingModifySharedLinkSettingsRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.ModifySharedLinkSettingsErrorSerializer>
@@ -2829,7 +2818,7 @@ public class DBXSharingModifySharedLinkSettingsRpcRequest: NSObject, DBXRequest 
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingSharedLinkMetadata?, DBXSharingModifySharedLinkSettingsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2849,7 +2838,7 @@ public class DBXSharingModifySharedLinkSettingsRpcRequest: NSObject, DBXRequest 
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedLinkMetadata?
+            var objc: DBXSharingSharedLinkMetadata? = nil
             if let swift = result {
                 objc = DBXSharingSharedLinkMetadata.wrapPreservingSubtypes(swift: swift)
             }
@@ -2884,6 +2873,7 @@ public class DBXSharingModifySharedLinkSettingsRpcRequest: NSObject, DBXRequest 
     }
 }
 
+
 @objc
 public class DBXSharingMountFolderRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.MountFolderErrorSerializer>
@@ -2896,7 +2886,7 @@ public class DBXSharingMountFolderRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingSharedFolderMetadata?, DBXSharingMountFolderError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2916,7 +2906,7 @@ public class DBXSharingMountFolderRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedFolderMetadata?
+            var objc: DBXSharingSharedFolderMetadata? = nil
             if let swift = result {
                 objc = DBXSharingSharedFolderMetadata(swift: swift)
             }
@@ -2951,6 +2941,75 @@ public class DBXSharingMountFolderRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
+@objc
+public class DBXSharingRelinquishAccessRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Sharing.RelinquishAccessResultSerializer, Sharing.RelinquishAccessErrorSerializer>
+
+    init(swift: RpcRequest<Sharing.RelinquishAccessResultSerializer, Sharing.RelinquishAccessErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXSharingRelinquishAccessResult?, DBXSharingRelinquishAccessError?, DBXCallError?) -> Void
+    ) -> Self {
+        self.response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXSharingRelinquishAccessResult?, DBXSharingRelinquishAccessError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXSharingRelinquishAccessError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXSharingRelinquishAccessError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXSharingRelinquishAccessResult? = nil
+            if let swift = result {
+                objc = DBXSharingRelinquishAccessResult(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+
 @objc
 public class DBXSharingRelinquishFileMembershipRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Sharing.RelinquishFileMembershipErrorSerializer>
@@ -2963,7 +3022,7 @@ public class DBXSharingRelinquishFileMembershipRpcRequest: NSObject, DBXRequest 
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingRelinquishFileMembershipError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2971,7 +3030,7 @@ public class DBXSharingRelinquishFileMembershipRpcRequest: NSObject, DBXRequest 
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingRelinquishFileMembershipError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXSharingRelinquishFileMembershipError?
             var callError: DBXCallError?
             switch error {
@@ -3014,6 +3073,7 @@ public class DBXSharingRelinquishFileMembershipRpcRequest: NSObject, DBXRequest 
     }
 }
 
+
 @objc
 public class DBXSharingRelinquishFolderMembershipRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Async.LaunchEmptyResultSerializer, Sharing.RelinquishFolderMembershipErrorSerializer>
@@ -3026,7 +3086,7 @@ public class DBXSharingRelinquishFolderMembershipRpcRequest: NSObject, DBXReques
     @discardableResult public func response(
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXSharingRelinquishFolderMembershipError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3046,7 +3106,7 @@ public class DBXSharingRelinquishFolderMembershipRpcRequest: NSObject, DBXReques
                 callError = error?.objc
             }
 
-            var objc: DBXAsyncLaunchEmptyResult?
+            var objc: DBXAsyncLaunchEmptyResult? = nil
             if let swift = result {
                 objc = DBXAsyncLaunchEmptyResult.factory(swift: swift)
             }
@@ -3081,6 +3141,7 @@ public class DBXSharingRelinquishFolderMembershipRpcRequest: NSObject, DBXReques
     }
 }
 
+
 @objc
 public class DBXSharingRemoveFileMemberRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.FileMemberActionIndividualResultSerializer, Sharing.RemoveFileMemberErrorSerializer>
@@ -3093,7 +3154,7 @@ public class DBXSharingRemoveFileMemberRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingFileMemberActionIndividualResult?, DBXSharingRemoveFileMemberError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3113,7 +3174,7 @@ public class DBXSharingRemoveFileMemberRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingFileMemberActionIndividualResult?
+            var objc: DBXSharingFileMemberActionIndividualResult? = nil
             if let swift = result {
                 objc = DBXSharingFileMemberActionIndividualResult.factory(swift: swift)
             }
@@ -3148,6 +3209,7 @@ public class DBXSharingRemoveFileMemberRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingRemoveFileMember2RpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.FileMemberRemoveActionResultSerializer, Sharing.RemoveFileMemberErrorSerializer>
@@ -3160,7 +3222,7 @@ public class DBXSharingRemoveFileMember2RpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingFileMemberRemoveActionResult?, DBXSharingRemoveFileMemberError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3180,7 +3242,7 @@ public class DBXSharingRemoveFileMember2RpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingFileMemberRemoveActionResult?
+            var objc: DBXSharingFileMemberRemoveActionResult? = nil
             if let swift = result {
                 objc = DBXSharingFileMemberRemoveActionResult.factory(swift: swift)
             }
@@ -3215,6 +3277,7 @@ public class DBXSharingRemoveFileMember2RpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingRemoveFolderMemberRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Async.LaunchResultBaseSerializer, Sharing.RemoveFolderMemberErrorSerializer>
@@ -3227,7 +3290,7 @@ public class DBXSharingRemoveFolderMemberRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXSharingRemoveFolderMemberError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3247,7 +3310,7 @@ public class DBXSharingRemoveFolderMemberRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXAsyncLaunchResultBase?
+            var objc: DBXAsyncLaunchResultBase? = nil
             if let swift = result {
                 objc = DBXAsyncLaunchResultBase.factory(swift: swift)
             }
@@ -3282,6 +3345,7 @@ public class DBXSharingRemoveFolderMemberRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingRevokeSharedLinkRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Sharing.RevokeSharedLinkErrorSerializer>
@@ -3294,7 +3358,7 @@ public class DBXSharingRevokeSharedLinkRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingRevokeSharedLinkError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3302,7 +3366,7 @@ public class DBXSharingRevokeSharedLinkRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingRevokeSharedLinkError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXSharingRevokeSharedLinkError?
             var callError: DBXCallError?
             switch error {
@@ -3345,6 +3409,7 @@ public class DBXSharingRevokeSharedLinkRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingSetAccessInheritanceRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.SetAccessInheritanceErrorSerializer>
@@ -3357,7 +3422,7 @@ public class DBXSharingSetAccessInheritanceRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingShareFolderLaunch?, DBXSharingSetAccessInheritanceError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3377,7 +3442,7 @@ public class DBXSharingSetAccessInheritanceRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingShareFolderLaunch?
+            var objc: DBXSharingShareFolderLaunch? = nil
             if let swift = result {
                 objc = DBXSharingShareFolderLaunch.factory(swift: swift)
             }
@@ -3412,6 +3477,7 @@ public class DBXSharingSetAccessInheritanceRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingShareFolderRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.ShareFolderErrorSerializer>
@@ -3424,7 +3490,7 @@ public class DBXSharingShareFolderRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingShareFolderLaunch?, DBXSharingShareFolderError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3444,7 +3510,7 @@ public class DBXSharingShareFolderRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingShareFolderLaunch?
+            var objc: DBXSharingShareFolderLaunch? = nil
             if let swift = result {
                 objc = DBXSharingShareFolderLaunch.factory(swift: swift)
             }
@@ -3479,6 +3545,7 @@ public class DBXSharingShareFolderRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingTransferFolderRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Sharing.TransferFolderErrorSerializer>
@@ -3491,7 +3558,7 @@ public class DBXSharingTransferFolderRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingTransferFolderError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3499,7 +3566,7 @@ public class DBXSharingTransferFolderRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingTransferFolderError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXSharingTransferFolderError?
             var callError: DBXCallError?
             switch error {
@@ -3542,6 +3609,7 @@ public class DBXSharingTransferFolderRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingUnmountFolderRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Sharing.UnmountFolderErrorSerializer>
@@ -3554,7 +3622,7 @@ public class DBXSharingUnmountFolderRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingUnmountFolderError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3562,7 +3630,7 @@ public class DBXSharingUnmountFolderRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingUnmountFolderError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXSharingUnmountFolderError?
             var callError: DBXCallError?
             switch error {
@@ -3605,6 +3673,7 @@ public class DBXSharingUnmountFolderRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingUnshareFileRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Sharing.UnshareFileErrorSerializer>
@@ -3617,7 +3686,7 @@ public class DBXSharingUnshareFileRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingUnshareFileError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3625,7 +3694,7 @@ public class DBXSharingUnshareFileRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXSharingUnshareFileError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXSharingUnshareFileError?
             var callError: DBXCallError?
             switch error {
@@ -3668,6 +3737,7 @@ public class DBXSharingUnshareFileRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingUnshareFolderRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Async.LaunchEmptyResultSerializer, Sharing.UnshareFolderErrorSerializer>
@@ -3680,7 +3750,7 @@ public class DBXSharingUnshareFolderRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXSharingUnshareFolderError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3700,7 +3770,7 @@ public class DBXSharingUnshareFolderRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXAsyncLaunchEmptyResult?
+            var objc: DBXAsyncLaunchEmptyResult? = nil
             if let swift = result {
                 objc = DBXAsyncLaunchEmptyResult.factory(swift: swift)
             }
@@ -3735,6 +3805,7 @@ public class DBXSharingUnshareFolderRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingUpdateFileMemberRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.MemberAccessLevelResultSerializer, Sharing.FileMemberActionErrorSerializer>
@@ -3747,7 +3818,7 @@ public class DBXSharingUpdateFileMemberRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingMemberAccessLevelResult?, DBXSharingFileMemberActionError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3767,7 +3838,7 @@ public class DBXSharingUpdateFileMemberRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingMemberAccessLevelResult?
+            var objc: DBXSharingMemberAccessLevelResult? = nil
             if let swift = result {
                 objc = DBXSharingMemberAccessLevelResult(swift: swift)
             }
@@ -3802,6 +3873,75 @@ public class DBXSharingUpdateFileMemberRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
+@objc
+public class DBXSharingUpdateFilePolicyRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Sharing.SharedFileMetadataSerializer, Sharing.UpdateFilePolicyErrorSerializer>
+
+    init(swift: RpcRequest<Sharing.SharedFileMetadataSerializer, Sharing.UpdateFilePolicyErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXSharingSharedFileMetadata?, DBXSharingUpdateFilePolicyError?, DBXCallError?) -> Void
+    ) -> Self {
+        self.response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXSharingSharedFileMetadata?, DBXSharingUpdateFilePolicyError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXSharingUpdateFilePolicyError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXSharingUpdateFilePolicyError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXSharingSharedFileMetadata? = nil
+            if let swift = result {
+                objc = DBXSharingSharedFileMetadata(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+
 @objc
 public class DBXSharingUpdateFolderMemberRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.MemberAccessLevelResultSerializer, Sharing.UpdateFolderMemberErrorSerializer>
@@ -3814,7 +3954,7 @@ public class DBXSharingUpdateFolderMemberRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingMemberAccessLevelResult?, DBXSharingUpdateFolderMemberError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3834,7 +3974,7 @@ public class DBXSharingUpdateFolderMemberRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingMemberAccessLevelResult?
+            var objc: DBXSharingMemberAccessLevelResult? = nil
             if let swift = result {
                 objc = DBXSharingMemberAccessLevelResult(swift: swift)
             }
@@ -3869,6 +4009,7 @@ public class DBXSharingUpdateFolderMemberRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXSharingUpdateFolderPolicyRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.UpdateFolderPolicyErrorSerializer>
@@ -3881,7 +4022,7 @@ public class DBXSharingUpdateFolderPolicyRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXSharingSharedFolderMetadata?, DBXSharingUpdateFolderPolicyError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3901,7 +4042,7 @@ public class DBXSharingUpdateFolderPolicyRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXSharingSharedFolderMetadata?
+            var objc: DBXSharingSharedFolderMetadata? = nil
             if let swift = result {
                 objc = DBXSharingSharedFolderMetadata(swift: swift)
             }
@@ -3935,3 +4076,4 @@ public class DBXSharingUpdateFolderPolicyRpcRequest: NSObject, DBXRequest {
         swift.cancel()
     }
 }
+

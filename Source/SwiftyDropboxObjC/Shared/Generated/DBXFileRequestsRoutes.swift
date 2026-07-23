@@ -44,18 +44,13 @@ public class DBXFileRequestsRoutes: NSObject {
     /// - parameter open: Whether or not the file request should be open. If the file request is closed, it will not
     /// accept any file submissions, but it can be opened later.
     /// - parameter description_: A description of the file request.
+    /// - parameter videoProjectId: If this request was created from video project, its id.
     ///
     /// - returns: Through the response callback, the caller will receive a `FileRequests.FileRequest` object on success
     /// or a `FileRequests.CreateFileRequestError` object on failure.
     @objc
-    @discardableResult public func create(
-        title: String,
-        destination: String,
-        deadline: DBXFileRequestsFileRequestDeadline?,
-        open: NSNumber,
-        description_: String?
-    ) -> DBXFileRequestsCreateRpcRequest {
-        let swift = swift.create(title: title, destination: destination, deadline: deadline?.swift, open: open.boolValue, description_: description_)
+    @discardableResult public func create(title: String, destination: String, deadline: DBXFileRequestsFileRequestDeadline?, open: NSNumber, description_: String?, videoProjectId: String?) -> DBXFileRequestsCreateRpcRequest {
+        let swift = swift.create(title: title, destination: destination, deadline: deadline?.swift, open: open.boolValue, description_: description_, videoProjectId: videoProjectId)
         return DBXFileRequestsCreateRpcRequest(swift: swift)
     }
 
@@ -80,7 +75,7 @@ public class DBXFileRequestsRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `FileRequests.DeleteFileRequestsResult`
     /// object on success or a `FileRequests.DeleteFileRequestError` object on failure.
     @objc
-    @discardableResult public func delete(ids: [String]) -> DBXFileRequestsDeleteRpcRequest {
+    @discardableResult public func delete(ids: Array<String>) -> DBXFileRequestsDeleteRpcRequest {
         let swift = swift.delete(ids: ids)
         return DBXFileRequestsDeleteRpcRequest(swift: swift)
     }
@@ -186,14 +181,7 @@ public class DBXFileRequestsRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `FileRequests.FileRequest` object on success
     /// or a `FileRequests.UpdateFileRequestError` object on failure.
     @objc
-    @discardableResult public func update(
-        id: String,
-        title: String?,
-        destination: String?,
-        deadline: DBXFileRequestsUpdateFileRequestDeadline,
-        open: NSNumber?,
-        description_: String?
-    ) -> DBXFileRequestsUpdateRpcRequest {
+    @discardableResult public func update(id: String, title: String?, destination: String?, deadline: DBXFileRequestsUpdateFileRequestDeadline, open: NSNumber?, description_: String?) -> DBXFileRequestsUpdateRpcRequest {
         let swift = swift.update(id: id, title: title, destination: destination, deadline: deadline.swift, open: open?.boolValue, description_: description_)
         return DBXFileRequestsUpdateRpcRequest(swift: swift)
     }
@@ -209,7 +197,9 @@ public class DBXFileRequestsRoutes: NSObject {
         let swift = swift.update(id: id)
         return DBXFileRequestsUpdateRpcRequest(swift: swift)
     }
+
 }
+
 
 @objc
 public class DBXFileRequestsCountRpcRequest: NSObject, DBXRequest {
@@ -223,7 +213,7 @@ public class DBXFileRequestsCountRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFileRequestsCountFileRequestsResult?, DBXFileRequestsCountFileRequestsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -243,7 +233,7 @@ public class DBXFileRequestsCountRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFileRequestsCountFileRequestsResult?
+            var objc: DBXFileRequestsCountFileRequestsResult? = nil
             if let swift = result {
                 objc = DBXFileRequestsCountFileRequestsResult(swift: swift)
             }
@@ -278,6 +268,7 @@ public class DBXFileRequestsCountRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXFileRequestsCreateRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileRequests.FileRequestSerializer, FileRequests.CreateFileRequestErrorSerializer>
@@ -290,7 +281,7 @@ public class DBXFileRequestsCreateRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFileRequestsFileRequest?, DBXFileRequestsCreateFileRequestError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -310,7 +301,7 @@ public class DBXFileRequestsCreateRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFileRequestsFileRequest?
+            var objc: DBXFileRequestsFileRequest? = nil
             if let swift = result {
                 objc = DBXFileRequestsFileRequest(swift: swift)
             }
@@ -345,6 +336,7 @@ public class DBXFileRequestsCreateRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXFileRequestsDeleteRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileRequests.DeleteFileRequestsResultSerializer, FileRequests.DeleteFileRequestErrorSerializer>
@@ -357,7 +349,7 @@ public class DBXFileRequestsDeleteRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFileRequestsDeleteFileRequestsResult?, DBXFileRequestsDeleteFileRequestError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -377,7 +369,7 @@ public class DBXFileRequestsDeleteRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFileRequestsDeleteFileRequestsResult?
+            var objc: DBXFileRequestsDeleteFileRequestsResult? = nil
             if let swift = result {
                 objc = DBXFileRequestsDeleteFileRequestsResult(swift: swift)
             }
@@ -412,6 +404,7 @@ public class DBXFileRequestsDeleteRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXFileRequestsDeleteAllClosedRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileRequests.DeleteAllClosedFileRequestsResultSerializer, FileRequests.DeleteAllClosedFileRequestsErrorSerializer>
@@ -422,17 +415,15 @@ public class DBXFileRequestsDeleteAllClosedRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXFileRequestsDeleteAllClosedFileRequestsResult?, DBXFileRequestsDeleteAllClosedFileRequestsError?, DBXCallError?)
-            -> Void
+        completionHandler: @escaping (DBXFileRequestsDeleteAllClosedFileRequestsResult?, DBXFileRequestsDeleteAllClosedFileRequestsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFileRequestsDeleteAllClosedFileRequestsResult?, DBXFileRequestsDeleteAllClosedFileRequestsError?, DBXCallError?)
-            -> Void
+        completionHandler: @escaping (DBXFileRequestsDeleteAllClosedFileRequestsResult?, DBXFileRequestsDeleteAllClosedFileRequestsError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
             var routeError: DBXFileRequestsDeleteAllClosedFileRequestsError?
@@ -446,7 +437,7 @@ public class DBXFileRequestsDeleteAllClosedRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFileRequestsDeleteAllClosedFileRequestsResult?
+            var objc: DBXFileRequestsDeleteAllClosedFileRequestsResult? = nil
             if let swift = result {
                 objc = DBXFileRequestsDeleteAllClosedFileRequestsResult(swift: swift)
             }
@@ -481,6 +472,7 @@ public class DBXFileRequestsDeleteAllClosedRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXFileRequestsGetRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileRequests.FileRequestSerializer, FileRequests.GetFileRequestErrorSerializer>
@@ -493,7 +485,7 @@ public class DBXFileRequestsGetRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFileRequestsFileRequest?, DBXFileRequestsGetFileRequestError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -513,7 +505,7 @@ public class DBXFileRequestsGetRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFileRequestsFileRequest?
+            var objc: DBXFileRequestsFileRequest? = nil
             if let swift = result {
                 objc = DBXFileRequestsFileRequest(swift: swift)
             }
@@ -548,6 +540,7 @@ public class DBXFileRequestsGetRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXFileRequestsList_RpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileRequests.ListFileRequestsResultSerializer, FileRequests.ListFileRequestsErrorSerializer>
@@ -560,7 +553,7 @@ public class DBXFileRequestsList_RpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFileRequestsListFileRequestsResult?, DBXFileRequestsListFileRequestsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -580,7 +573,7 @@ public class DBXFileRequestsList_RpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFileRequestsListFileRequestsResult?
+            var objc: DBXFileRequestsListFileRequestsResult? = nil
             if let swift = result {
                 objc = DBXFileRequestsListFileRequestsResult(swift: swift)
             }
@@ -615,6 +608,7 @@ public class DBXFileRequestsList_RpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXFileRequestsList_RpcRequestV2: NSObject, DBXRequest {
     var swift: RpcRequest<FileRequests.ListFileRequestsV2ResultSerializer, FileRequests.ListFileRequestsErrorSerializer>
@@ -627,7 +621,7 @@ public class DBXFileRequestsList_RpcRequestV2: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFileRequestsListFileRequestsV2Result?, DBXFileRequestsListFileRequestsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -647,7 +641,7 @@ public class DBXFileRequestsList_RpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFileRequestsListFileRequestsV2Result?
+            var objc: DBXFileRequestsListFileRequestsV2Result? = nil
             if let swift = result {
                 objc = DBXFileRequestsListFileRequestsV2Result(swift: swift)
             }
@@ -682,6 +676,7 @@ public class DBXFileRequestsList_RpcRequestV2: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXFileRequestsListContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileRequests.ListFileRequestsV2ResultSerializer, FileRequests.ListFileRequestsContinueErrorSerializer>
@@ -694,7 +689,7 @@ public class DBXFileRequestsListContinueRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFileRequestsListFileRequestsV2Result?, DBXFileRequestsListFileRequestsContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -714,7 +709,7 @@ public class DBXFileRequestsListContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFileRequestsListFileRequestsV2Result?
+            var objc: DBXFileRequestsListFileRequestsV2Result? = nil
             if let swift = result {
                 objc = DBXFileRequestsListFileRequestsV2Result(swift: swift)
             }
@@ -749,6 +744,7 @@ public class DBXFileRequestsListContinueRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXFileRequestsUpdateRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileRequests.FileRequestSerializer, FileRequests.UpdateFileRequestErrorSerializer>
@@ -761,7 +757,7 @@ public class DBXFileRequestsUpdateRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFileRequestsFileRequest?, DBXFileRequestsUpdateFileRequestError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -781,7 +777,7 @@ public class DBXFileRequestsUpdateRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFileRequestsFileRequest?
+            var objc: DBXFileRequestsFileRequest? = nil
             if let swift = result {
                 objc = DBXFileRequestsFileRequest(swift: swift)
             }
@@ -815,3 +811,4 @@ public class DBXFileRequestsUpdateRpcRequest: NSObject, DBXRequest {
         swift.cancel()
     }
 }
+

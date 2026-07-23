@@ -31,18 +31,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.ListMemberDevicesResult` object on
     /// success or a `Team.ListMemberDevicesError` object on failure.
     @objc
-    @discardableResult public func devicesListMemberDevices(
-        teamMemberId: String,
-        includeWebSessions: NSNumber,
-        includeDesktopClients: NSNumber,
-        includeMobileClients: NSNumber
-    ) -> DBXTeamDevicesListMemberDevicesRpcRequest {
-        let swift = swift.devicesListMemberDevices(
-            teamMemberId: teamMemberId,
-            includeWebSessions: includeWebSessions.boolValue,
-            includeDesktopClients: includeDesktopClients.boolValue,
-            includeMobileClients: includeMobileClients.boolValue
-        )
+    @discardableResult public func devicesListMemberDevices(teamMemberId: String, includeWebSessions: NSNumber, includeDesktopClients: NSNumber, includeMobileClients: NSNumber) -> DBXTeamDevicesListMemberDevicesRpcRequest {
+        let swift = swift.devicesListMemberDevices(teamMemberId: teamMemberId, includeWebSessions: includeWebSessions.boolValue, includeDesktopClients: includeDesktopClients.boolValue, includeMobileClients: includeMobileClients.boolValue)
         return DBXTeamDevicesListMemberDevicesRpcRequest(swift: swift)
     }
 
@@ -72,18 +62,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.ListMembersDevicesResult` object on
     /// success or a `Team.ListMembersDevicesError` object on failure.
     @objc
-    @discardableResult public func devicesListMembersDevices(
-        cursor: String?,
-        includeWebSessions: NSNumber,
-        includeDesktopClients: NSNumber,
-        includeMobileClients: NSNumber
-    ) -> DBXTeamDevicesListMembersDevicesRpcRequest {
-        let swift = swift.devicesListMembersDevices(
-            cursor: cursor,
-            includeWebSessions: includeWebSessions.boolValue,
-            includeDesktopClients: includeDesktopClients.boolValue,
-            includeMobileClients: includeMobileClients.boolValue
-        )
+    @discardableResult public func devicesListMembersDevices(cursor: String?, includeWebSessions: NSNumber, includeDesktopClients: NSNumber, includeMobileClients: NSNumber) -> DBXTeamDevicesListMembersDevicesRpcRequest {
+        let swift = swift.devicesListMembersDevices(cursor: cursor, includeWebSessions: includeWebSessions.boolValue, includeDesktopClients: includeDesktopClients.boolValue, includeMobileClients: includeMobileClients.boolValue)
         return DBXTeamDevicesListMembersDevicesRpcRequest(swift: swift)
     }
 
@@ -108,8 +88,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Team.RevokeDeviceSessionError` object on failure.
     @objc
-    @discardableResult public func devicesRevokeDeviceSession(revokeDeviceSessionArg: DBXTeamRevokeDeviceSessionArg)
-        -> DBXTeamDevicesRevokeDeviceSessionRpcRequest {
+    @discardableResult public func devicesRevokeDeviceSession(revokeDeviceSessionArg: DBXTeamRevokeDeviceSessionArg) -> DBXTeamDevicesRevokeDeviceSessionRpcRequest {
         let swift = swift.devicesRevokeDeviceSession(revokeDeviceSessionArg: revokeDeviceSessionArg.swift)
         return DBXTeamDevicesRevokeDeviceSessionRpcRequest(swift: swift)
     }
@@ -122,13 +101,12 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.RevokeDeviceSessionBatchResult` object
     /// on success or a `Team.RevokeDeviceSessionBatchError` object on failure.
     @objc
-    @discardableResult public func devicesRevokeDeviceSessionBatch(revokeDevices: [DBXTeamRevokeDeviceSessionArg])
-        -> DBXTeamDevicesRevokeDeviceSessionBatchRpcRequest {
-        let swift = swift.devicesRevokeDeviceSessionBatch(revokeDevices: revokeDevices.map(\.swift))
+    @discardableResult public func devicesRevokeDeviceSessionBatch(revokeDevices: Array<DBXTeamRevokeDeviceSessionArg>) -> DBXTeamDevicesRevokeDeviceSessionBatchRpcRequest {
+        let swift = swift.devicesRevokeDeviceSessionBatch(revokeDevices: revokeDevices.map { $0.swift })
         return DBXTeamDevicesRevokeDeviceSessionBatchRpcRequest(swift: swift)
     }
 
-    /// Get the values for one or more featues. This route allows you to check your account's capability for what
+    /// Get the values for one or more features. This route allows you to check your account's capability for what
     /// feature you can access or what value you have for certain features. Permission : Team information.
     ///
     /// - scope: team_info.read
@@ -139,8 +117,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.FeaturesGetValuesBatchResult` object
     /// on success or a `Team.FeaturesGetValuesBatchError` object on failure.
     @objc
-    @discardableResult public func featuresGetValues(features: [DBXTeamFeature]) -> DBXTeamFeaturesGetValuesRpcRequest {
-        let swift = swift.featuresGetValues(features: features.map(\.swift))
+    @discardableResult public func featuresGetValues(features: Array<DBXTeamFeature>) -> DBXTeamFeaturesGetValuesRpcRequest {
+        let swift = swift.featuresGetValues(features: features.map { $0.swift })
         return DBXTeamFeaturesGetValuesRpcRequest(swift: swift)
     }
 
@@ -169,18 +147,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.GroupFullInfo` object on success or a
     /// `Team.GroupCreateError` object on failure.
     @objc
-    @discardableResult public func groupsCreate(
-        groupName: String,
-        addCreatorAsOwner: NSNumber,
-        groupExternalId: String?,
-        groupManagementType: DBXTeamCommonGroupManagementType?
-    ) -> DBXTeamGroupsCreateRpcRequest {
-        let swift = swift.groupsCreate(
-            groupName: groupName,
-            addCreatorAsOwner: addCreatorAsOwner.boolValue,
-            groupExternalId: groupExternalId,
-            groupManagementType: groupManagementType?.swift
-        )
+    @discardableResult public func groupsCreate(groupName: String, addCreatorAsOwner: NSNumber, groupExternalId: String?, groupManagementType: DBXTeamCommonGroupManagementType?) -> DBXTeamGroupsCreateRpcRequest {
+        let swift = swift.groupsCreate(groupName: groupName, addCreatorAsOwner: addCreatorAsOwner.boolValue, groupExternalId: groupExternalId, groupManagementType: groupManagementType?.swift)
         return DBXTeamGroupsCreateRpcRequest(swift: swift)
     }
 
@@ -212,7 +180,7 @@ public class DBXTeamRoutes: NSObject {
         return DBXTeamGroupsDeleteRpcRequest(swift: swift)
     }
 
-    /// Retrieves information about one or more groups. Note that the optional field  members in GroupFullInfo is not
+    /// Retrieves information about one or more groups. Note that the optional field members in GroupFullInfo is not
     /// returned for system-managed groups. Permission : Team Information.
     ///
     /// - scope: groups.read
@@ -297,12 +265,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.GroupMembersChangeResult` object on
     /// success or a `Team.GroupMembersAddError` object on failure.
     @objc
-    @discardableResult public func groupsMembersAdd(
-        group: DBXTeamGroupSelector,
-        members: [DBXTeamMemberAccess],
-        returnMembers: NSNumber
-    ) -> DBXTeamGroupsMembersAddRpcRequest {
-        let swift = swift.groupsMembersAdd(group: group.swift, members: members.map(\.swift), returnMembers: returnMembers.boolValue)
+    @discardableResult public func groupsMembersAdd(group: DBXTeamGroupSelector, members: Array<DBXTeamMemberAccess>, returnMembers: NSNumber) -> DBXTeamGroupsMembersAddRpcRequest {
+        let swift = swift.groupsMembersAdd(group: group.swift, members: members.map { $0.swift }, returnMembers: returnMembers.boolValue)
         return DBXTeamGroupsMembersAddRpcRequest(swift: swift)
     }
 
@@ -315,8 +279,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.GroupMembersChangeResult` object on
     /// success or a `Team.GroupMembersAddError` object on failure.
     @objc
-    @discardableResult public func groupsMembersAdd(group: DBXTeamGroupSelector, members: [DBXTeamMemberAccess]) -> DBXTeamGroupsMembersAddRpcRequest {
-        let swift = swift.groupsMembersAdd(group: group.swift, members: members.map(\.swift))
+    @discardableResult public func groupsMembersAdd(group: DBXTeamGroupSelector, members: Array<DBXTeamMemberAccess>) -> DBXTeamGroupsMembersAddRpcRequest {
+        let swift = swift.groupsMembersAdd(group: group.swift, members: members.map { $0.swift })
         return DBXTeamGroupsMembersAddRpcRequest(swift: swift)
     }
 
@@ -375,12 +339,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.GroupMembersChangeResult` object on
     /// success or a `Team.GroupMembersRemoveError` object on failure.
     @objc
-    @discardableResult public func groupsMembersRemove(
-        group: DBXTeamGroupSelector,
-        users: [DBXTeamUserSelectorArg],
-        returnMembers: NSNumber
-    ) -> DBXTeamGroupsMembersRemoveRpcRequest {
-        let swift = swift.groupsMembersRemove(group: group.swift, users: users.map(\.swift), returnMembers: returnMembers.boolValue)
+    @discardableResult public func groupsMembersRemove(group: DBXTeamGroupSelector, users: Array<DBXTeamUserSelectorArg>, returnMembers: NSNumber) -> DBXTeamGroupsMembersRemoveRpcRequest {
+        let swift = swift.groupsMembersRemove(group: group.swift, users: users.map { $0.swift }, returnMembers: returnMembers.boolValue)
         return DBXTeamGroupsMembersRemoveRpcRequest(swift: swift)
     }
 
@@ -394,8 +354,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.GroupMembersChangeResult` object on
     /// success or a `Team.GroupMembersRemoveError` object on failure.
     @objc
-    @discardableResult public func groupsMembersRemove(group: DBXTeamGroupSelector, users: [DBXTeamUserSelectorArg]) -> DBXTeamGroupsMembersRemoveRpcRequest {
-        let swift = swift.groupsMembersRemove(group: group.swift, users: users.map(\.swift))
+    @discardableResult public func groupsMembersRemove(group: DBXTeamGroupSelector, users: Array<DBXTeamUserSelectorArg>) -> DBXTeamGroupsMembersRemoveRpcRequest {
+        let swift = swift.groupsMembersRemove(group: group.swift, users: users.map { $0.swift })
         return DBXTeamGroupsMembersRemoveRpcRequest(swift: swift)
     }
 
@@ -404,18 +364,13 @@ public class DBXTeamRoutes: NSObject {
     /// - scope: groups.write
     ///
     /// - parameter accessType: New group access type the user will have.
-    /// - parameter returnMembers: Whether to return the list of members in the group.  Note that the default value will
-    /// cause all the group members  to be returned in the response. This may take a long time for large groups.
+    /// - parameter returnMembers: Whether to return the list of members in the group. Note that the default value will
+    /// cause all the group members to be returned in the response. This may take a long time for large groups.
     ///
     /// - returns: Through the response callback, the caller will receive a `Array<Team.GroupsGetInfoItem>` object on
     /// success or a `Team.GroupMemberSetAccessTypeError` object on failure.
     @objc
-    @discardableResult public func groupsMembersSetAccessType(
-        group: DBXTeamGroupSelector,
-        user: DBXTeamUserSelectorArg,
-        accessType: DBXTeamGroupAccessType,
-        returnMembers: NSNumber
-    ) -> DBXTeamGroupsMembersSetAccessTypeRpcRequest {
+    @discardableResult public func groupsMembersSetAccessType(group: DBXTeamGroupSelector, user: DBXTeamUserSelectorArg, accessType: DBXTeamGroupAccessType, returnMembers: NSNumber) -> DBXTeamGroupsMembersSetAccessTypeRpcRequest {
         let swift = swift.groupsMembersSetAccessType(group: group.swift, user: user.swift, accessType: accessType.swift, returnMembers: returnMembers.boolValue)
         return DBXTeamGroupsMembersSetAccessTypeRpcRequest(swift: swift)
     }
@@ -427,11 +382,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Array<Team.GroupsGetInfoItem>` object on
     /// success or a `Team.GroupMemberSetAccessTypeError` object on failure.
     @objc
-    @discardableResult public func groupsMembersSetAccessType(
-        group: DBXTeamGroupSelector,
-        user: DBXTeamUserSelectorArg,
-        accessType: DBXTeamGroupAccessType
-    ) -> DBXTeamGroupsMembersSetAccessTypeRpcRequest {
+    @discardableResult public func groupsMembersSetAccessType(group: DBXTeamGroupSelector, user: DBXTeamUserSelectorArg, accessType: DBXTeamGroupAccessType) -> DBXTeamGroupsMembersSetAccessTypeRpcRequest {
         let swift = swift.groupsMembersSetAccessType(group: group.swift, user: user.swift, accessType: accessType.swift)
         return DBXTeamGroupsMembersSetAccessTypeRpcRequest(swift: swift)
     }
@@ -449,20 +400,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.GroupFullInfo` object on success or a
     /// `Team.GroupUpdateError` object on failure.
     @objc
-    @discardableResult public func groupsUpdate(
-        group: DBXTeamGroupSelector,
-        returnMembers: NSNumber,
-        newGroupName: String?,
-        newGroupExternalId: String?,
-        newGroupManagementType: DBXTeamCommonGroupManagementType?
-    ) -> DBXTeamGroupsUpdateRpcRequest {
-        let swift = swift.groupsUpdate(
-            group: group.swift,
-            returnMembers: returnMembers.boolValue,
-            newGroupName: newGroupName,
-            newGroupExternalId: newGroupExternalId,
-            newGroupManagementType: newGroupManagementType?.swift
-        )
+    @discardableResult public func groupsUpdate(group: DBXTeamGroupSelector, returnMembers: NSNumber, newGroupName: String?, newGroupExternalId: String?, newGroupManagementType: DBXTeamCommonGroupManagementType?) -> DBXTeamGroupsUpdateRpcRequest {
+        let swift = swift.groupsUpdate(group: group.swift, returnMembers: returnMembers.boolValue, newGroupName: newGroupName, newGroupExternalId: newGroupExternalId, newGroupManagementType: newGroupManagementType?.swift)
         return DBXTeamGroupsUpdateRpcRequest(swift: swift)
     }
 
@@ -492,13 +431,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.LegalHoldPolicy` object on success or
     /// a `Team.LegalHoldsPolicyCreateError` object on failure.
     @objc
-    @discardableResult public func legalHoldsCreatePolicy(
-        name: String,
-        members: [String],
-        description_: String?,
-        startDate: Date?,
-        endDate: Date?
-    ) -> DBXTeamLegalHoldsCreatePolicyRpcRequest {
+    @discardableResult public func legalHoldsCreatePolicy(name: String, members: Array<String>, description_: String?, startDate: Date?, endDate: Date?) -> DBXTeamLegalHoldsCreatePolicyRpcRequest {
         let swift = swift.legalHoldsCreatePolicy(name: name, members: members, description_: description_, startDate: startDate, endDate: endDate)
         return DBXTeamLegalHoldsCreatePolicyRpcRequest(swift: swift)
     }
@@ -511,7 +444,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.LegalHoldPolicy` object on success or
     /// a `Team.LegalHoldsPolicyCreateError` object on failure.
     @objc
-    @discardableResult public func legalHoldsCreatePolicy(name: String, members: [String]) -> DBXTeamLegalHoldsCreatePolicyRpcRequest {
+    @discardableResult public func legalHoldsCreatePolicy(name: String, members: Array<String>) -> DBXTeamLegalHoldsCreatePolicyRpcRequest {
         let swift = swift.legalHoldsCreatePolicy(name: name, members: members)
         return DBXTeamLegalHoldsCreatePolicyRpcRequest(swift: swift)
     }
@@ -632,12 +565,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.LegalHoldPolicy` object on success or
     /// a `Team.LegalHoldsPolicyUpdateError` object on failure.
     @objc
-    @discardableResult public func legalHoldsUpdatePolicy(
-        id: String,
-        name: String?,
-        description_: String?,
-        members: [String]?
-    ) -> DBXTeamLegalHoldsUpdatePolicyRpcRequest {
+    @discardableResult public func legalHoldsUpdatePolicy(id: String, name: String?, description_: String?, members: Array<String>?) -> DBXTeamLegalHoldsUpdatePolicyRpcRequest {
         let swift = swift.legalHoldsUpdatePolicy(id: id, name: name, description_: description_, members: members)
         return DBXTeamLegalHoldsUpdatePolicyRpcRequest(swift: swift)
     }
@@ -705,17 +633,13 @@ public class DBXTeamRoutes: NSObject {
     ///
     /// - parameter appId: The application's unique id.
     /// - parameter teamMemberId: The unique id of the member owning the device.
-    /// - parameter keepAppFolder: This flag is not longer supported, the application dedicated folder (in case the
-    /// application uses  one) will be kept.
+    /// - parameter keepAppFolder: Field is deprecated. This flag is not longer supported, the application dedicated
+    /// folder (in case the application uses one) will be kept.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Team.RevokeLinkedAppError` object on failure.
     @objc
-    @discardableResult public func linkedAppsRevokeLinkedApp(
-        appId: String,
-        teamMemberId: String,
-        keepAppFolder: NSNumber
-    ) -> DBXTeamLinkedAppsRevokeLinkedAppRpcRequest {
+    @discardableResult public func linkedAppsRevokeLinkedApp(appId: String, teamMemberId: String, keepAppFolder: NSNumber) -> DBXTeamLinkedAppsRevokeLinkedAppRpcRequest {
         let swift = swift.linkedAppsRevokeLinkedApp(appId: appId, teamMemberId: teamMemberId, keepAppFolder: keepAppFolder.boolValue)
         return DBXTeamLinkedAppsRevokeLinkedAppRpcRequest(swift: swift)
     }
@@ -740,9 +664,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.RevokeLinkedAppBatchResult` object on
     /// success or a `Team.RevokeLinkedAppBatchError` object on failure.
     @objc
-    @discardableResult public func linkedAppsRevokeLinkedAppBatch(revokeLinkedApp: [DBXTeamRevokeLinkedApiAppArg])
-        -> DBXTeamLinkedAppsRevokeLinkedAppBatchRpcRequest {
-        let swift = swift.linkedAppsRevokeLinkedAppBatch(revokeLinkedApp: revokeLinkedApp.map(\.swift))
+    @discardableResult public func linkedAppsRevokeLinkedAppBatch(revokeLinkedApp: Array<DBXTeamRevokeLinkedApiAppArg>) -> DBXTeamLinkedAppsRevokeLinkedAppBatchRpcRequest {
+        let swift = swift.linkedAppsRevokeLinkedAppBatch(revokeLinkedApp: revokeLinkedApp.map { $0.swift })
         return DBXTeamLinkedAppsRevokeLinkedAppBatchRpcRequest(swift: swift)
     }
 
@@ -755,8 +678,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersUpdateResult` object on
     /// success or a `Team.ExcludedUsersUpdateError` object on failure.
     @objc
-    @discardableResult public func memberSpaceLimitsExcludedUsersAdd(users: [DBXTeamUserSelectorArg]?) -> DBXTeamMemberSpaceLimitsExcludedUsersAddRpcRequest {
-        let swift = swift.memberSpaceLimitsExcludedUsersAdd(users: users?.map(\.swift))
+    @discardableResult public func memberSpaceLimitsExcludedUsersAdd(users: Array<DBXTeamUserSelectorArg>?) -> DBXTeamMemberSpaceLimitsExcludedUsersAddRpcRequest {
+        let swift = swift.memberSpaceLimitsExcludedUsersAdd(users: users?.map { $0.swift })
         return DBXTeamMemberSpaceLimitsExcludedUsersAddRpcRequest(swift: swift)
     }
 
@@ -821,9 +744,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.ExcludedUsersUpdateResult` object on
     /// success or a `Team.ExcludedUsersUpdateError` object on failure.
     @objc
-    @discardableResult public func memberSpaceLimitsExcludedUsersRemove(users: [DBXTeamUserSelectorArg]?)
-        -> DBXTeamMemberSpaceLimitsExcludedUsersRemoveRpcRequest {
-        let swift = swift.memberSpaceLimitsExcludedUsersRemove(users: users?.map(\.swift))
+    @discardableResult public func memberSpaceLimitsExcludedUsersRemove(users: Array<DBXTeamUserSelectorArg>?) -> DBXTeamMemberSpaceLimitsExcludedUsersRemoveRpcRequest {
+        let swift = swift.memberSpaceLimitsExcludedUsersRemove(users: users?.map { $0.swift })
         return DBXTeamMemberSpaceLimitsExcludedUsersRemoveRpcRequest(swift: swift)
     }
 
@@ -850,8 +772,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Array<Team.CustomQuotaResult>` object on
     /// success or a `Team.CustomQuotaError` object on failure.
     @objc
-    @discardableResult public func memberSpaceLimitsGetCustomQuota(users: [DBXTeamUserSelectorArg]) -> DBXTeamMemberSpaceLimitsGetCustomQuotaRpcRequest {
-        let swift = swift.memberSpaceLimitsGetCustomQuota(users: users.map(\.swift))
+    @discardableResult public func memberSpaceLimitsGetCustomQuota(users: Array<DBXTeamUserSelectorArg>) -> DBXTeamMemberSpaceLimitsGetCustomQuotaRpcRequest {
+        let swift = swift.memberSpaceLimitsGetCustomQuota(users: users.map { $0.swift })
         return DBXTeamMemberSpaceLimitsGetCustomQuotaRpcRequest(swift: swift)
     }
 
@@ -866,12 +788,12 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Array<Team.RemoveCustomQuotaResult>` object
     /// on success or a `Team.CustomQuotaError` object on failure.
     @objc
-    @discardableResult public func memberSpaceLimitsRemoveCustomQuota(users: [DBXTeamUserSelectorArg]) -> DBXTeamMemberSpaceLimitsRemoveCustomQuotaRpcRequest {
-        let swift = swift.memberSpaceLimitsRemoveCustomQuota(users: users.map(\.swift))
+    @discardableResult public func memberSpaceLimitsRemoveCustomQuota(users: Array<DBXTeamUserSelectorArg>) -> DBXTeamMemberSpaceLimitsRemoveCustomQuotaRpcRequest {
+        let swift = swift.memberSpaceLimitsRemoveCustomQuota(users: users.map { $0.swift })
         return DBXTeamMemberSpaceLimitsRemoveCustomQuotaRpcRequest(swift: swift)
     }
 
-    /// Set users custom quota. Custom quota has to be at least 15GB. A maximum of 1000 members can be specified in a
+    /// Set users custom quota. Custom quota has to be at least 2GB. A maximum of 1000 members can be specified in a
     /// single call. Note: to apply a custom space limit, a team admin needs to set a member space limit for the
     /// team first. (the team admin can check the settings here: https://www.dropbox.com/team/admin/settings/space).
     ///
@@ -882,9 +804,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Array<Team.CustomQuotaResult>` object on
     /// success or a `Team.SetCustomQuotaError` object on failure.
     @objc
-    @discardableResult public func memberSpaceLimitsSetCustomQuota(usersAndQuotas: [DBXTeamUserCustomQuotaArg])
-        -> DBXTeamMemberSpaceLimitsSetCustomQuotaRpcRequest {
-        let swift = swift.memberSpaceLimitsSetCustomQuota(usersAndQuotas: usersAndQuotas.map(\.swift))
+    @discardableResult public func memberSpaceLimitsSetCustomQuota(usersAndQuotas: Array<DBXTeamUserCustomQuotaArg>) -> DBXTeamMemberSpaceLimitsSetCustomQuotaRpcRequest {
+        let swift = swift.memberSpaceLimitsSetCustomQuota(usersAndQuotas: usersAndQuotas.map { $0.swift })
         return DBXTeamMemberSpaceLimitsSetCustomQuotaRpcRequest(swift: swift)
     }
 
@@ -903,8 +824,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunch` object on success or
     /// a `Void` object on failure.
     @objc
-    @discardableResult public func membersAdd(newMembers: [DBXTeamMemberAddArg], forceAsync: NSNumber) -> DBXTeamMembersAddRpcRequest {
-        let swift = swift.membersAdd(newMembers: newMembers.map(\.subSwift), forceAsync: forceAsync.boolValue)
+    @discardableResult public func membersAdd(newMembers: Array<DBXTeamMemberAddArg>, forceAsync: NSNumber) -> DBXTeamMembersAddRpcRequest {
+        let swift = swift.membersAdd(newMembers: newMembers.map { $0.subSwift }, forceAsync: forceAsync.boolValue)
         return DBXTeamMembersAddRpcRequest(swift: swift)
     }
 
@@ -921,8 +842,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunch` object on success or
     /// a `Void` object on failure.
     @objc
-    @discardableResult public func membersAdd(newMembers: [DBXTeamMemberAddArg]) -> DBXTeamMembersAddRpcRequest {
-        let swift = swift.membersAdd(newMembers: newMembers.map(\.subSwift))
+    @discardableResult public func membersAdd(newMembers: Array<DBXTeamMemberAddArg>) -> DBXTeamMembersAddRpcRequest {
+        let swift = swift.membersAdd(newMembers: newMembers.map { $0.subSwift })
         return DBXTeamMembersAddRpcRequest(swift: swift)
     }
 
@@ -931,8 +852,7 @@ public class DBXTeamRoutes: NSObject {
     /// with the given email address, and that account will be invited to the team. If a personal Dropbox account
     /// exists with the email address specified in the call, this call will create a placeholder Dropbox account for
     /// the user on the team and send an email inviting the user to migrate their existing personal account onto the
-    /// team. Team member management apps are required to set an initial given_name and surname for a user to use in
-    /// the team invitation and for 'Perform as team member' actions taken on the user before they become 'active'.
+    /// team.
     ///
     /// - scope: members.write
     ///
@@ -941,8 +861,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunchV2Result` object on
     /// success or a `Void` object on failure.
     @objc
-    @discardableResult public func membersAddV2(newMembers: [DBXTeamMemberAddV2Arg], forceAsync: NSNumber) -> DBXTeamMembersAddRpcRequestV2 {
-        let swift = swift.membersAddV2(newMembers: newMembers.map(\.subSwift), forceAsync: forceAsync.boolValue)
+    @discardableResult public func membersAddV2(newMembers: Array<DBXTeamMemberAddV2Arg>, forceAsync: NSNumber) -> DBXTeamMembersAddRpcRequestV2 {
+        let swift = swift.membersAddV2(newMembers: newMembers.map { $0.subSwift }, forceAsync: forceAsync.boolValue)
         return DBXTeamMembersAddRpcRequestV2(swift: swift)
     }
 
@@ -951,16 +871,15 @@ public class DBXTeamRoutes: NSObject {
     /// with the given email address, and that account will be invited to the team. If a personal Dropbox account
     /// exists with the email address specified in the call, this call will create a placeholder Dropbox account for
     /// the user on the team and send an email inviting the user to migrate their existing personal account onto the
-    /// team. Team member management apps are required to set an initial given_name and surname for a user to use in
-    /// the team invitation and for 'Perform as team member' actions taken on the user before they become 'active'.
+    /// team.
     ///
     /// - scope: members.write
     ///
     /// - returns: Through the response callback, the caller will receive a `Team.MembersAddLaunchV2Result` object on
     /// success or a `Void` object on failure.
     @objc
-    @discardableResult public func membersAddV2(newMembers: [DBXTeamMemberAddV2Arg]) -> DBXTeamMembersAddRpcRequestV2 {
-        let swift = swift.membersAddV2(newMembers: newMembers.map(\.subSwift))
+    @discardableResult public func membersAddV2(newMembers: Array<DBXTeamMemberAddV2Arg>) -> DBXTeamMembersAddRpcRequestV2 {
+        let swift = swift.membersAddV2(newMembers: newMembers.map { $0.subSwift })
         return DBXTeamMembersAddRpcRequestV2(swift: swift)
     }
 
@@ -994,6 +913,22 @@ public class DBXTeamRoutes: NSObject {
     @discardableResult public func membersAddJobStatusGetV2(asyncJobId: String) -> DBXTeamMembersAddJobStatusGetRpcRequestV2 {
         let swift = swift.membersAddJobStatusGetV2(asyncJobId: asyncJobId)
         return DBXTeamMembersAddJobStatusGetRpcRequestV2(swift: swift)
+    }
+
+    /// Permanently delete the files of a user who has been removed from the team. After permanent deletion, those files
+    /// will not be available to be transferred to another team member. Permission : Team member management Exactly
+    /// one of team_member_id, email, or external_id must be provided to identify the user account.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter user: Identity of user whose files will be permanently deleted.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// `Team.MembersDeleteFormerMemberFilesError` object on failure.
+    @objc
+    @discardableResult public func membersDeleteFormerMemberFiles(user: DBXTeamUserSelectorArg) -> DBXTeamMembersDeleteFormerMemberFilesRpcRequest {
+        let swift = swift.membersDeleteFormerMemberFiles(user: user.swift)
+        return DBXTeamMembersDeleteFormerMemberFilesRpcRequest(swift: swift)
     }
 
     /// Deletes a team member's profile photo. Permission : Team member management.
@@ -1048,8 +983,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Array<Team.MembersGetInfoItem>` object on
     /// success or a `Team.MembersGetInfoError` object on failure.
     @objc
-    @discardableResult public func membersGetInfo(members: [DBXTeamUserSelectorArg]) -> DBXTeamMembersGetInfoRpcRequest {
-        let swift = swift.membersGetInfo(members: members.map(\.swift))
+    @discardableResult public func membersGetInfo(members: Array<DBXTeamUserSelectorArg>) -> DBXTeamMembersGetInfoRpcRequest {
+        let swift = swift.membersGetInfo(members: members.map { $0.swift })
         return DBXTeamMembersGetInfoRpcRequest(swift: swift)
     }
 
@@ -1063,8 +998,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.MembersGetInfoV2Result` object on
     /// success or a `Team.MembersGetInfoError` object on failure.
     @objc
-    @discardableResult public func membersGetInfoV2(members: [DBXTeamUserSelectorArg]) -> DBXTeamMembersGetInfoRpcRequestV2 {
-        let swift = swift.membersGetInfoV2(members: members.map(\.swift))
+    @discardableResult public func membersGetInfoV2(members: Array<DBXTeamUserSelectorArg>) -> DBXTeamMembersGetInfoRpcRequestV2 {
+        let swift = swift.membersGetInfoV2(members: members.map { $0.swift })
         return DBXTeamMembersGetInfoRpcRequestV2(swift: swift)
     }
 
@@ -1164,11 +1099,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
     /// or a `Team.MembersTransferFormerMembersFilesError` object on failure.
     @objc
-    @discardableResult public func membersMoveFormerMemberFiles(
-        user: DBXTeamUserSelectorArg,
-        transferDestId: DBXTeamUserSelectorArg,
-        transferAdminId: DBXTeamUserSelectorArg
-    ) -> DBXTeamMembersMoveFormerMemberFilesRpcRequest {
+    @discardableResult public func membersMoveFormerMemberFiles(user: DBXTeamUserSelectorArg, transferDestId: DBXTeamUserSelectorArg, transferAdminId: DBXTeamUserSelectorArg) -> DBXTeamMembersMoveFormerMemberFilesRpcRequest {
         let swift = swift.membersMoveFormerMemberFiles(user: user.swift, transferDestId: transferDestId.swift, transferAdminId: transferAdminId.swift)
         return DBXTeamMembersMoveFormerMemberFilesRpcRequest(swift: swift)
     }
@@ -1184,8 +1115,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Async.PollEmptyResult` object on success or
     /// a `Async.PollError` object on failure.
     @objc
-    @discardableResult public func membersMoveFormerMemberFilesJobStatusCheck(asyncJobId: String)
-        -> DBXTeamMembersMoveFormerMemberFilesJobStatusCheckRpcRequest {
+    @discardableResult public func membersMoveFormerMemberFilesJobStatusCheck(asyncJobId: String) -> DBXTeamMembersMoveFormerMemberFilesJobStatusCheckRpcRequest {
         let swift = swift.membersMoveFormerMemberFilesJobStatusCheck(asyncJobId: asyncJobId)
         return DBXTeamMembersMoveFormerMemberFilesJobStatusCheckRpcRequest(swift: swift)
     }
@@ -1210,9 +1140,10 @@ public class DBXTeamRoutes: NSObject {
     /// a 7 day period or until the account has been permanently deleted or transferred to another account
     /// (whichever comes first). Calling membersAdd while a user is still recoverable on your team will return with
     /// userAlreadyOnTeam in MemberAddResult. Accounts can have their files transferred via the admin console for a
-    /// limited time, based on the version history length associated with the team (180 days for most teams). This
-    /// endpoint may initiate an asynchronous job. To obtain the final result of the job, the client should
-    /// periodically poll membersRemoveJobStatusGet.
+    /// limited time, based on the version history length associated with the team (180 days for most teams).
+    /// Accounts can have their stacks transferred through the admin console. This only transfers stacks that they
+    /// have created. This endpoint may initiate an asynchronous job. To obtain the final result of the job, the
+    /// client should periodically poll membersRemoveJobStatusGet.
     ///
     /// - scope: members.delete
     ///
@@ -1220,32 +1151,20 @@ public class DBXTeamRoutes: NSObject {
     /// - parameter transferAdminId: If provided, errors during the transfer process will be sent via email to this
     /// user. If the transfer_dest_id argument was provided, then this argument must be provided as well.
     /// - parameter keepAccount: Downgrade the member to a Basic account. The user will retain the email address
-    /// associated with their Dropbox  account and data in their account that is not restricted to team members. In
+    /// associated with their Dropbox account and data in their account that is not restricted to team members. In
     /// order to keep the account the argument wipeData should be set to false.
     /// - parameter retainTeamShares: If provided, allows removed users to keep access to Dropbox folders (not Dropbox
     /// Paper folders) already explicitly shared with them (not via a group) when they are downgraded to a Basic
     /// account. Users will not retain access to folders that do not allow external sharing. In order to keep the
     /// sharing relationships, the arguments wipeData should be set to false and keepAccount should be set to true.
+    /// - parameter permanentlyDeleteFiles: Permanently delete the data in the deleted member's account. After permanent
+    /// deletion, the data is no longer available to be transferred to a different user.
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
     /// or a `Team.MembersRemoveError` object on failure.
     @objc
-    @discardableResult public func membersRemove(
-        user: DBXTeamUserSelectorArg,
-        wipeData: NSNumber,
-        transferDestId: DBXTeamUserSelectorArg?,
-        transferAdminId: DBXTeamUserSelectorArg?,
-        keepAccount: NSNumber,
-        retainTeamShares: NSNumber
-    ) -> DBXTeamMembersRemoveRpcRequest {
-        let swift = swift.membersRemove(
-            user: user.swift,
-            wipeData: wipeData.boolValue,
-            transferDestId: transferDestId?.swift,
-            transferAdminId: transferAdminId?.swift,
-            keepAccount: keepAccount.boolValue,
-            retainTeamShares: retainTeamShares.boolValue
-        )
+    @discardableResult public func membersRemove(user: DBXTeamUserSelectorArg, wipeData: NSNumber, transferDestId: DBXTeamUserSelectorArg?, transferAdminId: DBXTeamUserSelectorArg?, keepAccount: NSNumber, retainTeamShares: NSNumber, permanentlyDeleteFiles: NSNumber) -> DBXTeamMembersRemoveRpcRequest {
+        let swift = swift.membersRemove(user: user.swift, wipeData: wipeData.boolValue, transferDestId: transferDestId?.swift, transferAdminId: transferAdminId?.swift, keepAccount: keepAccount.boolValue, retainTeamShares: retainTeamShares.boolValue, permanentlyDeleteFiles: permanentlyDeleteFiles.boolValue)
         return DBXTeamMembersRemoveRpcRequest(swift: swift)
     }
 
@@ -1254,9 +1173,10 @@ public class DBXTeamRoutes: NSObject {
     /// a 7 day period or until the account has been permanently deleted or transferred to another account
     /// (whichever comes first). Calling membersAdd while a user is still recoverable on your team will return with
     /// userAlreadyOnTeam in MemberAddResult. Accounts can have their files transferred via the admin console for a
-    /// limited time, based on the version history length associated with the team (180 days for most teams). This
-    /// endpoint may initiate an asynchronous job. To obtain the final result of the job, the client should
-    /// periodically poll membersRemoveJobStatusGet.
+    /// limited time, based on the version history length associated with the team (180 days for most teams).
+    /// Accounts can have their stacks transferred through the admin console. This only transfers stacks that they
+    /// have created. This endpoint may initiate an asynchronous job. To obtain the final result of the job, the
+    /// client should periodically poll membersRemoveJobStatusGet.
     ///
     /// - scope: members.delete
     ///
@@ -1294,9 +1214,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.AddSecondaryEmailsResult` object on
     /// success or a `Team.AddSecondaryEmailsError` object on failure.
     @objc
-    @discardableResult public func membersSecondaryEmailsAdd(newSecondaryEmails: [DBXTeamUserSecondaryEmailsArg])
-        -> DBXTeamMembersSecondaryEmailsAddRpcRequest {
-        let swift = swift.membersSecondaryEmailsAdd(newSecondaryEmails: newSecondaryEmails.map(\.swift))
+    @discardableResult public func membersSecondaryEmailsAdd(newSecondaryEmails: Array<DBXTeamUserSecondaryEmailsArg>) -> DBXTeamMembersSecondaryEmailsAddRpcRequest {
+        let swift = swift.membersSecondaryEmailsAdd(newSecondaryEmails: newSecondaryEmails.map { $0.swift })
         return DBXTeamMembersSecondaryEmailsAddRpcRequest(swift: swift)
     }
 
@@ -1310,9 +1229,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.DeleteSecondaryEmailsResult` object on
     /// success or a `Void` object on failure.
     @objc
-    @discardableResult public func membersSecondaryEmailsDelete(emailsToDelete: [DBXTeamUserSecondaryEmailsArg])
-        -> DBXTeamMembersSecondaryEmailsDeleteRpcRequest {
-        let swift = swift.membersSecondaryEmailsDelete(emailsToDelete: emailsToDelete.map(\.swift))
+    @discardableResult public func membersSecondaryEmailsDelete(emailsToDelete: Array<DBXTeamUserSecondaryEmailsArg>) -> DBXTeamMembersSecondaryEmailsDeleteRpcRequest {
+        let swift = swift.membersSecondaryEmailsDelete(emailsToDelete: emailsToDelete.map { $0.swift })
         return DBXTeamMembersSecondaryEmailsDeleteRpcRequest(swift: swift)
     }
 
@@ -1325,9 +1243,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.ResendVerificationEmailResult` object
     /// on success or a `Void` object on failure.
     @objc
-    @discardableResult public func membersSecondaryEmailsResendVerificationEmails(emailsToResend: [DBXTeamUserSecondaryEmailsArg])
-        -> DBXTeamMembersSecondaryEmailsResendVerificationEmailsRpcRequest {
-        let swift = swift.membersSecondaryEmailsResendVerificationEmails(emailsToResend: emailsToResend.map(\.swift))
+    @discardableResult public func membersSecondaryEmailsResendVerificationEmails(emailsToResend: Array<DBXTeamUserSecondaryEmailsArg>) -> DBXTeamMembersSecondaryEmailsResendVerificationEmailsRpcRequest {
+        let swift = swift.membersSecondaryEmailsResendVerificationEmails(emailsToResend: emailsToResend.map { $0.swift })
         return DBXTeamMembersSecondaryEmailsResendVerificationEmailsRpcRequest(swift: swift)
     }
 
@@ -1357,10 +1274,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissionsResult` object on
     /// success or a `Team.MembersSetPermissionsError` object on failure.
     @objc
-    @discardableResult public func membersSetAdminPermissions(
-        user: DBXTeamUserSelectorArg,
-        newRole: DBXTeamAdminTier
-    ) -> DBXTeamMembersSetAdminPermissionsRpcRequest {
+    @discardableResult public func membersSetAdminPermissions(user: DBXTeamUserSelectorArg, newRole: DBXTeamAdminTier) -> DBXTeamMembersSetAdminPermissionsRpcRequest {
         let swift = swift.membersSetAdminPermissions(user: user.swift, newRole: newRole.swift)
         return DBXTeamMembersSetAdminPermissionsRpcRequest(swift: swift)
     }
@@ -1376,10 +1290,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.MembersSetPermissions2Result` object
     /// on success or a `Team.MembersSetPermissions2Error` object on failure.
     @objc
-    @discardableResult public func membersSetAdminPermissionsV2(
-        user: DBXTeamUserSelectorArg,
-        newRoles: [String]?
-    ) -> DBXTeamMembersSetAdminPermissionsRpcRequestV2 {
+    @discardableResult public func membersSetAdminPermissionsV2(user: DBXTeamUserSelectorArg, newRoles: Array<String>?) -> DBXTeamMembersSetAdminPermissionsRpcRequestV2 {
         let swift = swift.membersSetAdminPermissionsV2(user: user.swift, newRoles: newRoles)
         return DBXTeamMembersSetAdminPermissionsRpcRequestV2(swift: swift)
     }
@@ -1412,24 +1323,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or a
     /// `Team.MembersSetProfileError` object on failure.
     @objc
-    @discardableResult public func membersSetProfile(
-        user: DBXTeamUserSelectorArg,
-        newEmail: String?,
-        newExternalId: String?,
-        newGivenName: String?,
-        newSurname: String?,
-        newPersistentId: String?,
-        newIsDirectoryRestricted: NSNumber?
-    ) -> DBXTeamMembersSetProfileRpcRequest {
-        let swift = swift.membersSetProfile(
-            user: user.swift,
-            newEmail: newEmail,
-            newExternalId: newExternalId,
-            newGivenName: newGivenName,
-            newSurname: newSurname,
-            newPersistentId: newPersistentId,
-            newIsDirectoryRestricted: newIsDirectoryRestricted?.boolValue
-        )
+    @discardableResult public func membersSetProfile(user: DBXTeamUserSelectorArg, newEmail: String?, newExternalId: String?, newGivenName: String?, newSurname: String?, newPersistentId: String?, newIsDirectoryRestricted: NSNumber?) -> DBXTeamMembersSetProfileRpcRequest {
+        let swift = swift.membersSetProfile(user: user.swift, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId, newIsDirectoryRestricted: newIsDirectoryRestricted?.boolValue)
         return DBXTeamMembersSetProfileRpcRequest(swift: swift)
     }
 
@@ -1461,24 +1356,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
     /// success or a `Team.MembersSetProfileError` object on failure.
     @objc
-    @discardableResult public func membersSetProfileV2(
-        user: DBXTeamUserSelectorArg,
-        newEmail: String?,
-        newExternalId: String?,
-        newGivenName: String?,
-        newSurname: String?,
-        newPersistentId: String?,
-        newIsDirectoryRestricted: NSNumber?
-    ) -> DBXTeamMembersSetProfileRpcRequestV2 {
-        let swift = swift.membersSetProfileV2(
-            user: user.swift,
-            newEmail: newEmail,
-            newExternalId: newExternalId,
-            newGivenName: newGivenName,
-            newSurname: newSurname,
-            newPersistentId: newPersistentId,
-            newIsDirectoryRestricted: newIsDirectoryRestricted?.boolValue
-        )
+    @discardableResult public func membersSetProfileV2(user: DBXTeamUserSelectorArg, newEmail: String?, newExternalId: String?, newGivenName: String?, newSurname: String?, newPersistentId: String?, newIsDirectoryRestricted: NSNumber?) -> DBXTeamMembersSetProfileRpcRequestV2 {
+        let swift = swift.membersSetProfileV2(user: user.swift, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId, newIsDirectoryRestricted: newIsDirectoryRestricted?.boolValue)
         return DBXTeamMembersSetProfileRpcRequestV2(swift: swift)
     }
 
@@ -1504,10 +1383,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfo` object on success or a
     /// `Team.MembersSetProfilePhotoError` object on failure.
     @objc
-    @discardableResult public func membersSetProfilePhoto(
-        user: DBXTeamUserSelectorArg,
-        photo: DBXAccountPhotoSourceArg
-    ) -> DBXTeamMembersSetProfilePhotoRpcRequest {
+    @discardableResult public func membersSetProfilePhoto(user: DBXTeamUserSelectorArg, photo: DBXAccountPhotoSourceArg) -> DBXTeamMembersSetProfilePhotoRpcRequest {
         let swift = swift.membersSetProfilePhoto(user: user.swift, photo: photo.swift)
         return DBXTeamMembersSetProfilePhotoRpcRequest(swift: swift)
     }
@@ -1522,10 +1398,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.TeamMemberInfoV2Result` object on
     /// success or a `Team.MembersSetProfilePhotoError` object on failure.
     @objc
-    @discardableResult public func membersSetProfilePhotoV2(
-        user: DBXTeamUserSelectorArg,
-        photo: DBXAccountPhotoSourceArg
-    ) -> DBXTeamMembersSetProfilePhotoRpcRequestV2 {
+    @discardableResult public func membersSetProfilePhotoV2(user: DBXTeamUserSelectorArg, photo: DBXAccountPhotoSourceArg) -> DBXTeamMembersSetProfilePhotoRpcRequestV2 {
         let swift = swift.membersSetProfilePhotoV2(user: user.swift, photo: photo.swift)
         return DBXTeamMembersSetProfilePhotoRpcRequestV2(swift: swift)
     }
@@ -1580,7 +1453,7 @@ public class DBXTeamRoutes: NSObject {
     ///
     /// - scope: team_data.member
     ///
-    /// - parameter limit: Specifying a value here has no effect.
+    /// - parameter limit: Field is deprecated. Specifying a value here has no effect.
     ///
     /// - returns: Through the response callback, the caller will receive a `Team.TeamNamespacesListResult` object on
     /// success or a `Team.TeamNamespacesListError` object on failure.
@@ -1633,7 +1506,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistAddResponse` object on
     /// success or a `Team.SharingAllowlistAddError` object on failure.
     @objc
-    @discardableResult public func sharingAllowlistAdd(domains: [String]?, emails: [String]?) -> DBXTeamSharingAllowlistAddRpcRequest {
+    @discardableResult public func sharingAllowlistAdd(domains: Array<String>?, emails: Array<String>?) -> DBXTeamSharingAllowlistAddRpcRequest {
         let swift = swift.sharingAllowlistAdd(domains: domains, emails: emails)
         return DBXTeamSharingAllowlistAddRpcRequest(swift: swift)
     }
@@ -1711,7 +1584,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistRemoveResponse` object
     /// on success or a `Team.SharingAllowlistRemoveError` object on failure.
     @objc
-    @discardableResult public func sharingAllowlistRemove(domains: [String]?, emails: [String]?) -> DBXTeamSharingAllowlistRemoveRpcRequest {
+    @discardableResult public func sharingAllowlistRemove(domains: Array<String>?, emails: Array<String>?) -> DBXTeamSharingAllowlistRemoveRpcRequest {
         let swift = swift.sharingAllowlistRemove(domains: domains, emails: emails)
         return DBXTeamSharingAllowlistRemoveRpcRequest(swift: swift)
     }
@@ -1746,7 +1619,9 @@ public class DBXTeamRoutes: NSObject {
     }
 
     /// Sets an active team folder's status to archived and removes all folder and file members. This endpoint cannot be
-    /// used for teams that have a shared team space. Permission : Team member file access.
+    /// used for teams that have a shared team space. This route will either finish synchronously, or return a job
+    /// ID and do the async archive job in background. Please use team_folder/archive/check to check the job status.
+    /// Permission : Team member file access.
     ///
     /// - scope: team_data.content.write
     ///
@@ -1761,7 +1636,9 @@ public class DBXTeamRoutes: NSObject {
     }
 
     /// Sets an active team folder's status to archived and removes all folder and file members. This endpoint cannot be
-    /// used for teams that have a shared team space. Permission : Team member file access.
+    /// used for teams that have a shared team space. This route will either finish synchronously, or return a job
+    /// ID and do the async archive job in background. Please use team_folder/archive/check to check the job status.
+    /// Permission : Team member file access.
     ///
     /// - scope: team_data.content.write
     ///
@@ -1773,7 +1650,10 @@ public class DBXTeamRoutes: NSObject {
         return DBXTeamTeamFolderArchiveRpcRequest(swift: swift)
     }
 
-    /// Returns the status of an asynchronous job for archiving a team folder. Permission : Team member file access.
+    /// Returns the status of an asynchronous job for archiving a team folder. The job may show '.tag' as complete, but
+    /// the team folder could still be in the process of archiving (indicated by status in TeamFolderMetadata with
+    /// 'archive_in_progress'). To confirm that the team folder is fully archived, check the field status in
+    /// TeamFolderMetadata in the response for the value 'archived'. Permission : Team member file access.
     ///
     /// - scope: team_data.content.write
     ///
@@ -1827,7 +1707,7 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Array<Team.TeamFolderGetInfoItem>` object
     /// on success or a `Void` object on failure.
     @objc
-    @discardableResult public func teamFolderGetInfo(teamFolderIds: [String]) -> DBXTeamTeamFolderGetInfoRpcRequest {
+    @discardableResult public func teamFolderGetInfo(teamFolderIds: Array<String>) -> DBXTeamTeamFolderGetInfoRpcRequest {
         let swift = swift.teamFolderGetInfo(teamFolderIds: teamFolderIds)
         return DBXTeamTeamFolderGetInfoRpcRequest(swift: swift)
     }
@@ -1902,6 +1782,20 @@ public class DBXTeamRoutes: NSObject {
         return DBXTeamTeamFolderRenameRpcRequest(swift: swift)
     }
 
+    /// Sets an inactive team folder's status to active. Permission: Team member file access.
+    ///
+    /// - scope: team_data.content.write
+    ///
+    /// - parameter teamFolderId: The ID of the team folder.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
+    /// or a `Team.TeamFolderRestoreError` object on failure.
+    @objc
+    @discardableResult public func teamFolderRestore(teamFolderId: String) -> DBXTeamTeamFolderRestoreRpcRequest {
+        let swift = swift.teamFolderRestore(teamFolderId: teamFolderId)
+        return DBXTeamTeamFolderRestoreRpcRequest(swift: swift)
+    }
+
     /// Updates the sync settings on a team folder or its contents.  Use of this endpoint requires that the team has
     /// team selective sync enabled.
     ///
@@ -1914,16 +1808,8 @@ public class DBXTeamRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Team.TeamFolderMetadata` object on success
     /// or a `Team.TeamFolderUpdateSyncSettingsError` object on failure.
     @objc
-    @discardableResult public func teamFolderUpdateSyncSettings(
-        teamFolderId: String,
-        syncSetting: DBXFilesSyncSettingArg?,
-        contentSyncSettings: [DBXFilesContentSyncSettingArg]?
-    ) -> DBXTeamTeamFolderUpdateSyncSettingsRpcRequest {
-        let swift = swift.teamFolderUpdateSyncSettings(
-            teamFolderId: teamFolderId,
-            syncSetting: syncSetting?.swift,
-            contentSyncSettings: contentSyncSettings?.map(\.swift)
-        )
+    @discardableResult public func teamFolderUpdateSyncSettings(teamFolderId: String, syncSetting: DBXFilesSyncSettingArg?, contentSyncSettings: Array<DBXFilesContentSyncSettingArg>?) -> DBXTeamTeamFolderUpdateSyncSettingsRpcRequest {
+        let swift = swift.teamFolderUpdateSyncSettings(teamFolderId: teamFolderId, syncSetting: syncSetting?.swift, contentSyncSettings: contentSyncSettings?.map { $0.swift })
         return DBXTeamTeamFolderUpdateSyncSettingsRpcRequest(swift: swift)
     }
 
@@ -1952,7 +1838,9 @@ public class DBXTeamRoutes: NSObject {
         let swift = swift.tokenGetAuthenticatedAdmin()
         return DBXTeamTokenGetAuthenticatedAdminRpcRequest(swift: swift)
     }
+
 }
+
 
 @objc
 public class DBXTeamDevicesListMemberDevicesRpcRequest: NSObject, DBXRequest {
@@ -1966,7 +1854,7 @@ public class DBXTeamDevicesListMemberDevicesRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamListMemberDevicesResult?, DBXTeamListMemberDevicesError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -1986,7 +1874,7 @@ public class DBXTeamDevicesListMemberDevicesRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamListMemberDevicesResult?
+            var objc: DBXTeamListMemberDevicesResult? = nil
             if let swift = result {
                 objc = DBXTeamListMemberDevicesResult(swift: swift)
             }
@@ -2021,6 +1909,7 @@ public class DBXTeamDevicesListMemberDevicesRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamDevicesListMembersDevicesRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.ListMembersDevicesResultSerializer, Team.ListMembersDevicesErrorSerializer>
@@ -2033,7 +1922,7 @@ public class DBXTeamDevicesListMembersDevicesRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamListMembersDevicesResult?, DBXTeamListMembersDevicesError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2053,7 +1942,7 @@ public class DBXTeamDevicesListMembersDevicesRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamListMembersDevicesResult?
+            var objc: DBXTeamListMembersDevicesResult? = nil
             if let swift = result {
                 objc = DBXTeamListMembersDevicesResult(swift: swift)
             }
@@ -2088,6 +1977,7 @@ public class DBXTeamDevicesListMembersDevicesRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamDevicesListTeamDevicesRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.ListTeamDevicesResultSerializer, Team.ListTeamDevicesErrorSerializer>
@@ -2100,7 +1990,7 @@ public class DBXTeamDevicesListTeamDevicesRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamListTeamDevicesResult?, DBXTeamListTeamDevicesError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2120,7 +2010,7 @@ public class DBXTeamDevicesListTeamDevicesRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamListTeamDevicesResult?
+            var objc: DBXTeamListTeamDevicesResult? = nil
             if let swift = result {
                 objc = DBXTeamListTeamDevicesResult(swift: swift)
             }
@@ -2155,6 +2045,7 @@ public class DBXTeamDevicesListTeamDevicesRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamDevicesRevokeDeviceSessionRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Team.RevokeDeviceSessionErrorSerializer>
@@ -2167,7 +2058,7 @@ public class DBXTeamDevicesRevokeDeviceSessionRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamRevokeDeviceSessionError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2175,7 +2066,7 @@ public class DBXTeamDevicesRevokeDeviceSessionRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXTeamRevokeDeviceSessionError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXTeamRevokeDeviceSessionError?
             var callError: DBXCallError?
             switch error {
@@ -2218,6 +2109,7 @@ public class DBXTeamDevicesRevokeDeviceSessionRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamDevicesRevokeDeviceSessionBatchRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.RevokeDeviceSessionBatchResultSerializer, Team.RevokeDeviceSessionBatchErrorSerializer>
@@ -2230,7 +2122,7 @@ public class DBXTeamDevicesRevokeDeviceSessionBatchRpcRequest: NSObject, DBXRequ
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamRevokeDeviceSessionBatchResult?, DBXTeamRevokeDeviceSessionBatchError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2250,7 +2142,7 @@ public class DBXTeamDevicesRevokeDeviceSessionBatchRpcRequest: NSObject, DBXRequ
                 callError = error?.objc
             }
 
-            var objc: DBXTeamRevokeDeviceSessionBatchResult?
+            var objc: DBXTeamRevokeDeviceSessionBatchResult? = nil
             if let swift = result {
                 objc = DBXTeamRevokeDeviceSessionBatchResult(swift: swift)
             }
@@ -2285,6 +2177,7 @@ public class DBXTeamDevicesRevokeDeviceSessionBatchRpcRequest: NSObject, DBXRequ
     }
 }
 
+
 @objc
 public class DBXTeamFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.FeaturesGetValuesBatchResultSerializer, Team.FeaturesGetValuesBatchErrorSerializer>
@@ -2297,7 +2190,7 @@ public class DBXTeamFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamFeaturesGetValuesBatchResult?, DBXTeamFeaturesGetValuesBatchError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2317,7 +2210,7 @@ public class DBXTeamFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamFeaturesGetValuesBatchResult?
+            var objc: DBXTeamFeaturesGetValuesBatchResult? = nil
             if let swift = result {
                 objc = DBXTeamFeaturesGetValuesBatchResult(swift: swift)
             }
@@ -2352,6 +2245,7 @@ public class DBXTeamFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGetInfoRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamGetInfoResultSerializer, VoidSerializer>
@@ -2364,7 +2258,7 @@ public class DBXTeamGetInfoRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamGetInfoResult?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2373,7 +2267,7 @@ public class DBXTeamGetInfoRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXTeamTeamGetInfoResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXTeamTeamGetInfoResult?
+            var objc: DBXTeamTeamGetInfoResult? = nil
             if let swift = result {
                 objc = DBXTeamTeamGetInfoResult(swift: swift)
             }
@@ -2408,6 +2302,7 @@ public class DBXTeamGetInfoRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGroupsCreateRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.GroupFullInfoSerializer, Team.GroupCreateErrorSerializer>
@@ -2420,7 +2315,7 @@ public class DBXTeamGroupsCreateRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamGroupFullInfo?, DBXTeamGroupCreateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2440,7 +2335,7 @@ public class DBXTeamGroupsCreateRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamGroupFullInfo?
+            var objc: DBXTeamGroupFullInfo? = nil
             if let swift = result {
                 objc = DBXTeamGroupFullInfo(swift: swift)
             }
@@ -2475,6 +2370,7 @@ public class DBXTeamGroupsCreateRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGroupsDeleteRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Async.LaunchEmptyResultSerializer, Team.GroupDeleteErrorSerializer>
@@ -2487,7 +2383,7 @@ public class DBXTeamGroupsDeleteRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXTeamGroupDeleteError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2507,7 +2403,7 @@ public class DBXTeamGroupsDeleteRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXAsyncLaunchEmptyResult?
+            var objc: DBXAsyncLaunchEmptyResult? = nil
             if let swift = result {
                 objc = DBXAsyncLaunchEmptyResult.factory(swift: swift)
             }
@@ -2542,6 +2438,7 @@ public class DBXTeamGroupsDeleteRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGroupsGetInfoRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<ArraySerializer<Team.GroupsGetInfoItemSerializer>, Team.GroupsGetInfoErrorSerializer>
@@ -2552,15 +2449,15 @@ public class DBXTeamGroupsGetInfoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping ([DBXTeamGroupsGetInfoItem]?, DBXTeamGroupsGetInfoError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamGroupsGetInfoItem>?, DBXTeamGroupsGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping ([DBXTeamGroupsGetInfoItem]?, DBXTeamGroupsGetInfoError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamGroupsGetInfoItem>?, DBXTeamGroupsGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
             var routeError: DBXTeamGroupsGetInfoError?
@@ -2574,7 +2471,7 @@ public class DBXTeamGroupsGetInfoRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: [DBXTeamGroupsGetInfoItem]?
+            var objc: Array<DBXTeamGroupsGetInfoItem>? = nil
             if let swift = result {
                 objc = swift.map { DBXTeamGroupsGetInfoItem.factory(swift: $0) }
             }
@@ -2609,6 +2506,7 @@ public class DBXTeamGroupsGetInfoRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGroupsJobStatusGetRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Async.PollEmptyResultSerializer, Team.GroupsPollErrorSerializer>
@@ -2621,7 +2519,7 @@ public class DBXTeamGroupsJobStatusGetRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXAsyncPollEmptyResult?, DBXTeamGroupsPollError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2641,7 +2539,7 @@ public class DBXTeamGroupsJobStatusGetRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXAsyncPollEmptyResult?
+            var objc: DBXAsyncPollEmptyResult? = nil
             if let swift = result {
                 objc = DBXAsyncPollEmptyResult.factory(swift: swift)
             }
@@ -2676,6 +2574,7 @@ public class DBXTeamGroupsJobStatusGetRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGroupsListRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.GroupsListResultSerializer, VoidSerializer>
@@ -2688,7 +2587,7 @@ public class DBXTeamGroupsListRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamGroupsListResult?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2697,7 +2596,7 @@ public class DBXTeamGroupsListRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXTeamGroupsListResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXTeamGroupsListResult?
+            var objc: DBXTeamGroupsListResult? = nil
             if let swift = result {
                 objc = DBXTeamGroupsListResult(swift: swift)
             }
@@ -2732,6 +2631,7 @@ public class DBXTeamGroupsListRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGroupsListContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.GroupsListResultSerializer, Team.GroupsListContinueErrorSerializer>
@@ -2744,7 +2644,7 @@ public class DBXTeamGroupsListContinueRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamGroupsListResult?, DBXTeamGroupsListContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2764,7 +2664,7 @@ public class DBXTeamGroupsListContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamGroupsListResult?
+            var objc: DBXTeamGroupsListResult? = nil
             if let swift = result {
                 objc = DBXTeamGroupsListResult(swift: swift)
             }
@@ -2799,6 +2699,7 @@ public class DBXTeamGroupsListContinueRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGroupsMembersAddRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.GroupMembersChangeResultSerializer, Team.GroupMembersAddErrorSerializer>
@@ -2811,7 +2712,7 @@ public class DBXTeamGroupsMembersAddRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamGroupMembersChangeResult?, DBXTeamGroupMembersAddError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2831,7 +2732,7 @@ public class DBXTeamGroupsMembersAddRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamGroupMembersChangeResult?
+            var objc: DBXTeamGroupMembersChangeResult? = nil
             if let swift = result {
                 objc = DBXTeamGroupMembersChangeResult(swift: swift)
             }
@@ -2866,6 +2767,7 @@ public class DBXTeamGroupsMembersAddRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGroupsMembersListRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.GroupsMembersListResultSerializer, Team.GroupSelectorErrorSerializer>
@@ -2878,7 +2780,7 @@ public class DBXTeamGroupsMembersListRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamGroupsMembersListResult?, DBXTeamGroupSelectorError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2898,7 +2800,7 @@ public class DBXTeamGroupsMembersListRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamGroupsMembersListResult?
+            var objc: DBXTeamGroupsMembersListResult? = nil
             if let swift = result {
                 objc = DBXTeamGroupsMembersListResult(swift: swift)
             }
@@ -2933,6 +2835,7 @@ public class DBXTeamGroupsMembersListRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGroupsMembersListContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.GroupsMembersListResultSerializer, Team.GroupsMembersListContinueErrorSerializer>
@@ -2945,7 +2848,7 @@ public class DBXTeamGroupsMembersListContinueRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamGroupsMembersListResult?, DBXTeamGroupsMembersListContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -2965,7 +2868,7 @@ public class DBXTeamGroupsMembersListContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamGroupsMembersListResult?
+            var objc: DBXTeamGroupsMembersListResult? = nil
             if let swift = result {
                 objc = DBXTeamGroupsMembersListResult(swift: swift)
             }
@@ -3000,6 +2903,7 @@ public class DBXTeamGroupsMembersListContinueRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGroupsMembersRemoveRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.GroupMembersChangeResultSerializer, Team.GroupMembersRemoveErrorSerializer>
@@ -3012,7 +2916,7 @@ public class DBXTeamGroupsMembersRemoveRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamGroupMembersChangeResult?, DBXTeamGroupMembersRemoveError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3032,7 +2936,7 @@ public class DBXTeamGroupsMembersRemoveRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamGroupMembersChangeResult?
+            var objc: DBXTeamGroupMembersChangeResult? = nil
             if let swift = result {
                 objc = DBXTeamGroupMembersChangeResult(swift: swift)
             }
@@ -3067,6 +2971,7 @@ public class DBXTeamGroupsMembersRemoveRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGroupsMembersSetAccessTypeRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<ArraySerializer<Team.GroupsGetInfoItemSerializer>, Team.GroupMemberSetAccessTypeErrorSerializer>
@@ -3077,15 +2982,15 @@ public class DBXTeamGroupsMembersSetAccessTypeRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping ([DBXTeamGroupsGetInfoItem]?, DBXTeamGroupMemberSetAccessTypeError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamGroupsGetInfoItem>?, DBXTeamGroupMemberSetAccessTypeError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping ([DBXTeamGroupsGetInfoItem]?, DBXTeamGroupMemberSetAccessTypeError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamGroupsGetInfoItem>?, DBXTeamGroupMemberSetAccessTypeError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
             var routeError: DBXTeamGroupMemberSetAccessTypeError?
@@ -3099,7 +3004,7 @@ public class DBXTeamGroupsMembersSetAccessTypeRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: [DBXTeamGroupsGetInfoItem]?
+            var objc: Array<DBXTeamGroupsGetInfoItem>? = nil
             if let swift = result {
                 objc = swift.map { DBXTeamGroupsGetInfoItem.factory(swift: $0) }
             }
@@ -3134,6 +3039,7 @@ public class DBXTeamGroupsMembersSetAccessTypeRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamGroupsUpdateRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.GroupFullInfoSerializer, Team.GroupUpdateErrorSerializer>
@@ -3146,7 +3052,7 @@ public class DBXTeamGroupsUpdateRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamGroupFullInfo?, DBXTeamGroupUpdateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3166,7 +3072,7 @@ public class DBXTeamGroupsUpdateRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamGroupFullInfo?
+            var objc: DBXTeamGroupFullInfo? = nil
             if let swift = result {
                 objc = DBXTeamGroupFullInfo(swift: swift)
             }
@@ -3201,6 +3107,7 @@ public class DBXTeamGroupsUpdateRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamLegalHoldsCreatePolicyRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.LegalHoldPolicySerializer, Team.LegalHoldsPolicyCreateErrorSerializer>
@@ -3213,7 +3120,7 @@ public class DBXTeamLegalHoldsCreatePolicyRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamLegalHoldPolicy?, DBXTeamLegalHoldsPolicyCreateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3233,7 +3140,7 @@ public class DBXTeamLegalHoldsCreatePolicyRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamLegalHoldPolicy?
+            var objc: DBXTeamLegalHoldPolicy? = nil
             if let swift = result {
                 objc = DBXTeamLegalHoldPolicy(swift: swift)
             }
@@ -3268,6 +3175,7 @@ public class DBXTeamLegalHoldsCreatePolicyRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamLegalHoldsGetPolicyRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.LegalHoldPolicySerializer, Team.LegalHoldsGetPolicyErrorSerializer>
@@ -3280,7 +3188,7 @@ public class DBXTeamLegalHoldsGetPolicyRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamLegalHoldPolicy?, DBXTeamLegalHoldsGetPolicyError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3300,7 +3208,7 @@ public class DBXTeamLegalHoldsGetPolicyRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamLegalHoldPolicy?
+            var objc: DBXTeamLegalHoldPolicy? = nil
             if let swift = result {
                 objc = DBXTeamLegalHoldPolicy(swift: swift)
             }
@@ -3335,6 +3243,7 @@ public class DBXTeamLegalHoldsGetPolicyRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamLegalHoldsListHeldRevisionsRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.LegalHoldsListHeldRevisionResultSerializer, Team.LegalHoldsListHeldRevisionsErrorSerializer>
@@ -3347,7 +3256,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsRpcRequest: NSObject, DBXRequest 
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamLegalHoldsListHeldRevisionResult?, DBXTeamLegalHoldsListHeldRevisionsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3367,7 +3276,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsRpcRequest: NSObject, DBXRequest 
                 callError = error?.objc
             }
 
-            var objc: DBXTeamLegalHoldsListHeldRevisionResult?
+            var objc: DBXTeamLegalHoldsListHeldRevisionResult? = nil
             if let swift = result {
                 objc = DBXTeamLegalHoldsListHeldRevisionResult(swift: swift)
             }
@@ -3401,6 +3310,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsRpcRequest: NSObject, DBXRequest 
         swift.cancel()
     }
 }
+
 
 @objc
 public class DBXTeamLegalHoldsListHeldRevisionsContinueRpcRequest: NSObject, DBXRequest {
@@ -3414,7 +3324,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsContinueRpcRequest: NSObject, DBX
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamLegalHoldsListHeldRevisionResult?, DBXTeamLegalHoldsListHeldRevisionsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3434,7 +3344,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsContinueRpcRequest: NSObject, DBX
                 callError = error?.objc
             }
 
-            var objc: DBXTeamLegalHoldsListHeldRevisionResult?
+            var objc: DBXTeamLegalHoldsListHeldRevisionResult? = nil
             if let swift = result {
                 objc = DBXTeamLegalHoldsListHeldRevisionResult(swift: swift)
             }
@@ -3469,6 +3379,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsContinueRpcRequest: NSObject, DBX
     }
 }
 
+
 @objc
 public class DBXTeamLegalHoldsListPoliciesRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.LegalHoldsListPoliciesResultSerializer, Team.LegalHoldsListPoliciesErrorSerializer>
@@ -3481,7 +3392,7 @@ public class DBXTeamLegalHoldsListPoliciesRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamLegalHoldsListPoliciesResult?, DBXTeamLegalHoldsListPoliciesError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3501,7 +3412,7 @@ public class DBXTeamLegalHoldsListPoliciesRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamLegalHoldsListPoliciesResult?
+            var objc: DBXTeamLegalHoldsListPoliciesResult? = nil
             if let swift = result {
                 objc = DBXTeamLegalHoldsListPoliciesResult(swift: swift)
             }
@@ -3536,6 +3447,7 @@ public class DBXTeamLegalHoldsListPoliciesRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamLegalHoldsReleasePolicyRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Team.LegalHoldsPolicyReleaseErrorSerializer>
@@ -3548,7 +3460,7 @@ public class DBXTeamLegalHoldsReleasePolicyRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamLegalHoldsPolicyReleaseError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3556,7 +3468,7 @@ public class DBXTeamLegalHoldsReleasePolicyRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXTeamLegalHoldsPolicyReleaseError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXTeamLegalHoldsPolicyReleaseError?
             var callError: DBXCallError?
             switch error {
@@ -3599,6 +3511,7 @@ public class DBXTeamLegalHoldsReleasePolicyRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamLegalHoldsUpdatePolicyRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.LegalHoldPolicySerializer, Team.LegalHoldsPolicyUpdateErrorSerializer>
@@ -3611,7 +3524,7 @@ public class DBXTeamLegalHoldsUpdatePolicyRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamLegalHoldPolicy?, DBXTeamLegalHoldsPolicyUpdateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3631,7 +3544,7 @@ public class DBXTeamLegalHoldsUpdatePolicyRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamLegalHoldPolicy?
+            var objc: DBXTeamLegalHoldPolicy? = nil
             if let swift = result {
                 objc = DBXTeamLegalHoldPolicy(swift: swift)
             }
@@ -3666,6 +3579,7 @@ public class DBXTeamLegalHoldsUpdatePolicyRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamLinkedAppsListMemberLinkedAppsRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.ListMemberAppsResultSerializer, Team.ListMemberAppsErrorSerializer>
@@ -3678,7 +3592,7 @@ public class DBXTeamLinkedAppsListMemberLinkedAppsRpcRequest: NSObject, DBXReque
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamListMemberAppsResult?, DBXTeamListMemberAppsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3698,7 +3612,7 @@ public class DBXTeamLinkedAppsListMemberLinkedAppsRpcRequest: NSObject, DBXReque
                 callError = error?.objc
             }
 
-            var objc: DBXTeamListMemberAppsResult?
+            var objc: DBXTeamListMemberAppsResult? = nil
             if let swift = result {
                 objc = DBXTeamListMemberAppsResult(swift: swift)
             }
@@ -3733,6 +3647,7 @@ public class DBXTeamLinkedAppsListMemberLinkedAppsRpcRequest: NSObject, DBXReque
     }
 }
 
+
 @objc
 public class DBXTeamLinkedAppsListMembersLinkedAppsRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.ListMembersAppsResultSerializer, Team.ListMembersAppsErrorSerializer>
@@ -3745,7 +3660,7 @@ public class DBXTeamLinkedAppsListMembersLinkedAppsRpcRequest: NSObject, DBXRequ
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamListMembersAppsResult?, DBXTeamListMembersAppsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3765,7 +3680,7 @@ public class DBXTeamLinkedAppsListMembersLinkedAppsRpcRequest: NSObject, DBXRequ
                 callError = error?.objc
             }
 
-            var objc: DBXTeamListMembersAppsResult?
+            var objc: DBXTeamListMembersAppsResult? = nil
             if let swift = result {
                 objc = DBXTeamListMembersAppsResult(swift: swift)
             }
@@ -3800,6 +3715,7 @@ public class DBXTeamLinkedAppsListMembersLinkedAppsRpcRequest: NSObject, DBXRequ
     }
 }
 
+
 @objc
 public class DBXTeamLinkedAppsListTeamLinkedAppsRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.ListTeamAppsResultSerializer, Team.ListTeamAppsErrorSerializer>
@@ -3812,7 +3728,7 @@ public class DBXTeamLinkedAppsListTeamLinkedAppsRpcRequest: NSObject, DBXRequest
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamListTeamAppsResult?, DBXTeamListTeamAppsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3832,7 +3748,7 @@ public class DBXTeamLinkedAppsListTeamLinkedAppsRpcRequest: NSObject, DBXRequest
                 callError = error?.objc
             }
 
-            var objc: DBXTeamListTeamAppsResult?
+            var objc: DBXTeamListTeamAppsResult? = nil
             if let swift = result {
                 objc = DBXTeamListTeamAppsResult(swift: swift)
             }
@@ -3867,6 +3783,7 @@ public class DBXTeamLinkedAppsListTeamLinkedAppsRpcRequest: NSObject, DBXRequest
     }
 }
 
+
 @objc
 public class DBXTeamLinkedAppsRevokeLinkedAppRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Team.RevokeLinkedAppErrorSerializer>
@@ -3879,7 +3796,7 @@ public class DBXTeamLinkedAppsRevokeLinkedAppRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamRevokeLinkedAppError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3887,7 +3804,7 @@ public class DBXTeamLinkedAppsRevokeLinkedAppRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXTeamRevokeLinkedAppError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXTeamRevokeLinkedAppError?
             var callError: DBXCallError?
             switch error {
@@ -3930,6 +3847,7 @@ public class DBXTeamLinkedAppsRevokeLinkedAppRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamLinkedAppsRevokeLinkedAppBatchRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.RevokeLinkedAppBatchResultSerializer, Team.RevokeLinkedAppBatchErrorSerializer>
@@ -3942,7 +3860,7 @@ public class DBXTeamLinkedAppsRevokeLinkedAppBatchRpcRequest: NSObject, DBXReque
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamRevokeLinkedAppBatchResult?, DBXTeamRevokeLinkedAppBatchError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -3962,7 +3880,7 @@ public class DBXTeamLinkedAppsRevokeLinkedAppBatchRpcRequest: NSObject, DBXReque
                 callError = error?.objc
             }
 
-            var objc: DBXTeamRevokeLinkedAppBatchResult?
+            var objc: DBXTeamRevokeLinkedAppBatchResult? = nil
             if let swift = result {
                 objc = DBXTeamRevokeLinkedAppBatchResult(swift: swift)
             }
@@ -3997,6 +3915,7 @@ public class DBXTeamLinkedAppsRevokeLinkedAppBatchRpcRequest: NSObject, DBXReque
     }
 }
 
+
 @objc
 public class DBXTeamMemberSpaceLimitsExcludedUsersAddRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.ExcludedUsersUpdateResultSerializer, Team.ExcludedUsersUpdateErrorSerializer>
@@ -4009,7 +3928,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersAddRpcRequest: NSObject, DBXRe
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamExcludedUsersUpdateResult?, DBXTeamExcludedUsersUpdateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -4029,7 +3948,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersAddRpcRequest: NSObject, DBXRe
                 callError = error?.objc
             }
 
-            var objc: DBXTeamExcludedUsersUpdateResult?
+            var objc: DBXTeamExcludedUsersUpdateResult? = nil
             if let swift = result {
                 objc = DBXTeamExcludedUsersUpdateResult(swift: swift)
             }
@@ -4064,6 +3983,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersAddRpcRequest: NSObject, DBXRe
     }
 }
 
+
 @objc
 public class DBXTeamMemberSpaceLimitsExcludedUsersListRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.ExcludedUsersListResultSerializer, Team.ExcludedUsersListErrorSerializer>
@@ -4076,7 +3996,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersListRpcRequest: NSObject, DBXR
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamExcludedUsersListResult?, DBXTeamExcludedUsersListError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -4096,7 +4016,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersListRpcRequest: NSObject, DBXR
                 callError = error?.objc
             }
 
-            var objc: DBXTeamExcludedUsersListResult?
+            var objc: DBXTeamExcludedUsersListResult? = nil
             if let swift = result {
                 objc = DBXTeamExcludedUsersListResult(swift: swift)
             }
@@ -4131,6 +4051,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersListRpcRequest: NSObject, DBXR
     }
 }
 
+
 @objc
 public class DBXTeamMemberSpaceLimitsExcludedUsersListContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.ExcludedUsersListResultSerializer, Team.ExcludedUsersListContinueErrorSerializer>
@@ -4143,7 +4064,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersListContinueRpcRequest: NSObje
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamExcludedUsersListResult?, DBXTeamExcludedUsersListContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -4163,7 +4084,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersListContinueRpcRequest: NSObje
                 callError = error?.objc
             }
 
-            var objc: DBXTeamExcludedUsersListResult?
+            var objc: DBXTeamExcludedUsersListResult? = nil
             if let swift = result {
                 objc = DBXTeamExcludedUsersListResult(swift: swift)
             }
@@ -4198,6 +4119,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersListContinueRpcRequest: NSObje
     }
 }
 
+
 @objc
 public class DBXTeamMemberSpaceLimitsExcludedUsersRemoveRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.ExcludedUsersUpdateResultSerializer, Team.ExcludedUsersUpdateErrorSerializer>
@@ -4210,7 +4132,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersRemoveRpcRequest: NSObject, DB
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamExcludedUsersUpdateResult?, DBXTeamExcludedUsersUpdateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -4230,7 +4152,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersRemoveRpcRequest: NSObject, DB
                 callError = error?.objc
             }
 
-            var objc: DBXTeamExcludedUsersUpdateResult?
+            var objc: DBXTeamExcludedUsersUpdateResult? = nil
             if let swift = result {
                 objc = DBXTeamExcludedUsersUpdateResult(swift: swift)
             }
@@ -4265,6 +4187,7 @@ public class DBXTeamMemberSpaceLimitsExcludedUsersRemoveRpcRequest: NSObject, DB
     }
 }
 
+
 @objc
 public class DBXTeamMemberSpaceLimitsGetCustomQuotaRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<ArraySerializer<Team.CustomQuotaResultSerializer>, Team.CustomQuotaErrorSerializer>
@@ -4275,15 +4198,15 @@ public class DBXTeamMemberSpaceLimitsGetCustomQuotaRpcRequest: NSObject, DBXRequ
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping ([DBXTeamCustomQuotaResult]?, DBXTeamCustomQuotaError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamCustomQuotaResult>?, DBXTeamCustomQuotaError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping ([DBXTeamCustomQuotaResult]?, DBXTeamCustomQuotaError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamCustomQuotaResult>?, DBXTeamCustomQuotaError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
             var routeError: DBXTeamCustomQuotaError?
@@ -4297,7 +4220,7 @@ public class DBXTeamMemberSpaceLimitsGetCustomQuotaRpcRequest: NSObject, DBXRequ
                 callError = error?.objc
             }
 
-            var objc: [DBXTeamCustomQuotaResult]?
+            var objc: Array<DBXTeamCustomQuotaResult>? = nil
             if let swift = result {
                 objc = swift.map { DBXTeamCustomQuotaResult.factory(swift: $0) }
             }
@@ -4332,6 +4255,7 @@ public class DBXTeamMemberSpaceLimitsGetCustomQuotaRpcRequest: NSObject, DBXRequ
     }
 }
 
+
 @objc
 public class DBXTeamMemberSpaceLimitsRemoveCustomQuotaRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<ArraySerializer<Team.RemoveCustomQuotaResultSerializer>, Team.CustomQuotaErrorSerializer>
@@ -4342,15 +4266,15 @@ public class DBXTeamMemberSpaceLimitsRemoveCustomQuotaRpcRequest: NSObject, DBXR
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping ([DBXTeamRemoveCustomQuotaResult]?, DBXTeamCustomQuotaError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamRemoveCustomQuotaResult>?, DBXTeamCustomQuotaError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping ([DBXTeamRemoveCustomQuotaResult]?, DBXTeamCustomQuotaError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamRemoveCustomQuotaResult>?, DBXTeamCustomQuotaError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
             var routeError: DBXTeamCustomQuotaError?
@@ -4364,7 +4288,7 @@ public class DBXTeamMemberSpaceLimitsRemoveCustomQuotaRpcRequest: NSObject, DBXR
                 callError = error?.objc
             }
 
-            var objc: [DBXTeamRemoveCustomQuotaResult]?
+            var objc: Array<DBXTeamRemoveCustomQuotaResult>? = nil
             if let swift = result {
                 objc = swift.map { DBXTeamRemoveCustomQuotaResult.factory(swift: $0) }
             }
@@ -4399,6 +4323,7 @@ public class DBXTeamMemberSpaceLimitsRemoveCustomQuotaRpcRequest: NSObject, DBXR
     }
 }
 
+
 @objc
 public class DBXTeamMemberSpaceLimitsSetCustomQuotaRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<ArraySerializer<Team.CustomQuotaResultSerializer>, Team.SetCustomQuotaErrorSerializer>
@@ -4409,15 +4334,15 @@ public class DBXTeamMemberSpaceLimitsSetCustomQuotaRpcRequest: NSObject, DBXRequ
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping ([DBXTeamCustomQuotaResult]?, DBXTeamSetCustomQuotaError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamCustomQuotaResult>?, DBXTeamSetCustomQuotaError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping ([DBXTeamCustomQuotaResult]?, DBXTeamSetCustomQuotaError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamCustomQuotaResult>?, DBXTeamSetCustomQuotaError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
             var routeError: DBXTeamSetCustomQuotaError?
@@ -4431,7 +4356,7 @@ public class DBXTeamMemberSpaceLimitsSetCustomQuotaRpcRequest: NSObject, DBXRequ
                 callError = error?.objc
             }
 
-            var objc: [DBXTeamCustomQuotaResult]?
+            var objc: Array<DBXTeamCustomQuotaResult>? = nil
             if let swift = result {
                 objc = swift.map { DBXTeamCustomQuotaResult.factory(swift: $0) }
             }
@@ -4466,6 +4391,7 @@ public class DBXTeamMemberSpaceLimitsSetCustomQuotaRpcRequest: NSObject, DBXRequ
     }
 }
 
+
 @objc
 public class DBXTeamMembersAddRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersAddLaunchSerializer, VoidSerializer>
@@ -4478,7 +4404,7 @@ public class DBXTeamMembersAddRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersAddLaunch?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -4487,7 +4413,7 @@ public class DBXTeamMembersAddRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXTeamMembersAddLaunch?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXTeamMembersAddLaunch?
+            var objc: DBXTeamMembersAddLaunch? = nil
             if let swift = result {
                 objc = DBXTeamMembersAddLaunch.factory(swift: swift)
             }
@@ -4522,6 +4448,7 @@ public class DBXTeamMembersAddRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersAddRpcRequestV2: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersAddLaunchV2ResultSerializer, VoidSerializer>
@@ -4534,7 +4461,7 @@ public class DBXTeamMembersAddRpcRequestV2: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersAddLaunchV2Result?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -4543,7 +4470,7 @@ public class DBXTeamMembersAddRpcRequestV2: NSObject, DBXRequest {
         completionHandler: @escaping (DBXTeamMembersAddLaunchV2Result?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXTeamMembersAddLaunchV2Result?
+            var objc: DBXTeamMembersAddLaunchV2Result? = nil
             if let swift = result {
                 objc = DBXTeamMembersAddLaunchV2Result.factory(swift: swift)
             }
@@ -4578,6 +4505,7 @@ public class DBXTeamMembersAddRpcRequestV2: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersAddJobStatusGetRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersAddJobStatusSerializer, Async.PollErrorSerializer>
@@ -4590,7 +4518,7 @@ public class DBXTeamMembersAddJobStatusGetRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersAddJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -4610,7 +4538,7 @@ public class DBXTeamMembersAddJobStatusGetRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamMembersAddJobStatus?
+            var objc: DBXTeamMembersAddJobStatus? = nil
             if let swift = result {
                 objc = DBXTeamMembersAddJobStatus.factory(swift: swift)
             }
@@ -4645,6 +4573,7 @@ public class DBXTeamMembersAddJobStatusGetRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersAddJobStatusV2ResultSerializer, Async.PollErrorSerializer>
@@ -4657,7 +4586,7 @@ public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersAddJobStatusV2Result?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -4677,7 +4606,7 @@ public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamMembersAddJobStatusV2Result?
+            var objc: DBXTeamMembersAddJobStatusV2Result? = nil
             if let swift = result {
                 objc = DBXTeamMembersAddJobStatusV2Result.factory(swift: swift)
             }
@@ -4712,6 +4641,71 @@ public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
     }
 }
 
+
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<VoidSerializer, Team.MembersDeleteFormerMemberFilesErrorSerializer>
+
+    init(swift: RpcRequest<VoidSerializer, Team.MembersDeleteFormerMemberFilesErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXTeamMembersDeleteFormerMemberFilesError?, DBXCallError?) -> Void
+    ) -> Self {
+        self.response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXTeamMembersDeleteFormerMemberFilesError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXTeamMembersDeleteFormerMemberFilesError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXTeamMembersDeleteFormerMemberFilesError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            completionHandler(routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+
 @objc
 public class DBXTeamMembersDeleteProfilePhotoRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersDeleteProfilePhotoErrorSerializer>
@@ -4724,7 +4718,7 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamMemberInfo?, DBXTeamMembersDeleteProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -4744,7 +4738,7 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamMemberInfo?
+            var objc: DBXTeamTeamMemberInfo? = nil
             if let swift = result {
                 objc = DBXTeamTeamMemberInfo(swift: swift)
             }
@@ -4779,6 +4773,7 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersDeleteProfilePhotoRpcRequestV2: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersDeleteProfilePhotoErrorSerializer>
@@ -4791,7 +4786,7 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequestV2: NSObject, DBXRequest 
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersDeleteProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -4811,7 +4806,7 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequestV2: NSObject, DBXRequest 
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamMemberInfoV2Result?
+            var objc: DBXTeamTeamMemberInfoV2Result? = nil
             if let swift = result {
                 objc = DBXTeamTeamMemberInfoV2Result(swift: swift)
             }
@@ -4846,6 +4841,7 @@ public class DBXTeamMembersDeleteProfilePhotoRpcRequestV2: NSObject, DBXRequest 
     }
 }
 
+
 @objc
 public class DBXTeamMembersGetAvailableTeamMemberRolesRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersGetAvailableTeamMemberRolesResultSerializer, VoidSerializer>
@@ -4858,7 +4854,7 @@ public class DBXTeamMembersGetAvailableTeamMemberRolesRpcRequest: NSObject, DBXR
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersGetAvailableTeamMemberRolesResult?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -4867,7 +4863,7 @@ public class DBXTeamMembersGetAvailableTeamMemberRolesRpcRequest: NSObject, DBXR
         completionHandler: @escaping (DBXTeamMembersGetAvailableTeamMemberRolesResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXTeamMembersGetAvailableTeamMemberRolesResult?
+            var objc: DBXTeamMembersGetAvailableTeamMemberRolesResult? = nil
             if let swift = result {
                 objc = DBXTeamMembersGetAvailableTeamMemberRolesResult(swift: swift)
             }
@@ -4902,6 +4898,7 @@ public class DBXTeamMembersGetAvailableTeamMemberRolesRpcRequest: NSObject, DBXR
     }
 }
 
+
 @objc
 public class DBXTeamMembersGetInfoRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<ArraySerializer<Team.MembersGetInfoItemSerializer>, Team.MembersGetInfoErrorSerializer>
@@ -4912,15 +4909,15 @@ public class DBXTeamMembersGetInfoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping ([DBXTeamMembersGetInfoItem]?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamMembersGetInfoItem>?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping ([DBXTeamMembersGetInfoItem]?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamMembersGetInfoItem>?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
             var routeError: DBXTeamMembersGetInfoError?
@@ -4934,7 +4931,7 @@ public class DBXTeamMembersGetInfoRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: [DBXTeamMembersGetInfoItem]?
+            var objc: Array<DBXTeamMembersGetInfoItem>? = nil
             if let swift = result {
                 objc = swift.map { DBXTeamMembersGetInfoItem.factory(swift: $0) }
             }
@@ -4969,6 +4966,7 @@ public class DBXTeamMembersGetInfoRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersGetInfoRpcRequestV2: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersGetInfoV2ResultSerializer, Team.MembersGetInfoErrorSerializer>
@@ -4981,7 +4979,7 @@ public class DBXTeamMembersGetInfoRpcRequestV2: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersGetInfoV2Result?, DBXTeamMembersGetInfoError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5001,7 +4999,7 @@ public class DBXTeamMembersGetInfoRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamMembersGetInfoV2Result?
+            var objc: DBXTeamMembersGetInfoV2Result? = nil
             if let swift = result {
                 objc = DBXTeamMembersGetInfoV2Result(swift: swift)
             }
@@ -5036,6 +5034,7 @@ public class DBXTeamMembersGetInfoRpcRequestV2: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersListRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersListResultSerializer, Team.MembersListErrorSerializer>
@@ -5048,7 +5047,7 @@ public class DBXTeamMembersListRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersListResult?, DBXTeamMembersListError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5068,7 +5067,7 @@ public class DBXTeamMembersListRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamMembersListResult?
+            var objc: DBXTeamMembersListResult? = nil
             if let swift = result {
                 objc = DBXTeamMembersListResult(swift: swift)
             }
@@ -5102,6 +5101,7 @@ public class DBXTeamMembersListRpcRequest: NSObject, DBXRequest {
         swift.cancel()
     }
 }
+
 
 @objc
 public class DBXTeamMembersListRpcRequestV2: NSObject, DBXRequest {
@@ -5115,7 +5115,7 @@ public class DBXTeamMembersListRpcRequestV2: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5135,7 +5135,7 @@ public class DBXTeamMembersListRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamMembersListV2Result?
+            var objc: DBXTeamMembersListV2Result? = nil
             if let swift = result {
                 objc = DBXTeamMembersListV2Result(swift: swift)
             }
@@ -5170,6 +5170,7 @@ public class DBXTeamMembersListRpcRequestV2: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersListContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersListResultSerializer, Team.MembersListContinueErrorSerializer>
@@ -5182,7 +5183,7 @@ public class DBXTeamMembersListContinueRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersListResult?, DBXTeamMembersListContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5202,7 +5203,7 @@ public class DBXTeamMembersListContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamMembersListResult?
+            var objc: DBXTeamMembersListResult? = nil
             if let swift = result {
                 objc = DBXTeamMembersListResult(swift: swift)
             }
@@ -5237,6 +5238,7 @@ public class DBXTeamMembersListContinueRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersListContinueRpcRequestV2: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersListV2ResultSerializer, Team.MembersListContinueErrorSerializer>
@@ -5249,7 +5251,7 @@ public class DBXTeamMembersListContinueRpcRequestV2: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersListV2Result?, DBXTeamMembersListContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5269,7 +5271,7 @@ public class DBXTeamMembersListContinueRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamMembersListV2Result?
+            var objc: DBXTeamMembersListV2Result? = nil
             if let swift = result {
                 objc = DBXTeamMembersListV2Result(swift: swift)
             }
@@ -5304,6 +5306,7 @@ public class DBXTeamMembersListContinueRpcRequestV2: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersMoveFormerMemberFilesRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Async.LaunchEmptyResultSerializer, Team.MembersTransferFormerMembersFilesErrorSerializer>
@@ -5316,7 +5319,7 @@ public class DBXTeamMembersMoveFormerMemberFilesRpcRequest: NSObject, DBXRequest
     @discardableResult public func response(
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXTeamMembersTransferFormerMembersFilesError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5336,7 +5339,7 @@ public class DBXTeamMembersMoveFormerMemberFilesRpcRequest: NSObject, DBXRequest
                 callError = error?.objc
             }
 
-            var objc: DBXAsyncLaunchEmptyResult?
+            var objc: DBXAsyncLaunchEmptyResult? = nil
             if let swift = result {
                 objc = DBXAsyncLaunchEmptyResult.factory(swift: swift)
             }
@@ -5371,6 +5374,7 @@ public class DBXTeamMembersMoveFormerMemberFilesRpcRequest: NSObject, DBXRequest
     }
 }
 
+
 @objc
 public class DBXTeamMembersMoveFormerMemberFilesJobStatusCheckRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Async.PollEmptyResultSerializer, Async.PollErrorSerializer>
@@ -5383,7 +5387,7 @@ public class DBXTeamMembersMoveFormerMemberFilesJobStatusCheckRpcRequest: NSObje
     @discardableResult public func response(
         completionHandler: @escaping (DBXAsyncPollEmptyResult?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5403,7 +5407,7 @@ public class DBXTeamMembersMoveFormerMemberFilesJobStatusCheckRpcRequest: NSObje
                 callError = error?.objc
             }
 
-            var objc: DBXAsyncPollEmptyResult?
+            var objc: DBXAsyncPollEmptyResult? = nil
             if let swift = result {
                 objc = DBXAsyncPollEmptyResult.factory(swift: swift)
             }
@@ -5438,6 +5442,7 @@ public class DBXTeamMembersMoveFormerMemberFilesJobStatusCheckRpcRequest: NSObje
     }
 }
 
+
 @objc
 public class DBXTeamMembersRecoverRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Team.MembersRecoverErrorSerializer>
@@ -5450,7 +5455,7 @@ public class DBXTeamMembersRecoverRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersRecoverError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5458,7 +5463,7 @@ public class DBXTeamMembersRecoverRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXTeamMembersRecoverError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXTeamMembersRecoverError?
             var callError: DBXCallError?
             switch error {
@@ -5501,6 +5506,7 @@ public class DBXTeamMembersRecoverRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersRemoveRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Async.LaunchEmptyResultSerializer, Team.MembersRemoveErrorSerializer>
@@ -5513,7 +5519,7 @@ public class DBXTeamMembersRemoveRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXAsyncLaunchEmptyResult?, DBXTeamMembersRemoveError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5533,7 +5539,7 @@ public class DBXTeamMembersRemoveRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXAsyncLaunchEmptyResult?
+            var objc: DBXAsyncLaunchEmptyResult? = nil
             if let swift = result {
                 objc = DBXAsyncLaunchEmptyResult.factory(swift: swift)
             }
@@ -5568,6 +5574,7 @@ public class DBXTeamMembersRemoveRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersRemoveJobStatusGetRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Async.PollEmptyResultSerializer, Async.PollErrorSerializer>
@@ -5580,7 +5587,7 @@ public class DBXTeamMembersRemoveJobStatusGetRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXAsyncPollEmptyResult?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5600,7 +5607,7 @@ public class DBXTeamMembersRemoveJobStatusGetRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXAsyncPollEmptyResult?
+            var objc: DBXAsyncPollEmptyResult? = nil
             if let swift = result {
                 objc = DBXAsyncPollEmptyResult.factory(swift: swift)
             }
@@ -5635,6 +5642,7 @@ public class DBXTeamMembersRemoveJobStatusGetRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersSecondaryEmailsAddRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.AddSecondaryEmailsResultSerializer, Team.AddSecondaryEmailsErrorSerializer>
@@ -5647,7 +5655,7 @@ public class DBXTeamMembersSecondaryEmailsAddRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamAddSecondaryEmailsResult?, DBXTeamAddSecondaryEmailsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5667,7 +5675,7 @@ public class DBXTeamMembersSecondaryEmailsAddRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamAddSecondaryEmailsResult?
+            var objc: DBXTeamAddSecondaryEmailsResult? = nil
             if let swift = result {
                 objc = DBXTeamAddSecondaryEmailsResult(swift: swift)
             }
@@ -5702,6 +5710,7 @@ public class DBXTeamMembersSecondaryEmailsAddRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersSecondaryEmailsDeleteRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.DeleteSecondaryEmailsResultSerializer, VoidSerializer>
@@ -5714,7 +5723,7 @@ public class DBXTeamMembersSecondaryEmailsDeleteRpcRequest: NSObject, DBXRequest
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamDeleteSecondaryEmailsResult?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5723,7 +5732,7 @@ public class DBXTeamMembersSecondaryEmailsDeleteRpcRequest: NSObject, DBXRequest
         completionHandler: @escaping (DBXTeamDeleteSecondaryEmailsResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXTeamDeleteSecondaryEmailsResult?
+            var objc: DBXTeamDeleteSecondaryEmailsResult? = nil
             if let swift = result {
                 objc = DBXTeamDeleteSecondaryEmailsResult(swift: swift)
             }
@@ -5758,6 +5767,7 @@ public class DBXTeamMembersSecondaryEmailsDeleteRpcRequest: NSObject, DBXRequest
     }
 }
 
+
 @objc
 public class DBXTeamMembersSecondaryEmailsResendVerificationEmailsRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.ResendVerificationEmailResultSerializer, VoidSerializer>
@@ -5770,7 +5780,7 @@ public class DBXTeamMembersSecondaryEmailsResendVerificationEmailsRpcRequest: NS
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamResendVerificationEmailResult?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5779,7 +5789,7 @@ public class DBXTeamMembersSecondaryEmailsResendVerificationEmailsRpcRequest: NS
         completionHandler: @escaping (DBXTeamResendVerificationEmailResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXTeamResendVerificationEmailResult?
+            var objc: DBXTeamResendVerificationEmailResult? = nil
             if let swift = result {
                 objc = DBXTeamResendVerificationEmailResult(swift: swift)
             }
@@ -5814,6 +5824,7 @@ public class DBXTeamMembersSecondaryEmailsResendVerificationEmailsRpcRequest: NS
     }
 }
 
+
 @objc
 public class DBXTeamMembersSendWelcomeEmailRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Team.MembersSendWelcomeErrorSerializer>
@@ -5826,7 +5837,7 @@ public class DBXTeamMembersSendWelcomeEmailRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersSendWelcomeError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5834,7 +5845,7 @@ public class DBXTeamMembersSendWelcomeEmailRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXTeamMembersSendWelcomeError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXTeamMembersSendWelcomeError?
             var callError: DBXCallError?
             switch error {
@@ -5877,6 +5888,7 @@ public class DBXTeamMembersSendWelcomeEmailRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersSetAdminPermissionsRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersSetPermissionsResultSerializer, Team.MembersSetPermissionsErrorSerializer>
@@ -5889,7 +5901,7 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersSetPermissionsResult?, DBXTeamMembersSetPermissionsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5909,7 +5921,7 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamMembersSetPermissionsResult?
+            var objc: DBXTeamMembersSetPermissionsResult? = nil
             if let swift = result {
                 objc = DBXTeamMembersSetPermissionsResult(swift: swift)
             }
@@ -5944,6 +5956,7 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersSetAdminPermissionsRpcRequestV2: NSObject, DBXRequest {
     var swift: RpcRequest<Team.MembersSetPermissions2ResultSerializer, Team.MembersSetPermissions2ErrorSerializer>
@@ -5956,7 +5969,7 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequestV2: NSObject, DBXRequest
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersSetPermissions2Result?, DBXTeamMembersSetPermissions2Error?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -5976,7 +5989,7 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequestV2: NSObject, DBXRequest
                 callError = error?.objc
             }
 
-            var objc: DBXTeamMembersSetPermissions2Result?
+            var objc: DBXTeamMembersSetPermissions2Result? = nil
             if let swift = result {
                 objc = DBXTeamMembersSetPermissions2Result(swift: swift)
             }
@@ -6011,6 +6024,7 @@ public class DBXTeamMembersSetAdminPermissionsRpcRequestV2: NSObject, DBXRequest
     }
 }
 
+
 @objc
 public class DBXTeamMembersSetProfileRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfileErrorSerializer>
@@ -6023,7 +6037,7 @@ public class DBXTeamMembersSetProfileRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamMemberInfo?, DBXTeamMembersSetProfileError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6043,7 +6057,7 @@ public class DBXTeamMembersSetProfileRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamMemberInfo?
+            var objc: DBXTeamTeamMemberInfo? = nil
             if let swift = result {
                 objc = DBXTeamTeamMemberInfo(swift: swift)
             }
@@ -6077,6 +6091,7 @@ public class DBXTeamMembersSetProfileRpcRequest: NSObject, DBXRequest {
         swift.cancel()
     }
 }
+
 
 @objc
 public class DBXTeamMembersSetProfileRpcRequestV2: NSObject, DBXRequest {
@@ -6090,7 +6105,7 @@ public class DBXTeamMembersSetProfileRpcRequestV2: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfileError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6110,7 +6125,7 @@ public class DBXTeamMembersSetProfileRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamMemberInfoV2Result?
+            var objc: DBXTeamTeamMemberInfoV2Result? = nil
             if let swift = result {
                 objc = DBXTeamTeamMemberInfoV2Result(swift: swift)
             }
@@ -6145,6 +6160,7 @@ public class DBXTeamMembersSetProfileRpcRequestV2: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersSetProfilePhotoRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamMemberInfoSerializer, Team.MembersSetProfilePhotoErrorSerializer>
@@ -6157,7 +6173,7 @@ public class DBXTeamMembersSetProfilePhotoRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamMemberInfo?, DBXTeamMembersSetProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6177,7 +6193,7 @@ public class DBXTeamMembersSetProfilePhotoRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamMemberInfo?
+            var objc: DBXTeamTeamMemberInfo? = nil
             if let swift = result {
                 objc = DBXTeamTeamMemberInfo(swift: swift)
             }
@@ -6212,6 +6228,7 @@ public class DBXTeamMembersSetProfilePhotoRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersSetProfilePhotoRpcRequestV2: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamMemberInfoV2ResultSerializer, Team.MembersSetProfilePhotoErrorSerializer>
@@ -6224,7 +6241,7 @@ public class DBXTeamMembersSetProfilePhotoRpcRequestV2: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamMemberInfoV2Result?, DBXTeamMembersSetProfilePhotoError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6244,7 +6261,7 @@ public class DBXTeamMembersSetProfilePhotoRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamMemberInfoV2Result?
+            var objc: DBXTeamTeamMemberInfoV2Result? = nil
             if let swift = result {
                 objc = DBXTeamTeamMemberInfoV2Result(swift: swift)
             }
@@ -6279,6 +6296,7 @@ public class DBXTeamMembersSetProfilePhotoRpcRequestV2: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersSuspendRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Team.MembersSuspendErrorSerializer>
@@ -6291,7 +6309,7 @@ public class DBXTeamMembersSuspendRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersSuspendError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6299,7 +6317,7 @@ public class DBXTeamMembersSuspendRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXTeamMembersSuspendError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXTeamMembersSuspendError?
             var callError: DBXCallError?
             switch error {
@@ -6342,6 +6360,7 @@ public class DBXTeamMembersSuspendRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamMembersUnsuspendRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Team.MembersUnsuspendErrorSerializer>
@@ -6354,7 +6373,7 @@ public class DBXTeamMembersUnsuspendRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamMembersUnsuspendError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6362,7 +6381,7 @@ public class DBXTeamMembersUnsuspendRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXTeamMembersUnsuspendError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXTeamMembersUnsuspendError?
             var callError: DBXCallError?
             switch error {
@@ -6405,6 +6424,7 @@ public class DBXTeamMembersUnsuspendRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamNamespacesListRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamNamespacesListResultSerializer, Team.TeamNamespacesListErrorSerializer>
@@ -6417,7 +6437,7 @@ public class DBXTeamNamespacesListRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamNamespacesListResult?, DBXTeamTeamNamespacesListError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6437,7 +6457,7 @@ public class DBXTeamNamespacesListRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamNamespacesListResult?
+            var objc: DBXTeamTeamNamespacesListResult? = nil
             if let swift = result {
                 objc = DBXTeamTeamNamespacesListResult(swift: swift)
             }
@@ -6472,6 +6492,7 @@ public class DBXTeamNamespacesListRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamNamespacesListContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamNamespacesListResultSerializer, Team.TeamNamespacesListContinueErrorSerializer>
@@ -6484,7 +6505,7 @@ public class DBXTeamNamespacesListContinueRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamNamespacesListResult?, DBXTeamTeamNamespacesListContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6504,7 +6525,7 @@ public class DBXTeamNamespacesListContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamNamespacesListResult?
+            var objc: DBXTeamTeamNamespacesListResult? = nil
             if let swift = result {
                 objc = DBXTeamTeamNamespacesListResult(swift: swift)
             }
@@ -6539,6 +6560,7 @@ public class DBXTeamNamespacesListContinueRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamPropertiesTemplateAddRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileProperties.AddTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer>
@@ -6551,7 +6573,7 @@ public class DBXTeamPropertiesTemplateAddRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesAddTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6571,7 +6593,7 @@ public class DBXTeamPropertiesTemplateAddRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesAddTemplateResult?
+            var objc: DBXFilePropertiesAddTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesAddTemplateResult(swift: swift)
             }
@@ -6606,6 +6628,7 @@ public class DBXTeamPropertiesTemplateAddRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamPropertiesTemplateGetRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<FileProperties.GetTemplateResultSerializer, FileProperties.TemplateErrorSerializer>
@@ -6618,7 +6641,7 @@ public class DBXTeamPropertiesTemplateGetRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXFilePropertiesGetTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6638,7 +6661,7 @@ public class DBXTeamPropertiesTemplateGetRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesGetTemplateResult?
+            var objc: DBXFilePropertiesGetTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesGetTemplateResult(swift: swift)
             }
@@ -6673,139 +6696,6 @@ public class DBXTeamPropertiesTemplateGetRpcRequest: NSObject, DBXRequest {
     }
 }
 
-@objc
-public class DBXTeamPropertiesTemplateListRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<FileProperties.ListTemplateResultSerializer, FileProperties.TemplateErrorSerializer>
-
-    init(swift: RpcRequest<FileProperties.ListTemplateResultSerializer, FileProperties.TemplateErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXFilePropertiesListTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilePropertiesListTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXFilePropertiesTemplateError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXFilePropertiesListTemplateResult?
-            if let swift = result {
-                objc = DBXFilePropertiesListTemplateResult(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
-public class DBXTeamPropertiesTemplateUpdateRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<FileProperties.UpdateTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer>
-
-    init(swift: RpcRequest<FileProperties.UpdateTemplateResultSerializer, FileProperties.ModifyTemplateErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXFilePropertiesUpdateTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilePropertiesUpdateTemplateResult?, DBXFilePropertiesModifyTemplateError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXFilePropertiesModifyTemplateError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesModifyTemplateError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXFilePropertiesUpdateTemplateResult?
-            if let swift = result {
-                objc = DBXFilePropertiesUpdateTemplateResult(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
 
 @objc
 public class DBXTeamReportsGetActivityRpcRequest: NSObject, DBXRequest {
@@ -6819,7 +6709,7 @@ public class DBXTeamReportsGetActivityRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamGetActivityReport?, DBXTeamDateRangeError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6839,7 +6729,7 @@ public class DBXTeamReportsGetActivityRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamGetActivityReport?
+            var objc: DBXTeamGetActivityReport? = nil
             if let swift = result {
                 objc = DBXTeamGetActivityReport(swift: swift)
             }
@@ -6874,6 +6764,7 @@ public class DBXTeamReportsGetActivityRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamReportsGetDevicesRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.GetDevicesReportSerializer, Team.DateRangeErrorSerializer>
@@ -6886,7 +6777,7 @@ public class DBXTeamReportsGetDevicesRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamGetDevicesReport?, DBXTeamDateRangeError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6906,7 +6797,7 @@ public class DBXTeamReportsGetDevicesRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamGetDevicesReport?
+            var objc: DBXTeamGetDevicesReport? = nil
             if let swift = result {
                 objc = DBXTeamGetDevicesReport(swift: swift)
             }
@@ -6941,6 +6832,7 @@ public class DBXTeamReportsGetDevicesRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamReportsGetMembershipRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.GetMembershipReportSerializer, Team.DateRangeErrorSerializer>
@@ -6953,7 +6845,7 @@ public class DBXTeamReportsGetMembershipRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamGetMembershipReport?, DBXTeamDateRangeError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -6973,7 +6865,7 @@ public class DBXTeamReportsGetMembershipRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamGetMembershipReport?
+            var objc: DBXTeamGetMembershipReport? = nil
             if let swift = result {
                 objc = DBXTeamGetMembershipReport(swift: swift)
             }
@@ -7008,6 +6900,7 @@ public class DBXTeamReportsGetMembershipRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamReportsGetStorageRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.GetStorageReportSerializer, Team.DateRangeErrorSerializer>
@@ -7020,7 +6913,7 @@ public class DBXTeamReportsGetStorageRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamGetStorageReport?, DBXTeamDateRangeError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7040,7 +6933,7 @@ public class DBXTeamReportsGetStorageRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamGetStorageReport?
+            var objc: DBXTeamGetStorageReport? = nil
             if let swift = result {
                 objc = DBXTeamGetStorageReport(swift: swift)
             }
@@ -7075,6 +6968,7 @@ public class DBXTeamReportsGetStorageRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamSharingAllowlistAddRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.SharingAllowlistAddResponseSerializer, Team.SharingAllowlistAddErrorSerializer>
@@ -7087,7 +6981,7 @@ public class DBXTeamSharingAllowlistAddRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamSharingAllowlistAddResponse?, DBXTeamSharingAllowlistAddError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7107,7 +7001,7 @@ public class DBXTeamSharingAllowlistAddRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamSharingAllowlistAddResponse?
+            var objc: DBXTeamSharingAllowlistAddResponse? = nil
             if let swift = result {
                 objc = DBXTeamSharingAllowlistAddResponse(swift: swift)
             }
@@ -7142,6 +7036,7 @@ public class DBXTeamSharingAllowlistAddRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamSharingAllowlistListRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.SharingAllowlistListResponseSerializer, Team.SharingAllowlistListErrorSerializer>
@@ -7154,7 +7049,7 @@ public class DBXTeamSharingAllowlistListRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamSharingAllowlistListResponse?, DBXTeamSharingAllowlistListError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7174,7 +7069,7 @@ public class DBXTeamSharingAllowlistListRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamSharingAllowlistListResponse?
+            var objc: DBXTeamSharingAllowlistListResponse? = nil
             if let swift = result {
                 objc = DBXTeamSharingAllowlistListResponse(swift: swift)
             }
@@ -7209,6 +7104,7 @@ public class DBXTeamSharingAllowlistListRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamSharingAllowlistListContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.SharingAllowlistListResponseSerializer, Team.SharingAllowlistListContinueErrorSerializer>
@@ -7221,7 +7117,7 @@ public class DBXTeamSharingAllowlistListContinueRpcRequest: NSObject, DBXRequest
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamSharingAllowlistListResponse?, DBXTeamSharingAllowlistListContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7241,7 +7137,7 @@ public class DBXTeamSharingAllowlistListContinueRpcRequest: NSObject, DBXRequest
                 callError = error?.objc
             }
 
-            var objc: DBXTeamSharingAllowlistListResponse?
+            var objc: DBXTeamSharingAllowlistListResponse? = nil
             if let swift = result {
                 objc = DBXTeamSharingAllowlistListResponse(swift: swift)
             }
@@ -7276,6 +7172,7 @@ public class DBXTeamSharingAllowlistListContinueRpcRequest: NSObject, DBXRequest
     }
 }
 
+
 @objc
 public class DBXTeamSharingAllowlistRemoveRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.SharingAllowlistRemoveResponseSerializer, Team.SharingAllowlistRemoveErrorSerializer>
@@ -7288,7 +7185,7 @@ public class DBXTeamSharingAllowlistRemoveRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamSharingAllowlistRemoveResponse?, DBXTeamSharingAllowlistRemoveError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7308,7 +7205,7 @@ public class DBXTeamSharingAllowlistRemoveRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamSharingAllowlistRemoveResponse?
+            var objc: DBXTeamSharingAllowlistRemoveResponse? = nil
             if let swift = result {
                 objc = DBXTeamSharingAllowlistRemoveResponse(swift: swift)
             }
@@ -7343,6 +7240,7 @@ public class DBXTeamSharingAllowlistRemoveRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamTeamFolderActivateRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderActivateErrorSerializer>
@@ -7355,7 +7253,7 @@ public class DBXTeamTeamFolderActivateRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderActivateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7375,7 +7273,7 @@ public class DBXTeamTeamFolderActivateRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamFolderMetadata?
+            var objc: DBXTeamTeamFolderMetadata? = nil
             if let swift = result {
                 objc = DBXTeamTeamFolderMetadata(swift: swift)
             }
@@ -7410,6 +7308,7 @@ public class DBXTeamTeamFolderActivateRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamTeamFolderArchiveRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamFolderArchiveLaunchSerializer, Team.TeamFolderArchiveErrorSerializer>
@@ -7422,7 +7321,7 @@ public class DBXTeamTeamFolderArchiveRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamFolderArchiveLaunch?, DBXTeamTeamFolderArchiveError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7442,7 +7341,7 @@ public class DBXTeamTeamFolderArchiveRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamFolderArchiveLaunch?
+            var objc: DBXTeamTeamFolderArchiveLaunch? = nil
             if let swift = result {
                 objc = DBXTeamTeamFolderArchiveLaunch.factory(swift: swift)
             }
@@ -7477,6 +7376,7 @@ public class DBXTeamTeamFolderArchiveRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamTeamFolderArchiveCheckRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamFolderArchiveJobStatusSerializer, Async.PollErrorSerializer>
@@ -7489,7 +7389,7 @@ public class DBXTeamTeamFolderArchiveCheckRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamFolderArchiveJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7509,7 +7409,7 @@ public class DBXTeamTeamFolderArchiveCheckRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamFolderArchiveJobStatus?
+            var objc: DBXTeamTeamFolderArchiveJobStatus? = nil
             if let swift = result {
                 objc = DBXTeamTeamFolderArchiveJobStatus.factory(swift: swift)
             }
@@ -7544,6 +7444,7 @@ public class DBXTeamTeamFolderArchiveCheckRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamTeamFolderCreateRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderCreateErrorSerializer>
@@ -7556,7 +7457,7 @@ public class DBXTeamTeamFolderCreateRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderCreateError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7576,7 +7477,7 @@ public class DBXTeamTeamFolderCreateRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamFolderMetadata?
+            var objc: DBXTeamTeamFolderMetadata? = nil
             if let swift = result {
                 objc = DBXTeamTeamFolderMetadata(swift: swift)
             }
@@ -7611,6 +7512,7 @@ public class DBXTeamTeamFolderCreateRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamTeamFolderGetInfoRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<ArraySerializer<Team.TeamFolderGetInfoItemSerializer>, VoidSerializer>
@@ -7621,18 +7523,18 @@ public class DBXTeamTeamFolderGetInfoRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping ([DBXTeamTeamFolderGetInfoItem]?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamTeamFolderGetInfoItem>?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping ([DBXTeamTeamFolderGetInfoItem]?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXTeamTeamFolderGetInfoItem>?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: [DBXTeamTeamFolderGetInfoItem]?
+            var objc: Array<DBXTeamTeamFolderGetInfoItem>? = nil
             if let swift = result {
                 objc = swift.map { DBXTeamTeamFolderGetInfoItem.factory(swift: $0) }
             }
@@ -7667,6 +7569,7 @@ public class DBXTeamTeamFolderGetInfoRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamTeamFolderListRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamFolderListResultSerializer, Team.TeamFolderListErrorSerializer>
@@ -7679,7 +7582,7 @@ public class DBXTeamTeamFolderListRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamFolderListResult?, DBXTeamTeamFolderListError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7699,7 +7602,7 @@ public class DBXTeamTeamFolderListRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamFolderListResult?
+            var objc: DBXTeamTeamFolderListResult? = nil
             if let swift = result {
                 objc = DBXTeamTeamFolderListResult(swift: swift)
             }
@@ -7734,6 +7637,7 @@ public class DBXTeamTeamFolderListRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamTeamFolderListContinueRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamFolderListResultSerializer, Team.TeamFolderListContinueErrorSerializer>
@@ -7746,7 +7650,7 @@ public class DBXTeamTeamFolderListContinueRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamFolderListResult?, DBXTeamTeamFolderListContinueError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7766,7 +7670,7 @@ public class DBXTeamTeamFolderListContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamFolderListResult?
+            var objc: DBXTeamTeamFolderListResult? = nil
             if let swift = result {
                 objc = DBXTeamTeamFolderListResult(swift: swift)
             }
@@ -7801,6 +7705,7 @@ public class DBXTeamTeamFolderListContinueRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXTeamTeamFolderPermanentlyDeleteRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Team.TeamFolderPermanentlyDeleteErrorSerializer>
@@ -7813,7 +7718,7 @@ public class DBXTeamTeamFolderPermanentlyDeleteRpcRequest: NSObject, DBXRequest 
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamFolderPermanentlyDeleteError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7821,7 +7726,7 @@ public class DBXTeamTeamFolderPermanentlyDeleteRpcRequest: NSObject, DBXRequest 
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXTeamTeamFolderPermanentlyDeleteError?, DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             var routeError: DBXTeamTeamFolderPermanentlyDeleteError?
             var callError: DBXCallError?
             switch error {
@@ -7864,6 +7769,7 @@ public class DBXTeamTeamFolderPermanentlyDeleteRpcRequest: NSObject, DBXRequest 
     }
 }
 
+
 @objc
 public class DBXTeamTeamFolderRenameRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderRenameErrorSerializer>
@@ -7876,7 +7782,7 @@ public class DBXTeamTeamFolderRenameRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderRenameError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7896,7 +7802,7 @@ public class DBXTeamTeamFolderRenameRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamFolderMetadata?
+            var objc: DBXTeamTeamFolderMetadata? = nil
             if let swift = result {
                 objc = DBXTeamTeamFolderMetadata(swift: swift)
             }
@@ -7931,6 +7837,75 @@ public class DBXTeamTeamFolderRenameRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
+@objc
+public class DBXTeamTeamFolderRestoreRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderRestoreErrorSerializer>
+
+    init(swift: RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderRestoreErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderRestoreError?, DBXCallError?) -> Void
+    ) -> Self {
+        self.response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderRestoreError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXTeamTeamFolderRestoreError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXTeamTeamFolderRestoreError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXTeamTeamFolderMetadata? = nil
+            if let swift = result {
+                objc = DBXTeamTeamFolderMetadata(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+
 @objc
 public class DBXTeamTeamFolderUpdateSyncSettingsRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TeamFolderMetadataSerializer, Team.TeamFolderUpdateSyncSettingsErrorSerializer>
@@ -7943,7 +7918,7 @@ public class DBXTeamTeamFolderUpdateSyncSettingsRpcRequest: NSObject, DBXRequest
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTeamFolderMetadata?, DBXTeamTeamFolderUpdateSyncSettingsError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -7963,7 +7938,7 @@ public class DBXTeamTeamFolderUpdateSyncSettingsRpcRequest: NSObject, DBXRequest
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTeamFolderMetadata?
+            var objc: DBXTeamTeamFolderMetadata? = nil
             if let swift = result {
                 objc = DBXTeamTeamFolderMetadata(swift: swift)
             }
@@ -7998,6 +7973,7 @@ public class DBXTeamTeamFolderUpdateSyncSettingsRpcRequest: NSObject, DBXRequest
     }
 }
 
+
 @objc
 public class DBXTeamTokenGetAuthenticatedAdminRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Team.TokenGetAuthenticatedAdminResultSerializer, Team.TokenGetAuthenticatedAdminErrorSerializer>
@@ -8010,7 +7986,7 @@ public class DBXTeamTokenGetAuthenticatedAdminRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXTeamTokenGetAuthenticatedAdminResult?, DBXTeamTokenGetAuthenticatedAdminError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -8030,7 +8006,7 @@ public class DBXTeamTokenGetAuthenticatedAdminRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamTokenGetAuthenticatedAdminResult?
+            var objc: DBXTeamTokenGetAuthenticatedAdminResult? = nil
             if let swift = result {
                 objc = DBXTeamTokenGetAuthenticatedAdminResult(swift: swift)
             }
@@ -8064,3 +8040,4 @@ public class DBXTeamTokenGetAuthenticatedAdminRpcRequest: NSObject, DBXRequest {
         swift.cancel()
     }
 }
+

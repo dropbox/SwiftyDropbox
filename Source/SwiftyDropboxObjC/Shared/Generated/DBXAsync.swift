@@ -34,12 +34,12 @@ public class DBXAsyncLaunchResultBase: NSObject {
 
     @objc
     public var asAsyncJobId: DBXAsyncLaunchResultBaseAsyncJobId? {
-        self as? DBXAsyncLaunchResultBaseAsyncJobId
+        return self as? DBXAsyncLaunchResultBaseAsyncJobId
     }
 }
 
 /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
-/// the status of the asynchronous job.
+        /// the status of the asynchronous job.
 @objc
 public class DBXAsyncLaunchResultBaseAsyncJobId: DBXAsyncLaunchResultBase {
     @objc
@@ -47,7 +47,7 @@ public class DBXAsyncLaunchResultBaseAsyncJobId: DBXAsyncLaunchResultBase {
 
     @objc
     public init(_ arg: String) {
-        self.asyncJobId = arg
+        asyncJobId = arg
         let swift = Async.LaunchResultBase.asyncJobId(arg)
         super.init(swift: swift)
     }
@@ -78,17 +78,17 @@ public class DBXAsyncLaunchEmptyResult: NSObject {
 
     @objc
     public var asAsyncJobId: DBXAsyncLaunchEmptyResultAsyncJobId? {
-        self as? DBXAsyncLaunchEmptyResultAsyncJobId
+        return self as? DBXAsyncLaunchEmptyResultAsyncJobId
     }
 
     @objc
     public var asComplete: DBXAsyncLaunchEmptyResultComplete? {
-        self as? DBXAsyncLaunchEmptyResultComplete
+        return self as? DBXAsyncLaunchEmptyResultComplete
     }
 }
 
 /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
-/// the status of the asynchronous job.
+        /// the status of the asynchronous job.
 @objc
 public class DBXAsyncLaunchEmptyResultAsyncJobId: DBXAsyncLaunchEmptyResult {
     @objc
@@ -96,7 +96,7 @@ public class DBXAsyncLaunchEmptyResultAsyncJobId: DBXAsyncLaunchEmptyResult {
 
     @objc
     public init(_ arg: String) {
-        self.asyncJobId = arg
+        asyncJobId = arg
         let swift = Async.LaunchEmptyResult.asyncJobId(arg)
         super.init(swift: swift)
     }
@@ -130,13 +130,14 @@ public class DBXAsyncPollArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
 
 /// Result returned by methods that poll for the status of an asynchronous job. Unions that extend this union should
 /// add a 'complete' field with a type of the information returned upon job completion. See PollEmptyResult for an
-/// example.
+/// example
 @objc
 public class DBXAsyncPollResultBase: NSObject {
     let swift: Async.PollResultBase
@@ -157,7 +158,7 @@ public class DBXAsyncPollResultBase: NSObject {
 
     @objc
     public var asInProgress: DBXAsyncPollResultBaseInProgress? {
-        self as? DBXAsyncPollResultBaseInProgress
+        return self as? DBXAsyncPollResultBaseInProgress
     }
 }
 
@@ -195,12 +196,12 @@ public class DBXAsyncPollEmptyResult: NSObject {
 
     @objc
     public var asInProgress: DBXAsyncPollEmptyResultInProgress? {
-        self as? DBXAsyncPollEmptyResultInProgress
+        return self as? DBXAsyncPollEmptyResultInProgress
     }
 
     @objc
     public var asComplete: DBXAsyncPollEmptyResultComplete? {
-        self as? DBXAsyncPollEmptyResultComplete
+        return self as? DBXAsyncPollEmptyResultComplete
     }
 }
 
@@ -249,17 +250,17 @@ public class DBXAsyncPollError: NSObject {
 
     @objc
     public var asInvalidAsyncJobId: DBXAsyncPollErrorInvalidAsyncJobId? {
-        self as? DBXAsyncPollErrorInvalidAsyncJobId
+        return self as? DBXAsyncPollErrorInvalidAsyncJobId
     }
 
     @objc
     public var asInternalError: DBXAsyncPollErrorInternalError? {
-        self as? DBXAsyncPollErrorInternalError
+        return self as? DBXAsyncPollErrorInternalError
     }
 
     @objc
     public var asOther: DBXAsyncPollErrorOther? {
-        self as? DBXAsyncPollErrorOther
+        return self as? DBXAsyncPollErrorOther
     }
 }
 
@@ -274,7 +275,7 @@ public class DBXAsyncPollErrorInvalidAsyncJobId: DBXAsyncPollError {
 }
 
 /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking
-/// succeeded, and if not, try again. This should happen very rarely.
+        /// succeeded, and if not, try again. This should happen very rarely.
 @objc
 public class DBXAsyncPollErrorInternalError: DBXAsyncPollError {
     @objc
@@ -293,3 +294,4 @@ public class DBXAsyncPollErrorOther: DBXAsyncPollError {
         super.init(swift: swift)
     }
 }
+

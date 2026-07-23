@@ -35,17 +35,17 @@ public class DBXUsersCommonAccountType: NSObject {
 
     @objc
     public var asBasic: DBXUsersCommonAccountTypeBasic? {
-        self as? DBXUsersCommonAccountTypeBasic
+        return self as? DBXUsersCommonAccountTypeBasic
     }
 
     @objc
     public var asPro: DBXUsersCommonAccountTypePro? {
-        self as? DBXUsersCommonAccountTypePro
+        return self as? DBXUsersCommonAccountTypePro
     }
 
     @objc
     public var asBusiness: DBXUsersCommonAccountTypeBusiness? {
-        self as? DBXUsersCommonAccountTypeBusiness
+        return self as? DBXUsersCommonAccountTypeBusiness
     }
 }
 
@@ -78,3 +78,4 @@ public class DBXUsersCommonAccountTypeBusiness: DBXUsersCommonAccountType {
         super.init(swift: swift)
     }
 }
+

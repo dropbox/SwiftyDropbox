@@ -10,6 +10,217 @@ import SwiftyDropbox
 /// Objective-C compatible datatypes for the account namespace
 /// For Swift see account
 
+/// Objective-C compatible AccountPhotoGetArg struct
+@objc
+public class DBXAccountAccountPhotoGetArg: NSObject {
+    /// Encoded ID of the user. Must start either with 'dbid:' or 'dbaphid:'.
+    @objc
+    public var dbxAccountId: String { swift.dbxAccountId }
+    /// A string representing the size of the photo.
+    @objc
+    public var size: String { swift.size }
+    /// True if the photo should be cropped and false otherwise.
+    @objc
+    public var circleCrop: NSNumber { swift.circleCrop as NSNumber }
+    /// True if we expect account photo to exist.
+    @objc
+    public var expectAccountPhoto: NSNumber { swift.expectAccountPhoto as NSNumber }
+
+    @objc
+    public init(dbxAccountId: String, size: String, circleCrop: NSNumber, expectAccountPhoto: NSNumber) {
+        self.swift = Account.AccountPhotoGetArg(dbxAccountId: dbxAccountId, size: size, circleCrop: circleCrop.boolValue, expectAccountPhoto: expectAccountPhoto.boolValue)
+    }
+
+    let swift: Account.AccountPhotoGetArg
+
+    public init(swift: Account.AccountPhotoGetArg) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible AccountPhotoGetError union
+@objc
+public class DBXAccountAccountPhotoGetError: NSObject {
+    let swift: Account.AccountPhotoGetError
+
+    public init(swift: Account.AccountPhotoGetError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Account.AccountPhotoGetError) -> DBXAccountAccountPhotoGetError {
+        switch swift {
+        case .thumbnailError(let swiftArg):
+            let arg = DBXAccountThumbnailError(swift: swiftArg)
+            return DBXAccountAccountPhotoGetErrorThumbnailError(arg)
+        case .accountPhotoMissing:
+            return DBXAccountAccountPhotoGetErrorAccountPhotoMissing()
+        case .expectedAccountPhotoMissing:
+            return DBXAccountAccountPhotoGetErrorExpectedAccountPhotoMissing()
+        case .other:
+            return DBXAccountAccountPhotoGetErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asThumbnailError: DBXAccountAccountPhotoGetErrorThumbnailError? {
+        return self as? DBXAccountAccountPhotoGetErrorThumbnailError
+    }
+
+    @objc
+    public var asAccountPhotoMissing: DBXAccountAccountPhotoGetErrorAccountPhotoMissing? {
+        return self as? DBXAccountAccountPhotoGetErrorAccountPhotoMissing
+    }
+
+    @objc
+    public var asExpectedAccountPhotoMissing: DBXAccountAccountPhotoGetErrorExpectedAccountPhotoMissing? {
+        return self as? DBXAccountAccountPhotoGetErrorExpectedAccountPhotoMissing
+    }
+
+    @objc
+    public var asOther: DBXAccountAccountPhotoGetErrorOther? {
+        return self as? DBXAccountAccountPhotoGetErrorOther
+    }
+}
+
+/// Indicates infrastructural failure.
+@objc
+public class DBXAccountAccountPhotoGetErrorThumbnailError: DBXAccountAccountPhotoGetError {
+    @objc
+    public var thumbnailError: DBXAccountThumbnailError
+
+    @objc
+    public init(_ arg: DBXAccountThumbnailError) {
+        thumbnailError = arg
+        let swift = Account.AccountPhotoGetError.thumbnailError(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// Account photo is missing (but we did not expect it to exist).
+@objc
+public class DBXAccountAccountPhotoGetErrorAccountPhotoMissing: DBXAccountAccountPhotoGetError {
+    @objc
+    public init() {
+        let swift = Account.AccountPhotoGetError.accountPhotoMissing
+        super.init(swift: swift)
+    }
+}
+
+/// Account photo was expected to exist, but it's missing.
+@objc
+public class DBXAccountAccountPhotoGetErrorExpectedAccountPhotoMissing: DBXAccountAccountPhotoGetError {
+    @objc
+    public init() {
+        let swift = Account.AccountPhotoGetError.expectedAccountPhotoMissing
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXAccountAccountPhotoGetErrorOther: DBXAccountAccountPhotoGetError {
+    @objc
+    public init() {
+        let swift = Account.AccountPhotoGetError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible AccountPhotoGetResult struct
+@objc
+public class DBXAccountAccountPhotoGetResult: NSObject {
+    /// The data returned by get_photo.
+    @objc
+    public var contentType: String { swift.contentType }
+
+    @objc
+    public init(contentType: String) {
+        self.swift = Account.AccountPhotoGetResult(contentType: contentType)
+    }
+
+    let swift: Account.AccountPhotoGetResult
+
+    public init(swift: Account.AccountPhotoGetResult) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
+@objc
+public class DBXAccountDeleteProfilePhotoArg: NSObject {
+
+    let swift: Account.DeleteProfilePhotoArg
+
+    public init(swift: Account.DeleteProfilePhotoArg) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// This union is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
+@objc
+public class DBXAccountDeleteProfilePhotoError: NSObject {
+    let swift: Account.DeleteProfilePhotoError
+
+    public init(swift: Account.DeleteProfilePhotoError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Account.DeleteProfilePhotoError) -> DBXAccountDeleteProfilePhotoError {
+        switch swift {
+        case .other:
+            return DBXAccountDeleteProfilePhotoErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asOther: DBXAccountDeleteProfilePhotoErrorOther? {
+        return self as? DBXAccountDeleteProfilePhotoErrorOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXAccountDeleteProfilePhotoErrorOther: DBXAccountDeleteProfilePhotoError {
+    @objc
+    public init() {
+        let swift = Account.DeleteProfilePhotoError.other
+        super.init(swift: swift)
+    }
+}
+
+/// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
+@objc
+public class DBXAccountDeleteProfilePhotoResult: NSObject {
+
+    let swift: Account.DeleteProfilePhotoResult
+
+    public init(swift: Account.DeleteProfilePhotoResult) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
 /// Objective-C compatible PhotoSourceArg union
 @objc
 public class DBXAccountPhotoSourceArg: NSObject {
@@ -34,12 +245,12 @@ public class DBXAccountPhotoSourceArg: NSObject {
 
     @objc
     public var asBase64Data: DBXAccountPhotoSourceArgBase64Data? {
-        self as? DBXAccountPhotoSourceArgBase64Data
+        return self as? DBXAccountPhotoSourceArgBase64Data
     }
 
     @objc
     public var asOther: DBXAccountPhotoSourceArgOther? {
-        self as? DBXAccountPhotoSourceArgOther
+        return self as? DBXAccountPhotoSourceArgOther
     }
 }
 
@@ -51,7 +262,7 @@ public class DBXAccountPhotoSourceArgBase64Data: DBXAccountPhotoSourceArg {
 
     @objc
     public init(_ arg: String) {
-        self.base64Data = arg
+        base64Data = arg
         let swift = Account.PhotoSourceArg.base64Data(arg)
         super.init(swift: swift)
     }
@@ -84,6 +295,7 @@ public class DBXAccountSetProfilePhotoArg: NSObject {
     public init(swift: Account.SetProfilePhotoArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -120,32 +332,32 @@ public class DBXAccountSetProfilePhotoError: NSObject {
 
     @objc
     public var asFileTypeError: DBXAccountSetProfilePhotoErrorFileTypeError? {
-        self as? DBXAccountSetProfilePhotoErrorFileTypeError
+        return self as? DBXAccountSetProfilePhotoErrorFileTypeError
     }
 
     @objc
     public var asFileSizeError: DBXAccountSetProfilePhotoErrorFileSizeError? {
-        self as? DBXAccountSetProfilePhotoErrorFileSizeError
+        return self as? DBXAccountSetProfilePhotoErrorFileSizeError
     }
 
     @objc
     public var asDimensionError: DBXAccountSetProfilePhotoErrorDimensionError? {
-        self as? DBXAccountSetProfilePhotoErrorDimensionError
+        return self as? DBXAccountSetProfilePhotoErrorDimensionError
     }
 
     @objc
     public var asThumbnailError: DBXAccountSetProfilePhotoErrorThumbnailError? {
-        self as? DBXAccountSetProfilePhotoErrorThumbnailError
+        return self as? DBXAccountSetProfilePhotoErrorThumbnailError
     }
 
     @objc
     public var asTransientError: DBXAccountSetProfilePhotoErrorTransientError? {
-        self as? DBXAccountSetProfilePhotoErrorTransientError
+        return self as? DBXAccountSetProfilePhotoErrorTransientError
     }
 
     @objc
     public var asOther: DBXAccountSetProfilePhotoErrorOther? {
-        self as? DBXAccountSetProfilePhotoErrorOther
+        return self as? DBXAccountSetProfilePhotoErrorOther
     }
 }
 
@@ -227,6 +439,77 @@ public class DBXAccountSetProfilePhotoResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
+
+/// Objective-C compatible ThumbnailError union
+@objc
+public class DBXAccountThumbnailError: NSObject {
+    let swift: Account.ThumbnailError
+
+    public init(swift: Account.ThumbnailError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Account.ThumbnailError) -> DBXAccountThumbnailError {
+        switch swift {
+        case .permanentFailure:
+            return DBXAccountThumbnailErrorPermanentFailure()
+        case .temporaryFailure:
+            return DBXAccountThumbnailErrorTemporaryFailure()
+        case .other:
+            return DBXAccountThumbnailErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asPermanentFailure: DBXAccountThumbnailErrorPermanentFailure? {
+        return self as? DBXAccountThumbnailErrorPermanentFailure
+    }
+
+    @objc
+    public var asTemporaryFailure: DBXAccountThumbnailErrorTemporaryFailure? {
+        return self as? DBXAccountThumbnailErrorTemporaryFailure
+    }
+
+    @objc
+    public var asOther: DBXAccountThumbnailErrorOther? {
+        return self as? DBXAccountThumbnailErrorOther
+    }
+}
+
+/// Indicates permanent infrastructural failure.
+@objc
+public class DBXAccountThumbnailErrorPermanentFailure: DBXAccountThumbnailError {
+    @objc
+    public init() {
+        let swift = Account.ThumbnailError.permanentFailure
+        super.init(swift: swift)
+    }
+}
+
+/// Indicates temporary infrastructural failure.
+@objc
+public class DBXAccountThumbnailErrorTemporaryFailure: DBXAccountThumbnailError {
+    @objc
+    public init() {
+        let swift = Account.ThumbnailError.temporaryFailure
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXAccountThumbnailErrorOther: DBXAccountThumbnailError {
+    @objc
+    public init() {
+        let swift = Account.ThumbnailError.other
+        super.init(swift: swift)
+    }
+}
+

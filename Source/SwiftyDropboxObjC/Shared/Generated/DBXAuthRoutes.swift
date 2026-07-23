@@ -30,7 +30,9 @@ public class DBXAuthRoutes: NSObject {
         let swift = swift.tokenRevoke()
         return DBXAuthTokenRevokeRpcRequest(swift: swift)
     }
+
 }
+
 
 @objc
 public class DBXAuthTokenRevokeRpcRequest: NSObject, DBXRequest {
@@ -44,7 +46,7 @@ public class DBXAuthTokenRevokeRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -52,7 +54,7 @@ public class DBXAuthTokenRevokeRpcRequest: NSObject, DBXRequest {
         queue: DispatchQueue?,
         completionHandler: @escaping (DBXCallError?) -> Void
     ) -> Self {
-        swift.response(queue: queue) { _, error in
+        swift.response(queue: queue) { result, error in
             completionHandler(error?.objc)
         }
         return self
@@ -83,3 +85,4 @@ public class DBXAuthTokenRevokeRpcRequest: NSObject, DBXRequest {
         swift.cancel()
     }
 }
+

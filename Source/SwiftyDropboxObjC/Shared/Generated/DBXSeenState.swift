@@ -45,42 +45,42 @@ public class DBXSeenStatePlatformType: NSObject {
 
     @objc
     public var asWeb: DBXSeenStatePlatformTypeWeb? {
-        self as? DBXSeenStatePlatformTypeWeb
+        return self as? DBXSeenStatePlatformTypeWeb
     }
 
     @objc
     public var asDesktop: DBXSeenStatePlatformTypeDesktop? {
-        self as? DBXSeenStatePlatformTypeDesktop
+        return self as? DBXSeenStatePlatformTypeDesktop
     }
 
     @objc
     public var asMobileIos: DBXSeenStatePlatformTypeMobileIos? {
-        self as? DBXSeenStatePlatformTypeMobileIos
+        return self as? DBXSeenStatePlatformTypeMobileIos
     }
 
     @objc
     public var asMobileAndroid: DBXSeenStatePlatformTypeMobileAndroid? {
-        self as? DBXSeenStatePlatformTypeMobileAndroid
+        return self as? DBXSeenStatePlatformTypeMobileAndroid
     }
 
     @objc
     public var asApi: DBXSeenStatePlatformTypeApi? {
-        self as? DBXSeenStatePlatformTypeApi
+        return self as? DBXSeenStatePlatformTypeApi
     }
 
     @objc
     public var asUnknown: DBXSeenStatePlatformTypeUnknown? {
-        self as? DBXSeenStatePlatformTypeUnknown
+        return self as? DBXSeenStatePlatformTypeUnknown
     }
 
     @objc
     public var asMobile: DBXSeenStatePlatformTypeMobile? {
-        self as? DBXSeenStatePlatformTypeMobile
+        return self as? DBXSeenStatePlatformTypeMobile
     }
 
     @objc
     public var asOther: DBXSeenStatePlatformTypeOther? {
-        self as? DBXSeenStatePlatformTypeOther
+        return self as? DBXSeenStatePlatformTypeOther
     }
 }
 
@@ -163,3 +163,4 @@ public class DBXSeenStatePlatformTypeOther: DBXSeenStatePlatformType {
         super.init(swift: swift)
     }
 }
+

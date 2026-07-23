@@ -37,13 +37,7 @@ public class TeamLogRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `TeamLog.GetTeamEventsResult` object on
     /// success or a `TeamLog.GetTeamEventsError` object on failure.
-    @discardableResult public func getEvents(
-        limit: UInt32 = 1_000,
-        accountId: String? = nil,
-        time: TeamCommon.TimeRange? = nil,
-        category: TeamLog.EventCategory? = nil,
-        eventType: TeamLog.EventTypeArg? = nil
-    ) -> RpcRequest<TeamLog.GetTeamEventsResultSerializer, TeamLog.GetTeamEventsErrorSerializer> {
+    @discardableResult public func getEvents(limit: UInt32 = 1000, accountId: String? = nil, time: TeamCommon.TimeRange? = nil, category: TeamLog.EventCategory? = nil, eventType: TeamLog.EventTypeArg? = nil) -> RpcRequest<TeamLog.GetTeamEventsResultSerializer, TeamLog.GetTeamEventsErrorSerializer> {
         let route = TeamLog.getEvents
         let serverArgs = TeamLog.GetTeamEventsArg(limit: limit, accountId: accountId, time: time, category: category, eventType: eventType)
         return client.request(route, serverArgs: serverArgs)
@@ -58,10 +52,10 @@ public class TeamLogRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `TeamLog.GetTeamEventsResult` object on
     /// success or a `TeamLog.GetTeamEventsContinueError` object on failure.
-    @discardableResult public func getEventsContinue(cursor: String)
-        -> RpcRequest<TeamLog.GetTeamEventsResultSerializer, TeamLog.GetTeamEventsContinueErrorSerializer> {
+    @discardableResult public func getEventsContinue(cursor: String) -> RpcRequest<TeamLog.GetTeamEventsResultSerializer, TeamLog.GetTeamEventsContinueErrorSerializer> {
         let route = TeamLog.getEventsContinue
         let serverArgs = TeamLog.GetTeamEventsContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
     }
+
 }

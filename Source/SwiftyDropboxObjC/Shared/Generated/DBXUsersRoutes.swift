@@ -29,8 +29,8 @@ public class DBXUsersRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Users.UserFeaturesGetValuesBatchResult`
     /// object on success or a `Users.UserFeaturesGetValuesBatchError` object on failure.
     @objc
-    @discardableResult public func featuresGetValues(features: [DBXUsersUserFeature]) -> DBXUsersFeaturesGetValuesRpcRequest {
-        let swift = swift.featuresGetValues(features: features.map(\.swift))
+    @discardableResult public func featuresGetValues(features: Array<DBXUsersUserFeature>) -> DBXUsersFeaturesGetValuesRpcRequest {
+        let swift = swift.featuresGetValues(features: features.map { $0.swift })
         return DBXUsersFeaturesGetValuesRpcRequest(swift: swift)
     }
 
@@ -48,7 +48,7 @@ public class DBXUsersRoutes: NSObject {
         return DBXUsersGetAccountRpcRequest(swift: swift)
     }
 
-    /// Get information about multiple user accounts.  At most 300 accounts may be queried per request.
+    /// Get information about multiple user accounts. At most 300 accounts may be queried per request.
     ///
     /// - scope: sharing.read
     ///
@@ -57,7 +57,7 @@ public class DBXUsersRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Array<Users.BasicAccount>` object on
     /// success or a `Users.GetAccountBatchError` object on failure.
     @objc
-    @discardableResult public func getAccountBatch(accountIds: [String]) -> DBXUsersGetAccountBatchRpcRequest {
+    @discardableResult public func getAccountBatch(accountIds: Array<String>) -> DBXUsersGetAccountBatchRpcRequest {
         let swift = swift.getAccountBatch(accountIds: accountIds)
         return DBXUsersGetAccountBatchRpcRequest(swift: swift)
     }
@@ -87,7 +87,9 @@ public class DBXUsersRoutes: NSObject {
         let swift = swift.getSpaceUsage()
         return DBXUsersGetSpaceUsageRpcRequest(swift: swift)
     }
+
 }
+
 
 @objc
 public class DBXUsersFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
@@ -101,7 +103,7 @@ public class DBXUsersFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXUsersUserFeaturesGetValuesBatchResult?, DBXUsersUserFeaturesGetValuesBatchError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -121,7 +123,7 @@ public class DBXUsersFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXUsersUserFeaturesGetValuesBatchResult?
+            var objc: DBXUsersUserFeaturesGetValuesBatchResult? = nil
             if let swift = result {
                 objc = DBXUsersUserFeaturesGetValuesBatchResult(swift: swift)
             }
@@ -156,6 +158,7 @@ public class DBXUsersFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXUsersGetAccountRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Users.BasicAccountSerializer, Users.GetAccountErrorSerializer>
@@ -168,7 +171,7 @@ public class DBXUsersGetAccountRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXUsersBasicAccount?, DBXUsersGetAccountError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -188,7 +191,7 @@ public class DBXUsersGetAccountRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXUsersBasicAccount?
+            var objc: DBXUsersBasicAccount? = nil
             if let swift = result {
                 objc = DBXUsersBasicAccount(swift: swift)
             }
@@ -223,6 +226,7 @@ public class DBXUsersGetAccountRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXUsersGetAccountBatchRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<ArraySerializer<Users.BasicAccountSerializer>, Users.GetAccountBatchErrorSerializer>
@@ -233,15 +237,15 @@ public class DBXUsersGetAccountBatchRpcRequest: NSObject, DBXRequest {
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping ([DBXUsersBasicAccount]?, DBXUsersGetAccountBatchError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXUsersBasicAccount>?, DBXUsersGetAccountBatchError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping ([DBXUsersBasicAccount]?, DBXUsersGetAccountBatchError?, DBXCallError?) -> Void
+        completionHandler: @escaping (Array<DBXUsersBasicAccount>?, DBXUsersGetAccountBatchError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
             var routeError: DBXUsersGetAccountBatchError?
@@ -255,7 +259,7 @@ public class DBXUsersGetAccountBatchRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: [DBXUsersBasicAccount]?
+            var objc: Array<DBXUsersBasicAccount>? = nil
             if let swift = result {
                 objc = swift.map { DBXUsersBasicAccount(swift: $0) }
             }
@@ -290,6 +294,7 @@ public class DBXUsersGetAccountBatchRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXUsersGetCurrentAccountRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Users.FullAccountSerializer, VoidSerializer>
@@ -302,7 +307,7 @@ public class DBXUsersGetCurrentAccountRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXUsersFullAccount?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -311,7 +316,7 @@ public class DBXUsersGetCurrentAccountRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXUsersFullAccount?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXUsersFullAccount?
+            var objc: DBXUsersFullAccount? = nil
             if let swift = result {
                 objc = DBXUsersFullAccount(swift: swift)
             }
@@ -346,6 +351,7 @@ public class DBXUsersGetCurrentAccountRpcRequest: NSObject, DBXRequest {
     }
 }
 
+
 @objc
 public class DBXUsersGetSpaceUsageRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Users.SpaceUsageSerializer, VoidSerializer>
@@ -358,7 +364,7 @@ public class DBXUsersGetSpaceUsageRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXUsersSpaceUsage?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -367,7 +373,7 @@ public class DBXUsersGetSpaceUsageRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXUsersSpaceUsage?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXUsersSpaceUsage?
+            var objc: DBXUsersSpaceUsage? = nil
             if let swift = result {
                 objc = DBXUsersSpaceUsage(swift: swift)
             }
@@ -401,3 +407,4 @@ public class DBXUsersGetSpaceUsageRpcRequest: NSObject, DBXRequest {
         swift.cancel()
     }
 }
+

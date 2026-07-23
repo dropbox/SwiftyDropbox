@@ -40,6 +40,7 @@ public class DBXTeamDeviceSession: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -61,28 +62,8 @@ public class DBXTeamActiveWebSession: DBXTeamDeviceSession {
     public var expires: Date? { subSwift.expires }
 
     @objc
-    public init(
-        sessionId: String,
-        userAgent: String,
-        os: String,
-        browser: String,
-        ipAddress: String?,
-        country: String?,
-        created: Date?,
-        updated: Date?,
-        expires: Date?
-    ) {
-        let swift = Team.ActiveWebSession(
-            sessionId: sessionId,
-            userAgent: userAgent,
-            os: os,
-            browser: browser,
-            ipAddress: ipAddress,
-            country: country,
-            created: created,
-            updated: updated,
-            expires: expires
-        )
+    public init(sessionId: String, userAgent: String, os: String, browser: String, ipAddress: String?, country: String?, created: Date?, updated: Date?, expires: Date?) {
+        let swift = Team.ActiveWebSession(sessionId: sessionId, userAgent: userAgent, os: os, browser: browser, ipAddress: ipAddress, country: country, created: created, updated: updated, expires: expires)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -93,6 +74,7 @@ public class DBXTeamActiveWebSession: DBXTeamDeviceSession {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -148,52 +130,52 @@ public class DBXTeamAddSecondaryEmailResult: NSObject {
 
     @objc
     public var asSuccess: DBXTeamAddSecondaryEmailResultSuccess? {
-        self as? DBXTeamAddSecondaryEmailResultSuccess
+        return self as? DBXTeamAddSecondaryEmailResultSuccess
     }
 
     @objc
     public var asUnavailable: DBXTeamAddSecondaryEmailResultUnavailable? {
-        self as? DBXTeamAddSecondaryEmailResultUnavailable
+        return self as? DBXTeamAddSecondaryEmailResultUnavailable
     }
 
     @objc
     public var asAlreadyPending: DBXTeamAddSecondaryEmailResultAlreadyPending? {
-        self as? DBXTeamAddSecondaryEmailResultAlreadyPending
+        return self as? DBXTeamAddSecondaryEmailResultAlreadyPending
     }
 
     @objc
     public var asAlreadyOwnedByUser: DBXTeamAddSecondaryEmailResultAlreadyOwnedByUser? {
-        self as? DBXTeamAddSecondaryEmailResultAlreadyOwnedByUser
+        return self as? DBXTeamAddSecondaryEmailResultAlreadyOwnedByUser
     }
 
     @objc
     public var asReachedLimit: DBXTeamAddSecondaryEmailResultReachedLimit? {
-        self as? DBXTeamAddSecondaryEmailResultReachedLimit
+        return self as? DBXTeamAddSecondaryEmailResultReachedLimit
     }
 
     @objc
     public var asTransientError: DBXTeamAddSecondaryEmailResultTransientError? {
-        self as? DBXTeamAddSecondaryEmailResultTransientError
+        return self as? DBXTeamAddSecondaryEmailResultTransientError
     }
 
     @objc
     public var asTooManyUpdates: DBXTeamAddSecondaryEmailResultTooManyUpdates? {
-        self as? DBXTeamAddSecondaryEmailResultTooManyUpdates
+        return self as? DBXTeamAddSecondaryEmailResultTooManyUpdates
     }
 
     @objc
     public var asUnknownError: DBXTeamAddSecondaryEmailResultUnknownError? {
-        self as? DBXTeamAddSecondaryEmailResultUnknownError
+        return self as? DBXTeamAddSecondaryEmailResultUnknownError
     }
 
     @objc
     public var asRateLimited: DBXTeamAddSecondaryEmailResultRateLimited? {
-        self as? DBXTeamAddSecondaryEmailResultRateLimited
+        return self as? DBXTeamAddSecondaryEmailResultRateLimited
     }
 
     @objc
     public var asOther: DBXTeamAddSecondaryEmailResultOther? {
-        self as? DBXTeamAddSecondaryEmailResultOther
+        return self as? DBXTeamAddSecondaryEmailResultOther
     }
 }
 
@@ -205,7 +187,7 @@ public class DBXTeamAddSecondaryEmailResultSuccess: DBXTeamAddSecondaryEmailResu
 
     @objc
     public init(_ arg: DBXSecondaryEmailsSecondaryEmail) {
-        self.success = arg
+        success = arg
         let swift = Team.AddSecondaryEmailResult.success(arg.swift)
         super.init(swift: swift)
     }
@@ -219,7 +201,7 @@ public class DBXTeamAddSecondaryEmailResultUnavailable: DBXTeamAddSecondaryEmail
 
     @objc
     public init(_ arg: String) {
-        self.unavailable = arg
+        unavailable = arg
         let swift = Team.AddSecondaryEmailResult.unavailable(arg)
         super.init(swift: swift)
     }
@@ -233,7 +215,7 @@ public class DBXTeamAddSecondaryEmailResultAlreadyPending: DBXTeamAddSecondaryEm
 
     @objc
     public init(_ arg: String) {
-        self.alreadyPending = arg
+        alreadyPending = arg
         let swift = Team.AddSecondaryEmailResult.alreadyPending(arg)
         super.init(swift: swift)
     }
@@ -247,7 +229,7 @@ public class DBXTeamAddSecondaryEmailResultAlreadyOwnedByUser: DBXTeamAddSeconda
 
     @objc
     public init(_ arg: String) {
-        self.alreadyOwnedByUser = arg
+        alreadyOwnedByUser = arg
         let swift = Team.AddSecondaryEmailResult.alreadyOwnedByUser(arg)
         super.init(swift: swift)
     }
@@ -261,13 +243,13 @@ public class DBXTeamAddSecondaryEmailResultReachedLimit: DBXTeamAddSecondaryEmai
 
     @objc
     public init(_ arg: String) {
-        self.reachedLimit = arg
+        reachedLimit = arg
         let swift = Team.AddSecondaryEmailResult.reachedLimit(arg)
         super.init(swift: swift)
     }
 }
 
-/// A transient error occurred. Please try again later.
+/// Field is deprecated. A transient error occurred. Please try again later.
 @objc
 public class DBXTeamAddSecondaryEmailResultTransientError: DBXTeamAddSecondaryEmailResult {
     @objc
@@ -275,7 +257,7 @@ public class DBXTeamAddSecondaryEmailResultTransientError: DBXTeamAddSecondaryEm
 
     @objc
     public init(_ arg: String) {
-        self.transientError = arg
+        transientError = arg
         let swift = Team.AddSecondaryEmailResult.transientError(arg)
         super.init(swift: swift)
     }
@@ -289,7 +271,7 @@ public class DBXTeamAddSecondaryEmailResultTooManyUpdates: DBXTeamAddSecondaryEm
 
     @objc
     public init(_ arg: String) {
-        self.tooManyUpdates = arg
+        tooManyUpdates = arg
         let swift = Team.AddSecondaryEmailResult.tooManyUpdates(arg)
         super.init(swift: swift)
     }
@@ -303,7 +285,7 @@ public class DBXTeamAddSecondaryEmailResultUnknownError: DBXTeamAddSecondaryEmai
 
     @objc
     public init(_ arg: String) {
-        self.unknownError = arg
+        unknownError = arg
         let swift = Team.AddSecondaryEmailResult.unknownError(arg)
         super.init(swift: swift)
     }
@@ -317,7 +299,7 @@ public class DBXTeamAddSecondaryEmailResultRateLimited: DBXTeamAddSecondaryEmail
 
     @objc
     public init(_ arg: String) {
-        self.rateLimited = arg
+        rateLimited = arg
         let swift = Team.AddSecondaryEmailResult.rateLimited(arg)
         super.init(swift: swift)
     }
@@ -338,11 +320,11 @@ public class DBXTeamAddSecondaryEmailResultOther: DBXTeamAddSecondaryEmailResult
 public class DBXTeamAddSecondaryEmailsArg: NSObject {
     /// List of users and secondary emails to add.
     @objc
-    public var newSecondaryEmails: [DBXTeamUserSecondaryEmailsArg] { swift.newSecondaryEmails.map { DBXTeamUserSecondaryEmailsArg(swift: $0) } }
+    public var newSecondaryEmails: Array<DBXTeamUserSecondaryEmailsArg> { swift.newSecondaryEmails.map { DBXTeamUserSecondaryEmailsArg(swift: $0) } }
 
     @objc
-    public init(newSecondaryEmails: [DBXTeamUserSecondaryEmailsArg]) {
-        self.swift = Team.AddSecondaryEmailsArg(newSecondaryEmails: newSecondaryEmails.map(\.swift))
+    public init(newSecondaryEmails: Array<DBXTeamUserSecondaryEmailsArg>) {
+        self.swift = Team.AddSecondaryEmailsArg(newSecondaryEmails: newSecondaryEmails.map { $0.swift })
     }
 
     let swift: Team.AddSecondaryEmailsArg
@@ -350,6 +332,7 @@ public class DBXTeamAddSecondaryEmailsArg: NSObject {
     public init(swift: Team.AddSecondaryEmailsArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -380,17 +363,17 @@ public class DBXTeamAddSecondaryEmailsError: NSObject {
 
     @objc
     public var asSecondaryEmailsDisabled: DBXTeamAddSecondaryEmailsErrorSecondaryEmailsDisabled? {
-        self as? DBXTeamAddSecondaryEmailsErrorSecondaryEmailsDisabled
+        return self as? DBXTeamAddSecondaryEmailsErrorSecondaryEmailsDisabled
     }
 
     @objc
     public var asTooManyEmails: DBXTeamAddSecondaryEmailsErrorTooManyEmails? {
-        self as? DBXTeamAddSecondaryEmailsErrorTooManyEmails
+        return self as? DBXTeamAddSecondaryEmailsErrorTooManyEmails
     }
 
     @objc
     public var asOther: DBXTeamAddSecondaryEmailsErrorOther? {
-        self as? DBXTeamAddSecondaryEmailsErrorOther
+        return self as? DBXTeamAddSecondaryEmailsErrorOther
     }
 }
 
@@ -429,11 +412,11 @@ public class DBXTeamAddSecondaryEmailsErrorOther: DBXTeamAddSecondaryEmailsError
 public class DBXTeamAddSecondaryEmailsResult: NSObject {
     /// List of users and secondary email results.
     @objc
-    public var results: [DBXTeamUserAddResult] { swift.results.map { DBXTeamUserAddResult(swift: $0) } }
+    public var results: Array<DBXTeamUserAddResult> { swift.results.map { DBXTeamUserAddResult(swift: $0) } }
 
     @objc
-    public init(results: [DBXTeamUserAddResult]) {
-        self.swift = Team.AddSecondaryEmailsResult(results: results.map(\.swift))
+    public init(results: Array<DBXTeamUserAddResult>) {
+        self.swift = Team.AddSecondaryEmailsResult(results: results.map { $0.swift })
     }
 
     let swift: Team.AddSecondaryEmailsResult
@@ -441,6 +424,7 @@ public class DBXTeamAddSecondaryEmailsResult: NSObject {
     public init(swift: Team.AddSecondaryEmailsResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -473,22 +457,22 @@ public class DBXTeamAdminTier: NSObject {
 
     @objc
     public var asTeamAdmin: DBXTeamAdminTierTeamAdmin? {
-        self as? DBXTeamAdminTierTeamAdmin
+        return self as? DBXTeamAdminTierTeamAdmin
     }
 
     @objc
     public var asUserManagementAdmin: DBXTeamAdminTierUserManagementAdmin? {
-        self as? DBXTeamAdminTierUserManagementAdmin
+        return self as? DBXTeamAdminTierUserManagementAdmin
     }
 
     @objc
     public var asSupportAdmin: DBXTeamAdminTierSupportAdmin? {
-        self as? DBXTeamAdminTierSupportAdmin
+        return self as? DBXTeamAdminTierSupportAdmin
     }
 
     @objc
     public var asMemberOnly: DBXTeamAdminTierMemberOnly? {
-        self as? DBXTeamAdminTierMemberOnly
+        return self as? DBXTeamAdminTierMemberOnly
     }
 }
 
@@ -513,7 +497,7 @@ public class DBXTeamAdminTierUserManagementAdmin: DBXTeamAdminTier {
 }
 
 /// User can do a limited set of common support tasks for existing users. Note: Dropbox is adding new types of
-/// admin roles; these may display as support_admin.
+        /// admin roles; these may display as support_admin.
 @objc
 public class DBXTeamAdminTierSupportAdmin: DBXTeamAdminTier {
     @objc
@@ -557,14 +541,7 @@ public class DBXTeamApiApp: NSObject {
 
     @objc
     public init(appId: String, appName: String, isAppFolder: NSNumber, publisher: String?, publisherUrl: String?, linked: Date?) {
-        self.swift = Team.ApiApp(
-            appId: appId,
-            appName: appName,
-            isAppFolder: isAppFolder.boolValue,
-            publisher: publisher,
-            publisherUrl: publisherUrl,
-            linked: linked
-        )
+        self.swift = Team.ApiApp(appId: appId, appName: appName, isAppFolder: isAppFolder.boolValue, publisher: publisher, publisherUrl: publisherUrl, linked: linked)
     }
 
     let swift: Team.ApiApp
@@ -572,6 +549,7 @@ public class DBXTeamApiApp: NSObject {
     public init(swift: Team.ApiApp) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -594,6 +572,7 @@ public class DBXTeamBaseDfbReport: NSObject {
     public init(swift: Team.BaseDfbReport) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -629,22 +608,22 @@ public class DBXTeamBaseTeamFolderError: NSObject {
 
     @objc
     public var asAccessError: DBXTeamBaseTeamFolderErrorAccessError? {
-        self as? DBXTeamBaseTeamFolderErrorAccessError
+        return self as? DBXTeamBaseTeamFolderErrorAccessError
     }
 
     @objc
     public var asStatusError: DBXTeamBaseTeamFolderErrorStatusError? {
-        self as? DBXTeamBaseTeamFolderErrorStatusError
+        return self as? DBXTeamBaseTeamFolderErrorStatusError
     }
 
     @objc
     public var asTeamSharedDropboxError: DBXTeamBaseTeamFolderErrorTeamSharedDropboxError? {
-        self as? DBXTeamBaseTeamFolderErrorTeamSharedDropboxError
+        return self as? DBXTeamBaseTeamFolderErrorTeamSharedDropboxError
     }
 
     @objc
     public var asOther: DBXTeamBaseTeamFolderErrorOther? {
-        self as? DBXTeamBaseTeamFolderErrorOther
+        return self as? DBXTeamBaseTeamFolderErrorOther
     }
 }
 
@@ -656,7 +635,7 @@ public class DBXTeamBaseTeamFolderErrorAccessError: DBXTeamBaseTeamFolderError {
 
     @objc
     public init(_ arg: DBXTeamTeamFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Team.BaseTeamFolderError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -670,7 +649,7 @@ public class DBXTeamBaseTeamFolderErrorStatusError: DBXTeamBaseTeamFolderError {
 
     @objc
     public init(_ arg: DBXTeamTeamFolderInvalidStatusError) {
-        self.statusError = arg
+        statusError = arg
         let swift = Team.BaseTeamFolderError.statusError(arg.swift)
         super.init(swift: swift)
     }
@@ -684,7 +663,7 @@ public class DBXTeamBaseTeamFolderErrorTeamSharedDropboxError: DBXTeamBaseTeamFo
 
     @objc
     public init(_ arg: DBXTeamTeamFolderTeamSharedDropboxError) {
-        self.teamSharedDropboxError = arg
+        teamSharedDropboxError = arg
         let swift = Team.BaseTeamFolderError.teamSharedDropboxError(arg.swift)
         super.init(swift: swift)
     }
@@ -723,12 +702,12 @@ public class DBXTeamCustomQuotaError: NSObject {
 
     @objc
     public var asTooManyUsers: DBXTeamCustomQuotaErrorTooManyUsers? {
-        self as? DBXTeamCustomQuotaErrorTooManyUsers
+        return self as? DBXTeamCustomQuotaErrorTooManyUsers
     }
 
     @objc
     public var asOther: DBXTeamCustomQuotaErrorOther? {
-        self as? DBXTeamCustomQuotaErrorOther
+        return self as? DBXTeamCustomQuotaErrorOther
     }
 }
 
@@ -779,17 +758,17 @@ public class DBXTeamCustomQuotaResult: NSObject {
 
     @objc
     public var asSuccess: DBXTeamCustomQuotaResultSuccess? {
-        self as? DBXTeamCustomQuotaResultSuccess
+        return self as? DBXTeamCustomQuotaResultSuccess
     }
 
     @objc
     public var asInvalidUser: DBXTeamCustomQuotaResultInvalidUser? {
-        self as? DBXTeamCustomQuotaResultInvalidUser
+        return self as? DBXTeamCustomQuotaResultInvalidUser
     }
 
     @objc
     public var asOther: DBXTeamCustomQuotaResultOther? {
-        self as? DBXTeamCustomQuotaResultOther
+        return self as? DBXTeamCustomQuotaResultOther
     }
 }
 
@@ -801,7 +780,7 @@ public class DBXTeamCustomQuotaResultSuccess: DBXTeamCustomQuotaResult {
 
     @objc
     public init(_ arg: DBXTeamUserCustomQuotaResult) {
-        self.success = arg
+        success = arg
         let swift = Team.CustomQuotaResult.success(arg.swift)
         super.init(swift: swift)
     }
@@ -815,7 +794,7 @@ public class DBXTeamCustomQuotaResultInvalidUser: DBXTeamCustomQuotaResult {
 
     @objc
     public init(_ arg: DBXTeamUserSelectorArg) {
-        self.invalidUser = arg
+        invalidUser = arg
         let swift = Team.CustomQuotaResult.invalidUser(arg.swift)
         super.init(swift: swift)
     }
@@ -836,11 +815,11 @@ public class DBXTeamCustomQuotaResultOther: DBXTeamCustomQuotaResult {
 public class DBXTeamCustomQuotaUsersArg: NSObject {
     /// List of users.
     @objc
-    public var users: [DBXTeamUserSelectorArg] { swift.users.map { DBXTeamUserSelectorArg(swift: $0) } }
+    public var users: Array<DBXTeamUserSelectorArg> { swift.users.map { DBXTeamUserSelectorArg(swift: $0) } }
 
     @objc
-    public init(users: [DBXTeamUserSelectorArg]) {
-        self.swift = Team.CustomQuotaUsersArg(users: users.map(\.swift))
+    public init(users: Array<DBXTeamUserSelectorArg>) {
+        self.swift = Team.CustomQuotaUsersArg(users: users.map { $0.swift })
     }
 
     let swift: Team.CustomQuotaUsersArg
@@ -849,6 +828,7 @@ public class DBXTeamCustomQuotaUsersArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -856,7 +836,7 @@ public class DBXTeamCustomQuotaUsersArg: NSObject {
 /// Input arguments that can be provided for most reports.
 @objc
 public class DBXTeamDateRange: NSObject {
-    /// Optional starting date (inclusive). If start_date is None or too long ago, this field will  be set to 6
+    /// Optional starting date (inclusive). If start_date is None or too long ago, this field will be set to 6
     /// months ago.
     @objc
     public var startDate: Date? { swift.startDate }
@@ -874,6 +854,7 @@ public class DBXTeamDateRange: NSObject {
     public init(swift: Team.DateRange) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -900,7 +881,7 @@ public class DBXTeamDateRangeError: NSObject {
 
     @objc
     public var asOther: DBXTeamDateRangeErrorOther? {
-        self as? DBXTeamDateRangeErrorOther
+        return self as? DBXTeamDateRangeErrorOther
     }
 }
 
@@ -946,22 +927,22 @@ public class DBXTeamDeleteSecondaryEmailResult: NSObject {
 
     @objc
     public var asSuccess: DBXTeamDeleteSecondaryEmailResultSuccess? {
-        self as? DBXTeamDeleteSecondaryEmailResultSuccess
+        return self as? DBXTeamDeleteSecondaryEmailResultSuccess
     }
 
     @objc
     public var asNotFound: DBXTeamDeleteSecondaryEmailResultNotFound? {
-        self as? DBXTeamDeleteSecondaryEmailResultNotFound
+        return self as? DBXTeamDeleteSecondaryEmailResultNotFound
     }
 
     @objc
     public var asCannotRemovePrimary: DBXTeamDeleteSecondaryEmailResultCannotRemovePrimary? {
-        self as? DBXTeamDeleteSecondaryEmailResultCannotRemovePrimary
+        return self as? DBXTeamDeleteSecondaryEmailResultCannotRemovePrimary
     }
 
     @objc
     public var asOther: DBXTeamDeleteSecondaryEmailResultOther? {
-        self as? DBXTeamDeleteSecondaryEmailResultOther
+        return self as? DBXTeamDeleteSecondaryEmailResultOther
     }
 }
 
@@ -973,7 +954,7 @@ public class DBXTeamDeleteSecondaryEmailResultSuccess: DBXTeamDeleteSecondaryEma
 
     @objc
     public init(_ arg: String) {
-        self.success = arg
+        success = arg
         let swift = Team.DeleteSecondaryEmailResult.success(arg)
         super.init(swift: swift)
     }
@@ -987,7 +968,7 @@ public class DBXTeamDeleteSecondaryEmailResultNotFound: DBXTeamDeleteSecondaryEm
 
     @objc
     public init(_ arg: String) {
-        self.notFound = arg
+        notFound = arg
         let swift = Team.DeleteSecondaryEmailResult.notFound(arg)
         super.init(swift: swift)
     }
@@ -1001,7 +982,7 @@ public class DBXTeamDeleteSecondaryEmailResultCannotRemovePrimary: DBXTeamDelete
 
     @objc
     public init(_ arg: String) {
-        self.cannotRemovePrimary = arg
+        cannotRemovePrimary = arg
         let swift = Team.DeleteSecondaryEmailResult.cannotRemovePrimary(arg)
         super.init(swift: swift)
     }
@@ -1022,11 +1003,11 @@ public class DBXTeamDeleteSecondaryEmailResultOther: DBXTeamDeleteSecondaryEmail
 public class DBXTeamDeleteSecondaryEmailsArg: NSObject {
     /// List of users and their secondary emails to delete.
     @objc
-    public var emailsToDelete: [DBXTeamUserSecondaryEmailsArg] { swift.emailsToDelete.map { DBXTeamUserSecondaryEmailsArg(swift: $0) } }
+    public var emailsToDelete: Array<DBXTeamUserSecondaryEmailsArg> { swift.emailsToDelete.map { DBXTeamUserSecondaryEmailsArg(swift: $0) } }
 
     @objc
-    public init(emailsToDelete: [DBXTeamUserSecondaryEmailsArg]) {
-        self.swift = Team.DeleteSecondaryEmailsArg(emailsToDelete: emailsToDelete.map(\.swift))
+    public init(emailsToDelete: Array<DBXTeamUserSecondaryEmailsArg>) {
+        self.swift = Team.DeleteSecondaryEmailsArg(emailsToDelete: emailsToDelete.map { $0.swift })
     }
 
     let swift: Team.DeleteSecondaryEmailsArg
@@ -1034,6 +1015,7 @@ public class DBXTeamDeleteSecondaryEmailsArg: NSObject {
     public init(swift: Team.DeleteSecondaryEmailsArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1044,11 +1026,11 @@ public class DBXTeamDeleteSecondaryEmailsArg: NSObject {
 public class DBXTeamDeleteSecondaryEmailsResult: NSObject {
     /// (no description)
     @objc
-    public var results: [DBXTeamUserDeleteResult] { swift.results.map { DBXTeamUserDeleteResult(swift: $0) } }
+    public var results: Array<DBXTeamUserDeleteResult> { swift.results.map { DBXTeamUserDeleteResult(swift: $0) } }
 
     @objc
-    public init(results: [DBXTeamUserDeleteResult]) {
-        self.swift = Team.DeleteSecondaryEmailsResult(results: results.map(\.swift))
+    public init(results: Array<DBXTeamUserDeleteResult>) {
+        self.swift = Team.DeleteSecondaryEmailsResult(results: results.map { $0.swift })
     }
 
     let swift: Team.DeleteSecondaryEmailsResult
@@ -1056,6 +1038,7 @@ public class DBXTeamDeleteSecondaryEmailsResult: NSObject {
     public init(swift: Team.DeleteSecondaryEmailsResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1081,30 +1064,8 @@ public class DBXTeamDesktopClientSession: DBXTeamDeviceSession {
     public var isDeleteOnUnlinkSupported: NSNumber { subSwift.isDeleteOnUnlinkSupported as NSNumber }
 
     @objc
-    public init(
-        sessionId: String,
-        hostName: String,
-        clientType: DBXTeamDesktopPlatform,
-        clientVersion: String,
-        platform: String,
-        isDeleteOnUnlinkSupported: NSNumber,
-        ipAddress: String?,
-        country: String?,
-        created: Date?,
-        updated: Date?
-    ) {
-        let swift = Team.DesktopClientSession(
-            sessionId: sessionId,
-            hostName: hostName,
-            clientType: clientType.swift,
-            clientVersion: clientVersion,
-            platform: platform,
-            isDeleteOnUnlinkSupported: isDeleteOnUnlinkSupported.boolValue,
-            ipAddress: ipAddress,
-            country: country,
-            created: created,
-            updated: updated
-        )
+    public init(sessionId: String, hostName: String, clientType: DBXTeamDesktopPlatform, clientVersion: String, platform: String, isDeleteOnUnlinkSupported: NSNumber, ipAddress: String?, country: String?, created: Date?, updated: Date?) {
+        let swift = Team.DesktopClientSession(sessionId: sessionId, hostName: hostName, clientType: clientType.swift, clientVersion: clientVersion, platform: platform, isDeleteOnUnlinkSupported: isDeleteOnUnlinkSupported.boolValue, ipAddress: ipAddress, country: country, created: created, updated: updated)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -1115,6 +1076,7 @@ public class DBXTeamDesktopClientSession: DBXTeamDeviceSession {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -1147,22 +1109,22 @@ public class DBXTeamDesktopPlatform: NSObject {
 
     @objc
     public var asWindows: DBXTeamDesktopPlatformWindows? {
-        self as? DBXTeamDesktopPlatformWindows
+        return self as? DBXTeamDesktopPlatformWindows
     }
 
     @objc
     public var asMac: DBXTeamDesktopPlatformMac? {
-        self as? DBXTeamDesktopPlatformMac
+        return self as? DBXTeamDesktopPlatformMac
     }
 
     @objc
     public var asLinux: DBXTeamDesktopPlatformLinux? {
-        self as? DBXTeamDesktopPlatformLinux
+        return self as? DBXTeamDesktopPlatformLinux
     }
 
     @objc
     public var asOther: DBXTeamDesktopPlatformOther? {
-        self as? DBXTeamDesktopPlatformOther
+        return self as? DBXTeamDesktopPlatformOther
     }
 }
 
@@ -1227,6 +1189,7 @@ public class DBXTeamDeviceSessionArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -1237,37 +1200,29 @@ public class DBXTeamDeviceSessionArg: NSObject {
 public class DBXTeamDevicesActive: NSObject {
     /// Array of number of linked windows (desktop) clients with activity.
     @objc
-    public var windows: [NSNumber] { swift.windows.compactMap { $0 as NSNumber? } }
+    public var windows: Array<NSNumber> { swift.windows.compactMap { $0 as NSNumber? } }
     /// Array of number of linked mac (desktop) clients with activity.
     @objc
-    public var macos: [NSNumber] { swift.macos.compactMap { $0 as NSNumber? } }
+    public var macos: Array<NSNumber> { swift.macos.compactMap { $0 as NSNumber? } }
     /// Array of number of linked linus (desktop) clients with activity.
     @objc
-    public var linux: [NSNumber] { swift.linux.compactMap { $0 as NSNumber? } }
+    public var linux: Array<NSNumber> { swift.linux.compactMap { $0 as NSNumber? } }
     /// Array of number of linked ios devices with activity.
     @objc
-    public var ios: [NSNumber] { swift.ios.compactMap { $0 as NSNumber? } }
+    public var ios: Array<NSNumber> { swift.ios.compactMap { $0 as NSNumber? } }
     /// Array of number of linked android devices with activity.
     @objc
-    public var android: [NSNumber] { swift.android.compactMap { $0 as NSNumber? } }
-    /// Array of number of other linked devices (blackberry, windows phone, etc)  with activity.
+    public var android: Array<NSNumber> { swift.android.compactMap { $0 as NSNumber? } }
+    /// Array of number of other linked devices (blackberry, windows phone, etc) with activity.
     @objc
-    public var other: [NSNumber] { swift.other.compactMap { $0 as NSNumber? } }
+    public var other: Array<NSNumber> { swift.other.compactMap { $0 as NSNumber? } }
     /// Array of total number of linked clients with activity.
     @objc
-    public var total: [NSNumber] { swift.total.compactMap { $0 as NSNumber? } }
+    public var total: Array<NSNumber> { swift.total.compactMap { $0 as NSNumber? } }
 
     @objc
-    public init(windows: [NSNumber], macos: [NSNumber], linux: [NSNumber], ios: [NSNumber], android: [NSNumber], other: [NSNumber], total: [NSNumber]) {
-        self.swift = Team.DevicesActive(
-            windows: windows.map(\.uint64Value),
-            macos: macos.map(\.uint64Value),
-            linux: linux.map(\.uint64Value),
-            ios: ios.map(\.uint64Value),
-            android: android.map(\.uint64Value),
-            other: other.map(\.uint64Value),
-            total: total.map(\.uint64Value)
-        )
+    public init(windows: Array<NSNumber>, macos: Array<NSNumber>, linux: Array<NSNumber>, ios: Array<NSNumber>, android: Array<NSNumber>, other: Array<NSNumber>, total: Array<NSNumber>) {
+        self.swift = Team.DevicesActive(windows: windows.map { $0.uint64Value }, macos: macos.map { $0.uint64Value }, linux: linux.map { $0.uint64Value }, ios: ios.map { $0.uint64Value }, android: android.map { $0.uint64Value }, other: other.map { $0.uint64Value }, total: total.map { $0.uint64Value })
     }
 
     let swift: Team.DevicesActive
@@ -1275,6 +1230,7 @@ public class DBXTeamDevicesActive: NSObject {
     public init(swift: Team.DevicesActive) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1298,6 +1254,7 @@ public class DBXTeamExcludedUsersListArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -1319,6 +1276,7 @@ public class DBXTeamExcludedUsersListContinueArg: NSObject {
     public init(swift: Team.ExcludedUsersListContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1347,12 +1305,12 @@ public class DBXTeamExcludedUsersListContinueError: NSObject {
 
     @objc
     public var asInvalidCursor: DBXTeamExcludedUsersListContinueErrorInvalidCursor? {
-        self as? DBXTeamExcludedUsersListContinueErrorInvalidCursor
+        return self as? DBXTeamExcludedUsersListContinueErrorInvalidCursor
     }
 
     @objc
     public var asOther: DBXTeamExcludedUsersListContinueErrorOther? {
-        self as? DBXTeamExcludedUsersListContinueErrorOther
+        return self as? DBXTeamExcludedUsersListContinueErrorOther
     }
 }
 
@@ -1399,12 +1357,12 @@ public class DBXTeamExcludedUsersListError: NSObject {
 
     @objc
     public var asListError: DBXTeamExcludedUsersListErrorListError? {
-        self as? DBXTeamExcludedUsersListErrorListError
+        return self as? DBXTeamExcludedUsersListErrorListError
     }
 
     @objc
     public var asOther: DBXTeamExcludedUsersListErrorOther? {
-        self as? DBXTeamExcludedUsersListErrorOther
+        return self as? DBXTeamExcludedUsersListErrorOther
     }
 }
 
@@ -1433,7 +1391,7 @@ public class DBXTeamExcludedUsersListErrorOther: DBXTeamExcludedUsersListError {
 public class DBXTeamExcludedUsersListResult: NSObject {
     /// (no description)
     @objc
-    public var users: [DBXTeamMemberProfile] { swift.users.map { DBXTeamMemberProfile(swift: $0) } }
+    public var users: Array<DBXTeamMemberProfile> { swift.users.map { DBXTeamMemberProfile(swift: $0) } }
     /// Pass the cursor into memberSpaceLimitsExcludedUsersListContinue to obtain additional excluded users.
     @objc
     public var cursor: String? { swift.cursor }
@@ -1443,8 +1401,8 @@ public class DBXTeamExcludedUsersListResult: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(users: [DBXTeamMemberProfile], hasMore: NSNumber, cursor: String?) {
-        self.swift = Team.ExcludedUsersListResult(users: users.map(\.swift), hasMore: hasMore.boolValue, cursor: cursor)
+    public init(users: Array<DBXTeamMemberProfile>, hasMore: NSNumber, cursor: String?) {
+        self.swift = Team.ExcludedUsersListResult(users: users.map { $0.swift }, hasMore: hasMore.boolValue, cursor: cursor)
     }
 
     let swift: Team.ExcludedUsersListResult
@@ -1452,6 +1410,7 @@ public class DBXTeamExcludedUsersListResult: NSObject {
     public init(swift: Team.ExcludedUsersListResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1463,11 +1422,11 @@ public class DBXTeamExcludedUsersListResult: NSObject {
 public class DBXTeamExcludedUsersUpdateArg: NSObject {
     /// List of users to be added/removed.
     @objc
-    public var users: [DBXTeamUserSelectorArg]? { swift.users?.map { DBXTeamUserSelectorArg(swift: $0) } }
+    public var users: Array<DBXTeamUserSelectorArg>? { swift.users?.map { DBXTeamUserSelectorArg(swift: $0) } }
 
     @objc
-    public init(users: [DBXTeamUserSelectorArg]?) {
-        self.swift = Team.ExcludedUsersUpdateArg(users: users?.map(\.swift))
+    public init(users: Array<DBXTeamUserSelectorArg>?) {
+        self.swift = Team.ExcludedUsersUpdateArg(users: users?.map { $0.swift })
     }
 
     let swift: Team.ExcludedUsersUpdateArg
@@ -1475,6 +1434,7 @@ public class DBXTeamExcludedUsersUpdateArg: NSObject {
     public init(swift: Team.ExcludedUsersUpdateArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1505,17 +1465,17 @@ public class DBXTeamExcludedUsersUpdateError: NSObject {
 
     @objc
     public var asUsersNotInTeam: DBXTeamExcludedUsersUpdateErrorUsersNotInTeam? {
-        self as? DBXTeamExcludedUsersUpdateErrorUsersNotInTeam
+        return self as? DBXTeamExcludedUsersUpdateErrorUsersNotInTeam
     }
 
     @objc
     public var asTooManyUsers: DBXTeamExcludedUsersUpdateErrorTooManyUsers? {
-        self as? DBXTeamExcludedUsersUpdateErrorTooManyUsers
+        return self as? DBXTeamExcludedUsersUpdateErrorTooManyUsers
     }
 
     @objc
     public var asOther: DBXTeamExcludedUsersUpdateErrorOther? {
-        self as? DBXTeamExcludedUsersUpdateErrorOther
+        return self as? DBXTeamExcludedUsersUpdateErrorOther
     }
 }
 
@@ -1567,6 +1527,7 @@ public class DBXTeamExcludedUsersUpdateResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -1594,12 +1555,12 @@ public class DBXTeamExcludedUsersUpdateStatus: NSObject {
 
     @objc
     public var asSuccess: DBXTeamExcludedUsersUpdateStatusSuccess? {
-        self as? DBXTeamExcludedUsersUpdateStatusSuccess
+        return self as? DBXTeamExcludedUsersUpdateStatusSuccess
     }
 
     @objc
     public var asOther: DBXTeamExcludedUsersUpdateStatusOther? {
-        self as? DBXTeamExcludedUsersUpdateStatusOther
+        return self as? DBXTeamExcludedUsersUpdateStatusOther
     }
 }
 
@@ -1642,6 +1603,8 @@ public class DBXTeamFeature: NSObject {
             return DBXTeamFeatureHasTeamFileEvents()
         case .hasTeamSelectiveSync:
             return DBXTeamFeatureHasTeamSelectiveSync()
+        case .hasDistinctMemberHomes:
+            return DBXTeamFeatureHasDistinctMemberHomes()
         case .other:
             return DBXTeamFeatureOther()
         }
@@ -1652,27 +1615,32 @@ public class DBXTeamFeature: NSObject {
 
     @objc
     public var asUploadApiRateLimit: DBXTeamFeatureUploadApiRateLimit? {
-        self as? DBXTeamFeatureUploadApiRateLimit
+        return self as? DBXTeamFeatureUploadApiRateLimit
     }
 
     @objc
     public var asHasTeamSharedDropbox: DBXTeamFeatureHasTeamSharedDropbox? {
-        self as? DBXTeamFeatureHasTeamSharedDropbox
+        return self as? DBXTeamFeatureHasTeamSharedDropbox
     }
 
     @objc
     public var asHasTeamFileEvents: DBXTeamFeatureHasTeamFileEvents? {
-        self as? DBXTeamFeatureHasTeamFileEvents
+        return self as? DBXTeamFeatureHasTeamFileEvents
     }
 
     @objc
     public var asHasTeamSelectiveSync: DBXTeamFeatureHasTeamSelectiveSync? {
-        self as? DBXTeamFeatureHasTeamSelectiveSync
+        return self as? DBXTeamFeatureHasTeamSelectiveSync
+    }
+
+    @objc
+    public var asHasDistinctMemberHomes: DBXTeamFeatureHasDistinctMemberHomes? {
+        return self as? DBXTeamFeatureHasDistinctMemberHomes
     }
 
     @objc
     public var asOther: DBXTeamFeatureOther? {
-        self as? DBXTeamFeatureOther
+        return self as? DBXTeamFeatureOther
     }
 }
 
@@ -1716,6 +1684,16 @@ public class DBXTeamFeatureHasTeamSelectiveSync: DBXTeamFeature {
     }
 }
 
+/// Does this team have team member folder.
+@objc
+public class DBXTeamFeatureHasDistinctMemberHomes: DBXTeamFeature {
+    @objc
+    public init() {
+        let swift = Team.Feature.hasDistinctMemberHomes
+        super.init(swift: swift)
+    }
+}
+
 /// An unspecified error.
 @objc
 public class DBXTeamFeatureOther: DBXTeamFeature {
@@ -1750,6 +1728,9 @@ public class DBXTeamFeatureValue: NSObject {
         case .hasTeamSelectiveSync(let swiftArg):
             let arg = DBXTeamHasTeamSelectiveSyncValue(swift: swiftArg)
             return DBXTeamFeatureValueHasTeamSelectiveSync(arg)
+        case .hasDistinctMemberHomes(let swiftArg):
+            let arg = DBXTeamHasDistinctMemberHomesValue(swift: swiftArg)
+            return DBXTeamFeatureValueHasDistinctMemberHomes(arg)
         case .other:
             return DBXTeamFeatureValueOther()
         }
@@ -1760,27 +1741,32 @@ public class DBXTeamFeatureValue: NSObject {
 
     @objc
     public var asUploadApiRateLimit: DBXTeamFeatureValueUploadApiRateLimit? {
-        self as? DBXTeamFeatureValueUploadApiRateLimit
+        return self as? DBXTeamFeatureValueUploadApiRateLimit
     }
 
     @objc
     public var asHasTeamSharedDropbox: DBXTeamFeatureValueHasTeamSharedDropbox? {
-        self as? DBXTeamFeatureValueHasTeamSharedDropbox
+        return self as? DBXTeamFeatureValueHasTeamSharedDropbox
     }
 
     @objc
     public var asHasTeamFileEvents: DBXTeamFeatureValueHasTeamFileEvents? {
-        self as? DBXTeamFeatureValueHasTeamFileEvents
+        return self as? DBXTeamFeatureValueHasTeamFileEvents
     }
 
     @objc
     public var asHasTeamSelectiveSync: DBXTeamFeatureValueHasTeamSelectiveSync? {
-        self as? DBXTeamFeatureValueHasTeamSelectiveSync
+        return self as? DBXTeamFeatureValueHasTeamSelectiveSync
+    }
+
+    @objc
+    public var asHasDistinctMemberHomes: DBXTeamFeatureValueHasDistinctMemberHomes? {
+        return self as? DBXTeamFeatureValueHasDistinctMemberHomes
     }
 
     @objc
     public var asOther: DBXTeamFeatureValueOther? {
-        self as? DBXTeamFeatureValueOther
+        return self as? DBXTeamFeatureValueOther
     }
 }
 
@@ -1792,7 +1778,7 @@ public class DBXTeamFeatureValueUploadApiRateLimit: DBXTeamFeatureValue {
 
     @objc
     public init(_ arg: DBXTeamUploadApiRateLimitValue) {
-        self.uploadApiRateLimit = arg
+        uploadApiRateLimit = arg
         let swift = Team.FeatureValue.uploadApiRateLimit(arg.swift)
         super.init(swift: swift)
     }
@@ -1806,7 +1792,7 @@ public class DBXTeamFeatureValueHasTeamSharedDropbox: DBXTeamFeatureValue {
 
     @objc
     public init(_ arg: DBXTeamHasTeamSharedDropboxValue) {
-        self.hasTeamSharedDropbox = arg
+        hasTeamSharedDropbox = arg
         let swift = Team.FeatureValue.hasTeamSharedDropbox(arg.swift)
         super.init(swift: swift)
     }
@@ -1820,7 +1806,7 @@ public class DBXTeamFeatureValueHasTeamFileEvents: DBXTeamFeatureValue {
 
     @objc
     public init(_ arg: DBXTeamHasTeamFileEventsValue) {
-        self.hasTeamFileEvents = arg
+        hasTeamFileEvents = arg
         let swift = Team.FeatureValue.hasTeamFileEvents(arg.swift)
         super.init(swift: swift)
     }
@@ -1834,8 +1820,22 @@ public class DBXTeamFeatureValueHasTeamSelectiveSync: DBXTeamFeatureValue {
 
     @objc
     public init(_ arg: DBXTeamHasTeamSelectiveSyncValue) {
-        self.hasTeamSelectiveSync = arg
+        hasTeamSelectiveSync = arg
         let swift = Team.FeatureValue.hasTeamSelectiveSync(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamFeatureValueHasDistinctMemberHomes: DBXTeamFeatureValue {
+    @objc
+    public var hasDistinctMemberHomes: DBXTeamHasDistinctMemberHomesValue
+
+    @objc
+    public init(_ arg: DBXTeamHasDistinctMemberHomesValue) {
+        hasDistinctMemberHomes = arg
+        let swift = Team.FeatureValue.hasDistinctMemberHomes(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -1855,11 +1855,11 @@ public class DBXTeamFeatureValueOther: DBXTeamFeatureValue {
 public class DBXTeamFeaturesGetValuesBatchArg: NSObject {
     /// A list of features in Feature. If the list is empty, this route will return FeaturesGetValuesBatchError.
     @objc
-    public var features: [DBXTeamFeature] { swift.features.map { DBXTeamFeature(swift: $0) } }
+    public var features: Array<DBXTeamFeature> { swift.features.map { DBXTeamFeature(swift: $0) } }
 
     @objc
-    public init(features: [DBXTeamFeature]) {
-        self.swift = Team.FeaturesGetValuesBatchArg(features: features.map(\.swift))
+    public init(features: Array<DBXTeamFeature>) {
+        self.swift = Team.FeaturesGetValuesBatchArg(features: features.map { $0.swift })
     }
 
     let swift: Team.FeaturesGetValuesBatchArg
@@ -1867,6 +1867,7 @@ public class DBXTeamFeaturesGetValuesBatchArg: NSObject {
     public init(swift: Team.FeaturesGetValuesBatchArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1895,12 +1896,12 @@ public class DBXTeamFeaturesGetValuesBatchError: NSObject {
 
     @objc
     public var asEmptyFeaturesList: DBXTeamFeaturesGetValuesBatchErrorEmptyFeaturesList? {
-        self as? DBXTeamFeaturesGetValuesBatchErrorEmptyFeaturesList
+        return self as? DBXTeamFeaturesGetValuesBatchErrorEmptyFeaturesList
     }
 
     @objc
     public var asOther: DBXTeamFeaturesGetValuesBatchErrorOther? {
-        self as? DBXTeamFeaturesGetValuesBatchErrorOther
+        return self as? DBXTeamFeaturesGetValuesBatchErrorOther
     }
 }
 
@@ -1929,11 +1930,11 @@ public class DBXTeamFeaturesGetValuesBatchErrorOther: DBXTeamFeaturesGetValuesBa
 public class DBXTeamFeaturesGetValuesBatchResult: NSObject {
     /// (no description)
     @objc
-    public var values: [DBXTeamFeatureValue] { swift.values.map { DBXTeamFeatureValue(swift: $0) } }
+    public var values: Array<DBXTeamFeatureValue> { swift.values.map { DBXTeamFeatureValue(swift: $0) } }
 
     @objc
-    public init(values: [DBXTeamFeatureValue]) {
-        self.swift = Team.FeaturesGetValuesBatchResult(values: values.map(\.swift))
+    public init(values: Array<DBXTeamFeatureValue>) {
+        self.swift = Team.FeaturesGetValuesBatchResult(values: values.map { $0.swift })
     }
 
     let swift: Team.FeaturesGetValuesBatchResult
@@ -1941,6 +1942,7 @@ public class DBXTeamFeaturesGetValuesBatchResult: NSObject {
     public init(swift: Team.FeaturesGetValuesBatchResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -1952,83 +1954,51 @@ public class DBXTeamFeaturesGetValuesBatchResult: NSObject {
 public class DBXTeamGetActivityReport: DBXTeamBaseDfbReport {
     /// Array of total number of adds by team members.
     @objc
-    public var adds: [NSNumber] { subSwift.adds.compactMap { $0 as NSNumber? } }
+    public var adds: Array<NSNumber> { subSwift.adds.compactMap { $0 as NSNumber? } }
     /// Array of number of edits by team members. If the same user edits the same file multiple times this is
     /// counted as a single edit.
     @objc
-    public var edits: [NSNumber] { subSwift.edits.compactMap { $0 as NSNumber? } }
+    public var edits: Array<NSNumber> { subSwift.edits.compactMap { $0 as NSNumber? } }
     /// Array of total number of deletes by team members.
     @objc
-    public var deletes: [NSNumber] { subSwift.deletes.compactMap { $0 as NSNumber? } }
+    public var deletes: Array<NSNumber> { subSwift.deletes.compactMap { $0 as NSNumber? } }
     /// Array of the number of users who have been active in the last 28 days.
     @objc
-    public var activeUsers28Day: [NSNumber] { subSwift.activeUsers28Day.compactMap { $0 as NSNumber? } }
+    public var activeUsers28Day: Array<NSNumber> { subSwift.activeUsers28Day.compactMap { $0 as NSNumber? } }
     /// Array of the number of users who have been active in the last week.
     @objc
-    public var activeUsers7Day: [NSNumber] { subSwift.activeUsers7Day.compactMap { $0 as NSNumber? } }
+    public var activeUsers7Day: Array<NSNumber> { subSwift.activeUsers7Day.compactMap { $0 as NSNumber? } }
     /// Array of the number of users who have been active in the last day.
     @objc
-    public var activeUsers1Day: [NSNumber] { subSwift.activeUsers1Day.compactMap { $0 as NSNumber? } }
+    public var activeUsers1Day: Array<NSNumber> { subSwift.activeUsers1Day.compactMap { $0 as NSNumber? } }
     /// Array of the number of shared folders with some activity in the last 28 days.
     @objc
-    public var activeSharedFolders28Day: [NSNumber] { subSwift.activeSharedFolders28Day.compactMap { $0 as NSNumber? } }
+    public var activeSharedFolders28Day: Array<NSNumber> { subSwift.activeSharedFolders28Day.compactMap { $0 as NSNumber? } }
     /// Array of the number of shared folders with some activity in the last week.
     @objc
-    public var activeSharedFolders7Day: [NSNumber] { subSwift.activeSharedFolders7Day.compactMap { $0 as NSNumber? } }
+    public var activeSharedFolders7Day: Array<NSNumber> { subSwift.activeSharedFolders7Day.compactMap { $0 as NSNumber? } }
     /// Array of the number of shared folders with some activity in the last day.
     @objc
-    public var activeSharedFolders1Day: [NSNumber] { subSwift.activeSharedFolders1Day.compactMap { $0 as NSNumber? } }
+    public var activeSharedFolders1Day: Array<NSNumber> { subSwift.activeSharedFolders1Day.compactMap { $0 as NSNumber? } }
     /// Array of the number of shared links created.
     @objc
-    public var sharedLinksCreated: [NSNumber] { subSwift.sharedLinksCreated.compactMap { $0 as NSNumber? } }
+    public var sharedLinksCreated: Array<NSNumber> { subSwift.sharedLinksCreated.compactMap { $0 as NSNumber? } }
     /// Array of the number of views by team users to shared links created by the team.
     @objc
-    public var sharedLinksViewedByTeam: [NSNumber] { subSwift.sharedLinksViewedByTeam.compactMap { $0 as NSNumber? } }
+    public var sharedLinksViewedByTeam: Array<NSNumber> { subSwift.sharedLinksViewedByTeam.compactMap { $0 as NSNumber? } }
     /// Array of the number of views by users outside of the team to shared links created by the team.
     @objc
-    public var sharedLinksViewedByOutsideUser: [NSNumber] { subSwift.sharedLinksViewedByOutsideUser.compactMap { $0 as NSNumber? } }
+    public var sharedLinksViewedByOutsideUser: Array<NSNumber> { subSwift.sharedLinksViewedByOutsideUser.compactMap { $0 as NSNumber? } }
     /// Array of the number of views by non-logged-in users to shared links created by the team.
     @objc
-    public var sharedLinksViewedByNotLoggedIn: [NSNumber] { subSwift.sharedLinksViewedByNotLoggedIn.compactMap { $0 as NSNumber? } }
+    public var sharedLinksViewedByNotLoggedIn: Array<NSNumber> { subSwift.sharedLinksViewedByNotLoggedIn.compactMap { $0 as NSNumber? } }
     /// Array of the total number of views to shared links created by the team.
     @objc
-    public var sharedLinksViewedTotal: [NSNumber] { subSwift.sharedLinksViewedTotal.compactMap { $0 as NSNumber? } }
+    public var sharedLinksViewedTotal: Array<NSNumber> { subSwift.sharedLinksViewedTotal.compactMap { $0 as NSNumber? } }
 
     @objc
-    public init(
-        startDate: String,
-        adds: [NSNumber],
-        edits: [NSNumber],
-        deletes: [NSNumber],
-        activeUsers28Day: [NSNumber],
-        activeUsers7Day: [NSNumber],
-        activeUsers1Day: [NSNumber],
-        activeSharedFolders28Day: [NSNumber],
-        activeSharedFolders7Day: [NSNumber],
-        activeSharedFolders1Day: [NSNumber],
-        sharedLinksCreated: [NSNumber],
-        sharedLinksViewedByTeam: [NSNumber],
-        sharedLinksViewedByOutsideUser: [NSNumber],
-        sharedLinksViewedByNotLoggedIn: [NSNumber],
-        sharedLinksViewedTotal: [NSNumber]
-    ) {
-        let swift = Team.GetActivityReport(
-            startDate: startDate,
-            adds: adds.map(\.uint64Value),
-            edits: edits.map(\.uint64Value),
-            deletes: deletes.map(\.uint64Value),
-            activeUsers28Day: activeUsers28Day.map(\.uint64Value),
-            activeUsers7Day: activeUsers7Day.map(\.uint64Value),
-            activeUsers1Day: activeUsers1Day.map(\.uint64Value),
-            activeSharedFolders28Day: activeSharedFolders28Day.map(\.uint64Value),
-            activeSharedFolders7Day: activeSharedFolders7Day.map(\.uint64Value),
-            activeSharedFolders1Day: activeSharedFolders1Day.map(\.uint64Value),
-            sharedLinksCreated: sharedLinksCreated.map(\.uint64Value),
-            sharedLinksViewedByTeam: sharedLinksViewedByTeam.map(\.uint64Value),
-            sharedLinksViewedByOutsideUser: sharedLinksViewedByOutsideUser.map(\.uint64Value),
-            sharedLinksViewedByNotLoggedIn: sharedLinksViewedByNotLoggedIn.map(\.uint64Value),
-            sharedLinksViewedTotal: sharedLinksViewedTotal.map(\.uint64Value)
-        )
+    public init(startDate: String, adds: Array<NSNumber>, edits: Array<NSNumber>, deletes: Array<NSNumber>, activeUsers28Day: Array<NSNumber>, activeUsers7Day: Array<NSNumber>, activeUsers1Day: Array<NSNumber>, activeSharedFolders28Day: Array<NSNumber>, activeSharedFolders7Day: Array<NSNumber>, activeSharedFolders1Day: Array<NSNumber>, sharedLinksCreated: Array<NSNumber>, sharedLinksViewedByTeam: Array<NSNumber>, sharedLinksViewedByOutsideUser: Array<NSNumber>, sharedLinksViewedByNotLoggedIn: Array<NSNumber>, sharedLinksViewedTotal: Array<NSNumber>) {
+        let swift = Team.GetActivityReport(startDate: startDate, adds: adds.map { $0.uint64Value }, edits: edits.map { $0.uint64Value }, deletes: deletes.map { $0.uint64Value }, activeUsers28Day: activeUsers28Day.map { $0.uint64Value }, activeUsers7Day: activeUsers7Day.map { $0.uint64Value }, activeUsers1Day: activeUsers1Day.map { $0.uint64Value }, activeSharedFolders28Day: activeSharedFolders28Day.map { $0.uint64Value }, activeSharedFolders7Day: activeSharedFolders7Day.map { $0.uint64Value }, activeSharedFolders1Day: activeSharedFolders1Day.map { $0.uint64Value }, sharedLinksCreated: sharedLinksCreated.map { $0.uint64Value }, sharedLinksViewedByTeam: sharedLinksViewedByTeam.map { $0.uint64Value }, sharedLinksViewedByOutsideUser: sharedLinksViewedByOutsideUser.map { $0.uint64Value }, sharedLinksViewedByNotLoggedIn: sharedLinksViewedByNotLoggedIn.map { $0.uint64Value }, sharedLinksViewedTotal: sharedLinksViewedTotal.map { $0.uint64Value })
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -2039,6 +2009,7 @@ public class DBXTeamGetActivityReport: DBXTeamBaseDfbReport {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -2073,6 +2044,7 @@ public class DBXTeamGetDevicesReport: DBXTeamBaseDfbReport {
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
 }
@@ -2083,37 +2055,23 @@ public class DBXTeamGetDevicesReport: DBXTeamBaseDfbReport {
 public class DBXTeamGetMembershipReport: DBXTeamBaseDfbReport {
     /// Team size, for each day.
     @objc
-    public var teamSize: [NSNumber] { subSwift.teamSize.compactMap { $0 as NSNumber? } }
+    public var teamSize: Array<NSNumber> { subSwift.teamSize.compactMap { $0 as NSNumber? } }
     /// The number of pending invites to the team, for each day.
     @objc
-    public var pendingInvites: [NSNumber] { subSwift.pendingInvites.compactMap { $0 as NSNumber? } }
+    public var pendingInvites: Array<NSNumber> { subSwift.pendingInvites.compactMap { $0 as NSNumber? } }
     /// The number of members that joined the team, for each day.
     @objc
-    public var membersJoined: [NSNumber] { subSwift.membersJoined.compactMap { $0 as NSNumber? } }
+    public var membersJoined: Array<NSNumber> { subSwift.membersJoined.compactMap { $0 as NSNumber? } }
     /// The number of suspended team members, for each day.
     @objc
-    public var suspendedMembers: [NSNumber] { subSwift.suspendedMembers.compactMap { $0 as NSNumber? } }
+    public var suspendedMembers: Array<NSNumber> { subSwift.suspendedMembers.compactMap { $0 as NSNumber? } }
     /// The total number of licenses the team has, for each day.
     @objc
-    public var licenses: [NSNumber] { subSwift.licenses.compactMap { $0 as NSNumber? } }
+    public var licenses: Array<NSNumber> { subSwift.licenses.compactMap { $0 as NSNumber? } }
 
     @objc
-    public init(
-        startDate: String,
-        teamSize: [NSNumber],
-        pendingInvites: [NSNumber],
-        membersJoined: [NSNumber],
-        suspendedMembers: [NSNumber],
-        licenses: [NSNumber]
-    ) {
-        let swift = Team.GetMembershipReport(
-            startDate: startDate,
-            teamSize: teamSize.map(\.uint64Value),
-            pendingInvites: pendingInvites.map(\.uint64Value),
-            membersJoined: membersJoined.map(\.uint64Value),
-            suspendedMembers: suspendedMembers.map(\.uint64Value),
-            licenses: licenses.map(\.uint64Value)
-        )
+    public init(startDate: String, teamSize: Array<NSNumber>, pendingInvites: Array<NSNumber>, membersJoined: Array<NSNumber>, suspendedMembers: Array<NSNumber>, licenses: Array<NSNumber>) {
+        let swift = Team.GetMembershipReport(startDate: startDate, teamSize: teamSize.map { $0.uint64Value }, pendingInvites: pendingInvites.map { $0.uint64Value }, membersJoined: membersJoined.map { $0.uint64Value }, suspendedMembers: suspendedMembers.map { $0.uint64Value }, licenses: licenses.map { $0.uint64Value })
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -2125,6 +2083,7 @@ public class DBXTeamGetMembershipReport: DBXTeamBaseDfbReport {
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
 }
@@ -2135,40 +2094,26 @@ public class DBXTeamGetMembershipReport: DBXTeamBaseDfbReport {
 public class DBXTeamGetStorageReport: DBXTeamBaseDfbReport {
     /// Sum of the shared, unshared, and datastore usages, for each day.
     @objc
-    public var totalUsage: [NSNumber] { subSwift.totalUsage.compactMap { $0 as NSNumber? } }
+    public var totalUsage: Array<NSNumber> { subSwift.totalUsage.compactMap { $0 as NSNumber? } }
     /// Array of the combined size (bytes) of team members' shared folders, for each day.
     @objc
-    public var sharedUsage: [NSNumber] { subSwift.sharedUsage.compactMap { $0 as NSNumber? } }
+    public var sharedUsage: Array<NSNumber> { subSwift.sharedUsage.compactMap { $0 as NSNumber? } }
     /// Array of the combined size (bytes) of team members' root namespaces, for each day.
     @objc
-    public var unsharedUsage: [NSNumber] { subSwift.unsharedUsage.compactMap { $0 as NSNumber? } }
+    public var unsharedUsage: Array<NSNumber> { subSwift.unsharedUsage.compactMap { $0 as NSNumber? } }
     /// Array of the number of shared folders owned by team members, for each day.
     @objc
-    public var sharedFolders: [NSNumber] { subSwift.sharedFolders.compactMap { $0 as NSNumber? } }
+    public var sharedFolders: Array<NSNumber> { subSwift.sharedFolders.compactMap { $0 as NSNumber? } }
     /// Array of storage summaries of team members' account sizes. Each storage summary is an array of key, value
     /// pairs, where each pair describes a storage bucket. The key indicates the upper bound of the bucket and
     /// the value is the number of users in that bucket. There is one such summary per day. If there is no data
     /// for a day, the storage summary will be empty.
     @objc
-    public var memberStorageMap: [[DBXTeamStorageBucket]] { subSwift.memberStorageMap.map { $0.map { DBXTeamStorageBucket(swift: $0) } } }
+    public var memberStorageMap: Array<Array<DBXTeamStorageBucket>> { subSwift.memberStorageMap.map { $0.map { DBXTeamStorageBucket(swift: $0) } } }
 
     @objc
-    public init(
-        startDate: String,
-        totalUsage: [NSNumber],
-        sharedUsage: [NSNumber],
-        unsharedUsage: [NSNumber],
-        sharedFolders: [NSNumber],
-        memberStorageMap: [[DBXTeamStorageBucket]]
-    ) {
-        let swift = Team.GetStorageReport(
-            startDate: startDate,
-            totalUsage: totalUsage.map(\.uint64Value),
-            sharedUsage: sharedUsage.map(\.uint64Value),
-            unsharedUsage: unsharedUsage.map(\.uint64Value),
-            sharedFolders: sharedFolders.map(\.uint64Value),
-            memberStorageMap: memberStorageMap.map { $0.map(\.swift) }
-        )
+    public init(startDate: String, totalUsage: Array<NSNumber>, sharedUsage: Array<NSNumber>, unsharedUsage: Array<NSNumber>, sharedFolders: Array<NSNumber>, memberStorageMap: Array<Array<DBXTeamStorageBucket>>) {
+        let swift = Team.GetStorageReport(startDate: startDate, totalUsage: totalUsage.map { $0.uint64Value }, sharedUsage: sharedUsage.map { $0.uint64Value }, unsharedUsage: unsharedUsage.map { $0.uint64Value }, sharedFolders: sharedFolders.map { $0.uint64Value }, memberStorageMap: memberStorageMap.map { $0.map { $0.swift } })
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -2179,6 +2124,7 @@ public class DBXTeamGetStorageReport: DBXTeamBaseDfbReport {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -2207,12 +2153,12 @@ public class DBXTeamGroupAccessType: NSObject {
 
     @objc
     public var asMember: DBXTeamGroupAccessTypeMember? {
-        self as? DBXTeamGroupAccessTypeMember
+        return self as? DBXTeamGroupAccessTypeMember
     }
 
     @objc
     public var asOwner: DBXTeamGroupAccessTypeOwner? {
-        self as? DBXTeamGroupAccessTypeOwner
+        return self as? DBXTeamGroupAccessTypeOwner
     }
 }
 
@@ -2250,18 +2196,11 @@ public class DBXTeamGroupCreateArg: NSObject {
     public var groupExternalId: String? { swift.groupExternalId }
     /// Whether the team can be managed by selected users, or only by team admins.
     @objc
-    public var groupManagementType: DBXTeamCommonGroupManagementType? { guard let swift = swift.groupManagementType else { return nil }
-        return DBXTeamCommonGroupManagementType(swift: swift)
-    }
+    public var groupManagementType: DBXTeamCommonGroupManagementType? { guard let swift = swift.groupManagementType else { return nil }; return DBXTeamCommonGroupManagementType(swift: swift) }
 
     @objc
     public init(groupName: String, addCreatorAsOwner: NSNumber, groupExternalId: String?, groupManagementType: DBXTeamCommonGroupManagementType?) {
-        self.swift = Team.GroupCreateArg(
-            groupName: groupName,
-            addCreatorAsOwner: addCreatorAsOwner.boolValue,
-            groupExternalId: groupExternalId,
-            groupManagementType: groupManagementType?.swift
-        )
+        self.swift = Team.GroupCreateArg(groupName: groupName, addCreatorAsOwner: addCreatorAsOwner.boolValue, groupExternalId: groupExternalId, groupManagementType: groupManagementType?.swift)
     }
 
     let swift: Team.GroupCreateArg
@@ -2269,6 +2208,7 @@ public class DBXTeamGroupCreateArg: NSObject {
     public init(swift: Team.GroupCreateArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -2303,27 +2243,27 @@ public class DBXTeamGroupCreateError: NSObject {
 
     @objc
     public var asGroupNameAlreadyUsed: DBXTeamGroupCreateErrorGroupNameAlreadyUsed? {
-        self as? DBXTeamGroupCreateErrorGroupNameAlreadyUsed
+        return self as? DBXTeamGroupCreateErrorGroupNameAlreadyUsed
     }
 
     @objc
     public var asGroupNameInvalid: DBXTeamGroupCreateErrorGroupNameInvalid? {
-        self as? DBXTeamGroupCreateErrorGroupNameInvalid
+        return self as? DBXTeamGroupCreateErrorGroupNameInvalid
     }
 
     @objc
     public var asExternalIdAlreadyInUse: DBXTeamGroupCreateErrorExternalIdAlreadyInUse? {
-        self as? DBXTeamGroupCreateErrorExternalIdAlreadyInUse
+        return self as? DBXTeamGroupCreateErrorExternalIdAlreadyInUse
     }
 
     @objc
     public var asSystemManagedGroupDisallowed: DBXTeamGroupCreateErrorSystemManagedGroupDisallowed? {
-        self as? DBXTeamGroupCreateErrorSystemManagedGroupDisallowed
+        return self as? DBXTeamGroupCreateErrorSystemManagedGroupDisallowed
     }
 
     @objc
     public var asOther: DBXTeamGroupCreateErrorOther? {
-        self as? DBXTeamGroupCreateErrorOther
+        return self as? DBXTeamGroupCreateErrorOther
     }
 }
 
@@ -2400,12 +2340,12 @@ public class DBXTeamGroupSelectorError: NSObject {
 
     @objc
     public var asGroupNotFound: DBXTeamGroupSelectorErrorGroupNotFound? {
-        self as? DBXTeamGroupSelectorErrorGroupNotFound
+        return self as? DBXTeamGroupSelectorErrorGroupNotFound
     }
 
     @objc
     public var asOther: DBXTeamGroupSelectorErrorOther? {
-        self as? DBXTeamGroupSelectorErrorOther
+        return self as? DBXTeamGroupSelectorErrorOther
     }
 }
 
@@ -2454,17 +2394,17 @@ public class DBXTeamGroupSelectorWithTeamGroupError: NSObject {
 
     @objc
     public var asGroupNotFound: DBXTeamGroupSelectorWithTeamGroupErrorGroupNotFound? {
-        self as? DBXTeamGroupSelectorWithTeamGroupErrorGroupNotFound
+        return self as? DBXTeamGroupSelectorWithTeamGroupErrorGroupNotFound
     }
 
     @objc
     public var asOther: DBXTeamGroupSelectorWithTeamGroupErrorOther? {
-        self as? DBXTeamGroupSelectorWithTeamGroupErrorOther
+        return self as? DBXTeamGroupSelectorWithTeamGroupErrorOther
     }
 
     @objc
     public var asSystemManagedGroupDisallowed: DBXTeamGroupSelectorWithTeamGroupErrorSystemManagedGroupDisallowed? {
-        self as? DBXTeamGroupSelectorWithTeamGroupErrorSystemManagedGroupDisallowed
+        return self as? DBXTeamGroupSelectorWithTeamGroupErrorSystemManagedGroupDisallowed
     }
 }
 
@@ -2525,22 +2465,22 @@ public class DBXTeamGroupDeleteError: NSObject {
 
     @objc
     public var asGroupNotFound: DBXTeamGroupDeleteErrorGroupNotFound? {
-        self as? DBXTeamGroupDeleteErrorGroupNotFound
+        return self as? DBXTeamGroupDeleteErrorGroupNotFound
     }
 
     @objc
     public var asOther: DBXTeamGroupDeleteErrorOther? {
-        self as? DBXTeamGroupDeleteErrorOther
+        return self as? DBXTeamGroupDeleteErrorOther
     }
 
     @objc
     public var asSystemManagedGroupDisallowed: DBXTeamGroupDeleteErrorSystemManagedGroupDisallowed? {
-        self as? DBXTeamGroupDeleteErrorSystemManagedGroupDisallowed
+        return self as? DBXTeamGroupDeleteErrorSystemManagedGroupDisallowed
     }
 
     @objc
     public var asGroupAlreadyDeleted: DBXTeamGroupDeleteErrorGroupAlreadyDeleted? {
-        self as? DBXTeamGroupDeleteErrorGroupAlreadyDeleted
+        return self as? DBXTeamGroupDeleteErrorGroupAlreadyDeleted
     }
 }
 
@@ -2589,30 +2529,14 @@ public class DBXTeamGroupDeleteErrorGroupAlreadyDeleted: DBXTeamGroupDeleteError
 public class DBXTeamGroupFullInfo: DBXTeamCommonGroupSummary {
     /// List of group members.
     @objc
-    public var members: [DBXTeamGroupMemberInfo]? { subSwift.members?.map { DBXTeamGroupMemberInfo(swift: $0) } }
+    public var members: Array<DBXTeamGroupMemberInfo>? { subSwift.members?.map { DBXTeamGroupMemberInfo(swift: $0) } }
     /// The group creation time as a UTC timestamp in milliseconds since the Unix epoch.
     @objc
     public var created: NSNumber { subSwift.created as NSNumber }
 
     @objc
-    public init(
-        groupName: String,
-        groupId: String,
-        groupManagementType: DBXTeamCommonGroupManagementType,
-        created: NSNumber,
-        groupExternalId: String?,
-        memberCount: NSNumber?,
-        members: [DBXTeamGroupMemberInfo]?
-    ) {
-        let swift = Team.GroupFullInfo(
-            groupName: groupName,
-            groupId: groupId,
-            groupManagementType: groupManagementType.swift,
-            created: created.uint64Value,
-            groupExternalId: groupExternalId,
-            memberCount: memberCount?.uint32Value,
-            members: members?.map(\.swift)
-        )
+    public init(groupName: String, groupId: String, groupManagementType: DBXTeamCommonGroupManagementType, created: NSNumber, groupExternalId: String?, memberCount: NSNumber?, members: Array<DBXTeamGroupMemberInfo>?) {
+        let swift = Team.GroupFullInfo(groupName: groupName, groupId: groupId, groupManagementType: groupManagementType.swift, created: created.uint64Value, groupExternalId: groupExternalId, memberCount: memberCount?.uint32Value, members: members?.map { $0.swift })
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -2623,6 +2547,7 @@ public class DBXTeamGroupFullInfo: DBXTeamCommonGroupSummary {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -2649,6 +2574,7 @@ public class DBXTeamGroupMemberInfo: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -2673,6 +2599,7 @@ public class DBXTeamGroupMemberSelector: NSObject {
     public init(swift: Team.GroupMemberSelector) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -2706,22 +2633,22 @@ public class DBXTeamGroupMemberSelectorError: NSObject {
 
     @objc
     public var asGroupNotFound: DBXTeamGroupMemberSelectorErrorGroupNotFound? {
-        self as? DBXTeamGroupMemberSelectorErrorGroupNotFound
+        return self as? DBXTeamGroupMemberSelectorErrorGroupNotFound
     }
 
     @objc
     public var asOther: DBXTeamGroupMemberSelectorErrorOther? {
-        self as? DBXTeamGroupMemberSelectorErrorOther
+        return self as? DBXTeamGroupMemberSelectorErrorOther
     }
 
     @objc
     public var asSystemManagedGroupDisallowed: DBXTeamGroupMemberSelectorErrorSystemManagedGroupDisallowed? {
-        self as? DBXTeamGroupMemberSelectorErrorSystemManagedGroupDisallowed
+        return self as? DBXTeamGroupMemberSelectorErrorSystemManagedGroupDisallowed
     }
 
     @objc
     public var asMemberNotInGroup: DBXTeamGroupMemberSelectorErrorMemberNotInGroup? {
-        self as? DBXTeamGroupMemberSelectorErrorMemberNotInGroup
+        return self as? DBXTeamGroupMemberSelectorErrorMemberNotInGroup
     }
 }
 
@@ -2794,27 +2721,27 @@ public class DBXTeamGroupMemberSetAccessTypeError: NSObject {
 
     @objc
     public var asGroupNotFound: DBXTeamGroupMemberSetAccessTypeErrorGroupNotFound? {
-        self as? DBXTeamGroupMemberSetAccessTypeErrorGroupNotFound
+        return self as? DBXTeamGroupMemberSetAccessTypeErrorGroupNotFound
     }
 
     @objc
     public var asOther: DBXTeamGroupMemberSetAccessTypeErrorOther? {
-        self as? DBXTeamGroupMemberSetAccessTypeErrorOther
+        return self as? DBXTeamGroupMemberSetAccessTypeErrorOther
     }
 
     @objc
     public var asSystemManagedGroupDisallowed: DBXTeamGroupMemberSetAccessTypeErrorSystemManagedGroupDisallowed? {
-        self as? DBXTeamGroupMemberSetAccessTypeErrorSystemManagedGroupDisallowed
+        return self as? DBXTeamGroupMemberSetAccessTypeErrorSystemManagedGroupDisallowed
     }
 
     @objc
     public var asMemberNotInGroup: DBXTeamGroupMemberSetAccessTypeErrorMemberNotInGroup? {
-        self as? DBXTeamGroupMemberSetAccessTypeErrorMemberNotInGroup
+        return self as? DBXTeamGroupMemberSetAccessTypeErrorMemberNotInGroup
     }
 
     @objc
     public var asUserCannotBeManagerOfCompanyManagedGroup: DBXTeamGroupMemberSetAccessTypeErrorUserCannotBeManagerOfCompanyManagedGroup? {
-        self as? DBXTeamGroupMemberSetAccessTypeErrorUserCannotBeManagerOfCompanyManagedGroup
+        return self as? DBXTeamGroupMemberSetAccessTypeErrorUserCannotBeManagerOfCompanyManagedGroup
     }
 }
 
@@ -2871,8 +2798,8 @@ public class DBXTeamGroupMemberSetAccessTypeErrorUserCannotBeManagerOfCompanyMan
 /// Objective-C compatible IncludeMembersArg struct
 @objc
 public class DBXTeamIncludeMembersArg: NSObject {
-    /// Whether to return the list of members in the group.  Note that the default value will cause all the group
-    /// members  to be returned in the response. This may take a long time for large groups.
+    /// Whether to return the list of members in the group. Note that the default value will cause all the group
+    /// members to be returned in the response. This may take a long time for large groups.
     @objc
     public var returnMembers: NSNumber { swift.returnMembers as NSNumber }
 
@@ -2887,6 +2814,7 @@ public class DBXTeamIncludeMembersArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -2899,11 +2827,11 @@ public class DBXTeamGroupMembersAddArg: DBXTeamIncludeMembersArg {
     public var group: DBXTeamGroupSelector { DBXTeamGroupSelector(swift: subSwift.group) }
     /// List of users to be added to the group.
     @objc
-    public var members: [DBXTeamMemberAccess] { subSwift.members.map { DBXTeamMemberAccess(swift: $0) } }
+    public var members: Array<DBXTeamMemberAccess> { subSwift.members.map { DBXTeamMemberAccess(swift: $0) } }
 
     @objc
-    public init(group: DBXTeamGroupSelector, members: [DBXTeamMemberAccess], returnMembers: NSNumber) {
-        let swift = Team.GroupMembersAddArg(group: group.swift, members: members.map(\.swift), returnMembers: returnMembers.boolValue)
+    public init(group: DBXTeamGroupSelector, members: Array<DBXTeamMemberAccess>, returnMembers: NSNumber) {
+        let swift = Team.GroupMembersAddArg(group: group.swift, members: members.map { $0.swift }, returnMembers: returnMembers.boolValue)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -2914,6 +2842,7 @@ public class DBXTeamGroupMembersAddArg: DBXTeamIncludeMembersArg {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -2959,47 +2888,47 @@ public class DBXTeamGroupMembersAddError: NSObject {
 
     @objc
     public var asGroupNotFound: DBXTeamGroupMembersAddErrorGroupNotFound? {
-        self as? DBXTeamGroupMembersAddErrorGroupNotFound
+        return self as? DBXTeamGroupMembersAddErrorGroupNotFound
     }
 
     @objc
     public var asOther: DBXTeamGroupMembersAddErrorOther? {
-        self as? DBXTeamGroupMembersAddErrorOther
+        return self as? DBXTeamGroupMembersAddErrorOther
     }
 
     @objc
     public var asSystemManagedGroupDisallowed: DBXTeamGroupMembersAddErrorSystemManagedGroupDisallowed? {
-        self as? DBXTeamGroupMembersAddErrorSystemManagedGroupDisallowed
+        return self as? DBXTeamGroupMembersAddErrorSystemManagedGroupDisallowed
     }
 
     @objc
     public var asDuplicateUser: DBXTeamGroupMembersAddErrorDuplicateUser? {
-        self as? DBXTeamGroupMembersAddErrorDuplicateUser
+        return self as? DBXTeamGroupMembersAddErrorDuplicateUser
     }
 
     @objc
     public var asGroupNotInTeam: DBXTeamGroupMembersAddErrorGroupNotInTeam? {
-        self as? DBXTeamGroupMembersAddErrorGroupNotInTeam
+        return self as? DBXTeamGroupMembersAddErrorGroupNotInTeam
     }
 
     @objc
     public var asMembersNotInTeam: DBXTeamGroupMembersAddErrorMembersNotInTeam? {
-        self as? DBXTeamGroupMembersAddErrorMembersNotInTeam
+        return self as? DBXTeamGroupMembersAddErrorMembersNotInTeam
     }
 
     @objc
     public var asUsersNotFound: DBXTeamGroupMembersAddErrorUsersNotFound? {
-        self as? DBXTeamGroupMembersAddErrorUsersNotFound
+        return self as? DBXTeamGroupMembersAddErrorUsersNotFound
     }
 
     @objc
     public var asUserMustBeActiveToBeOwner: DBXTeamGroupMembersAddErrorUserMustBeActiveToBeOwner? {
-        self as? DBXTeamGroupMembersAddErrorUserMustBeActiveToBeOwner
+        return self as? DBXTeamGroupMembersAddErrorUserMustBeActiveToBeOwner
     }
 
     @objc
     public var asUserCannotBeManagerOfCompanyManagedGroup: DBXTeamGroupMembersAddErrorUserCannotBeManagerOfCompanyManagedGroup? {
-        self as? DBXTeamGroupMembersAddErrorUserCannotBeManagerOfCompanyManagedGroup
+        return self as? DBXTeamGroupMembersAddErrorUserCannotBeManagerOfCompanyManagedGroup
     }
 }
 
@@ -3034,7 +2963,7 @@ public class DBXTeamGroupMembersAddErrorSystemManagedGroupDisallowed: DBXTeamGro
 }
 
 /// You cannot add duplicate users. One or more of the members you are trying to add is already a member of the
-/// group.
+        /// group.
 @objc
 public class DBXTeamGroupMembersAddErrorDuplicateUser: DBXTeamGroupMembersAddError {
     @objc
@@ -3055,16 +2984,16 @@ public class DBXTeamGroupMembersAddErrorGroupNotInTeam: DBXTeamGroupMembersAddEr
 }
 
 /// These members are not part of your team. Currently, you cannot add members to a group if they are not part
-/// of your team, though this may change in a subsequent version. To add new members to your Dropbox
-/// Business team, use the membersAdd endpoint.
+        /// of your team, though this may change in a subsequent version. To add new members to your Dropbox
+        /// Business team, use the membersAdd endpoint.
 @objc
 public class DBXTeamGroupMembersAddErrorMembersNotInTeam: DBXTeamGroupMembersAddError {
     @objc
-    public var membersNotInTeam: [String]
+    public var membersNotInTeam: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.membersNotInTeam = arg
+    public init(_ arg: Array<String>) {
+        membersNotInTeam = arg
         let swift = Team.GroupMembersAddError.membersNotInTeam(arg)
         super.init(swift: swift)
     }
@@ -3074,11 +3003,11 @@ public class DBXTeamGroupMembersAddErrorMembersNotInTeam: DBXTeamGroupMembersAdd
 @objc
 public class DBXTeamGroupMembersAddErrorUsersNotFound: DBXTeamGroupMembersAddError {
     @objc
-    public var usersNotFound: [String]
+    public var usersNotFound: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.usersNotFound = arg
+    public init(_ arg: Array<String>) {
+        usersNotFound = arg
         let swift = Team.GroupMembersAddError.usersNotFound(arg)
         super.init(swift: swift)
     }
@@ -3098,11 +3027,11 @@ public class DBXTeamGroupMembersAddErrorUserMustBeActiveToBeOwner: DBXTeamGroupM
 @objc
 public class DBXTeamGroupMembersAddErrorUserCannotBeManagerOfCompanyManagedGroup: DBXTeamGroupMembersAddError {
     @objc
-    public var userCannotBeManagerOfCompanyManagedGroup: [String]
+    public var userCannotBeManagerOfCompanyManagedGroup: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.userCannotBeManagerOfCompanyManagedGroup = arg
+    public init(_ arg: Array<String>) {
+        userCannotBeManagerOfCompanyManagedGroup = arg
         let swift = Team.GroupMembersAddError.userCannotBeManagerOfCompanyManagedGroup(arg)
         super.init(swift: swift)
     }
@@ -3114,9 +3043,9 @@ public class DBXTeamGroupMembersChangeResult: NSObject {
     /// The group info after member change operation has been performed.
     @objc
     public var groupInfo: DBXTeamGroupFullInfo { DBXTeamGroupFullInfo(swift: swift.groupInfo) }
-    /// For legacy purposes async_job_id will always return one space ' '. Formerly, it was an ID that was used to
-    /// obtain the status of granting/revoking group-owned resources. It's no longer necessary because the async
-    /// processing now happens automatically.
+    /// Field is deprecated. For legacy purposes async_job_id will always return one space ' '. Formerly, it was an
+    /// ID that was used to obtain the status of granting/revoking group-owned resources. It's no longer
+    /// necessary because the async processing now happens automatically.
     @objc
     public var asyncJobId: String { swift.asyncJobId }
 
@@ -3131,6 +3060,7 @@ public class DBXTeamGroupMembersChangeResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -3143,11 +3073,11 @@ public class DBXTeamGroupMembersRemoveArg: DBXTeamIncludeMembersArg {
     public var group: DBXTeamGroupSelector { DBXTeamGroupSelector(swift: subSwift.group) }
     /// List of users to be removed from the group.
     @objc
-    public var users: [DBXTeamUserSelectorArg] { subSwift.users.map { DBXTeamUserSelectorArg(swift: $0) } }
+    public var users: Array<DBXTeamUserSelectorArg> { subSwift.users.map { DBXTeamUserSelectorArg(swift: $0) } }
 
     @objc
-    public init(group: DBXTeamGroupSelector, users: [DBXTeamUserSelectorArg], returnMembers: NSNumber) {
-        let swift = Team.GroupMembersRemoveArg(group: group.swift, users: users.map(\.swift), returnMembers: returnMembers.boolValue)
+    public init(group: DBXTeamGroupSelector, users: Array<DBXTeamUserSelectorArg>, returnMembers: NSNumber) {
+        let swift = Team.GroupMembersRemoveArg(group: group.swift, users: users.map { $0.swift }, returnMembers: returnMembers.boolValue)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -3158,6 +3088,7 @@ public class DBXTeamGroupMembersRemoveArg: DBXTeamIncludeMembersArg {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -3191,22 +3122,22 @@ public class DBXTeamGroupMembersSelectorError: NSObject {
 
     @objc
     public var asGroupNotFound: DBXTeamGroupMembersSelectorErrorGroupNotFound? {
-        self as? DBXTeamGroupMembersSelectorErrorGroupNotFound
+        return self as? DBXTeamGroupMembersSelectorErrorGroupNotFound
     }
 
     @objc
     public var asOther: DBXTeamGroupMembersSelectorErrorOther? {
-        self as? DBXTeamGroupMembersSelectorErrorOther
+        return self as? DBXTeamGroupMembersSelectorErrorOther
     }
 
     @objc
     public var asSystemManagedGroupDisallowed: DBXTeamGroupMembersSelectorErrorSystemManagedGroupDisallowed? {
-        self as? DBXTeamGroupMembersSelectorErrorSystemManagedGroupDisallowed
+        return self as? DBXTeamGroupMembersSelectorErrorSystemManagedGroupDisallowed
     }
 
     @objc
     public var asMemberNotInGroup: DBXTeamGroupMembersSelectorErrorMemberNotInGroup? {
-        self as? DBXTeamGroupMembersSelectorErrorMemberNotInGroup
+        return self as? DBXTeamGroupMembersSelectorErrorMemberNotInGroup
     }
 }
 
@@ -3285,37 +3216,37 @@ public class DBXTeamGroupMembersRemoveError: NSObject {
 
     @objc
     public var asGroupNotFound: DBXTeamGroupMembersRemoveErrorGroupNotFound? {
-        self as? DBXTeamGroupMembersRemoveErrorGroupNotFound
+        return self as? DBXTeamGroupMembersRemoveErrorGroupNotFound
     }
 
     @objc
     public var asOther: DBXTeamGroupMembersRemoveErrorOther? {
-        self as? DBXTeamGroupMembersRemoveErrorOther
+        return self as? DBXTeamGroupMembersRemoveErrorOther
     }
 
     @objc
     public var asSystemManagedGroupDisallowed: DBXTeamGroupMembersRemoveErrorSystemManagedGroupDisallowed? {
-        self as? DBXTeamGroupMembersRemoveErrorSystemManagedGroupDisallowed
+        return self as? DBXTeamGroupMembersRemoveErrorSystemManagedGroupDisallowed
     }
 
     @objc
     public var asMemberNotInGroup: DBXTeamGroupMembersRemoveErrorMemberNotInGroup? {
-        self as? DBXTeamGroupMembersRemoveErrorMemberNotInGroup
+        return self as? DBXTeamGroupMembersRemoveErrorMemberNotInGroup
     }
 
     @objc
     public var asGroupNotInTeam: DBXTeamGroupMembersRemoveErrorGroupNotInTeam? {
-        self as? DBXTeamGroupMembersRemoveErrorGroupNotInTeam
+        return self as? DBXTeamGroupMembersRemoveErrorGroupNotInTeam
     }
 
     @objc
     public var asMembersNotInTeam: DBXTeamGroupMembersRemoveErrorMembersNotInTeam? {
-        self as? DBXTeamGroupMembersRemoveErrorMembersNotInTeam
+        return self as? DBXTeamGroupMembersRemoveErrorMembersNotInTeam
     }
 
     @objc
     public var asUsersNotFound: DBXTeamGroupMembersRemoveErrorUsersNotFound? {
-        self as? DBXTeamGroupMembersRemoveErrorUsersNotFound
+        return self as? DBXTeamGroupMembersRemoveErrorUsersNotFound
     }
 }
 
@@ -3373,11 +3304,11 @@ public class DBXTeamGroupMembersRemoveErrorGroupNotInTeam: DBXTeamGroupMembersRe
 @objc
 public class DBXTeamGroupMembersRemoveErrorMembersNotInTeam: DBXTeamGroupMembersRemoveError {
     @objc
-    public var membersNotInTeam: [String]
+    public var membersNotInTeam: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.membersNotInTeam = arg
+    public init(_ arg: Array<String>) {
+        membersNotInTeam = arg
         let swift = Team.GroupMembersRemoveError.membersNotInTeam(arg)
         super.init(swift: swift)
     }
@@ -3387,11 +3318,11 @@ public class DBXTeamGroupMembersRemoveErrorMembersNotInTeam: DBXTeamGroupMembers
 @objc
 public class DBXTeamGroupMembersRemoveErrorUsersNotFound: DBXTeamGroupMembersRemoveError {
     @objc
-    public var usersNotFound: [String]
+    public var usersNotFound: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.usersNotFound = arg
+    public init(_ arg: Array<String>) {
+        usersNotFound = arg
         let swift = Team.GroupMembersRemoveError.usersNotFound(arg)
         super.init(swift: swift)
     }
@@ -3418,6 +3349,7 @@ public class DBXTeamGroupMembersSelector: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -3428,19 +3360,14 @@ public class DBXTeamGroupMembersSetAccessTypeArg: DBXTeamGroupMemberSelector {
     /// New group access type the user will have.
     @objc
     public var accessType: DBXTeamGroupAccessType { DBXTeamGroupAccessType(swift: subSwift.accessType) }
-    /// Whether to return the list of members in the group.  Note that the default value will cause all the group
-    /// members  to be returned in the response. This may take a long time for large groups.
+    /// Whether to return the list of members in the group. Note that the default value will cause all the group
+    /// members to be returned in the response. This may take a long time for large groups.
     @objc
     public var returnMembers: NSNumber { subSwift.returnMembers as NSNumber }
 
     @objc
     public init(group: DBXTeamGroupSelector, user: DBXTeamUserSelectorArg, accessType: DBXTeamGroupAccessType, returnMembers: NSNumber) {
-        let swift = Team.GroupMembersSetAccessTypeArg(
-            group: group.swift,
-            user: user.swift,
-            accessType: accessType.swift,
-            returnMembers: returnMembers.boolValue
-        )
+        let swift = Team.GroupMembersSetAccessTypeArg(group: group.swift, user: user.swift, accessType: accessType.swift, returnMembers: returnMembers.boolValue)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -3451,6 +3378,7 @@ public class DBXTeamGroupMembersSetAccessTypeArg: DBXTeamGroupMemberSelector {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -3481,12 +3409,12 @@ public class DBXTeamGroupSelector: NSObject {
 
     @objc
     public var asGroupId: DBXTeamGroupSelectorGroupId? {
-        self as? DBXTeamGroupSelectorGroupId
+        return self as? DBXTeamGroupSelectorGroupId
     }
 
     @objc
     public var asGroupExternalId: DBXTeamGroupSelectorGroupExternalId? {
-        self as? DBXTeamGroupSelectorGroupExternalId
+        return self as? DBXTeamGroupSelectorGroupExternalId
     }
 }
 
@@ -3498,7 +3426,7 @@ public class DBXTeamGroupSelectorGroupId: DBXTeamGroupSelector {
 
     @objc
     public init(_ arg: String) {
-        self.groupId = arg
+        groupId = arg
         let swift = Team.GroupSelector.groupId(arg)
         super.init(swift: swift)
     }
@@ -3512,7 +3440,7 @@ public class DBXTeamGroupSelectorGroupExternalId: DBXTeamGroupSelector {
 
     @objc
     public init(_ arg: String) {
-        self.groupExternalId = arg
+        groupExternalId = arg
         let swift = Team.GroupSelector.groupExternalId(arg)
         super.init(swift: swift)
     }
@@ -3533,25 +3461,11 @@ public class DBXTeamGroupUpdateArgs: DBXTeamIncludeMembersArg {
     public var newGroupExternalId: String? { subSwift.newGroupExternalId }
     /// Set new group management type, if provided.
     @objc
-    public var newGroupManagementType: DBXTeamCommonGroupManagementType? { guard let swift = subSwift.newGroupManagementType else { return nil }
-        return DBXTeamCommonGroupManagementType(swift: swift)
-    }
+    public var newGroupManagementType: DBXTeamCommonGroupManagementType? { guard let swift = subSwift.newGroupManagementType else { return nil }; return DBXTeamCommonGroupManagementType(swift: swift) }
 
     @objc
-    public init(
-        group: DBXTeamGroupSelector,
-        returnMembers: NSNumber,
-        newGroupName: String?,
-        newGroupExternalId: String?,
-        newGroupManagementType: DBXTeamCommonGroupManagementType?
-    ) {
-        let swift = Team.GroupUpdateArgs(
-            group: group.swift,
-            returnMembers: returnMembers.boolValue,
-            newGroupName: newGroupName,
-            newGroupExternalId: newGroupExternalId,
-            newGroupManagementType: newGroupManagementType?.swift
-        )
+    public init(group: DBXTeamGroupSelector, returnMembers: NSNumber, newGroupName: String?, newGroupExternalId: String?, newGroupManagementType: DBXTeamCommonGroupManagementType?) {
+        let swift = Team.GroupUpdateArgs(group: group.swift, returnMembers: returnMembers.boolValue, newGroupName: newGroupName, newGroupExternalId: newGroupExternalId, newGroupManagementType: newGroupManagementType?.swift)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -3562,6 +3476,7 @@ public class DBXTeamGroupUpdateArgs: DBXTeamIncludeMembersArg {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -3598,32 +3513,32 @@ public class DBXTeamGroupUpdateError: NSObject {
 
     @objc
     public var asGroupNotFound: DBXTeamGroupUpdateErrorGroupNotFound? {
-        self as? DBXTeamGroupUpdateErrorGroupNotFound
+        return self as? DBXTeamGroupUpdateErrorGroupNotFound
     }
 
     @objc
     public var asOther: DBXTeamGroupUpdateErrorOther? {
-        self as? DBXTeamGroupUpdateErrorOther
+        return self as? DBXTeamGroupUpdateErrorOther
     }
 
     @objc
     public var asSystemManagedGroupDisallowed: DBXTeamGroupUpdateErrorSystemManagedGroupDisallowed? {
-        self as? DBXTeamGroupUpdateErrorSystemManagedGroupDisallowed
+        return self as? DBXTeamGroupUpdateErrorSystemManagedGroupDisallowed
     }
 
     @objc
     public var asGroupNameAlreadyUsed: DBXTeamGroupUpdateErrorGroupNameAlreadyUsed? {
-        self as? DBXTeamGroupUpdateErrorGroupNameAlreadyUsed
+        return self as? DBXTeamGroupUpdateErrorGroupNameAlreadyUsed
     }
 
     @objc
     public var asGroupNameInvalid: DBXTeamGroupUpdateErrorGroupNameInvalid? {
-        self as? DBXTeamGroupUpdateErrorGroupNameInvalid
+        return self as? DBXTeamGroupUpdateErrorGroupNameInvalid
     }
 
     @objc
     public var asExternalIdAlreadyInUse: DBXTeamGroupUpdateErrorExternalIdAlreadyInUse? {
-        self as? DBXTeamGroupUpdateErrorExternalIdAlreadyInUse
+        return self as? DBXTeamGroupUpdateErrorExternalIdAlreadyInUse
     }
 }
 
@@ -3710,12 +3625,12 @@ public class DBXTeamGroupsGetInfoError: NSObject {
 
     @objc
     public var asGroupNotOnTeam: DBXTeamGroupsGetInfoErrorGroupNotOnTeam? {
-        self as? DBXTeamGroupsGetInfoErrorGroupNotOnTeam
+        return self as? DBXTeamGroupsGetInfoErrorGroupNotOnTeam
     }
 
     @objc
     public var asOther: DBXTeamGroupsGetInfoErrorOther? {
-        self as? DBXTeamGroupsGetInfoErrorOther
+        return self as? DBXTeamGroupsGetInfoErrorOther
     }
 }
 
@@ -3764,17 +3679,17 @@ public class DBXTeamGroupsGetInfoItem: NSObject {
 
     @objc
     public var asIdNotFound: DBXTeamGroupsGetInfoItemIdNotFound? {
-        self as? DBXTeamGroupsGetInfoItemIdNotFound
+        return self as? DBXTeamGroupsGetInfoItemIdNotFound
     }
 
     @objc
     public var asGroupInfo: DBXTeamGroupsGetInfoItemGroupInfo? {
-        self as? DBXTeamGroupsGetInfoItemGroupInfo
+        return self as? DBXTeamGroupsGetInfoItemGroupInfo
     }
 }
 
 /// An ID that was provided as a parameter to groupsGetInfo, and did not match a corresponding group. The ID can
-/// be a group ID, or an external ID, depending on how the method was called.
+        /// be a group ID, or an external ID, depending on how the method was called.
 @objc
 public class DBXTeamGroupsGetInfoItemIdNotFound: DBXTeamGroupsGetInfoItem {
     @objc
@@ -3782,7 +3697,7 @@ public class DBXTeamGroupsGetInfoItemIdNotFound: DBXTeamGroupsGetInfoItem {
 
     @objc
     public init(_ arg: String) {
-        self.idNotFound = arg
+        idNotFound = arg
         let swift = Team.GroupsGetInfoItem.idNotFound(arg)
         super.init(swift: swift)
     }
@@ -3796,7 +3711,7 @@ public class DBXTeamGroupsGetInfoItemGroupInfo: DBXTeamGroupsGetInfoItem {
 
     @objc
     public init(_ arg: DBXTeamGroupFullInfo) {
-        self.groupInfo = arg
+        groupInfo = arg
         let swift = Team.GroupsGetInfoItem.groupInfo(arg.subSwift)
         super.init(swift: swift)
     }
@@ -3820,6 +3735,7 @@ public class DBXTeamGroupsListArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -3841,6 +3757,7 @@ public class DBXTeamGroupsListContinueArg: NSObject {
     public init(swift: Team.GroupsListContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -3869,12 +3786,12 @@ public class DBXTeamGroupsListContinueError: NSObject {
 
     @objc
     public var asInvalidCursor: DBXTeamGroupsListContinueErrorInvalidCursor? {
-        self as? DBXTeamGroupsListContinueErrorInvalidCursor
+        return self as? DBXTeamGroupsListContinueErrorInvalidCursor
     }
 
     @objc
     public var asOther: DBXTeamGroupsListContinueErrorOther? {
-        self as? DBXTeamGroupsListContinueErrorOther
+        return self as? DBXTeamGroupsListContinueErrorOther
     }
 }
 
@@ -3903,7 +3820,7 @@ public class DBXTeamGroupsListContinueErrorOther: DBXTeamGroupsListContinueError
 public class DBXTeamGroupsListResult: NSObject {
     /// (no description)
     @objc
-    public var groups: [DBXTeamCommonGroupSummary] { swift.groups.map { DBXTeamCommonGroupSummary(swift: $0) } }
+    public var groups: Array<DBXTeamCommonGroupSummary> { swift.groups.map { DBXTeamCommonGroupSummary(swift: $0) } }
     /// Pass the cursor into groupsListContinue to obtain the additional groups.
     @objc
     public var cursor: String { swift.cursor }
@@ -3913,8 +3830,8 @@ public class DBXTeamGroupsListResult: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(groups: [DBXTeamCommonGroupSummary], cursor: String, hasMore: NSNumber) {
-        self.swift = Team.GroupsListResult(groups: groups.map(\.swift), cursor: cursor, hasMore: hasMore.boolValue)
+    public init(groups: Array<DBXTeamCommonGroupSummary>, cursor: String, hasMore: NSNumber) {
+        self.swift = Team.GroupsListResult(groups: groups.map { $0.swift }, cursor: cursor, hasMore: hasMore.boolValue)
     }
 
     let swift: Team.GroupsListResult
@@ -3922,6 +3839,7 @@ public class DBXTeamGroupsListResult: NSObject {
     public init(swift: Team.GroupsListResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -3948,6 +3866,7 @@ public class DBXTeamGroupsMembersListArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -3969,6 +3888,7 @@ public class DBXTeamGroupsMembersListContinueArg: NSObject {
     public init(swift: Team.GroupsMembersListContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -3997,12 +3917,12 @@ public class DBXTeamGroupsMembersListContinueError: NSObject {
 
     @objc
     public var asInvalidCursor: DBXTeamGroupsMembersListContinueErrorInvalidCursor? {
-        self as? DBXTeamGroupsMembersListContinueErrorInvalidCursor
+        return self as? DBXTeamGroupsMembersListContinueErrorInvalidCursor
     }
 
     @objc
     public var asOther: DBXTeamGroupsMembersListContinueErrorOther? {
-        self as? DBXTeamGroupsMembersListContinueErrorOther
+        return self as? DBXTeamGroupsMembersListContinueErrorOther
     }
 }
 
@@ -4031,7 +3951,7 @@ public class DBXTeamGroupsMembersListContinueErrorOther: DBXTeamGroupsMembersLis
 public class DBXTeamGroupsMembersListResult: NSObject {
     /// (no description)
     @objc
-    public var members: [DBXTeamGroupMemberInfo] { swift.members.map { DBXTeamGroupMemberInfo(swift: $0) } }
+    public var members: Array<DBXTeamGroupMemberInfo> { swift.members.map { DBXTeamGroupMemberInfo(swift: $0) } }
     /// Pass the cursor into groupsMembersListContinue to obtain additional group members.
     @objc
     public var cursor: String { swift.cursor }
@@ -4041,8 +3961,8 @@ public class DBXTeamGroupsMembersListResult: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(members: [DBXTeamGroupMemberInfo], cursor: String, hasMore: NSNumber) {
-        self.swift = Team.GroupsMembersListResult(members: members.map(\.swift), cursor: cursor, hasMore: hasMore.boolValue)
+    public init(members: Array<DBXTeamGroupMemberInfo>, cursor: String, hasMore: NSNumber) {
+        self.swift = Team.GroupsMembersListResult(members: members.map { $0.swift }, cursor: cursor, hasMore: hasMore.boolValue)
     }
 
     let swift: Team.GroupsMembersListResult
@@ -4050,6 +3970,7 @@ public class DBXTeamGroupsMembersListResult: NSObject {
     public init(swift: Team.GroupsMembersListResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -4082,22 +4003,22 @@ public class DBXTeamGroupsPollError: NSObject {
 
     @objc
     public var asInvalidAsyncJobId: DBXTeamGroupsPollErrorInvalidAsyncJobId? {
-        self as? DBXTeamGroupsPollErrorInvalidAsyncJobId
+        return self as? DBXTeamGroupsPollErrorInvalidAsyncJobId
     }
 
     @objc
     public var asInternalError: DBXTeamGroupsPollErrorInternalError? {
-        self as? DBXTeamGroupsPollErrorInternalError
+        return self as? DBXTeamGroupsPollErrorInternalError
     }
 
     @objc
     public var asOther: DBXTeamGroupsPollErrorOther? {
-        self as? DBXTeamGroupsPollErrorOther
+        return self as? DBXTeamGroupsPollErrorOther
     }
 
     @objc
     public var asAccessDenied: DBXTeamGroupsPollErrorAccessDenied? {
-        self as? DBXTeamGroupsPollErrorAccessDenied
+        return self as? DBXTeamGroupsPollErrorAccessDenied
     }
 }
 
@@ -4112,7 +4033,7 @@ public class DBXTeamGroupsPollErrorInvalidAsyncJobId: DBXTeamGroupsPollError {
 }
 
 /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking
-/// succeeded, and if not, try again. This should happen very rarely.
+        /// succeeded, and if not, try again. This should happen very rarely.
 @objc
 public class DBXTeamGroupsPollErrorInternalError: DBXTeamGroupsPollError {
     @objc
@@ -4167,12 +4088,12 @@ public class DBXTeamGroupsSelector: NSObject {
 
     @objc
     public var asGroupIds: DBXTeamGroupsSelectorGroupIds? {
-        self as? DBXTeamGroupsSelectorGroupIds
+        return self as? DBXTeamGroupsSelectorGroupIds
     }
 
     @objc
     public var asGroupExternalIds: DBXTeamGroupsSelectorGroupExternalIds? {
-        self as? DBXTeamGroupsSelectorGroupExternalIds
+        return self as? DBXTeamGroupsSelectorGroupExternalIds
     }
 }
 
@@ -4180,11 +4101,11 @@ public class DBXTeamGroupsSelector: NSObject {
 @objc
 public class DBXTeamGroupsSelectorGroupIds: DBXTeamGroupsSelector {
     @objc
-    public var groupIds: [String]
+    public var groupIds: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.groupIds = arg
+    public init(_ arg: Array<String>) {
+        groupIds = arg
         let swift = Team.GroupsSelector.groupIds(arg)
         super.init(swift: swift)
     }
@@ -4194,12 +4115,69 @@ public class DBXTeamGroupsSelectorGroupIds: DBXTeamGroupsSelector {
 @objc
 public class DBXTeamGroupsSelectorGroupExternalIds: DBXTeamGroupsSelector {
     @objc
-    public var groupExternalIds: [String]
+    public var groupExternalIds: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.groupExternalIds = arg
+    public init(_ arg: Array<String>) {
+        groupExternalIds = arg
         let swift = Team.GroupsSelector.groupExternalIds(arg)
+        super.init(swift: swift)
+    }
+}
+
+/// The value for hasDistinctMemberHomes in Feature.
+@objc
+public class DBXTeamHasDistinctMemberHomesValue: NSObject {
+    let swift: Team.HasDistinctMemberHomesValue
+
+    public init(swift: Team.HasDistinctMemberHomesValue) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.HasDistinctMemberHomesValue) -> DBXTeamHasDistinctMemberHomesValue {
+        switch swift {
+        case .hasDistinctMemberHomes(let swiftArg):
+            let arg = NSNumber(value: swiftArg)
+            return DBXTeamHasDistinctMemberHomesValueHasDistinctMemberHomes(arg)
+        case .other:
+            return DBXTeamHasDistinctMemberHomesValueOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asHasDistinctMemberHomes: DBXTeamHasDistinctMemberHomesValueHasDistinctMemberHomes? {
+        return self as? DBXTeamHasDistinctMemberHomesValueHasDistinctMemberHomes
+    }
+
+    @objc
+    public var asOther: DBXTeamHasDistinctMemberHomesValueOther? {
+        return self as? DBXTeamHasDistinctMemberHomesValueOther
+    }
+}
+
+/// Does this team have distinct team member homes.
+@objc
+public class DBXTeamHasDistinctMemberHomesValueHasDistinctMemberHomes: DBXTeamHasDistinctMemberHomesValue {
+    @objc
+    public var hasDistinctMemberHomes: NSNumber
+
+    @objc
+    public init(_ arg: NSNumber) {
+        hasDistinctMemberHomes = arg
+        let swift = Team.HasDistinctMemberHomesValue.hasDistinctMemberHomes(arg.boolValue)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamHasDistinctMemberHomesValueOther: DBXTeamHasDistinctMemberHomesValue {
+    @objc
+    public init() {
+        let swift = Team.HasDistinctMemberHomesValue.other
         super.init(swift: swift)
     }
 }
@@ -4228,12 +4206,12 @@ public class DBXTeamHasTeamFileEventsValue: NSObject {
 
     @objc
     public var asEnabled: DBXTeamHasTeamFileEventsValueEnabled? {
-        self as? DBXTeamHasTeamFileEventsValueEnabled
+        return self as? DBXTeamHasTeamFileEventsValueEnabled
     }
 
     @objc
     public var asOther: DBXTeamHasTeamFileEventsValueOther? {
-        self as? DBXTeamHasTeamFileEventsValueOther
+        return self as? DBXTeamHasTeamFileEventsValueOther
     }
 }
 
@@ -4245,7 +4223,7 @@ public class DBXTeamHasTeamFileEventsValueEnabled: DBXTeamHasTeamFileEventsValue
 
     @objc
     public init(_ arg: NSNumber) {
-        self.enabled = arg
+        enabled = arg
         let swift = Team.HasTeamFileEventsValue.enabled(arg.boolValue)
         super.init(swift: swift)
     }
@@ -4285,12 +4263,12 @@ public class DBXTeamHasTeamSelectiveSyncValue: NSObject {
 
     @objc
     public var asHasTeamSelectiveSync: DBXTeamHasTeamSelectiveSyncValueHasTeamSelectiveSync? {
-        self as? DBXTeamHasTeamSelectiveSyncValueHasTeamSelectiveSync
+        return self as? DBXTeamHasTeamSelectiveSyncValueHasTeamSelectiveSync
     }
 
     @objc
     public var asOther: DBXTeamHasTeamSelectiveSyncValueOther? {
-        self as? DBXTeamHasTeamSelectiveSyncValueOther
+        return self as? DBXTeamHasTeamSelectiveSyncValueOther
     }
 }
 
@@ -4302,7 +4280,7 @@ public class DBXTeamHasTeamSelectiveSyncValueHasTeamSelectiveSync: DBXTeamHasTea
 
     @objc
     public init(_ arg: NSNumber) {
-        self.hasTeamSelectiveSync = arg
+        hasTeamSelectiveSync = arg
         let swift = Team.HasTeamSelectiveSyncValue.hasTeamSelectiveSync(arg.boolValue)
         super.init(swift: swift)
     }
@@ -4342,12 +4320,12 @@ public class DBXTeamHasTeamSharedDropboxValue: NSObject {
 
     @objc
     public var asHasTeamSharedDropbox: DBXTeamHasTeamSharedDropboxValueHasTeamSharedDropbox? {
-        self as? DBXTeamHasTeamSharedDropboxValueHasTeamSharedDropbox
+        return self as? DBXTeamHasTeamSharedDropboxValueHasTeamSharedDropbox
     }
 
     @objc
     public var asOther: DBXTeamHasTeamSharedDropboxValueOther? {
-        self as? DBXTeamHasTeamSharedDropboxValueOther
+        return self as? DBXTeamHasTeamSharedDropboxValueOther
     }
 }
 
@@ -4359,7 +4337,7 @@ public class DBXTeamHasTeamSharedDropboxValueHasTeamSharedDropbox: DBXTeamHasTea
 
     @objc
     public init(_ arg: NSNumber) {
-        self.hasTeamSharedDropbox = arg
+        hasTeamSharedDropbox = arg
         let swift = Team.HasTeamSharedDropboxValue.hasTeamSharedDropbox(arg.boolValue)
         super.init(swift: swift)
     }
@@ -4411,30 +4389,8 @@ public class DBXTeamLegalHoldHeldRevisionMetadata: NSObject {
     public var contentHash: String { swift.contentHash }
 
     @objc
-    public init(
-        newFilename: String,
-        originalRevisionId: String,
-        originalFilePath: String,
-        serverModified: Date,
-        authorMemberId: String,
-        authorMemberStatus: DBXTeamTeamMemberStatus,
-        authorEmail: String,
-        fileType: String,
-        size: NSNumber,
-        contentHash: String
-    ) {
-        self.swift = Team.LegalHoldHeldRevisionMetadata(
-            newFilename: newFilename,
-            originalRevisionId: originalRevisionId,
-            originalFilePath: originalFilePath,
-            serverModified: serverModified,
-            authorMemberId: authorMemberId,
-            authorMemberStatus: authorMemberStatus.swift,
-            authorEmail: authorEmail,
-            fileType: fileType,
-            size: size.uint64Value,
-            contentHash: contentHash
-        )
+    public init(newFilename: String, originalRevisionId: String, originalFilePath: String, serverModified: Date, authorMemberId: String, authorMemberStatus: DBXTeamTeamMemberStatus, authorEmail: String, fileType: String, size: NSNumber, contentHash: String) {
+        self.swift = Team.LegalHoldHeldRevisionMetadata(newFilename: newFilename, originalRevisionId: originalRevisionId, originalFilePath: originalFilePath, serverModified: serverModified, authorMemberId: authorMemberId, authorMemberStatus: authorMemberStatus.swift, authorEmail: authorEmail, fileType: fileType, size: size.uint64Value, contentHash: contentHash)
     }
 
     let swift: Team.LegalHoldHeldRevisionMetadata
@@ -4442,6 +4398,7 @@ public class DBXTeamLegalHoldHeldRevisionMetadata: NSObject {
     public init(swift: Team.LegalHoldHeldRevisionMetadata) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -4476,26 +4433,8 @@ public class DBXTeamLegalHoldPolicy: NSObject {
     public var endDate: Date? { swift.endDate }
 
     @objc
-    public init(
-        id: String,
-        name: String,
-        members: DBXTeamMembersInfo,
-        status: DBXTeamLegalHoldStatus,
-        startDate: Date,
-        description_: String?,
-        activationTime: Date?,
-        endDate: Date?
-    ) {
-        self.swift = Team.LegalHoldPolicy(
-            id: id,
-            name: name,
-            members: members.swift,
-            status: status.swift,
-            startDate: startDate,
-            description_: description_,
-            activationTime: activationTime,
-            endDate: endDate
-        )
+    public init(id: String, name: String, members: DBXTeamMembersInfo, status: DBXTeamLegalHoldStatus, startDate: Date, description_: String?, activationTime: Date?, endDate: Date?) {
+        self.swift = Team.LegalHoldPolicy(id: id, name: name, members: members.swift, status: status.swift, startDate: startDate, description_: description_, activationTime: activationTime, endDate: endDate)
     }
 
     let swift: Team.LegalHoldPolicy
@@ -4503,6 +4442,7 @@ public class DBXTeamLegalHoldPolicy: NSObject {
     public init(swift: Team.LegalHoldPolicy) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -4541,37 +4481,37 @@ public class DBXTeamLegalHoldStatus: NSObject {
 
     @objc
     public var asActive: DBXTeamLegalHoldStatusActive? {
-        self as? DBXTeamLegalHoldStatusActive
+        return self as? DBXTeamLegalHoldStatusActive
     }
 
     @objc
     public var asReleased: DBXTeamLegalHoldStatusReleased? {
-        self as? DBXTeamLegalHoldStatusReleased
+        return self as? DBXTeamLegalHoldStatusReleased
     }
 
     @objc
     public var asActivating: DBXTeamLegalHoldStatusActivating? {
-        self as? DBXTeamLegalHoldStatusActivating
+        return self as? DBXTeamLegalHoldStatusActivating
     }
 
     @objc
     public var asUpdating: DBXTeamLegalHoldStatusUpdating? {
-        self as? DBXTeamLegalHoldStatusUpdating
+        return self as? DBXTeamLegalHoldStatusUpdating
     }
 
     @objc
     public var asExporting: DBXTeamLegalHoldStatusExporting? {
-        self as? DBXTeamLegalHoldStatusExporting
+        return self as? DBXTeamLegalHoldStatusExporting
     }
 
     @objc
     public var asReleasing: DBXTeamLegalHoldStatusReleasing? {
-        self as? DBXTeamLegalHoldStatusReleasing
+        return self as? DBXTeamLegalHoldStatusReleasing
     }
 
     @objc
     public var asOther: DBXTeamLegalHoldStatusOther? {
-        self as? DBXTeamLegalHoldStatusOther
+        return self as? DBXTeamLegalHoldStatusOther
     }
 }
 
@@ -4670,17 +4610,17 @@ public class DBXTeamLegalHoldsError: NSObject {
 
     @objc
     public var asUnknownLegalHoldError: DBXTeamLegalHoldsErrorUnknownLegalHoldError? {
-        self as? DBXTeamLegalHoldsErrorUnknownLegalHoldError
+        return self as? DBXTeamLegalHoldsErrorUnknownLegalHoldError
     }
 
     @objc
     public var asInsufficientPermissions: DBXTeamLegalHoldsErrorInsufficientPermissions? {
-        self as? DBXTeamLegalHoldsErrorInsufficientPermissions
+        return self as? DBXTeamLegalHoldsErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXTeamLegalHoldsErrorOther? {
-        self as? DBXTeamLegalHoldsErrorOther
+        return self as? DBXTeamLegalHoldsErrorOther
     }
 }
 
@@ -4732,6 +4672,7 @@ public class DBXTeamLegalHoldsGetPolicyArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -4763,22 +4704,22 @@ public class DBXTeamLegalHoldsGetPolicyError: NSObject {
 
     @objc
     public var asUnknownLegalHoldError: DBXTeamLegalHoldsGetPolicyErrorUnknownLegalHoldError? {
-        self as? DBXTeamLegalHoldsGetPolicyErrorUnknownLegalHoldError
+        return self as? DBXTeamLegalHoldsGetPolicyErrorUnknownLegalHoldError
     }
 
     @objc
     public var asInsufficientPermissions: DBXTeamLegalHoldsGetPolicyErrorInsufficientPermissions? {
-        self as? DBXTeamLegalHoldsGetPolicyErrorInsufficientPermissions
+        return self as? DBXTeamLegalHoldsGetPolicyErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXTeamLegalHoldsGetPolicyErrorOther? {
-        self as? DBXTeamLegalHoldsGetPolicyErrorOther
+        return self as? DBXTeamLegalHoldsGetPolicyErrorOther
     }
 
     @objc
     public var asLegalHoldPolicyNotFound: DBXTeamLegalHoldsGetPolicyErrorLegalHoldPolicyNotFound? {
-        self as? DBXTeamLegalHoldsGetPolicyErrorLegalHoldPolicyNotFound
+        return self as? DBXTeamLegalHoldsGetPolicyErrorLegalHoldPolicyNotFound
     }
 }
 
@@ -4827,7 +4768,7 @@ public class DBXTeamLegalHoldsGetPolicyErrorLegalHoldPolicyNotFound: DBXTeamLega
 public class DBXTeamLegalHoldsListHeldRevisionResult: NSObject {
     /// List of file entries that under the hold.
     @objc
-    public var entries: [DBXTeamLegalHoldHeldRevisionMetadata] { swift.entries.map { DBXTeamLegalHoldHeldRevisionMetadata(swift: $0) } }
+    public var entries: Array<DBXTeamLegalHoldHeldRevisionMetadata> { swift.entries.map { DBXTeamLegalHoldHeldRevisionMetadata(swift: $0) } }
     /// The cursor idicates where to continue reading file metadata entries for the next API call. When there are no
     /// more entries, the cursor will return none. Pass the cursor into
     /// /2/team/legal_holds/list_held_revisions/continue.
@@ -4839,8 +4780,8 @@ public class DBXTeamLegalHoldsListHeldRevisionResult: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(entries: [DBXTeamLegalHoldHeldRevisionMetadata], hasMore: NSNumber, cursor: String?) {
-        self.swift = Team.LegalHoldsListHeldRevisionResult(entries: entries.map(\.swift), hasMore: hasMore.boolValue, cursor: cursor)
+    public init(entries: Array<DBXTeamLegalHoldHeldRevisionMetadata>, hasMore: NSNumber, cursor: String?) {
+        self.swift = Team.LegalHoldsListHeldRevisionResult(entries: entries.map { $0.swift }, hasMore: hasMore.boolValue, cursor: cursor)
     }
 
     let swift: Team.LegalHoldsListHeldRevisionResult
@@ -4848,6 +4789,7 @@ public class DBXTeamLegalHoldsListHeldRevisionResult: NSObject {
     public init(swift: Team.LegalHoldsListHeldRevisionResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -4870,6 +4812,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsArg: NSObject {
     public init(swift: Team.LegalHoldsListHeldRevisionsArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -4896,6 +4839,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsContinueArg: NSObject {
     public init(swift: Team.LegalHoldsListHeldRevisionsContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -4928,22 +4872,22 @@ public class DBXTeamLegalHoldsListHeldRevisionsContinueError: NSObject {
 
     @objc
     public var asUnknownLegalHoldError: DBXTeamLegalHoldsListHeldRevisionsContinueErrorUnknownLegalHoldError? {
-        self as? DBXTeamLegalHoldsListHeldRevisionsContinueErrorUnknownLegalHoldError
+        return self as? DBXTeamLegalHoldsListHeldRevisionsContinueErrorUnknownLegalHoldError
     }
 
     @objc
     public var asTransientError: DBXTeamLegalHoldsListHeldRevisionsContinueErrorTransientError? {
-        self as? DBXTeamLegalHoldsListHeldRevisionsContinueErrorTransientError
+        return self as? DBXTeamLegalHoldsListHeldRevisionsContinueErrorTransientError
     }
 
     @objc
     public var asReset: DBXTeamLegalHoldsListHeldRevisionsContinueErrorReset? {
-        self as? DBXTeamLegalHoldsListHeldRevisionsContinueErrorReset
+        return self as? DBXTeamLegalHoldsListHeldRevisionsContinueErrorReset
     }
 
     @objc
     public var asOther: DBXTeamLegalHoldsListHeldRevisionsContinueErrorOther? {
-        self as? DBXTeamLegalHoldsListHeldRevisionsContinueErrorOther
+        return self as? DBXTeamLegalHoldsListHeldRevisionsContinueErrorOther
     }
 }
 
@@ -4968,7 +4912,7 @@ public class DBXTeamLegalHoldsListHeldRevisionsContinueErrorTransientError: DBXT
 }
 
 /// Indicates that the cursor has been invalidated. Call legalHoldsListHeldRevisionsContinue again with an empty
-/// cursor to obtain a new cursor.
+        /// cursor to obtain a new cursor.
 @objc
 public class DBXTeamLegalHoldsListHeldRevisionsContinueErrorReset: DBXTeamLegalHoldsListHeldRevisionsContinueError {
     @objc
@@ -5019,32 +4963,32 @@ public class DBXTeamLegalHoldsListHeldRevisionsError: NSObject {
 
     @objc
     public var asUnknownLegalHoldError: DBXTeamLegalHoldsListHeldRevisionsErrorUnknownLegalHoldError? {
-        self as? DBXTeamLegalHoldsListHeldRevisionsErrorUnknownLegalHoldError
+        return self as? DBXTeamLegalHoldsListHeldRevisionsErrorUnknownLegalHoldError
     }
 
     @objc
     public var asInsufficientPermissions: DBXTeamLegalHoldsListHeldRevisionsErrorInsufficientPermissions? {
-        self as? DBXTeamLegalHoldsListHeldRevisionsErrorInsufficientPermissions
+        return self as? DBXTeamLegalHoldsListHeldRevisionsErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXTeamLegalHoldsListHeldRevisionsErrorOther? {
-        self as? DBXTeamLegalHoldsListHeldRevisionsErrorOther
+        return self as? DBXTeamLegalHoldsListHeldRevisionsErrorOther
     }
 
     @objc
     public var asTransientError: DBXTeamLegalHoldsListHeldRevisionsErrorTransientError? {
-        self as? DBXTeamLegalHoldsListHeldRevisionsErrorTransientError
+        return self as? DBXTeamLegalHoldsListHeldRevisionsErrorTransientError
     }
 
     @objc
     public var asLegalHoldStillEmpty: DBXTeamLegalHoldsListHeldRevisionsErrorLegalHoldStillEmpty? {
-        self as? DBXTeamLegalHoldsListHeldRevisionsErrorLegalHoldStillEmpty
+        return self as? DBXTeamLegalHoldsListHeldRevisionsErrorLegalHoldStillEmpty
     }
 
     @objc
     public var asInactiveLegalHold: DBXTeamLegalHoldsListHeldRevisionsErrorInactiveLegalHold? {
-        self as? DBXTeamLegalHoldsListHeldRevisionsErrorInactiveLegalHold
+        return self as? DBXTeamLegalHoldsListHeldRevisionsErrorInactiveLegalHold
     }
 }
 
@@ -5126,6 +5070,7 @@ public class DBXTeamLegalHoldsListPoliciesArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -5157,22 +5102,22 @@ public class DBXTeamLegalHoldsListPoliciesError: NSObject {
 
     @objc
     public var asUnknownLegalHoldError: DBXTeamLegalHoldsListPoliciesErrorUnknownLegalHoldError? {
-        self as? DBXTeamLegalHoldsListPoliciesErrorUnknownLegalHoldError
+        return self as? DBXTeamLegalHoldsListPoliciesErrorUnknownLegalHoldError
     }
 
     @objc
     public var asInsufficientPermissions: DBXTeamLegalHoldsListPoliciesErrorInsufficientPermissions? {
-        self as? DBXTeamLegalHoldsListPoliciesErrorInsufficientPermissions
+        return self as? DBXTeamLegalHoldsListPoliciesErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXTeamLegalHoldsListPoliciesErrorOther? {
-        self as? DBXTeamLegalHoldsListPoliciesErrorOther
+        return self as? DBXTeamLegalHoldsListPoliciesErrorOther
     }
 
     @objc
     public var asTransientError: DBXTeamLegalHoldsListPoliciesErrorTransientError? {
-        self as? DBXTeamLegalHoldsListPoliciesErrorTransientError
+        return self as? DBXTeamLegalHoldsListPoliciesErrorTransientError
     }
 }
 
@@ -5221,11 +5166,11 @@ public class DBXTeamLegalHoldsListPoliciesErrorTransientError: DBXTeamLegalHolds
 public class DBXTeamLegalHoldsListPoliciesResult: NSObject {
     /// (no description)
     @objc
-    public var policies: [DBXTeamLegalHoldPolicy] { swift.policies.map { DBXTeamLegalHoldPolicy(swift: $0) } }
+    public var policies: Array<DBXTeamLegalHoldPolicy> { swift.policies.map { DBXTeamLegalHoldPolicy(swift: $0) } }
 
     @objc
-    public init(policies: [DBXTeamLegalHoldPolicy]) {
-        self.swift = Team.LegalHoldsListPoliciesResult(policies: policies.map(\.swift))
+    public init(policies: Array<DBXTeamLegalHoldPolicy>) {
+        self.swift = Team.LegalHoldsListPoliciesResult(policies: policies.map { $0.swift })
     }
 
     let swift: Team.LegalHoldsListPoliciesResult
@@ -5233,6 +5178,7 @@ public class DBXTeamLegalHoldsListPoliciesResult: NSObject {
     public init(swift: Team.LegalHoldsListPoliciesResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5249,7 +5195,7 @@ public class DBXTeamLegalHoldsPolicyCreateArg: NSObject {
     public var description_: String? { swift.description_ }
     /// List of team member IDs added to the hold.
     @objc
-    public var members: [String] { swift.members }
+    public var members: Array<String> { swift.members }
     /// start date of the legal hold policy.
     @objc
     public var startDate: Date? { swift.startDate }
@@ -5258,7 +5204,7 @@ public class DBXTeamLegalHoldsPolicyCreateArg: NSObject {
     public var endDate: Date? { swift.endDate }
 
     @objc
-    public init(name: String, members: [String], description_: String?, startDate: Date?, endDate: Date?) {
+    public init(name: String, members: Array<String>, description_: String?, startDate: Date?, endDate: Date?) {
         self.swift = Team.LegalHoldsPolicyCreateArg(name: name, members: members, description_: description_, startDate: startDate, endDate: endDate)
     }
 
@@ -5267,6 +5213,7 @@ public class DBXTeamLegalHoldsPolicyCreateArg: NSObject {
     public init(swift: Team.LegalHoldsPolicyCreateArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5313,57 +5260,57 @@ public class DBXTeamLegalHoldsPolicyCreateError: NSObject {
 
     @objc
     public var asUnknownLegalHoldError: DBXTeamLegalHoldsPolicyCreateErrorUnknownLegalHoldError? {
-        self as? DBXTeamLegalHoldsPolicyCreateErrorUnknownLegalHoldError
+        return self as? DBXTeamLegalHoldsPolicyCreateErrorUnknownLegalHoldError
     }
 
     @objc
     public var asInsufficientPermissions: DBXTeamLegalHoldsPolicyCreateErrorInsufficientPermissions? {
-        self as? DBXTeamLegalHoldsPolicyCreateErrorInsufficientPermissions
+        return self as? DBXTeamLegalHoldsPolicyCreateErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXTeamLegalHoldsPolicyCreateErrorOther? {
-        self as? DBXTeamLegalHoldsPolicyCreateErrorOther
+        return self as? DBXTeamLegalHoldsPolicyCreateErrorOther
     }
 
     @objc
     public var asStartDateIsLaterThanEndDate: DBXTeamLegalHoldsPolicyCreateErrorStartDateIsLaterThanEndDate? {
-        self as? DBXTeamLegalHoldsPolicyCreateErrorStartDateIsLaterThanEndDate
+        return self as? DBXTeamLegalHoldsPolicyCreateErrorStartDateIsLaterThanEndDate
     }
 
     @objc
     public var asEmptyMembersList: DBXTeamLegalHoldsPolicyCreateErrorEmptyMembersList? {
-        self as? DBXTeamLegalHoldsPolicyCreateErrorEmptyMembersList
+        return self as? DBXTeamLegalHoldsPolicyCreateErrorEmptyMembersList
     }
 
     @objc
     public var asInvalidMembers: DBXTeamLegalHoldsPolicyCreateErrorInvalidMembers? {
-        self as? DBXTeamLegalHoldsPolicyCreateErrorInvalidMembers
+        return self as? DBXTeamLegalHoldsPolicyCreateErrorInvalidMembers
     }
 
     @objc
     public var asNumberOfUsersOnHoldIsGreaterThanHoldLimitation: DBXTeamLegalHoldsPolicyCreateErrorNumberOfUsersOnHoldIsGreaterThanHoldLimitation? {
-        self as? DBXTeamLegalHoldsPolicyCreateErrorNumberOfUsersOnHoldIsGreaterThanHoldLimitation
+        return self as? DBXTeamLegalHoldsPolicyCreateErrorNumberOfUsersOnHoldIsGreaterThanHoldLimitation
     }
 
     @objc
     public var asTransientError: DBXTeamLegalHoldsPolicyCreateErrorTransientError? {
-        self as? DBXTeamLegalHoldsPolicyCreateErrorTransientError
+        return self as? DBXTeamLegalHoldsPolicyCreateErrorTransientError
     }
 
     @objc
     public var asNameMustBeUnique: DBXTeamLegalHoldsPolicyCreateErrorNameMustBeUnique? {
-        self as? DBXTeamLegalHoldsPolicyCreateErrorNameMustBeUnique
+        return self as? DBXTeamLegalHoldsPolicyCreateErrorNameMustBeUnique
     }
 
     @objc
     public var asTeamExceededLegalHoldQuota: DBXTeamLegalHoldsPolicyCreateErrorTeamExceededLegalHoldQuota? {
-        self as? DBXTeamLegalHoldsPolicyCreateErrorTeamExceededLegalHoldQuota
+        return self as? DBXTeamLegalHoldsPolicyCreateErrorTeamExceededLegalHoldQuota
     }
 
     @objc
     public var asInvalidDate: DBXTeamLegalHoldsPolicyCreateErrorInvalidDate? {
-        self as? DBXTeamLegalHoldsPolicyCreateErrorInvalidDate
+        return self as? DBXTeamLegalHoldsPolicyCreateErrorInvalidDate
     }
 }
 
@@ -5495,6 +5442,7 @@ public class DBXTeamLegalHoldsPolicyReleaseArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -5530,32 +5478,32 @@ public class DBXTeamLegalHoldsPolicyReleaseError: NSObject {
 
     @objc
     public var asUnknownLegalHoldError: DBXTeamLegalHoldsPolicyReleaseErrorUnknownLegalHoldError? {
-        self as? DBXTeamLegalHoldsPolicyReleaseErrorUnknownLegalHoldError
+        return self as? DBXTeamLegalHoldsPolicyReleaseErrorUnknownLegalHoldError
     }
 
     @objc
     public var asInsufficientPermissions: DBXTeamLegalHoldsPolicyReleaseErrorInsufficientPermissions? {
-        self as? DBXTeamLegalHoldsPolicyReleaseErrorInsufficientPermissions
+        return self as? DBXTeamLegalHoldsPolicyReleaseErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXTeamLegalHoldsPolicyReleaseErrorOther? {
-        self as? DBXTeamLegalHoldsPolicyReleaseErrorOther
+        return self as? DBXTeamLegalHoldsPolicyReleaseErrorOther
     }
 
     @objc
     public var asLegalHoldPerformingAnotherOperation: DBXTeamLegalHoldsPolicyReleaseErrorLegalHoldPerformingAnotherOperation? {
-        self as? DBXTeamLegalHoldsPolicyReleaseErrorLegalHoldPerformingAnotherOperation
+        return self as? DBXTeamLegalHoldsPolicyReleaseErrorLegalHoldPerformingAnotherOperation
     }
 
     @objc
     public var asLegalHoldAlreadyReleasing: DBXTeamLegalHoldsPolicyReleaseErrorLegalHoldAlreadyReleasing? {
-        self as? DBXTeamLegalHoldsPolicyReleaseErrorLegalHoldAlreadyReleasing
+        return self as? DBXTeamLegalHoldsPolicyReleaseErrorLegalHoldAlreadyReleasing
     }
 
     @objc
     public var asLegalHoldPolicyNotFound: DBXTeamLegalHoldsPolicyReleaseErrorLegalHoldPolicyNotFound? {
-        self as? DBXTeamLegalHoldsPolicyReleaseErrorLegalHoldPolicyNotFound
+        return self as? DBXTeamLegalHoldsPolicyReleaseErrorLegalHoldPolicyNotFound
     }
 }
 
@@ -5633,10 +5581,10 @@ public class DBXTeamLegalHoldsPolicyUpdateArg: NSObject {
     public var description_: String? { swift.description_ }
     /// List of team member IDs to apply the policy on.
     @objc
-    public var members: [String]? { swift.members }
+    public var members: Array<String>? { swift.members }
 
     @objc
-    public init(id: String, name: String?, description_: String?, members: [String]?) {
+    public init(id: String, name: String?, description_: String?, members: Array<String>?) {
         self.swift = Team.LegalHoldsPolicyUpdateArg(id: id, name: name, description_: description_, members: members)
     }
 
@@ -5645,6 +5593,7 @@ public class DBXTeamLegalHoldsPolicyUpdateArg: NSObject {
     public init(swift: Team.LegalHoldsPolicyUpdateArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5691,57 +5640,57 @@ public class DBXTeamLegalHoldsPolicyUpdateError: NSObject {
 
     @objc
     public var asUnknownLegalHoldError: DBXTeamLegalHoldsPolicyUpdateErrorUnknownLegalHoldError? {
-        self as? DBXTeamLegalHoldsPolicyUpdateErrorUnknownLegalHoldError
+        return self as? DBXTeamLegalHoldsPolicyUpdateErrorUnknownLegalHoldError
     }
 
     @objc
     public var asInsufficientPermissions: DBXTeamLegalHoldsPolicyUpdateErrorInsufficientPermissions? {
-        self as? DBXTeamLegalHoldsPolicyUpdateErrorInsufficientPermissions
+        return self as? DBXTeamLegalHoldsPolicyUpdateErrorInsufficientPermissions
     }
 
     @objc
     public var asOther: DBXTeamLegalHoldsPolicyUpdateErrorOther? {
-        self as? DBXTeamLegalHoldsPolicyUpdateErrorOther
+        return self as? DBXTeamLegalHoldsPolicyUpdateErrorOther
     }
 
     @objc
     public var asTransientError: DBXTeamLegalHoldsPolicyUpdateErrorTransientError? {
-        self as? DBXTeamLegalHoldsPolicyUpdateErrorTransientError
+        return self as? DBXTeamLegalHoldsPolicyUpdateErrorTransientError
     }
 
     @objc
     public var asInactiveLegalHold: DBXTeamLegalHoldsPolicyUpdateErrorInactiveLegalHold? {
-        self as? DBXTeamLegalHoldsPolicyUpdateErrorInactiveLegalHold
+        return self as? DBXTeamLegalHoldsPolicyUpdateErrorInactiveLegalHold
     }
 
     @objc
     public var asLegalHoldPerformingAnotherOperation: DBXTeamLegalHoldsPolicyUpdateErrorLegalHoldPerformingAnotherOperation? {
-        self as? DBXTeamLegalHoldsPolicyUpdateErrorLegalHoldPerformingAnotherOperation
+        return self as? DBXTeamLegalHoldsPolicyUpdateErrorLegalHoldPerformingAnotherOperation
     }
 
     @objc
     public var asInvalidMembers: DBXTeamLegalHoldsPolicyUpdateErrorInvalidMembers? {
-        self as? DBXTeamLegalHoldsPolicyUpdateErrorInvalidMembers
+        return self as? DBXTeamLegalHoldsPolicyUpdateErrorInvalidMembers
     }
 
     @objc
     public var asNumberOfUsersOnHoldIsGreaterThanHoldLimitation: DBXTeamLegalHoldsPolicyUpdateErrorNumberOfUsersOnHoldIsGreaterThanHoldLimitation? {
-        self as? DBXTeamLegalHoldsPolicyUpdateErrorNumberOfUsersOnHoldIsGreaterThanHoldLimitation
+        return self as? DBXTeamLegalHoldsPolicyUpdateErrorNumberOfUsersOnHoldIsGreaterThanHoldLimitation
     }
 
     @objc
     public var asEmptyMembersList: DBXTeamLegalHoldsPolicyUpdateErrorEmptyMembersList? {
-        self as? DBXTeamLegalHoldsPolicyUpdateErrorEmptyMembersList
+        return self as? DBXTeamLegalHoldsPolicyUpdateErrorEmptyMembersList
     }
 
     @objc
     public var asNameMustBeUnique: DBXTeamLegalHoldsPolicyUpdateErrorNameMustBeUnique? {
-        self as? DBXTeamLegalHoldsPolicyUpdateErrorNameMustBeUnique
+        return self as? DBXTeamLegalHoldsPolicyUpdateErrorNameMustBeUnique
     }
 
     @objc
     public var asLegalHoldPolicyNotFound: DBXTeamLegalHoldsPolicyUpdateErrorLegalHoldPolicyNotFound? {
-        self as? DBXTeamLegalHoldsPolicyUpdateErrorLegalHoldPolicyNotFound
+        return self as? DBXTeamLegalHoldsPolicyUpdateErrorLegalHoldPolicyNotFound
     }
 }
 
@@ -5873,6 +5822,7 @@ public class DBXTeamListMemberAppsArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -5900,12 +5850,12 @@ public class DBXTeamListMemberAppsError: NSObject {
 
     @objc
     public var asMemberNotFound: DBXTeamListMemberAppsErrorMemberNotFound? {
-        self as? DBXTeamListMemberAppsErrorMemberNotFound
+        return self as? DBXTeamListMemberAppsErrorMemberNotFound
     }
 
     @objc
     public var asOther: DBXTeamListMemberAppsErrorOther? {
-        self as? DBXTeamListMemberAppsErrorOther
+        return self as? DBXTeamListMemberAppsErrorOther
     }
 }
 
@@ -5934,11 +5884,11 @@ public class DBXTeamListMemberAppsErrorOther: DBXTeamListMemberAppsError {
 public class DBXTeamListMemberAppsResult: NSObject {
     /// List of third party applications linked by this team member.
     @objc
-    public var linkedApiApps: [DBXTeamApiApp] { swift.linkedApiApps.map { DBXTeamApiApp(swift: $0) } }
+    public var linkedApiApps: Array<DBXTeamApiApp> { swift.linkedApiApps.map { DBXTeamApiApp(swift: $0) } }
 
     @objc
-    public init(linkedApiApps: [DBXTeamApiApp]) {
-        self.swift = Team.ListMemberAppsResult(linkedApiApps: linkedApiApps.map(\.swift))
+    public init(linkedApiApps: Array<DBXTeamApiApp>) {
+        self.swift = Team.ListMemberAppsResult(linkedApiApps: linkedApiApps.map { $0.swift })
     }
 
     let swift: Team.ListMemberAppsResult
@@ -5946,6 +5896,7 @@ public class DBXTeamListMemberAppsResult: NSObject {
     public init(swift: Team.ListMemberAppsResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -5969,12 +5920,7 @@ public class DBXTeamListMemberDevicesArg: NSObject {
 
     @objc
     public init(teamMemberId: String, includeWebSessions: NSNumber, includeDesktopClients: NSNumber, includeMobileClients: NSNumber) {
-        self.swift = Team.ListMemberDevicesArg(
-            teamMemberId: teamMemberId,
-            includeWebSessions: includeWebSessions.boolValue,
-            includeDesktopClients: includeDesktopClients.boolValue,
-            includeMobileClients: includeMobileClients.boolValue
-        )
+        self.swift = Team.ListMemberDevicesArg(teamMemberId: teamMemberId, includeWebSessions: includeWebSessions.boolValue, includeDesktopClients: includeDesktopClients.boolValue, includeMobileClients: includeMobileClients.boolValue)
     }
 
     let swift: Team.ListMemberDevicesArg
@@ -5982,6 +5928,7 @@ public class DBXTeamListMemberDevicesArg: NSObject {
     public init(swift: Team.ListMemberDevicesArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6010,12 +5957,12 @@ public class DBXTeamListMemberDevicesError: NSObject {
 
     @objc
     public var asMemberNotFound: DBXTeamListMemberDevicesErrorMemberNotFound? {
-        self as? DBXTeamListMemberDevicesErrorMemberNotFound
+        return self as? DBXTeamListMemberDevicesErrorMemberNotFound
     }
 
     @objc
     public var asOther: DBXTeamListMemberDevicesErrorOther? {
-        self as? DBXTeamListMemberDevicesErrorOther
+        return self as? DBXTeamListMemberDevicesErrorOther
     }
 }
 
@@ -6044,25 +5991,17 @@ public class DBXTeamListMemberDevicesErrorOther: DBXTeamListMemberDevicesError {
 public class DBXTeamListMemberDevicesResult: NSObject {
     /// List of web sessions made by this team member.
     @objc
-    public var activeWebSessions: [DBXTeamActiveWebSession]? { swift.activeWebSessions?.map { DBXTeamActiveWebSession(swift: $0) } }
+    public var activeWebSessions: Array<DBXTeamActiveWebSession>? { swift.activeWebSessions?.map { DBXTeamActiveWebSession(swift: $0) } }
     /// List of desktop clients used by this team member.
     @objc
-    public var desktopClientSessions: [DBXTeamDesktopClientSession]? { swift.desktopClientSessions?.map { DBXTeamDesktopClientSession(swift: $0) } }
+    public var desktopClientSessions: Array<DBXTeamDesktopClientSession>? { swift.desktopClientSessions?.map { DBXTeamDesktopClientSession(swift: $0) } }
     /// List of mobile client used by this team member.
     @objc
-    public var mobileClientSessions: [DBXTeamMobileClientSession]? { swift.mobileClientSessions?.map { DBXTeamMobileClientSession(swift: $0) } }
+    public var mobileClientSessions: Array<DBXTeamMobileClientSession>? { swift.mobileClientSessions?.map { DBXTeamMobileClientSession(swift: $0) } }
 
     @objc
-    public init(
-        activeWebSessions: [DBXTeamActiveWebSession]?,
-        desktopClientSessions: [DBXTeamDesktopClientSession]?,
-        mobileClientSessions: [DBXTeamMobileClientSession]?
-    ) {
-        self.swift = Team.ListMemberDevicesResult(
-            activeWebSessions: activeWebSessions?.map(\.subSwift),
-            desktopClientSessions: desktopClientSessions?.map(\.subSwift),
-            mobileClientSessions: mobileClientSessions?.map(\.subSwift)
-        )
+    public init(activeWebSessions: Array<DBXTeamActiveWebSession>?, desktopClientSessions: Array<DBXTeamDesktopClientSession>?, mobileClientSessions: Array<DBXTeamMobileClientSession>?) {
+        self.swift = Team.ListMemberDevicesResult(activeWebSessions: activeWebSessions?.map { $0.subSwift }, desktopClientSessions: desktopClientSessions?.map { $0.subSwift }, mobileClientSessions: mobileClientSessions?.map { $0.subSwift })
     }
 
     let swift: Team.ListMemberDevicesResult
@@ -6070,6 +6009,7 @@ public class DBXTeamListMemberDevicesResult: NSObject {
     public init(swift: Team.ListMemberDevicesResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6094,6 +6034,7 @@ public class DBXTeamListMembersAppsArg: NSObject {
     public init(swift: Team.ListMembersAppsArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6122,17 +6063,17 @@ public class DBXTeamListMembersAppsError: NSObject {
 
     @objc
     public var asReset: DBXTeamListMembersAppsErrorReset? {
-        self as? DBXTeamListMembersAppsErrorReset
+        return self as? DBXTeamListMembersAppsErrorReset
     }
 
     @objc
     public var asOther: DBXTeamListMembersAppsErrorOther? {
-        self as? DBXTeamListMembersAppsErrorOther
+        return self as? DBXTeamListMembersAppsErrorOther
     }
 }
 
 /// Indicates that the cursor has been invalidated. Call linkedAppsListMembersLinkedApps again with an empty
-/// cursor to obtain a new cursor.
+        /// cursor to obtain a new cursor.
 @objc
 public class DBXTeamListMembersAppsErrorReset: DBXTeamListMembersAppsError {
     @objc
@@ -6157,7 +6098,7 @@ public class DBXTeamListMembersAppsErrorOther: DBXTeamListMembersAppsError {
 public class DBXTeamListMembersAppsResult: NSObject {
     /// The linked applications of each member of the team.
     @objc
-    public var apps: [DBXTeamMemberLinkedApps] { swift.apps.map { DBXTeamMemberLinkedApps(swift: $0) } }
+    public var apps: Array<DBXTeamMemberLinkedApps> { swift.apps.map { DBXTeamMemberLinkedApps(swift: $0) } }
     /// If true, then there are more apps available. Pass the cursor to linkedAppsListMembersLinkedApps to retrieve
     /// the rest.
     @objc
@@ -6167,8 +6108,8 @@ public class DBXTeamListMembersAppsResult: NSObject {
     public var cursor: String? { swift.cursor }
 
     @objc
-    public init(apps: [DBXTeamMemberLinkedApps], hasMore: NSNumber, cursor: String?) {
-        self.swift = Team.ListMembersAppsResult(apps: apps.map(\.swift), hasMore: hasMore.boolValue, cursor: cursor)
+    public init(apps: Array<DBXTeamMemberLinkedApps>, hasMore: NSNumber, cursor: String?) {
+        self.swift = Team.ListMembersAppsResult(apps: apps.map { $0.swift }, hasMore: hasMore.boolValue, cursor: cursor)
     }
 
     let swift: Team.ListMembersAppsResult
@@ -6176,6 +6117,7 @@ public class DBXTeamListMembersAppsResult: NSObject {
     public init(swift: Team.ListMembersAppsResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6201,12 +6143,7 @@ public class DBXTeamListMembersDevicesArg: NSObject {
 
     @objc
     public init(cursor: String?, includeWebSessions: NSNumber, includeDesktopClients: NSNumber, includeMobileClients: NSNumber) {
-        self.swift = Team.ListMembersDevicesArg(
-            cursor: cursor,
-            includeWebSessions: includeWebSessions.boolValue,
-            includeDesktopClients: includeDesktopClients.boolValue,
-            includeMobileClients: includeMobileClients.boolValue
-        )
+        self.swift = Team.ListMembersDevicesArg(cursor: cursor, includeWebSessions: includeWebSessions.boolValue, includeDesktopClients: includeDesktopClients.boolValue, includeMobileClients: includeMobileClients.boolValue)
     }
 
     let swift: Team.ListMembersDevicesArg
@@ -6214,6 +6151,7 @@ public class DBXTeamListMembersDevicesArg: NSObject {
     public init(swift: Team.ListMembersDevicesArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6242,17 +6180,17 @@ public class DBXTeamListMembersDevicesError: NSObject {
 
     @objc
     public var asReset: DBXTeamListMembersDevicesErrorReset? {
-        self as? DBXTeamListMembersDevicesErrorReset
+        return self as? DBXTeamListMembersDevicesErrorReset
     }
 
     @objc
     public var asOther: DBXTeamListMembersDevicesErrorOther? {
-        self as? DBXTeamListMembersDevicesErrorOther
+        return self as? DBXTeamListMembersDevicesErrorOther
     }
 }
 
 /// Indicates that the cursor has been invalidated. Call devicesListMembersDevices again with an empty cursor to
-/// obtain a new cursor.
+        /// obtain a new cursor.
 @objc
 public class DBXTeamListMembersDevicesErrorReset: DBXTeamListMembersDevicesError {
     @objc
@@ -6277,7 +6215,7 @@ public class DBXTeamListMembersDevicesErrorOther: DBXTeamListMembersDevicesError
 public class DBXTeamListMembersDevicesResult: NSObject {
     /// The devices of each member of the team.
     @objc
-    public var devices: [DBXTeamMemberDevices] { swift.devices.map { DBXTeamMemberDevices(swift: $0) } }
+    public var devices: Array<DBXTeamMemberDevices> { swift.devices.map { DBXTeamMemberDevices(swift: $0) } }
     /// If true, then there are more devices available. Pass the cursor to devicesListMembersDevices to retrieve the
     /// rest.
     @objc
@@ -6287,8 +6225,8 @@ public class DBXTeamListMembersDevicesResult: NSObject {
     public var cursor: String? { swift.cursor }
 
     @objc
-    public init(devices: [DBXTeamMemberDevices], hasMore: NSNumber, cursor: String?) {
-        self.swift = Team.ListMembersDevicesResult(devices: devices.map(\.swift), hasMore: hasMore.boolValue, cursor: cursor)
+    public init(devices: Array<DBXTeamMemberDevices>, hasMore: NSNumber, cursor: String?) {
+        self.swift = Team.ListMembersDevicesResult(devices: devices.map { $0.swift }, hasMore: hasMore.boolValue, cursor: cursor)
     }
 
     let swift: Team.ListMembersDevicesResult
@@ -6296,6 +6234,7 @@ public class DBXTeamListMembersDevicesResult: NSObject {
     public init(swift: Team.ListMembersDevicesResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6320,6 +6259,7 @@ public class DBXTeamListTeamAppsArg: NSObject {
     public init(swift: Team.ListTeamAppsArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6348,17 +6288,17 @@ public class DBXTeamListTeamAppsError: NSObject {
 
     @objc
     public var asReset: DBXTeamListTeamAppsErrorReset? {
-        self as? DBXTeamListTeamAppsErrorReset
+        return self as? DBXTeamListTeamAppsErrorReset
     }
 
     @objc
     public var asOther: DBXTeamListTeamAppsErrorOther? {
-        self as? DBXTeamListTeamAppsErrorOther
+        return self as? DBXTeamListTeamAppsErrorOther
     }
 }
 
 /// Indicates that the cursor has been invalidated. Call linkedAppsListTeamLinkedApps again with an empty cursor
-/// to obtain a new cursor.
+        /// to obtain a new cursor.
 @objc
 public class DBXTeamListTeamAppsErrorReset: DBXTeamListTeamAppsError {
     @objc
@@ -6383,7 +6323,7 @@ public class DBXTeamListTeamAppsErrorOther: DBXTeamListTeamAppsError {
 public class DBXTeamListTeamAppsResult: NSObject {
     /// The linked applications of each member of the team.
     @objc
-    public var apps: [DBXTeamMemberLinkedApps] { swift.apps.map { DBXTeamMemberLinkedApps(swift: $0) } }
+    public var apps: Array<DBXTeamMemberLinkedApps> { swift.apps.map { DBXTeamMemberLinkedApps(swift: $0) } }
     /// If true, then there are more apps available. Pass the cursor to linkedAppsListTeamLinkedApps to retrieve the
     /// rest.
     @objc
@@ -6393,8 +6333,8 @@ public class DBXTeamListTeamAppsResult: NSObject {
     public var cursor: String? { swift.cursor }
 
     @objc
-    public init(apps: [DBXTeamMemberLinkedApps], hasMore: NSNumber, cursor: String?) {
-        self.swift = Team.ListTeamAppsResult(apps: apps.map(\.swift), hasMore: hasMore.boolValue, cursor: cursor)
+    public init(apps: Array<DBXTeamMemberLinkedApps>, hasMore: NSNumber, cursor: String?) {
+        self.swift = Team.ListTeamAppsResult(apps: apps.map { $0.swift }, hasMore: hasMore.boolValue, cursor: cursor)
     }
 
     let swift: Team.ListTeamAppsResult
@@ -6402,6 +6342,7 @@ public class DBXTeamListTeamAppsResult: NSObject {
     public init(swift: Team.ListTeamAppsResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6427,12 +6368,7 @@ public class DBXTeamListTeamDevicesArg: NSObject {
 
     @objc
     public init(cursor: String?, includeWebSessions: NSNumber, includeDesktopClients: NSNumber, includeMobileClients: NSNumber) {
-        self.swift = Team.ListTeamDevicesArg(
-            cursor: cursor,
-            includeWebSessions: includeWebSessions.boolValue,
-            includeDesktopClients: includeDesktopClients.boolValue,
-            includeMobileClients: includeMobileClients.boolValue
-        )
+        self.swift = Team.ListTeamDevicesArg(cursor: cursor, includeWebSessions: includeWebSessions.boolValue, includeDesktopClients: includeDesktopClients.boolValue, includeMobileClients: includeMobileClients.boolValue)
     }
 
     let swift: Team.ListTeamDevicesArg
@@ -6440,6 +6376,7 @@ public class DBXTeamListTeamDevicesArg: NSObject {
     public init(swift: Team.ListTeamDevicesArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6468,17 +6405,17 @@ public class DBXTeamListTeamDevicesError: NSObject {
 
     @objc
     public var asReset: DBXTeamListTeamDevicesErrorReset? {
-        self as? DBXTeamListTeamDevicesErrorReset
+        return self as? DBXTeamListTeamDevicesErrorReset
     }
 
     @objc
     public var asOther: DBXTeamListTeamDevicesErrorOther? {
-        self as? DBXTeamListTeamDevicesErrorOther
+        return self as? DBXTeamListTeamDevicesErrorOther
     }
 }
 
 /// Indicates that the cursor has been invalidated. Call devicesListTeamDevices again with an empty cursor to
-/// obtain a new cursor.
+        /// obtain a new cursor.
 @objc
 public class DBXTeamListTeamDevicesErrorReset: DBXTeamListTeamDevicesError {
     @objc
@@ -6503,7 +6440,7 @@ public class DBXTeamListTeamDevicesErrorOther: DBXTeamListTeamDevicesError {
 public class DBXTeamListTeamDevicesResult: NSObject {
     /// The devices of each member of the team.
     @objc
-    public var devices: [DBXTeamMemberDevices] { swift.devices.map { DBXTeamMemberDevices(swift: $0) } }
+    public var devices: Array<DBXTeamMemberDevices> { swift.devices.map { DBXTeamMemberDevices(swift: $0) } }
     /// If true, then there are more devices available. Pass the cursor to devicesListTeamDevices to retrieve the
     /// rest.
     @objc
@@ -6513,8 +6450,8 @@ public class DBXTeamListTeamDevicesResult: NSObject {
     public var cursor: String? { swift.cursor }
 
     @objc
-    public init(devices: [DBXTeamMemberDevices], hasMore: NSNumber, cursor: String?) {
-        self.swift = Team.ListTeamDevicesResult(devices: devices.map(\.swift), hasMore: hasMore.boolValue, cursor: cursor)
+    public init(devices: Array<DBXTeamMemberDevices>, hasMore: NSNumber, cursor: String?) {
+        self.swift = Team.ListTeamDevicesResult(devices: devices.map { $0.swift }, hasMore: hasMore.boolValue, cursor: cursor)
     }
 
     let swift: Team.ListTeamDevicesResult
@@ -6522,6 +6459,7 @@ public class DBXTeamListTeamDevicesResult: NSObject {
     public init(swift: Team.ListTeamDevicesResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6547,6 +6485,7 @@ public class DBXTeamMemberAccess: NSObject {
     public init(swift: Team.MemberAccess) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6580,24 +6519,8 @@ public class DBXTeamMemberAddArgBase: NSObject {
     public var isDirectoryRestricted: NSNumber? { swift.isDirectoryRestricted as NSNumber? }
 
     @objc
-    public init(
-        memberEmail: String,
-        memberGivenName: String?,
-        memberSurname: String?,
-        memberExternalId: String?,
-        memberPersistentId: String?,
-        sendWelcomeEmail: NSNumber,
-        isDirectoryRestricted: NSNumber?
-    ) {
-        self.swift = Team.MemberAddArgBase(
-            memberEmail: memberEmail,
-            memberGivenName: memberGivenName,
-            memberSurname: memberSurname,
-            memberExternalId: memberExternalId,
-            memberPersistentId: memberPersistentId,
-            sendWelcomeEmail: sendWelcomeEmail.boolValue,
-            isDirectoryRestricted: isDirectoryRestricted?.boolValue
-        )
+    public init(memberEmail: String, memberGivenName: String?, memberSurname: String?, memberExternalId: String?, memberPersistentId: String?, sendWelcomeEmail: NSNumber, isDirectoryRestricted: NSNumber?) {
+        self.swift = Team.MemberAddArgBase(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, memberPersistentId: memberPersistentId, sendWelcomeEmail: sendWelcomeEmail.boolValue, isDirectoryRestricted: isDirectoryRestricted?.boolValue)
     }
 
     let swift: Team.MemberAddArgBase
@@ -6605,6 +6528,7 @@ public class DBXTeamMemberAddArgBase: NSObject {
     public init(swift: Team.MemberAddArgBase) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -6618,26 +6542,8 @@ public class DBXTeamMemberAddArg: DBXTeamMemberAddArgBase {
     public var role: DBXTeamAdminTier { DBXTeamAdminTier(swift: subSwift.role) }
 
     @objc
-    public init(
-        memberEmail: String,
-        memberGivenName: String?,
-        memberSurname: String?,
-        memberExternalId: String?,
-        memberPersistentId: String?,
-        sendWelcomeEmail: NSNumber,
-        isDirectoryRestricted: NSNumber?,
-        role: DBXTeamAdminTier
-    ) {
-        let swift = Team.MemberAddArg(
-            memberEmail: memberEmail,
-            memberGivenName: memberGivenName,
-            memberSurname: memberSurname,
-            memberExternalId: memberExternalId,
-            memberPersistentId: memberPersistentId,
-            sendWelcomeEmail: sendWelcomeEmail.boolValue,
-            isDirectoryRestricted: isDirectoryRestricted?.boolValue,
-            role: role.swift
-        )
+    public init(memberEmail: String, memberGivenName: String?, memberSurname: String?, memberExternalId: String?, memberPersistentId: String?, sendWelcomeEmail: NSNumber, isDirectoryRestricted: NSNumber?, role: DBXTeamAdminTier) {
+        let swift = Team.MemberAddArg(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, memberPersistentId: memberPersistentId, sendWelcomeEmail: sendWelcomeEmail.boolValue, isDirectoryRestricted: isDirectoryRestricted?.boolValue, role: role.swift)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -6648,6 +6554,7 @@ public class DBXTeamMemberAddArg: DBXTeamMemberAddArgBase {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -6702,52 +6609,52 @@ public class DBXTeamMemberAddResultBase: NSObject {
 
     @objc
     public var asTeamLicenseLimit: DBXTeamMemberAddResultBaseTeamLicenseLimit? {
-        self as? DBXTeamMemberAddResultBaseTeamLicenseLimit
+        return self as? DBXTeamMemberAddResultBaseTeamLicenseLimit
     }
 
     @objc
     public var asFreeTeamMemberLimitReached: DBXTeamMemberAddResultBaseFreeTeamMemberLimitReached? {
-        self as? DBXTeamMemberAddResultBaseFreeTeamMemberLimitReached
+        return self as? DBXTeamMemberAddResultBaseFreeTeamMemberLimitReached
     }
 
     @objc
     public var asUserAlreadyOnTeam: DBXTeamMemberAddResultBaseUserAlreadyOnTeam? {
-        self as? DBXTeamMemberAddResultBaseUserAlreadyOnTeam
+        return self as? DBXTeamMemberAddResultBaseUserAlreadyOnTeam
     }
 
     @objc
     public var asUserOnAnotherTeam: DBXTeamMemberAddResultBaseUserOnAnotherTeam? {
-        self as? DBXTeamMemberAddResultBaseUserOnAnotherTeam
+        return self as? DBXTeamMemberAddResultBaseUserOnAnotherTeam
     }
 
     @objc
     public var asUserAlreadyPaired: DBXTeamMemberAddResultBaseUserAlreadyPaired? {
-        self as? DBXTeamMemberAddResultBaseUserAlreadyPaired
+        return self as? DBXTeamMemberAddResultBaseUserAlreadyPaired
     }
 
     @objc
     public var asUserMigrationFailed: DBXTeamMemberAddResultBaseUserMigrationFailed? {
-        self as? DBXTeamMemberAddResultBaseUserMigrationFailed
+        return self as? DBXTeamMemberAddResultBaseUserMigrationFailed
     }
 
     @objc
     public var asDuplicateExternalMemberId: DBXTeamMemberAddResultBaseDuplicateExternalMemberId? {
-        self as? DBXTeamMemberAddResultBaseDuplicateExternalMemberId
+        return self as? DBXTeamMemberAddResultBaseDuplicateExternalMemberId
     }
 
     @objc
     public var asDuplicateMemberPersistentId: DBXTeamMemberAddResultBaseDuplicateMemberPersistentId? {
-        self as? DBXTeamMemberAddResultBaseDuplicateMemberPersistentId
+        return self as? DBXTeamMemberAddResultBaseDuplicateMemberPersistentId
     }
 
     @objc
     public var asPersistentIdDisabled: DBXTeamMemberAddResultBasePersistentIdDisabled? {
-        self as? DBXTeamMemberAddResultBasePersistentIdDisabled
+        return self as? DBXTeamMemberAddResultBasePersistentIdDisabled
     }
 
     @objc
     public var asUserCreationFailed: DBXTeamMemberAddResultBaseUserCreationFailed? {
-        self as? DBXTeamMemberAddResultBaseUserCreationFailed
+        return self as? DBXTeamMemberAddResultBaseUserCreationFailed
     }
 }
 
@@ -6759,7 +6666,7 @@ public class DBXTeamMemberAddResultBaseTeamLicenseLimit: DBXTeamMemberAddResultB
 
     @objc
     public init(_ arg: String) {
-        self.teamLicenseLimit = arg
+        teamLicenseLimit = arg
         let swift = Team.MemberAddResultBase.teamLicenseLimit(arg)
         super.init(swift: swift)
     }
@@ -6773,14 +6680,14 @@ public class DBXTeamMemberAddResultBaseFreeTeamMemberLimitReached: DBXTeamMember
 
     @objc
     public init(_ arg: String) {
-        self.freeTeamMemberLimitReached = arg
+        freeTeamMemberLimitReached = arg
         let swift = Team.MemberAddResultBase.freeTeamMemberLimitReached(arg)
         super.init(swift: swift)
     }
 }
 
 /// User is already on this team. The provided email address is associated with a user who is already a member
-/// of (including in recoverable state) or invited to the team.
+        /// of (including in recoverable state) or invited to the team.
 @objc
 public class DBXTeamMemberAddResultBaseUserAlreadyOnTeam: DBXTeamMemberAddResultBase {
     @objc
@@ -6788,14 +6695,14 @@ public class DBXTeamMemberAddResultBaseUserAlreadyOnTeam: DBXTeamMemberAddResult
 
     @objc
     public init(_ arg: String) {
-        self.userAlreadyOnTeam = arg
+        userAlreadyOnTeam = arg
         let swift = Team.MemberAddResultBase.userAlreadyOnTeam(arg)
         super.init(swift: swift)
     }
 }
 
 /// User is already on another team. The provided email address is associated with a user that is already a
-/// member or invited to another team.
+        /// member or invited to another team.
 @objc
 public class DBXTeamMemberAddResultBaseUserOnAnotherTeam: DBXTeamMemberAddResultBase {
     @objc
@@ -6803,7 +6710,7 @@ public class DBXTeamMemberAddResultBaseUserOnAnotherTeam: DBXTeamMemberAddResult
 
     @objc
     public init(_ arg: String) {
-        self.userOnAnotherTeam = arg
+        userOnAnotherTeam = arg
         let swift = Team.MemberAddResultBase.userOnAnotherTeam(arg)
         super.init(swift: swift)
     }
@@ -6817,7 +6724,7 @@ public class DBXTeamMemberAddResultBaseUserAlreadyPaired: DBXTeamMemberAddResult
 
     @objc
     public init(_ arg: String) {
-        self.userAlreadyPaired = arg
+        userAlreadyPaired = arg
         let swift = Team.MemberAddResultBase.userAlreadyPaired(arg)
         super.init(swift: swift)
     }
@@ -6831,7 +6738,7 @@ public class DBXTeamMemberAddResultBaseUserMigrationFailed: DBXTeamMemberAddResu
 
     @objc
     public init(_ arg: String) {
-        self.userMigrationFailed = arg
+        userMigrationFailed = arg
         let swift = Team.MemberAddResultBase.userMigrationFailed(arg)
         super.init(swift: swift)
     }
@@ -6845,7 +6752,7 @@ public class DBXTeamMemberAddResultBaseDuplicateExternalMemberId: DBXTeamMemberA
 
     @objc
     public init(_ arg: String) {
-        self.duplicateExternalMemberId = arg
+        duplicateExternalMemberId = arg
         let swift = Team.MemberAddResultBase.duplicateExternalMemberId(arg)
         super.init(swift: swift)
     }
@@ -6859,14 +6766,14 @@ public class DBXTeamMemberAddResultBaseDuplicateMemberPersistentId: DBXTeamMembe
 
     @objc
     public init(_ arg: String) {
-        self.duplicateMemberPersistentId = arg
+        duplicateMemberPersistentId = arg
         let swift = Team.MemberAddResultBase.duplicateMemberPersistentId(arg)
         super.init(swift: swift)
     }
 }
 
 /// Persistent ID is only available to teams with persistent ID SAML configuration. Please contact Dropbox for
-/// more information.
+        /// more information.
 @objc
 public class DBXTeamMemberAddResultBasePersistentIdDisabled: DBXTeamMemberAddResultBase {
     @objc
@@ -6874,7 +6781,7 @@ public class DBXTeamMemberAddResultBasePersistentIdDisabled: DBXTeamMemberAddRes
 
     @objc
     public init(_ arg: String) {
-        self.persistentIdDisabled = arg
+        persistentIdDisabled = arg
         let swift = Team.MemberAddResultBase.persistentIdDisabled(arg)
         super.init(swift: swift)
     }
@@ -6888,7 +6795,7 @@ public class DBXTeamMemberAddResultBaseUserCreationFailed: DBXTeamMemberAddResul
 
     @objc
     public init(_ arg: String) {
-        self.userCreationFailed = arg
+        userCreationFailed = arg
         let swift = Team.MemberAddResultBase.userCreationFailed(arg)
         super.init(swift: swift)
     }
@@ -6948,57 +6855,57 @@ public class DBXTeamMemberAddResult: NSObject {
 
     @objc
     public var asTeamLicenseLimit: DBXTeamMemberAddResultTeamLicenseLimit? {
-        self as? DBXTeamMemberAddResultTeamLicenseLimit
+        return self as? DBXTeamMemberAddResultTeamLicenseLimit
     }
 
     @objc
     public var asFreeTeamMemberLimitReached: DBXTeamMemberAddResultFreeTeamMemberLimitReached? {
-        self as? DBXTeamMemberAddResultFreeTeamMemberLimitReached
+        return self as? DBXTeamMemberAddResultFreeTeamMemberLimitReached
     }
 
     @objc
     public var asUserAlreadyOnTeam: DBXTeamMemberAddResultUserAlreadyOnTeam? {
-        self as? DBXTeamMemberAddResultUserAlreadyOnTeam
+        return self as? DBXTeamMemberAddResultUserAlreadyOnTeam
     }
 
     @objc
     public var asUserOnAnotherTeam: DBXTeamMemberAddResultUserOnAnotherTeam? {
-        self as? DBXTeamMemberAddResultUserOnAnotherTeam
+        return self as? DBXTeamMemberAddResultUserOnAnotherTeam
     }
 
     @objc
     public var asUserAlreadyPaired: DBXTeamMemberAddResultUserAlreadyPaired? {
-        self as? DBXTeamMemberAddResultUserAlreadyPaired
+        return self as? DBXTeamMemberAddResultUserAlreadyPaired
     }
 
     @objc
     public var asUserMigrationFailed: DBXTeamMemberAddResultUserMigrationFailed? {
-        self as? DBXTeamMemberAddResultUserMigrationFailed
+        return self as? DBXTeamMemberAddResultUserMigrationFailed
     }
 
     @objc
     public var asDuplicateExternalMemberId: DBXTeamMemberAddResultDuplicateExternalMemberId? {
-        self as? DBXTeamMemberAddResultDuplicateExternalMemberId
+        return self as? DBXTeamMemberAddResultDuplicateExternalMemberId
     }
 
     @objc
     public var asDuplicateMemberPersistentId: DBXTeamMemberAddResultDuplicateMemberPersistentId? {
-        self as? DBXTeamMemberAddResultDuplicateMemberPersistentId
+        return self as? DBXTeamMemberAddResultDuplicateMemberPersistentId
     }
 
     @objc
     public var asPersistentIdDisabled: DBXTeamMemberAddResultPersistentIdDisabled? {
-        self as? DBXTeamMemberAddResultPersistentIdDisabled
+        return self as? DBXTeamMemberAddResultPersistentIdDisabled
     }
 
     @objc
     public var asUserCreationFailed: DBXTeamMemberAddResultUserCreationFailed? {
-        self as? DBXTeamMemberAddResultUserCreationFailed
+        return self as? DBXTeamMemberAddResultUserCreationFailed
     }
 
     @objc
     public var asSuccess: DBXTeamMemberAddResultSuccess? {
-        self as? DBXTeamMemberAddResultSuccess
+        return self as? DBXTeamMemberAddResultSuccess
     }
 }
 
@@ -7010,7 +6917,7 @@ public class DBXTeamMemberAddResultTeamLicenseLimit: DBXTeamMemberAddResult {
 
     @objc
     public init(_ arg: String) {
-        self.teamLicenseLimit = arg
+        teamLicenseLimit = arg
         let swift = Team.MemberAddResult.teamLicenseLimit(arg)
         super.init(swift: swift)
     }
@@ -7024,14 +6931,14 @@ public class DBXTeamMemberAddResultFreeTeamMemberLimitReached: DBXTeamMemberAddR
 
     @objc
     public init(_ arg: String) {
-        self.freeTeamMemberLimitReached = arg
+        freeTeamMemberLimitReached = arg
         let swift = Team.MemberAddResult.freeTeamMemberLimitReached(arg)
         super.init(swift: swift)
     }
 }
 
 /// User is already on this team. The provided email address is associated with a user who is already a member
-/// of (including in recoverable state) or invited to the team.
+        /// of (including in recoverable state) or invited to the team.
 @objc
 public class DBXTeamMemberAddResultUserAlreadyOnTeam: DBXTeamMemberAddResult {
     @objc
@@ -7039,14 +6946,14 @@ public class DBXTeamMemberAddResultUserAlreadyOnTeam: DBXTeamMemberAddResult {
 
     @objc
     public init(_ arg: String) {
-        self.userAlreadyOnTeam = arg
+        userAlreadyOnTeam = arg
         let swift = Team.MemberAddResult.userAlreadyOnTeam(arg)
         super.init(swift: swift)
     }
 }
 
 /// User is already on another team. The provided email address is associated with a user that is already a
-/// member or invited to another team.
+        /// member or invited to another team.
 @objc
 public class DBXTeamMemberAddResultUserOnAnotherTeam: DBXTeamMemberAddResult {
     @objc
@@ -7054,7 +6961,7 @@ public class DBXTeamMemberAddResultUserOnAnotherTeam: DBXTeamMemberAddResult {
 
     @objc
     public init(_ arg: String) {
-        self.userOnAnotherTeam = arg
+        userOnAnotherTeam = arg
         let swift = Team.MemberAddResult.userOnAnotherTeam(arg)
         super.init(swift: swift)
     }
@@ -7068,7 +6975,7 @@ public class DBXTeamMemberAddResultUserAlreadyPaired: DBXTeamMemberAddResult {
 
     @objc
     public init(_ arg: String) {
-        self.userAlreadyPaired = arg
+        userAlreadyPaired = arg
         let swift = Team.MemberAddResult.userAlreadyPaired(arg)
         super.init(swift: swift)
     }
@@ -7082,7 +6989,7 @@ public class DBXTeamMemberAddResultUserMigrationFailed: DBXTeamMemberAddResult {
 
     @objc
     public init(_ arg: String) {
-        self.userMigrationFailed = arg
+        userMigrationFailed = arg
         let swift = Team.MemberAddResult.userMigrationFailed(arg)
         super.init(swift: swift)
     }
@@ -7096,7 +7003,7 @@ public class DBXTeamMemberAddResultDuplicateExternalMemberId: DBXTeamMemberAddRe
 
     @objc
     public init(_ arg: String) {
-        self.duplicateExternalMemberId = arg
+        duplicateExternalMemberId = arg
         let swift = Team.MemberAddResult.duplicateExternalMemberId(arg)
         super.init(swift: swift)
     }
@@ -7110,14 +7017,14 @@ public class DBXTeamMemberAddResultDuplicateMemberPersistentId: DBXTeamMemberAdd
 
     @objc
     public init(_ arg: String) {
-        self.duplicateMemberPersistentId = arg
+        duplicateMemberPersistentId = arg
         let swift = Team.MemberAddResult.duplicateMemberPersistentId(arg)
         super.init(swift: swift)
     }
 }
 
 /// Persistent ID is only available to teams with persistent ID SAML configuration. Please contact Dropbox for
-/// more information.
+        /// more information.
 @objc
 public class DBXTeamMemberAddResultPersistentIdDisabled: DBXTeamMemberAddResult {
     @objc
@@ -7125,7 +7032,7 @@ public class DBXTeamMemberAddResultPersistentIdDisabled: DBXTeamMemberAddResult 
 
     @objc
     public init(_ arg: String) {
-        self.persistentIdDisabled = arg
+        persistentIdDisabled = arg
         let swift = Team.MemberAddResult.persistentIdDisabled(arg)
         super.init(swift: swift)
     }
@@ -7139,7 +7046,7 @@ public class DBXTeamMemberAddResultUserCreationFailed: DBXTeamMemberAddResult {
 
     @objc
     public init(_ arg: String) {
-        self.userCreationFailed = arg
+        userCreationFailed = arg
         let swift = Team.MemberAddResult.userCreationFailed(arg)
         super.init(swift: swift)
     }
@@ -7153,7 +7060,7 @@ public class DBXTeamMemberAddResultSuccess: DBXTeamMemberAddResult {
 
     @objc
     public init(_ arg: DBXTeamTeamMemberInfo) {
-        self.success = arg
+        success = arg
         let swift = Team.MemberAddResult.success(arg.swift)
         super.init(swift: swift)
     }
@@ -7164,29 +7071,11 @@ public class DBXTeamMemberAddResultSuccess: DBXTeamMemberAddResult {
 public class DBXTeamMemberAddV2Arg: DBXTeamMemberAddArgBase {
     /// (no description)
     @objc
-    public var roleIds: [String]? { subSwift.roleIds }
+    public var roleIds: Array<String>? { subSwift.roleIds }
 
     @objc
-    public init(
-        memberEmail: String,
-        memberGivenName: String?,
-        memberSurname: String?,
-        memberExternalId: String?,
-        memberPersistentId: String?,
-        sendWelcomeEmail: NSNumber,
-        isDirectoryRestricted: NSNumber?,
-        roleIds: [String]?
-    ) {
-        let swift = Team.MemberAddV2Arg(
-            memberEmail: memberEmail,
-            memberGivenName: memberGivenName,
-            memberSurname: memberSurname,
-            memberExternalId: memberExternalId,
-            memberPersistentId: memberPersistentId,
-            sendWelcomeEmail: sendWelcomeEmail.boolValue,
-            isDirectoryRestricted: isDirectoryRestricted?.boolValue,
-            roleIds: roleIds
-        )
+    public init(memberEmail: String, memberGivenName: String?, memberSurname: String?, memberExternalId: String?, memberPersistentId: String?, sendWelcomeEmail: NSNumber, isDirectoryRestricted: NSNumber?, roleIds: Array<String>?) {
+        let swift = Team.MemberAddV2Arg(memberEmail: memberEmail, memberGivenName: memberGivenName, memberSurname: memberSurname, memberExternalId: memberExternalId, memberPersistentId: memberPersistentId, sendWelcomeEmail: sendWelcomeEmail.boolValue, isDirectoryRestricted: isDirectoryRestricted?.boolValue, roleIds: roleIds)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -7197,6 +7086,7 @@ public class DBXTeamMemberAddV2Arg: DBXTeamMemberAddArgBase {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -7258,62 +7148,62 @@ public class DBXTeamMemberAddV2Result: NSObject {
 
     @objc
     public var asTeamLicenseLimit: DBXTeamMemberAddV2ResultTeamLicenseLimit? {
-        self as? DBXTeamMemberAddV2ResultTeamLicenseLimit
+        return self as? DBXTeamMemberAddV2ResultTeamLicenseLimit
     }
 
     @objc
     public var asFreeTeamMemberLimitReached: DBXTeamMemberAddV2ResultFreeTeamMemberLimitReached? {
-        self as? DBXTeamMemberAddV2ResultFreeTeamMemberLimitReached
+        return self as? DBXTeamMemberAddV2ResultFreeTeamMemberLimitReached
     }
 
     @objc
     public var asUserAlreadyOnTeam: DBXTeamMemberAddV2ResultUserAlreadyOnTeam? {
-        self as? DBXTeamMemberAddV2ResultUserAlreadyOnTeam
+        return self as? DBXTeamMemberAddV2ResultUserAlreadyOnTeam
     }
 
     @objc
     public var asUserOnAnotherTeam: DBXTeamMemberAddV2ResultUserOnAnotherTeam? {
-        self as? DBXTeamMemberAddV2ResultUserOnAnotherTeam
+        return self as? DBXTeamMemberAddV2ResultUserOnAnotherTeam
     }
 
     @objc
     public var asUserAlreadyPaired: DBXTeamMemberAddV2ResultUserAlreadyPaired? {
-        self as? DBXTeamMemberAddV2ResultUserAlreadyPaired
+        return self as? DBXTeamMemberAddV2ResultUserAlreadyPaired
     }
 
     @objc
     public var asUserMigrationFailed: DBXTeamMemberAddV2ResultUserMigrationFailed? {
-        self as? DBXTeamMemberAddV2ResultUserMigrationFailed
+        return self as? DBXTeamMemberAddV2ResultUserMigrationFailed
     }
 
     @objc
     public var asDuplicateExternalMemberId: DBXTeamMemberAddV2ResultDuplicateExternalMemberId? {
-        self as? DBXTeamMemberAddV2ResultDuplicateExternalMemberId
+        return self as? DBXTeamMemberAddV2ResultDuplicateExternalMemberId
     }
 
     @objc
     public var asDuplicateMemberPersistentId: DBXTeamMemberAddV2ResultDuplicateMemberPersistentId? {
-        self as? DBXTeamMemberAddV2ResultDuplicateMemberPersistentId
+        return self as? DBXTeamMemberAddV2ResultDuplicateMemberPersistentId
     }
 
     @objc
     public var asPersistentIdDisabled: DBXTeamMemberAddV2ResultPersistentIdDisabled? {
-        self as? DBXTeamMemberAddV2ResultPersistentIdDisabled
+        return self as? DBXTeamMemberAddV2ResultPersistentIdDisabled
     }
 
     @objc
     public var asUserCreationFailed: DBXTeamMemberAddV2ResultUserCreationFailed? {
-        self as? DBXTeamMemberAddV2ResultUserCreationFailed
+        return self as? DBXTeamMemberAddV2ResultUserCreationFailed
     }
 
     @objc
     public var asSuccess: DBXTeamMemberAddV2ResultSuccess? {
-        self as? DBXTeamMemberAddV2ResultSuccess
+        return self as? DBXTeamMemberAddV2ResultSuccess
     }
 
     @objc
     public var asOther: DBXTeamMemberAddV2ResultOther? {
-        self as? DBXTeamMemberAddV2ResultOther
+        return self as? DBXTeamMemberAddV2ResultOther
     }
 }
 
@@ -7325,7 +7215,7 @@ public class DBXTeamMemberAddV2ResultTeamLicenseLimit: DBXTeamMemberAddV2Result 
 
     @objc
     public init(_ arg: String) {
-        self.teamLicenseLimit = arg
+        teamLicenseLimit = arg
         let swift = Team.MemberAddV2Result.teamLicenseLimit(arg)
         super.init(swift: swift)
     }
@@ -7339,14 +7229,14 @@ public class DBXTeamMemberAddV2ResultFreeTeamMemberLimitReached: DBXTeamMemberAd
 
     @objc
     public init(_ arg: String) {
-        self.freeTeamMemberLimitReached = arg
+        freeTeamMemberLimitReached = arg
         let swift = Team.MemberAddV2Result.freeTeamMemberLimitReached(arg)
         super.init(swift: swift)
     }
 }
 
 /// User is already on this team. The provided email address is associated with a user who is already a member
-/// of (including in recoverable state) or invited to the team.
+        /// of (including in recoverable state) or invited to the team.
 @objc
 public class DBXTeamMemberAddV2ResultUserAlreadyOnTeam: DBXTeamMemberAddV2Result {
     @objc
@@ -7354,14 +7244,14 @@ public class DBXTeamMemberAddV2ResultUserAlreadyOnTeam: DBXTeamMemberAddV2Result
 
     @objc
     public init(_ arg: String) {
-        self.userAlreadyOnTeam = arg
+        userAlreadyOnTeam = arg
         let swift = Team.MemberAddV2Result.userAlreadyOnTeam(arg)
         super.init(swift: swift)
     }
 }
 
 /// User is already on another team. The provided email address is associated with a user that is already a
-/// member or invited to another team.
+        /// member or invited to another team.
 @objc
 public class DBXTeamMemberAddV2ResultUserOnAnotherTeam: DBXTeamMemberAddV2Result {
     @objc
@@ -7369,7 +7259,7 @@ public class DBXTeamMemberAddV2ResultUserOnAnotherTeam: DBXTeamMemberAddV2Result
 
     @objc
     public init(_ arg: String) {
-        self.userOnAnotherTeam = arg
+        userOnAnotherTeam = arg
         let swift = Team.MemberAddV2Result.userOnAnotherTeam(arg)
         super.init(swift: swift)
     }
@@ -7383,7 +7273,7 @@ public class DBXTeamMemberAddV2ResultUserAlreadyPaired: DBXTeamMemberAddV2Result
 
     @objc
     public init(_ arg: String) {
-        self.userAlreadyPaired = arg
+        userAlreadyPaired = arg
         let swift = Team.MemberAddV2Result.userAlreadyPaired(arg)
         super.init(swift: swift)
     }
@@ -7397,7 +7287,7 @@ public class DBXTeamMemberAddV2ResultUserMigrationFailed: DBXTeamMemberAddV2Resu
 
     @objc
     public init(_ arg: String) {
-        self.userMigrationFailed = arg
+        userMigrationFailed = arg
         let swift = Team.MemberAddV2Result.userMigrationFailed(arg)
         super.init(swift: swift)
     }
@@ -7411,7 +7301,7 @@ public class DBXTeamMemberAddV2ResultDuplicateExternalMemberId: DBXTeamMemberAdd
 
     @objc
     public init(_ arg: String) {
-        self.duplicateExternalMemberId = arg
+        duplicateExternalMemberId = arg
         let swift = Team.MemberAddV2Result.duplicateExternalMemberId(arg)
         super.init(swift: swift)
     }
@@ -7425,14 +7315,14 @@ public class DBXTeamMemberAddV2ResultDuplicateMemberPersistentId: DBXTeamMemberA
 
     @objc
     public init(_ arg: String) {
-        self.duplicateMemberPersistentId = arg
+        duplicateMemberPersistentId = arg
         let swift = Team.MemberAddV2Result.duplicateMemberPersistentId(arg)
         super.init(swift: swift)
     }
 }
 
 /// Persistent ID is only available to teams with persistent ID SAML configuration. Please contact Dropbox for
-/// more information.
+        /// more information.
 @objc
 public class DBXTeamMemberAddV2ResultPersistentIdDisabled: DBXTeamMemberAddV2Result {
     @objc
@@ -7440,7 +7330,7 @@ public class DBXTeamMemberAddV2ResultPersistentIdDisabled: DBXTeamMemberAddV2Res
 
     @objc
     public init(_ arg: String) {
-        self.persistentIdDisabled = arg
+        persistentIdDisabled = arg
         let swift = Team.MemberAddV2Result.persistentIdDisabled(arg)
         super.init(swift: swift)
     }
@@ -7454,7 +7344,7 @@ public class DBXTeamMemberAddV2ResultUserCreationFailed: DBXTeamMemberAddV2Resul
 
     @objc
     public init(_ arg: String) {
-        self.userCreationFailed = arg
+        userCreationFailed = arg
         let swift = Team.MemberAddV2Result.userCreationFailed(arg)
         super.init(swift: swift)
     }
@@ -7468,7 +7358,7 @@ public class DBXTeamMemberAddV2ResultSuccess: DBXTeamMemberAddV2Result {
 
     @objc
     public init(_ arg: DBXTeamTeamMemberInfoV2) {
-        self.success = arg
+        success = arg
         let swift = Team.MemberAddV2Result.success(arg.swift)
         super.init(swift: swift)
     }
@@ -7492,27 +7382,17 @@ public class DBXTeamMemberDevices: NSObject {
     public var teamMemberId: String { swift.teamMemberId }
     /// List of web sessions made by this team member.
     @objc
-    public var webSessions: [DBXTeamActiveWebSession]? { swift.webSessions?.map { DBXTeamActiveWebSession(swift: $0) } }
+    public var webSessions: Array<DBXTeamActiveWebSession>? { swift.webSessions?.map { DBXTeamActiveWebSession(swift: $0) } }
     /// List of desktop clients by this team member.
     @objc
-    public var desktopClients: [DBXTeamDesktopClientSession]? { swift.desktopClients?.map { DBXTeamDesktopClientSession(swift: $0) } }
+    public var desktopClients: Array<DBXTeamDesktopClientSession>? { swift.desktopClients?.map { DBXTeamDesktopClientSession(swift: $0) } }
     /// List of mobile clients by this team member.
     @objc
-    public var mobileClients: [DBXTeamMobileClientSession]? { swift.mobileClients?.map { DBXTeamMobileClientSession(swift: $0) } }
+    public var mobileClients: Array<DBXTeamMobileClientSession>? { swift.mobileClients?.map { DBXTeamMobileClientSession(swift: $0) } }
 
     @objc
-    public init(
-        teamMemberId: String,
-        webSessions: [DBXTeamActiveWebSession]?,
-        desktopClients: [DBXTeamDesktopClientSession]?,
-        mobileClients: [DBXTeamMobileClientSession]?
-    ) {
-        self.swift = Team.MemberDevices(
-            teamMemberId: teamMemberId,
-            webSessions: webSessions?.map(\.subSwift),
-            desktopClients: desktopClients?.map(\.subSwift),
-            mobileClients: mobileClients?.map(\.subSwift)
-        )
+    public init(teamMemberId: String, webSessions: Array<DBXTeamActiveWebSession>?, desktopClients: Array<DBXTeamDesktopClientSession>?, mobileClients: Array<DBXTeamMobileClientSession>?) {
+        self.swift = Team.MemberDevices(teamMemberId: teamMemberId, webSessions: webSessions?.map { $0.subSwift }, desktopClients: desktopClients?.map { $0.subSwift }, mobileClients: mobileClients?.map { $0.subSwift })
     }
 
     let swift: Team.MemberDevices
@@ -7520,6 +7400,7 @@ public class DBXTeamMemberDevices: NSObject {
     public init(swift: Team.MemberDevices) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -7533,11 +7414,11 @@ public class DBXTeamMemberLinkedApps: NSObject {
     public var teamMemberId: String { swift.teamMemberId }
     /// List of third party applications linked by this team member.
     @objc
-    public var linkedApiApps: [DBXTeamApiApp] { swift.linkedApiApps.map { DBXTeamApiApp(swift: $0) } }
+    public var linkedApiApps: Array<DBXTeamApiApp> { swift.linkedApiApps.map { DBXTeamApiApp(swift: $0) } }
 
     @objc
-    public init(teamMemberId: String, linkedApiApps: [DBXTeamApiApp]) {
-        self.swift = Team.MemberLinkedApps(teamMemberId: teamMemberId, linkedApiApps: linkedApiApps.map(\.swift))
+    public init(teamMemberId: String, linkedApiApps: Array<DBXTeamApiApp>) {
+        self.swift = Team.MemberLinkedApps(teamMemberId: teamMemberId, linkedApiApps: linkedApiApps.map { $0.swift })
     }
 
     let swift: Team.MemberLinkedApps
@@ -7545,6 +7426,7 @@ public class DBXTeamMemberLinkedApps: NSObject {
     public init(swift: Team.MemberLinkedApps) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -7571,7 +7453,7 @@ public class DBXTeamMemberProfile: NSObject {
     public var emailVerified: NSNumber { swift.emailVerified as NSNumber }
     /// Secondary emails of a user.
     @objc
-    public var secondaryEmails: [DBXSecondaryEmailsSecondaryEmail]? { swift.secondaryEmails?.map { DBXSecondaryEmailsSecondaryEmail(swift: $0) } }
+    public var secondaryEmails: Array<DBXSecondaryEmailsSecondaryEmail>? { swift.secondaryEmails?.map { DBXSecondaryEmailsSecondaryEmail(swift: $0) } }
     /// The user's status as a member of a specific team.
     @objc
     public var status: DBXTeamTeamMemberStatus { DBXTeamTeamMemberStatus(swift: swift.status) }
@@ -7605,40 +7487,8 @@ public class DBXTeamMemberProfile: NSObject {
     public var profilePhotoUrl: String? { swift.profilePhotoUrl }
 
     @objc
-    public init(
-        teamMemberId: String,
-        email: String,
-        emailVerified: NSNumber,
-        status: DBXTeamTeamMemberStatus,
-        name: DBXUsersName,
-        membershipType: DBXTeamTeamMembershipType,
-        externalId: String?,
-        accountId: String?,
-        secondaryEmails: [DBXSecondaryEmailsSecondaryEmail]?,
-        invitedOn: Date?,
-        joinedOn: Date?,
-        suspendedOn: Date?,
-        persistentId: String?,
-        isDirectoryRestricted: NSNumber?,
-        profilePhotoUrl: String?
-    ) {
-        self.swift = Team.MemberProfile(
-            teamMemberId: teamMemberId,
-            email: email,
-            emailVerified: emailVerified.boolValue,
-            status: status.swift,
-            name: name.swift,
-            membershipType: membershipType.swift,
-            externalId: externalId,
-            accountId: accountId,
-            secondaryEmails: secondaryEmails?.map(\.swift),
-            invitedOn: invitedOn,
-            joinedOn: joinedOn,
-            suspendedOn: suspendedOn,
-            persistentId: persistentId,
-            isDirectoryRestricted: isDirectoryRestricted?.boolValue,
-            profilePhotoUrl: profilePhotoUrl
-        )
+    public init(teamMemberId: String, email: String, emailVerified: NSNumber, status: DBXTeamTeamMemberStatus, name: DBXUsersName, membershipType: DBXTeamTeamMembershipType, externalId: String?, accountId: String?, secondaryEmails: Array<DBXSecondaryEmailsSecondaryEmail>?, invitedOn: Date?, joinedOn: Date?, suspendedOn: Date?, persistentId: String?, isDirectoryRestricted: NSNumber?, profilePhotoUrl: String?) {
+        self.swift = Team.MemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified.boolValue, status: status.swift, name: name.swift, membershipType: membershipType.swift, externalId: externalId, accountId: accountId, secondaryEmails: secondaryEmails?.map { $0.swift }, invitedOn: invitedOn, joinedOn: joinedOn, suspendedOn: suspendedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted?.boolValue, profilePhotoUrl: profilePhotoUrl)
     }
 
     let swift: Team.MemberProfile
@@ -7646,6 +7496,7 @@ public class DBXTeamMemberProfile: NSObject {
     public init(swift: Team.MemberProfile) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -7672,7 +7523,7 @@ public class DBXTeamUserSelectorError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamUserSelectorErrorUserNotFound? {
-        self as? DBXTeamUserSelectorErrorUserNotFound
+        return self as? DBXTeamUserSelectorErrorUserNotFound
     }
 }
 
@@ -7709,12 +7560,12 @@ public class DBXTeamMemberSelectorError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMemberSelectorErrorUserNotFound? {
-        self as? DBXTeamMemberSelectorErrorUserNotFound
+        return self as? DBXTeamMemberSelectorErrorUserNotFound
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMemberSelectorErrorUserNotInTeam? {
-        self as? DBXTeamMemberSelectorErrorUserNotInTeam
+        return self as? DBXTeamMemberSelectorErrorUserNotInTeam
     }
 }
 
@@ -7756,6 +7607,7 @@ public class DBXTeamMembersAddArgBase: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -7765,11 +7617,11 @@ public class DBXTeamMembersAddArgBase: NSObject {
 public class DBXTeamMembersAddArg: DBXTeamMembersAddArgBase {
     /// Details of new members to be added to the team.
     @objc
-    public var newMembers: [DBXTeamMemberAddArg] { subSwift.newMembers.map { DBXTeamMemberAddArg(swift: $0) } }
+    public var newMembers: Array<DBXTeamMemberAddArg> { subSwift.newMembers.map { DBXTeamMemberAddArg(swift: $0) } }
 
     @objc
-    public init(newMembers: [DBXTeamMemberAddArg], forceAsync: NSNumber) {
-        let swift = Team.MembersAddArg(newMembers: newMembers.map(\.subSwift), forceAsync: forceAsync.boolValue)
+    public init(newMembers: Array<DBXTeamMemberAddArg>, forceAsync: NSNumber) {
+        let swift = Team.MembersAddArg(newMembers: newMembers.map { $0.subSwift }, forceAsync: forceAsync.boolValue)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -7780,6 +7632,7 @@ public class DBXTeamMembersAddArg: DBXTeamMembersAddArgBase {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -7812,17 +7665,17 @@ public class DBXTeamMembersAddJobStatus: NSObject {
 
     @objc
     public var asInProgress: DBXTeamMembersAddJobStatusInProgress? {
-        self as? DBXTeamMembersAddJobStatusInProgress
+        return self as? DBXTeamMembersAddJobStatusInProgress
     }
 
     @objc
     public var asComplete: DBXTeamMembersAddJobStatusComplete? {
-        self as? DBXTeamMembersAddJobStatusComplete
+        return self as? DBXTeamMembersAddJobStatusComplete
     }
 
     @objc
     public var asFailed: DBXTeamMembersAddJobStatusFailed? {
-        self as? DBXTeamMembersAddJobStatusFailed
+        return self as? DBXTeamMembersAddJobStatusFailed
     }
 }
 
@@ -7837,16 +7690,16 @@ public class DBXTeamMembersAddJobStatusInProgress: DBXTeamMembersAddJobStatus {
 }
 
 /// The asynchronous job has finished. For each member that was specified in the parameter MembersAddArg that
-/// was provided to membersAdd, a corresponding item is returned in this list.
+        /// was provided to membersAdd, a corresponding item is returned in this list.
 @objc
 public class DBXTeamMembersAddJobStatusComplete: DBXTeamMembersAddJobStatus {
     @objc
-    public var complete: [DBXTeamMemberAddResult]
+    public var complete: Array<DBXTeamMemberAddResult>
 
     @objc
-    public init(_ arg: [DBXTeamMemberAddResult]) {
-        self.complete = arg
-        let swift = Team.MembersAddJobStatus.complete(arg.map(\.swift))
+    public init(_ arg: Array<DBXTeamMemberAddResult>) {
+        complete = arg
+        let swift = Team.MembersAddJobStatus.complete(arg.map { $0.swift })
         super.init(swift: swift)
     }
 }
@@ -7859,7 +7712,7 @@ public class DBXTeamMembersAddJobStatusFailed: DBXTeamMembersAddJobStatus {
 
     @objc
     public init(_ arg: String) {
-        self.failed = arg
+        failed = arg
         let swift = Team.MembersAddJobStatus.failed(arg)
         super.init(swift: swift)
     }
@@ -7894,22 +7747,22 @@ public class DBXTeamMembersAddJobStatusV2Result: NSObject {
 
     @objc
     public var asInProgress: DBXTeamMembersAddJobStatusV2ResultInProgress? {
-        self as? DBXTeamMembersAddJobStatusV2ResultInProgress
+        return self as? DBXTeamMembersAddJobStatusV2ResultInProgress
     }
 
     @objc
     public var asComplete: DBXTeamMembersAddJobStatusV2ResultComplete? {
-        self as? DBXTeamMembersAddJobStatusV2ResultComplete
+        return self as? DBXTeamMembersAddJobStatusV2ResultComplete
     }
 
     @objc
     public var asFailed: DBXTeamMembersAddJobStatusV2ResultFailed? {
-        self as? DBXTeamMembersAddJobStatusV2ResultFailed
+        return self as? DBXTeamMembersAddJobStatusV2ResultFailed
     }
 
     @objc
     public var asOther: DBXTeamMembersAddJobStatusV2ResultOther? {
-        self as? DBXTeamMembersAddJobStatusV2ResultOther
+        return self as? DBXTeamMembersAddJobStatusV2ResultOther
     }
 }
 
@@ -7924,16 +7777,16 @@ public class DBXTeamMembersAddJobStatusV2ResultInProgress: DBXTeamMembersAddJobS
 }
 
 /// The asynchronous job has finished. For each member that was specified in the parameter MembersAddArg that
-/// was provided to membersAddV2, a corresponding item is returned in this list.
+        /// was provided to membersAddV2, a corresponding item is returned in this list.
 @objc
 public class DBXTeamMembersAddJobStatusV2ResultComplete: DBXTeamMembersAddJobStatusV2Result {
     @objc
-    public var complete: [DBXTeamMemberAddV2Result]
+    public var complete: Array<DBXTeamMemberAddV2Result>
 
     @objc
-    public init(_ arg: [DBXTeamMemberAddV2Result]) {
-        self.complete = arg
-        let swift = Team.MembersAddJobStatusV2Result.complete(arg.map(\.swift))
+    public init(_ arg: Array<DBXTeamMemberAddV2Result>) {
+        complete = arg
+        let swift = Team.MembersAddJobStatusV2Result.complete(arg.map { $0.swift })
         super.init(swift: swift)
     }
 }
@@ -7946,7 +7799,7 @@ public class DBXTeamMembersAddJobStatusV2ResultFailed: DBXTeamMembersAddJobStatu
 
     @objc
     public init(_ arg: String) {
-        self.failed = arg
+        failed = arg
         let swift = Team.MembersAddJobStatusV2Result.failed(arg)
         super.init(swift: swift)
     }
@@ -7987,17 +7840,17 @@ public class DBXTeamMembersAddLaunch: NSObject {
 
     @objc
     public var asAsyncJobId: DBXTeamMembersAddLaunchAsyncJobId? {
-        self as? DBXTeamMembersAddLaunchAsyncJobId
+        return self as? DBXTeamMembersAddLaunchAsyncJobId
     }
 
     @objc
     public var asComplete: DBXTeamMembersAddLaunchComplete? {
-        self as? DBXTeamMembersAddLaunchComplete
+        return self as? DBXTeamMembersAddLaunchComplete
     }
 }
 
 /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
-/// the status of the asynchronous job.
+        /// the status of the asynchronous job.
 @objc
 public class DBXTeamMembersAddLaunchAsyncJobId: DBXTeamMembersAddLaunch {
     @objc
@@ -8005,7 +7858,7 @@ public class DBXTeamMembersAddLaunchAsyncJobId: DBXTeamMembersAddLaunch {
 
     @objc
     public init(_ arg: String) {
-        self.asyncJobId = arg
+        asyncJobId = arg
         let swift = Team.MembersAddLaunch.asyncJobId(arg)
         super.init(swift: swift)
     }
@@ -8015,12 +7868,12 @@ public class DBXTeamMembersAddLaunchAsyncJobId: DBXTeamMembersAddLaunch {
 @objc
 public class DBXTeamMembersAddLaunchComplete: DBXTeamMembersAddLaunch {
     @objc
-    public var complete: [DBXTeamMemberAddResult]
+    public var complete: Array<DBXTeamMemberAddResult>
 
     @objc
-    public init(_ arg: [DBXTeamMemberAddResult]) {
-        self.complete = arg
-        let swift = Team.MembersAddLaunch.complete(arg.map(\.swift))
+    public init(_ arg: Array<DBXTeamMemberAddResult>) {
+        complete = arg
+        let swift = Team.MembersAddLaunch.complete(arg.map { $0.swift })
         super.init(swift: swift)
     }
 }
@@ -8052,22 +7905,22 @@ public class DBXTeamMembersAddLaunchV2Result: NSObject {
 
     @objc
     public var asAsyncJobId: DBXTeamMembersAddLaunchV2ResultAsyncJobId? {
-        self as? DBXTeamMembersAddLaunchV2ResultAsyncJobId
+        return self as? DBXTeamMembersAddLaunchV2ResultAsyncJobId
     }
 
     @objc
     public var asComplete: DBXTeamMembersAddLaunchV2ResultComplete? {
-        self as? DBXTeamMembersAddLaunchV2ResultComplete
+        return self as? DBXTeamMembersAddLaunchV2ResultComplete
     }
 
     @objc
     public var asOther: DBXTeamMembersAddLaunchV2ResultOther? {
-        self as? DBXTeamMembersAddLaunchV2ResultOther
+        return self as? DBXTeamMembersAddLaunchV2ResultOther
     }
 }
 
 /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
-/// the status of the asynchronous job.
+        /// the status of the asynchronous job.
 @objc
 public class DBXTeamMembersAddLaunchV2ResultAsyncJobId: DBXTeamMembersAddLaunchV2Result {
     @objc
@@ -8075,7 +7928,7 @@ public class DBXTeamMembersAddLaunchV2ResultAsyncJobId: DBXTeamMembersAddLaunchV
 
     @objc
     public init(_ arg: String) {
-        self.asyncJobId = arg
+        asyncJobId = arg
         let swift = Team.MembersAddLaunchV2Result.asyncJobId(arg)
         super.init(swift: swift)
     }
@@ -8085,12 +7938,12 @@ public class DBXTeamMembersAddLaunchV2ResultAsyncJobId: DBXTeamMembersAddLaunchV
 @objc
 public class DBXTeamMembersAddLaunchV2ResultComplete: DBXTeamMembersAddLaunchV2Result {
     @objc
-    public var complete: [DBXTeamMemberAddV2Result]
+    public var complete: Array<DBXTeamMemberAddV2Result>
 
     @objc
-    public init(_ arg: [DBXTeamMemberAddV2Result]) {
-        self.complete = arg
-        let swift = Team.MembersAddLaunchV2Result.complete(arg.map(\.swift))
+    public init(_ arg: Array<DBXTeamMemberAddV2Result>) {
+        complete = arg
+        let swift = Team.MembersAddLaunchV2Result.complete(arg.map { $0.swift })
         super.init(swift: swift)
     }
 }
@@ -8110,11 +7963,11 @@ public class DBXTeamMembersAddLaunchV2ResultOther: DBXTeamMembersAddLaunchV2Resu
 public class DBXTeamMembersAddV2Arg: DBXTeamMembersAddArgBase {
     /// Details of new members to be added to the team.
     @objc
-    public var newMembers: [DBXTeamMemberAddV2Arg] { subSwift.newMembers.map { DBXTeamMemberAddV2Arg(swift: $0) } }
+    public var newMembers: Array<DBXTeamMemberAddV2Arg> { subSwift.newMembers.map { DBXTeamMemberAddV2Arg(swift: $0) } }
 
     @objc
-    public init(newMembers: [DBXTeamMemberAddV2Arg], forceAsync: NSNumber) {
-        let swift = Team.MembersAddV2Arg(newMembers: newMembers.map(\.subSwift), forceAsync: forceAsync.boolValue)
+    public init(newMembers: Array<DBXTeamMemberAddV2Arg>, forceAsync: NSNumber) {
+        let swift = Team.MembersAddV2Arg(newMembers: newMembers.map { $0.subSwift }, forceAsync: forceAsync.boolValue)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -8125,6 +7978,7 @@ public class DBXTeamMembersAddV2Arg: DBXTeamMembersAddArgBase {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -8147,6 +8001,7 @@ public class DBXTeamMembersDeactivateBaseArg: NSObject {
     public init(swift: Team.MembersDeactivateBaseArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -8176,6 +8031,7 @@ public class DBXTeamMembersDataTransferArg: DBXTeamMembersDeactivateBaseArg {
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
 }
@@ -8200,6 +8056,7 @@ public class DBXTeamMembersDeactivateArg: DBXTeamMembersDeactivateBaseArg {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -8230,17 +8087,17 @@ public class DBXTeamMembersDeactivateError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersDeactivateErrorUserNotFound? {
-        self as? DBXTeamMembersDeactivateErrorUserNotFound
+        return self as? DBXTeamMembersDeactivateErrorUserNotFound
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersDeactivateErrorUserNotInTeam? {
-        self as? DBXTeamMembersDeactivateErrorUserNotInTeam
+        return self as? DBXTeamMembersDeactivateErrorUserNotInTeam
     }
 
     @objc
     public var asOther: DBXTeamMembersDeactivateErrorOther? {
-        self as? DBXTeamMembersDeactivateErrorOther
+        return self as? DBXTeamMembersDeactivateErrorOther
     }
 }
 
@@ -8274,6 +8131,263 @@ public class DBXTeamMembersDeactivateErrorOther: DBXTeamMembersDeactivateError {
     }
 }
 
+/// Objective-C compatible MembersPermanentlyDeleteFilesError union
+@objc
+public class DBXTeamMembersPermanentlyDeleteFilesError: NSObject {
+    let swift: Team.MembersPermanentlyDeleteFilesError
+
+    public init(swift: Team.MembersPermanentlyDeleteFilesError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.MembersPermanentlyDeleteFilesError) -> DBXTeamMembersPermanentlyDeleteFilesError {
+        switch swift {
+        case .userNotFound:
+            return DBXTeamMembersPermanentlyDeleteFilesErrorUserNotFound()
+        case .userNotInTeam:
+            return DBXTeamMembersPermanentlyDeleteFilesErrorUserNotInTeam()
+        case .other:
+            return DBXTeamMembersPermanentlyDeleteFilesErrorOther()
+        case .transferInProgress:
+            return DBXTeamMembersPermanentlyDeleteFilesErrorTransferInProgress()
+        case .alreadyTransferred:
+            return DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferred()
+        case .alreadyTransferredOrDeleted:
+            return DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferredOrDeleted()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asUserNotFound: DBXTeamMembersPermanentlyDeleteFilesErrorUserNotFound? {
+        return self as? DBXTeamMembersPermanentlyDeleteFilesErrorUserNotFound
+    }
+
+    @objc
+    public var asUserNotInTeam: DBXTeamMembersPermanentlyDeleteFilesErrorUserNotInTeam? {
+        return self as? DBXTeamMembersPermanentlyDeleteFilesErrorUserNotInTeam
+    }
+
+    @objc
+    public var asOther: DBXTeamMembersPermanentlyDeleteFilesErrorOther? {
+        return self as? DBXTeamMembersPermanentlyDeleteFilesErrorOther
+    }
+
+    @objc
+    public var asTransferInProgress: DBXTeamMembersPermanentlyDeleteFilesErrorTransferInProgress? {
+        return self as? DBXTeamMembersPermanentlyDeleteFilesErrorTransferInProgress
+    }
+
+    @objc
+    public var asAlreadyTransferred: DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferred? {
+        return self as? DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferred
+    }
+
+    @objc
+    public var asAlreadyTransferredOrDeleted: DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferredOrDeleted? {
+        return self as? DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferredOrDeleted
+    }
+}
+
+/// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+@objc
+public class DBXTeamMembersPermanentlyDeleteFilesErrorUserNotFound: DBXTeamMembersPermanentlyDeleteFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersPermanentlyDeleteFilesError.userNotFound
+        super.init(swift: swift)
+    }
+}
+
+/// The user is not a member of the team.
+@objc
+public class DBXTeamMembersPermanentlyDeleteFilesErrorUserNotInTeam: DBXTeamMembersPermanentlyDeleteFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersPermanentlyDeleteFilesError.userNotInTeam
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersPermanentlyDeleteFilesErrorOther: DBXTeamMembersPermanentlyDeleteFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersPermanentlyDeleteFilesError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files while it's being transferred.
+@objc
+public class DBXTeamMembersPermanentlyDeleteFilesErrorTransferInProgress: DBXTeamMembersPermanentlyDeleteFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersPermanentlyDeleteFilesError.transferInProgress
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred.
+@objc
+public class DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferred: DBXTeamMembersPermanentlyDeleteFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersPermanentlyDeleteFilesError.alreadyTransferred
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred or deleted.
+@objc
+public class DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferredOrDeleted: DBXTeamMembersPermanentlyDeleteFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersPermanentlyDeleteFilesError.alreadyTransferredOrDeleted
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible MembersDeleteFormerMemberFilesError union
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesError: NSObject {
+    let swift: Team.MembersDeleteFormerMemberFilesError
+
+    public init(swift: Team.MembersDeleteFormerMemberFilesError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.MembersDeleteFormerMemberFilesError) -> DBXTeamMembersDeleteFormerMemberFilesError {
+        switch swift {
+        case .userNotFound:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorUserNotFound()
+        case .userNotInTeam:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorUserNotInTeam()
+        case .other:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorOther()
+        case .transferInProgress:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorTransferInProgress()
+        case .alreadyTransferred:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferred()
+        case .alreadyTransferredOrDeleted:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferredOrDeleted()
+        case .userNotRemoved:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorUserNotRemoved()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asUserNotFound: DBXTeamMembersDeleteFormerMemberFilesErrorUserNotFound? {
+        return self as? DBXTeamMembersDeleteFormerMemberFilesErrorUserNotFound
+    }
+
+    @objc
+    public var asUserNotInTeam: DBXTeamMembersDeleteFormerMemberFilesErrorUserNotInTeam? {
+        return self as? DBXTeamMembersDeleteFormerMemberFilesErrorUserNotInTeam
+    }
+
+    @objc
+    public var asOther: DBXTeamMembersDeleteFormerMemberFilesErrorOther? {
+        return self as? DBXTeamMembersDeleteFormerMemberFilesErrorOther
+    }
+
+    @objc
+    public var asTransferInProgress: DBXTeamMembersDeleteFormerMemberFilesErrorTransferInProgress? {
+        return self as? DBXTeamMembersDeleteFormerMemberFilesErrorTransferInProgress
+    }
+
+    @objc
+    public var asAlreadyTransferred: DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferred? {
+        return self as? DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferred
+    }
+
+    @objc
+    public var asAlreadyTransferredOrDeleted: DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferredOrDeleted? {
+        return self as? DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferredOrDeleted
+    }
+
+    @objc
+    public var asUserNotRemoved: DBXTeamMembersDeleteFormerMemberFilesErrorUserNotRemoved? {
+        return self as? DBXTeamMembersDeleteFormerMemberFilesErrorUserNotRemoved
+    }
+}
+
+/// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorUserNotFound: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.userNotFound
+        super.init(swift: swift)
+    }
+}
+
+/// The user is not a member of the team.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorUserNotInTeam: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.userNotInTeam
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorOther: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files while it's being transferred.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorTransferInProgress: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.transferInProgress
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferred: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.alreadyTransferred
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred or deleted.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferredOrDeleted: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.alreadyTransferredOrDeleted
+        super.init(swift: swift)
+    }
+}
+
+/// User has not been removed from the team.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorUserNotRemoved: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.userNotRemoved
+        super.init(swift: swift)
+    }
+}
+
 /// Objective-C compatible MembersDeleteProfilePhotoArg struct
 @objc
 public class DBXTeamMembersDeleteProfilePhotoArg: NSObject {
@@ -8291,6 +8405,7 @@ public class DBXTeamMembersDeleteProfilePhotoArg: NSObject {
     public init(swift: Team.MembersDeleteProfilePhotoArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -8323,22 +8438,22 @@ public class DBXTeamMembersDeleteProfilePhotoError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersDeleteProfilePhotoErrorUserNotFound? {
-        self as? DBXTeamMembersDeleteProfilePhotoErrorUserNotFound
+        return self as? DBXTeamMembersDeleteProfilePhotoErrorUserNotFound
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersDeleteProfilePhotoErrorUserNotInTeam? {
-        self as? DBXTeamMembersDeleteProfilePhotoErrorUserNotInTeam
+        return self as? DBXTeamMembersDeleteProfilePhotoErrorUserNotInTeam
     }
 
     @objc
     public var asSetProfileDisallowed: DBXTeamMembersDeleteProfilePhotoErrorSetProfileDisallowed? {
-        self as? DBXTeamMembersDeleteProfilePhotoErrorSetProfileDisallowed
+        return self as? DBXTeamMembersDeleteProfilePhotoErrorSetProfileDisallowed
     }
 
     @objc
     public var asOther: DBXTeamMembersDeleteProfilePhotoErrorOther? {
-        self as? DBXTeamMembersDeleteProfilePhotoErrorOther
+        return self as? DBXTeamMembersDeleteProfilePhotoErrorOther
     }
 }
 
@@ -8382,16 +8497,39 @@ public class DBXTeamMembersDeleteProfilePhotoErrorOther: DBXTeamMembersDeletePro
     }
 }
 
+/// Exactly one of team_member_id, email, or external_id must be provided to identify a former team member.
+@objc
+public class DBXTeamMembersFormerMemberArg: NSObject {
+    /// Identity of user whose files will be permanently deleted.
+    @objc
+    public var user: DBXTeamUserSelectorArg { DBXTeamUserSelectorArg(swift: swift.user) }
+
+    @objc
+    public init(user: DBXTeamUserSelectorArg) {
+        self.swift = Team.MembersFormerMemberArg(user: user.swift)
+    }
+
+    let swift: Team.MembersFormerMemberArg
+
+    public init(swift: Team.MembersFormerMemberArg) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
 /// Available TeamMemberRole for the connected team. To be used with membersSetAdminPermissionsV2.
 @objc
 public class DBXTeamMembersGetAvailableTeamMemberRolesResult: NSObject {
     /// Available roles.
     @objc
-    public var roles: [DBXTeamTeamMemberRole] { swift.roles.map { DBXTeamTeamMemberRole(swift: $0) } }
+    public var roles: Array<DBXTeamTeamMemberRole> { swift.roles.map { DBXTeamTeamMemberRole(swift: $0) } }
 
     @objc
-    public init(roles: [DBXTeamTeamMemberRole]) {
-        self.swift = Team.MembersGetAvailableTeamMemberRolesResult(roles: roles.map(\.swift))
+    public init(roles: Array<DBXTeamTeamMemberRole>) {
+        self.swift = Team.MembersGetAvailableTeamMemberRolesResult(roles: roles.map { $0.swift })
     }
 
     let swift: Team.MembersGetAvailableTeamMemberRolesResult
@@ -8399,6 +8537,7 @@ public class DBXTeamMembersGetAvailableTeamMemberRolesResult: NSObject {
     public init(swift: Team.MembersGetAvailableTeamMemberRolesResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -8409,11 +8548,11 @@ public class DBXTeamMembersGetAvailableTeamMemberRolesResult: NSObject {
 public class DBXTeamMembersGetInfoArgs: NSObject {
     /// List of team members.
     @objc
-    public var members: [DBXTeamUserSelectorArg] { swift.members.map { DBXTeamUserSelectorArg(swift: $0) } }
+    public var members: Array<DBXTeamUserSelectorArg> { swift.members.map { DBXTeamUserSelectorArg(swift: $0) } }
 
     @objc
-    public init(members: [DBXTeamUserSelectorArg]) {
-        self.swift = Team.MembersGetInfoArgs(members: members.map(\.swift))
+    public init(members: Array<DBXTeamUserSelectorArg>) {
+        self.swift = Team.MembersGetInfoArgs(members: members.map { $0.swift })
     }
 
     let swift: Team.MembersGetInfoArgs
@@ -8421,6 +8560,7 @@ public class DBXTeamMembersGetInfoArgs: NSObject {
     public init(swift: Team.MembersGetInfoArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -8447,7 +8587,7 @@ public class DBXTeamMembersGetInfoError: NSObject {
 
     @objc
     public var asOther: DBXTeamMembersGetInfoErrorOther? {
-        self as? DBXTeamMembersGetInfoErrorOther
+        return self as? DBXTeamMembersGetInfoErrorOther
     }
 }
 
@@ -8483,13 +8623,13 @@ public class DBXTeamMembersGetInfoItemBase: NSObject {
 
     @objc
     public var asIdNotFound: DBXTeamMembersGetInfoItemBaseIdNotFound? {
-        self as? DBXTeamMembersGetInfoItemBaseIdNotFound
+        return self as? DBXTeamMembersGetInfoItemBaseIdNotFound
     }
 }
 
 /// An ID that was provided as a parameter to membersGetInfo or membersGetInfoV2, and did not match a
-/// corresponding user. This might be a team_member_id, an email, or an external ID, depending on how
-/// the method was called.
+        /// corresponding user. This might be a team_member_id, an email, or an external ID, depending on how
+        /// the method was called.
 @objc
 public class DBXTeamMembersGetInfoItemBaseIdNotFound: DBXTeamMembersGetInfoItemBase {
     @objc
@@ -8497,7 +8637,7 @@ public class DBXTeamMembersGetInfoItemBaseIdNotFound: DBXTeamMembersGetInfoItemB
 
     @objc
     public init(_ arg: String) {
-        self.idNotFound = arg
+        idNotFound = arg
         let swift = Team.MembersGetInfoItemBase.idNotFound(arg)
         super.init(swift: swift)
     }
@@ -8528,18 +8668,18 @@ public class DBXTeamMembersGetInfoItem: NSObject {
 
     @objc
     public var asIdNotFound: DBXTeamMembersGetInfoItemIdNotFound? {
-        self as? DBXTeamMembersGetInfoItemIdNotFound
+        return self as? DBXTeamMembersGetInfoItemIdNotFound
     }
 
     @objc
     public var asMemberInfo: DBXTeamMembersGetInfoItemMemberInfo? {
-        self as? DBXTeamMembersGetInfoItemMemberInfo
+        return self as? DBXTeamMembersGetInfoItemMemberInfo
     }
 }
 
 /// An ID that was provided as a parameter to membersGetInfo or membersGetInfoV2, and did not match a
-/// corresponding user. This might be a team_member_id, an email, or an external ID, depending on how
-/// the method was called.
+        /// corresponding user. This might be a team_member_id, an email, or an external ID, depending on how
+        /// the method was called.
 @objc
 public class DBXTeamMembersGetInfoItemIdNotFound: DBXTeamMembersGetInfoItem {
     @objc
@@ -8547,7 +8687,7 @@ public class DBXTeamMembersGetInfoItemIdNotFound: DBXTeamMembersGetInfoItem {
 
     @objc
     public init(_ arg: String) {
-        self.idNotFound = arg
+        idNotFound = arg
         let swift = Team.MembersGetInfoItem.idNotFound(arg)
         super.init(swift: swift)
     }
@@ -8561,7 +8701,7 @@ public class DBXTeamMembersGetInfoItemMemberInfo: DBXTeamMembersGetInfoItem {
 
     @objc
     public init(_ arg: DBXTeamTeamMemberInfo) {
-        self.memberInfo = arg
+        memberInfo = arg
         let swift = Team.MembersGetInfoItem.memberInfo(arg.swift)
         super.init(swift: swift)
     }
@@ -8594,23 +8734,23 @@ public class DBXTeamMembersGetInfoItemV2: NSObject {
 
     @objc
     public var asIdNotFound: DBXTeamMembersGetInfoItemV2IdNotFound? {
-        self as? DBXTeamMembersGetInfoItemV2IdNotFound
+        return self as? DBXTeamMembersGetInfoItemV2IdNotFound
     }
 
     @objc
     public var asMemberInfo: DBXTeamMembersGetInfoItemV2MemberInfo? {
-        self as? DBXTeamMembersGetInfoItemV2MemberInfo
+        return self as? DBXTeamMembersGetInfoItemV2MemberInfo
     }
 
     @objc
     public var asOther: DBXTeamMembersGetInfoItemV2Other? {
-        self as? DBXTeamMembersGetInfoItemV2Other
+        return self as? DBXTeamMembersGetInfoItemV2Other
     }
 }
 
 /// An ID that was provided as a parameter to membersGetInfo or membersGetInfoV2, and did not match a
-/// corresponding user. This might be a team_member_id, an email, or an external ID, depending on how
-/// the method was called.
+        /// corresponding user. This might be a team_member_id, an email, or an external ID, depending on how
+        /// the method was called.
 @objc
 public class DBXTeamMembersGetInfoItemV2IdNotFound: DBXTeamMembersGetInfoItemV2 {
     @objc
@@ -8618,7 +8758,7 @@ public class DBXTeamMembersGetInfoItemV2IdNotFound: DBXTeamMembersGetInfoItemV2 
 
     @objc
     public init(_ arg: String) {
-        self.idNotFound = arg
+        idNotFound = arg
         let swift = Team.MembersGetInfoItemV2.idNotFound(arg)
         super.init(swift: swift)
     }
@@ -8632,7 +8772,7 @@ public class DBXTeamMembersGetInfoItemV2MemberInfo: DBXTeamMembersGetInfoItemV2 
 
     @objc
     public init(_ arg: DBXTeamTeamMemberInfoV2) {
-        self.memberInfo = arg
+        memberInfo = arg
         let swift = Team.MembersGetInfoItemV2.memberInfo(arg.swift)
         super.init(swift: swift)
     }
@@ -8653,11 +8793,11 @@ public class DBXTeamMembersGetInfoItemV2Other: DBXTeamMembersGetInfoItemV2 {
 public class DBXTeamMembersGetInfoV2Arg: NSObject {
     /// List of team members.
     @objc
-    public var members: [DBXTeamUserSelectorArg] { swift.members.map { DBXTeamUserSelectorArg(swift: $0) } }
+    public var members: Array<DBXTeamUserSelectorArg> { swift.members.map { DBXTeamUserSelectorArg(swift: $0) } }
 
     @objc
-    public init(members: [DBXTeamUserSelectorArg]) {
-        self.swift = Team.MembersGetInfoV2Arg(members: members.map(\.swift))
+    public init(members: Array<DBXTeamUserSelectorArg>) {
+        self.swift = Team.MembersGetInfoV2Arg(members: members.map { $0.swift })
     }
 
     let swift: Team.MembersGetInfoV2Arg
@@ -8665,6 +8805,7 @@ public class DBXTeamMembersGetInfoV2Arg: NSObject {
     public init(swift: Team.MembersGetInfoV2Arg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -8675,11 +8816,11 @@ public class DBXTeamMembersGetInfoV2Arg: NSObject {
 public class DBXTeamMembersGetInfoV2Result: NSObject {
     /// List of team members info.
     @objc
-    public var membersInfo: [DBXTeamMembersGetInfoItemV2] { swift.membersInfo.map { DBXTeamMembersGetInfoItemV2(swift: $0) } }
+    public var membersInfo: Array<DBXTeamMembersGetInfoItemV2> { swift.membersInfo.map { DBXTeamMembersGetInfoItemV2(swift: $0) } }
 
     @objc
-    public init(membersInfo: [DBXTeamMembersGetInfoItemV2]) {
-        self.swift = Team.MembersGetInfoV2Result(membersInfo: membersInfo.map(\.swift))
+    public init(membersInfo: Array<DBXTeamMembersGetInfoItemV2>) {
+        self.swift = Team.MembersGetInfoV2Result(membersInfo: membersInfo.map { $0.swift })
     }
 
     let swift: Team.MembersGetInfoV2Result
@@ -8687,6 +8828,7 @@ public class DBXTeamMembersGetInfoV2Result: NSObject {
     public init(swift: Team.MembersGetInfoV2Result) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -8697,13 +8839,13 @@ public class DBXTeamMembersGetInfoV2Result: NSObject {
 public class DBXTeamMembersInfo: NSObject {
     /// Team member IDs of the users under this hold.
     @objc
-    public var teamMemberIds: [String] { swift.teamMemberIds }
+    public var teamMemberIds: Array<String> { swift.teamMemberIds }
     /// The number of permanently deleted users that were under this hold.
     @objc
     public var permanentlyDeletedUsers: NSNumber { swift.permanentlyDeletedUsers as NSNumber }
 
     @objc
-    public init(teamMemberIds: [String], permanentlyDeletedUsers: NSNumber) {
+    public init(teamMemberIds: Array<String>, permanentlyDeletedUsers: NSNumber) {
         self.swift = Team.MembersInfo(teamMemberIds: teamMemberIds, permanentlyDeletedUsers: permanentlyDeletedUsers.uint64Value)
     }
 
@@ -8712,6 +8854,7 @@ public class DBXTeamMembersInfo: NSObject {
     public init(swift: Team.MembersInfo) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -8738,6 +8881,7 @@ public class DBXTeamMembersListArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -8759,6 +8903,7 @@ public class DBXTeamMembersListContinueArg: NSObject {
     public init(swift: Team.MembersListContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -8787,12 +8932,12 @@ public class DBXTeamMembersListContinueError: NSObject {
 
     @objc
     public var asInvalidCursor: DBXTeamMembersListContinueErrorInvalidCursor? {
-        self as? DBXTeamMembersListContinueErrorInvalidCursor
+        return self as? DBXTeamMembersListContinueErrorInvalidCursor
     }
 
     @objc
     public var asOther: DBXTeamMembersListContinueErrorOther? {
-        self as? DBXTeamMembersListContinueErrorOther
+        return self as? DBXTeamMembersListContinueErrorOther
     }
 }
 
@@ -8837,7 +8982,7 @@ public class DBXTeamMembersListError: NSObject {
 
     @objc
     public var asOther: DBXTeamMembersListErrorOther? {
-        self as? DBXTeamMembersListErrorOther
+        return self as? DBXTeamMembersListErrorOther
     }
 }
 
@@ -8856,7 +9001,7 @@ public class DBXTeamMembersListErrorOther: DBXTeamMembersListError {
 public class DBXTeamMembersListResult: NSObject {
     /// List of team members.
     @objc
-    public var members: [DBXTeamTeamMemberInfo] { swift.members.map { DBXTeamTeamMemberInfo(swift: $0) } }
+    public var members: Array<DBXTeamTeamMemberInfo> { swift.members.map { DBXTeamTeamMemberInfo(swift: $0) } }
     /// Pass the cursor into membersListContinue to obtain the additional members.
     @objc
     public var cursor: String { swift.cursor }
@@ -8866,8 +9011,8 @@ public class DBXTeamMembersListResult: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(members: [DBXTeamTeamMemberInfo], cursor: String, hasMore: NSNumber) {
-        self.swift = Team.MembersListResult(members: members.map(\.swift), cursor: cursor, hasMore: hasMore.boolValue)
+    public init(members: Array<DBXTeamTeamMemberInfo>, cursor: String, hasMore: NSNumber) {
+        self.swift = Team.MembersListResult(members: members.map { $0.swift }, cursor: cursor, hasMore: hasMore.boolValue)
     }
 
     let swift: Team.MembersListResult
@@ -8875,6 +9020,7 @@ public class DBXTeamMembersListResult: NSObject {
     public init(swift: Team.MembersListResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -8885,7 +9031,7 @@ public class DBXTeamMembersListResult: NSObject {
 public class DBXTeamMembersListV2Result: NSObject {
     /// List of team members.
     @objc
-    public var members: [DBXTeamTeamMemberInfoV2] { swift.members.map { DBXTeamTeamMemberInfoV2(swift: $0) } }
+    public var members: Array<DBXTeamTeamMemberInfoV2> { swift.members.map { DBXTeamTeamMemberInfoV2(swift: $0) } }
     /// Pass the cursor into membersListContinueV2 to obtain the additional members.
     @objc
     public var cursor: String { swift.cursor }
@@ -8895,8 +9041,8 @@ public class DBXTeamMembersListV2Result: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(members: [DBXTeamTeamMemberInfoV2], cursor: String, hasMore: NSNumber) {
-        self.swift = Team.MembersListV2Result(members: members.map(\.swift), cursor: cursor, hasMore: hasMore.boolValue)
+    public init(members: Array<DBXTeamTeamMemberInfoV2>, cursor: String, hasMore: NSNumber) {
+        self.swift = Team.MembersListV2Result(members: members.map { $0.swift }, cursor: cursor, hasMore: hasMore.boolValue)
     }
 
     let swift: Team.MembersListV2Result
@@ -8904,6 +9050,7 @@ public class DBXTeamMembersListV2Result: NSObject {
     public init(swift: Team.MembersListV2Result) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -8926,6 +9073,7 @@ public class DBXTeamMembersRecoverArg: NSObject {
     public init(swift: Team.MembersRecoverArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -8960,27 +9108,27 @@ public class DBXTeamMembersRecoverError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersRecoverErrorUserNotFound? {
-        self as? DBXTeamMembersRecoverErrorUserNotFound
+        return self as? DBXTeamMembersRecoverErrorUserNotFound
     }
 
     @objc
     public var asUserUnrecoverable: DBXTeamMembersRecoverErrorUserUnrecoverable? {
-        self as? DBXTeamMembersRecoverErrorUserUnrecoverable
+        return self as? DBXTeamMembersRecoverErrorUserUnrecoverable
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersRecoverErrorUserNotInTeam? {
-        self as? DBXTeamMembersRecoverErrorUserNotInTeam
+        return self as? DBXTeamMembersRecoverErrorUserNotInTeam
     }
 
     @objc
     public var asTeamLicenseLimit: DBXTeamMembersRecoverErrorTeamLicenseLimit? {
-        self as? DBXTeamMembersRecoverErrorTeamLicenseLimit
+        return self as? DBXTeamMembersRecoverErrorTeamLicenseLimit
     }
 
     @objc
     public var asOther: DBXTeamMembersRecoverErrorOther? {
-        self as? DBXTeamMembersRecoverErrorOther
+        return self as? DBXTeamMembersRecoverErrorOther
     }
 }
 
@@ -9039,19 +9187,13 @@ public class DBXTeamMembersRecoverErrorOther: DBXTeamMembersRecoverError {
 public class DBXTeamMembersRemoveArg: DBXTeamMembersDeactivateArg {
     /// If provided, files from the deleted member account will be transferred to this user.
     @objc
-    public var transferDestId: DBXTeamUserSelectorArg? { guard let swift = subSubSwift.transferDestId else { return nil }
-        return DBXTeamUserSelectorArg(swift: swift)
-    }
-
+    public var transferDestId: DBXTeamUserSelectorArg? { guard let swift = subSubSwift.transferDestId else { return nil }; return DBXTeamUserSelectorArg(swift: swift) }
     /// If provided, errors during the transfer process will be sent via email to this user. If the transfer_dest_id
     /// argument was provided, then this argument must be provided as well.
     @objc
-    public var transferAdminId: DBXTeamUserSelectorArg? { guard let swift = subSubSwift.transferAdminId else { return nil }
-        return DBXTeamUserSelectorArg(swift: swift)
-    }
-
+    public var transferAdminId: DBXTeamUserSelectorArg? { guard let swift = subSubSwift.transferAdminId else { return nil }; return DBXTeamUserSelectorArg(swift: swift) }
     /// Downgrade the member to a Basic account. The user will retain the email address associated with their
-    /// Dropbox  account and data in their account that is not restricted to team members. In order to keep the
+    /// Dropbox account and data in their account that is not restricted to team members. In order to keep the
     /// account the argument wipeData should be set to false.
     @objc
     public var keepAccount: NSNumber { subSubSwift.keepAccount as NSNumber }
@@ -9061,24 +9203,14 @@ public class DBXTeamMembersRemoveArg: DBXTeamMembersDeactivateArg {
     /// relationships, the arguments wipeData should be set to false and keepAccount should be set to true.
     @objc
     public var retainTeamShares: NSNumber { subSubSwift.retainTeamShares as NSNumber }
+    /// Permanently delete the data in the deleted member's account. After permanent deletion, the data is no longer
+    /// available to be transferred to a different user.
+    @objc
+    public var permanentlyDeleteFiles: NSNumber { subSubSwift.permanentlyDeleteFiles as NSNumber }
 
     @objc
-    public init(
-        user: DBXTeamUserSelectorArg,
-        wipeData: NSNumber,
-        transferDestId: DBXTeamUserSelectorArg?,
-        transferAdminId: DBXTeamUserSelectorArg?,
-        keepAccount: NSNumber,
-        retainTeamShares: NSNumber
-    ) {
-        let swift = Team.MembersRemoveArg(
-            user: user.swift,
-            wipeData: wipeData.boolValue,
-            transferDestId: transferDestId?.swift,
-            transferAdminId: transferAdminId?.swift,
-            keepAccount: keepAccount.boolValue,
-            retainTeamShares: retainTeamShares.boolValue
-        )
+    public init(user: DBXTeamUserSelectorArg, wipeData: NSNumber, transferDestId: DBXTeamUserSelectorArg?, transferAdminId: DBXTeamUserSelectorArg?, keepAccount: NSNumber, retainTeamShares: NSNumber, permanentlyDeleteFiles: NSNumber) {
+        let swift = Team.MembersRemoveArg(user: user.swift, wipeData: wipeData.boolValue, transferDestId: transferDestId?.swift, transferAdminId: transferAdminId?.swift, keepAccount: keepAccount.boolValue, retainTeamShares: retainTeamShares.boolValue, permanentlyDeleteFiles: permanentlyDeleteFiles.boolValue)
         self.subSubSwift = swift
         super.init(swift: swift)
     }
@@ -9089,6 +9221,7 @@ public class DBXTeamMembersRemoveArg: DBXTeamMembersDeactivateArg {
         self.subSubSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -9111,6 +9244,12 @@ public class DBXTeamMembersTransferFilesError: NSObject {
             return DBXTeamMembersTransferFilesErrorUserNotInTeam()
         case .other:
             return DBXTeamMembersTransferFilesErrorOther()
+        case .transferInProgress:
+            return DBXTeamMembersTransferFilesErrorTransferInProgress()
+        case .alreadyTransferred:
+            return DBXTeamMembersTransferFilesErrorAlreadyTransferred()
+        case .alreadyTransferredOrDeleted:
+            return DBXTeamMembersTransferFilesErrorAlreadyTransferredOrDeleted()
         case .removedAndTransferDestShouldDiffer:
             return DBXTeamMembersTransferFilesErrorRemovedAndTransferDestShouldDiffer()
         case .removedAndTransferAdminShouldDiffer:
@@ -9137,62 +9276,77 @@ public class DBXTeamMembersTransferFilesError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersTransferFilesErrorUserNotFound? {
-        self as? DBXTeamMembersTransferFilesErrorUserNotFound
+        return self as? DBXTeamMembersTransferFilesErrorUserNotFound
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersTransferFilesErrorUserNotInTeam? {
-        self as? DBXTeamMembersTransferFilesErrorUserNotInTeam
+        return self as? DBXTeamMembersTransferFilesErrorUserNotInTeam
     }
 
     @objc
     public var asOther: DBXTeamMembersTransferFilesErrorOther? {
-        self as? DBXTeamMembersTransferFilesErrorOther
+        return self as? DBXTeamMembersTransferFilesErrorOther
+    }
+
+    @objc
+    public var asTransferInProgress: DBXTeamMembersTransferFilesErrorTransferInProgress? {
+        return self as? DBXTeamMembersTransferFilesErrorTransferInProgress
+    }
+
+    @objc
+    public var asAlreadyTransferred: DBXTeamMembersTransferFilesErrorAlreadyTransferred? {
+        return self as? DBXTeamMembersTransferFilesErrorAlreadyTransferred
+    }
+
+    @objc
+    public var asAlreadyTransferredOrDeleted: DBXTeamMembersTransferFilesErrorAlreadyTransferredOrDeleted? {
+        return self as? DBXTeamMembersTransferFilesErrorAlreadyTransferredOrDeleted
     }
 
     @objc
     public var asRemovedAndTransferDestShouldDiffer: DBXTeamMembersTransferFilesErrorRemovedAndTransferDestShouldDiffer? {
-        self as? DBXTeamMembersTransferFilesErrorRemovedAndTransferDestShouldDiffer
+        return self as? DBXTeamMembersTransferFilesErrorRemovedAndTransferDestShouldDiffer
     }
 
     @objc
     public var asRemovedAndTransferAdminShouldDiffer: DBXTeamMembersTransferFilesErrorRemovedAndTransferAdminShouldDiffer? {
-        self as? DBXTeamMembersTransferFilesErrorRemovedAndTransferAdminShouldDiffer
+        return self as? DBXTeamMembersTransferFilesErrorRemovedAndTransferAdminShouldDiffer
     }
 
     @objc
     public var asTransferDestUserNotFound: DBXTeamMembersTransferFilesErrorTransferDestUserNotFound? {
-        self as? DBXTeamMembersTransferFilesErrorTransferDestUserNotFound
+        return self as? DBXTeamMembersTransferFilesErrorTransferDestUserNotFound
     }
 
     @objc
     public var asTransferDestUserNotInTeam: DBXTeamMembersTransferFilesErrorTransferDestUserNotInTeam? {
-        self as? DBXTeamMembersTransferFilesErrorTransferDestUserNotInTeam
+        return self as? DBXTeamMembersTransferFilesErrorTransferDestUserNotInTeam
     }
 
     @objc
     public var asTransferAdminUserNotInTeam: DBXTeamMembersTransferFilesErrorTransferAdminUserNotInTeam? {
-        self as? DBXTeamMembersTransferFilesErrorTransferAdminUserNotInTeam
+        return self as? DBXTeamMembersTransferFilesErrorTransferAdminUserNotInTeam
     }
 
     @objc
     public var asTransferAdminUserNotFound: DBXTeamMembersTransferFilesErrorTransferAdminUserNotFound? {
-        self as? DBXTeamMembersTransferFilesErrorTransferAdminUserNotFound
+        return self as? DBXTeamMembersTransferFilesErrorTransferAdminUserNotFound
     }
 
     @objc
     public var asUnspecifiedTransferAdminId: DBXTeamMembersTransferFilesErrorUnspecifiedTransferAdminId? {
-        self as? DBXTeamMembersTransferFilesErrorUnspecifiedTransferAdminId
+        return self as? DBXTeamMembersTransferFilesErrorUnspecifiedTransferAdminId
     }
 
     @objc
     public var asTransferAdminIsNotAdmin: DBXTeamMembersTransferFilesErrorTransferAdminIsNotAdmin? {
-        self as? DBXTeamMembersTransferFilesErrorTransferAdminIsNotAdmin
+        return self as? DBXTeamMembersTransferFilesErrorTransferAdminIsNotAdmin
     }
 
     @objc
     public var asRecipientNotVerified: DBXTeamMembersTransferFilesErrorRecipientNotVerified? {
-        self as? DBXTeamMembersTransferFilesErrorRecipientNotVerified
+        return self as? DBXTeamMembersTransferFilesErrorRecipientNotVerified
     }
 }
 
@@ -9222,6 +9376,36 @@ public class DBXTeamMembersTransferFilesErrorOther: DBXTeamMembersTransferFilesE
     @objc
     public init() {
         let swift = Team.MembersTransferFilesError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files while it's being transferred.
+@objc
+public class DBXTeamMembersTransferFilesErrorTransferInProgress: DBXTeamMembersTransferFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersTransferFilesError.transferInProgress
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred.
+@objc
+public class DBXTeamMembersTransferFilesErrorAlreadyTransferred: DBXTeamMembersTransferFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersTransferFilesError.alreadyTransferred
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred or deleted.
+@objc
+public class DBXTeamMembersTransferFilesErrorAlreadyTransferredOrDeleted: DBXTeamMembersTransferFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersTransferFilesError.alreadyTransferredOrDeleted
         super.init(swift: swift)
     }
 }
@@ -9333,6 +9517,12 @@ public class DBXTeamMembersRemoveError: NSObject {
             return DBXTeamMembersRemoveErrorUserNotInTeam()
         case .other:
             return DBXTeamMembersRemoveErrorOther()
+        case .transferInProgress:
+            return DBXTeamMembersRemoveErrorTransferInProgress()
+        case .alreadyTransferred:
+            return DBXTeamMembersRemoveErrorAlreadyTransferred()
+        case .alreadyTransferredOrDeleted:
+            return DBXTeamMembersRemoveErrorAlreadyTransferredOrDeleted()
         case .removedAndTransferDestShouldDiffer:
             return DBXTeamMembersRemoveErrorRemovedAndTransferDestShouldDiffer()
         case .removedAndTransferAdminShouldDiffer:
@@ -9357,6 +9547,8 @@ public class DBXTeamMembersRemoveError: NSObject {
             return DBXTeamMembersRemoveErrorCannotKeepAccountAndTransfer()
         case .cannotKeepAccountAndDeleteData:
             return DBXTeamMembersRemoveErrorCannotKeepAccountAndDeleteData()
+        case .cannotKeepAccountAndPermanentlyDelete:
+            return DBXTeamMembersRemoveErrorCannotKeepAccountAndPermanentlyDelete()
         case .emailAddressTooLongToBeDisabled:
             return DBXTeamMembersRemoveErrorEmailAddressTooLongToBeDisabled()
         case .cannotKeepInvitedUserAccount:
@@ -9373,6 +9565,10 @@ public class DBXTeamMembersRemoveError: NSObject {
             return DBXTeamMembersRemoveErrorCannotKeepAccountUnderLegalHold()
         case .cannotKeepAccountRequiredToSignTos:
             return DBXTeamMembersRemoveErrorCannotKeepAccountRequiredToSignTos()
+        case .cannotPermanentlyDeleteAndTransfer:
+            return DBXTeamMembersRemoveErrorCannotPermanentlyDeleteAndTransfer()
+        case .memberIsTransferDestination:
+            return DBXTeamMembersRemoveErrorMemberIsTransferDestination()
         }
     }
 
@@ -9381,117 +9577,147 @@ public class DBXTeamMembersRemoveError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersRemoveErrorUserNotFound? {
-        self as? DBXTeamMembersRemoveErrorUserNotFound
+        return self as? DBXTeamMembersRemoveErrorUserNotFound
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersRemoveErrorUserNotInTeam? {
-        self as? DBXTeamMembersRemoveErrorUserNotInTeam
+        return self as? DBXTeamMembersRemoveErrorUserNotInTeam
     }
 
     @objc
     public var asOther: DBXTeamMembersRemoveErrorOther? {
-        self as? DBXTeamMembersRemoveErrorOther
+        return self as? DBXTeamMembersRemoveErrorOther
+    }
+
+    @objc
+    public var asTransferInProgress: DBXTeamMembersRemoveErrorTransferInProgress? {
+        return self as? DBXTeamMembersRemoveErrorTransferInProgress
+    }
+
+    @objc
+    public var asAlreadyTransferred: DBXTeamMembersRemoveErrorAlreadyTransferred? {
+        return self as? DBXTeamMembersRemoveErrorAlreadyTransferred
+    }
+
+    @objc
+    public var asAlreadyTransferredOrDeleted: DBXTeamMembersRemoveErrorAlreadyTransferredOrDeleted? {
+        return self as? DBXTeamMembersRemoveErrorAlreadyTransferredOrDeleted
     }
 
     @objc
     public var asRemovedAndTransferDestShouldDiffer: DBXTeamMembersRemoveErrorRemovedAndTransferDestShouldDiffer? {
-        self as? DBXTeamMembersRemoveErrorRemovedAndTransferDestShouldDiffer
+        return self as? DBXTeamMembersRemoveErrorRemovedAndTransferDestShouldDiffer
     }
 
     @objc
     public var asRemovedAndTransferAdminShouldDiffer: DBXTeamMembersRemoveErrorRemovedAndTransferAdminShouldDiffer? {
-        self as? DBXTeamMembersRemoveErrorRemovedAndTransferAdminShouldDiffer
+        return self as? DBXTeamMembersRemoveErrorRemovedAndTransferAdminShouldDiffer
     }
 
     @objc
     public var asTransferDestUserNotFound: DBXTeamMembersRemoveErrorTransferDestUserNotFound? {
-        self as? DBXTeamMembersRemoveErrorTransferDestUserNotFound
+        return self as? DBXTeamMembersRemoveErrorTransferDestUserNotFound
     }
 
     @objc
     public var asTransferDestUserNotInTeam: DBXTeamMembersRemoveErrorTransferDestUserNotInTeam? {
-        self as? DBXTeamMembersRemoveErrorTransferDestUserNotInTeam
+        return self as? DBXTeamMembersRemoveErrorTransferDestUserNotInTeam
     }
 
     @objc
     public var asTransferAdminUserNotInTeam: DBXTeamMembersRemoveErrorTransferAdminUserNotInTeam? {
-        self as? DBXTeamMembersRemoveErrorTransferAdminUserNotInTeam
+        return self as? DBXTeamMembersRemoveErrorTransferAdminUserNotInTeam
     }
 
     @objc
     public var asTransferAdminUserNotFound: DBXTeamMembersRemoveErrorTransferAdminUserNotFound? {
-        self as? DBXTeamMembersRemoveErrorTransferAdminUserNotFound
+        return self as? DBXTeamMembersRemoveErrorTransferAdminUserNotFound
     }
 
     @objc
     public var asUnspecifiedTransferAdminId: DBXTeamMembersRemoveErrorUnspecifiedTransferAdminId? {
-        self as? DBXTeamMembersRemoveErrorUnspecifiedTransferAdminId
+        return self as? DBXTeamMembersRemoveErrorUnspecifiedTransferAdminId
     }
 
     @objc
     public var asTransferAdminIsNotAdmin: DBXTeamMembersRemoveErrorTransferAdminIsNotAdmin? {
-        self as? DBXTeamMembersRemoveErrorTransferAdminIsNotAdmin
+        return self as? DBXTeamMembersRemoveErrorTransferAdminIsNotAdmin
     }
 
     @objc
     public var asRecipientNotVerified: DBXTeamMembersRemoveErrorRecipientNotVerified? {
-        self as? DBXTeamMembersRemoveErrorRecipientNotVerified
+        return self as? DBXTeamMembersRemoveErrorRecipientNotVerified
     }
 
     @objc
     public var asRemoveLastAdmin: DBXTeamMembersRemoveErrorRemoveLastAdmin? {
-        self as? DBXTeamMembersRemoveErrorRemoveLastAdmin
+        return self as? DBXTeamMembersRemoveErrorRemoveLastAdmin
     }
 
     @objc
     public var asCannotKeepAccountAndTransfer: DBXTeamMembersRemoveErrorCannotKeepAccountAndTransfer? {
-        self as? DBXTeamMembersRemoveErrorCannotKeepAccountAndTransfer
+        return self as? DBXTeamMembersRemoveErrorCannotKeepAccountAndTransfer
     }
 
     @objc
     public var asCannotKeepAccountAndDeleteData: DBXTeamMembersRemoveErrorCannotKeepAccountAndDeleteData? {
-        self as? DBXTeamMembersRemoveErrorCannotKeepAccountAndDeleteData
+        return self as? DBXTeamMembersRemoveErrorCannotKeepAccountAndDeleteData
+    }
+
+    @objc
+    public var asCannotKeepAccountAndPermanentlyDelete: DBXTeamMembersRemoveErrorCannotKeepAccountAndPermanentlyDelete? {
+        return self as? DBXTeamMembersRemoveErrorCannotKeepAccountAndPermanentlyDelete
     }
 
     @objc
     public var asEmailAddressTooLongToBeDisabled: DBXTeamMembersRemoveErrorEmailAddressTooLongToBeDisabled? {
-        self as? DBXTeamMembersRemoveErrorEmailAddressTooLongToBeDisabled
+        return self as? DBXTeamMembersRemoveErrorEmailAddressTooLongToBeDisabled
     }
 
     @objc
     public var asCannotKeepInvitedUserAccount: DBXTeamMembersRemoveErrorCannotKeepInvitedUserAccount? {
-        self as? DBXTeamMembersRemoveErrorCannotKeepInvitedUserAccount
+        return self as? DBXTeamMembersRemoveErrorCannotKeepInvitedUserAccount
     }
 
     @objc
     public var asCannotRetainSharesWhenDataWiped: DBXTeamMembersRemoveErrorCannotRetainSharesWhenDataWiped? {
-        self as? DBXTeamMembersRemoveErrorCannotRetainSharesWhenDataWiped
+        return self as? DBXTeamMembersRemoveErrorCannotRetainSharesWhenDataWiped
     }
 
     @objc
     public var asCannotRetainSharesWhenNoAccountKept: DBXTeamMembersRemoveErrorCannotRetainSharesWhenNoAccountKept? {
-        self as? DBXTeamMembersRemoveErrorCannotRetainSharesWhenNoAccountKept
+        return self as? DBXTeamMembersRemoveErrorCannotRetainSharesWhenNoAccountKept
     }
 
     @objc
     public var asCannotRetainSharesWhenTeamExternalSharingOff: DBXTeamMembersRemoveErrorCannotRetainSharesWhenTeamExternalSharingOff? {
-        self as? DBXTeamMembersRemoveErrorCannotRetainSharesWhenTeamExternalSharingOff
+        return self as? DBXTeamMembersRemoveErrorCannotRetainSharesWhenTeamExternalSharingOff
     }
 
     @objc
     public var asCannotKeepAccount: DBXTeamMembersRemoveErrorCannotKeepAccount? {
-        self as? DBXTeamMembersRemoveErrorCannotKeepAccount
+        return self as? DBXTeamMembersRemoveErrorCannotKeepAccount
     }
 
     @objc
     public var asCannotKeepAccountUnderLegalHold: DBXTeamMembersRemoveErrorCannotKeepAccountUnderLegalHold? {
-        self as? DBXTeamMembersRemoveErrorCannotKeepAccountUnderLegalHold
+        return self as? DBXTeamMembersRemoveErrorCannotKeepAccountUnderLegalHold
     }
 
     @objc
     public var asCannotKeepAccountRequiredToSignTos: DBXTeamMembersRemoveErrorCannotKeepAccountRequiredToSignTos? {
-        self as? DBXTeamMembersRemoveErrorCannotKeepAccountRequiredToSignTos
+        return self as? DBXTeamMembersRemoveErrorCannotKeepAccountRequiredToSignTos
+    }
+
+    @objc
+    public var asCannotPermanentlyDeleteAndTransfer: DBXTeamMembersRemoveErrorCannotPermanentlyDeleteAndTransfer? {
+        return self as? DBXTeamMembersRemoveErrorCannotPermanentlyDeleteAndTransfer
+    }
+
+    @objc
+    public var asMemberIsTransferDestination: DBXTeamMembersRemoveErrorMemberIsTransferDestination? {
+        return self as? DBXTeamMembersRemoveErrorMemberIsTransferDestination
     }
 }
 
@@ -9521,6 +9747,36 @@ public class DBXTeamMembersRemoveErrorOther: DBXTeamMembersRemoveError {
     @objc
     public init() {
         let swift = Team.MembersRemoveError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files while it's being transferred.
+@objc
+public class DBXTeamMembersRemoveErrorTransferInProgress: DBXTeamMembersRemoveError {
+    @objc
+    public init() {
+        let swift = Team.MembersRemoveError.transferInProgress
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred.
+@objc
+public class DBXTeamMembersRemoveErrorAlreadyTransferred: DBXTeamMembersRemoveError {
+    @objc
+    public init() {
+        let swift = Team.MembersRemoveError.alreadyTransferred
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred or deleted.
+@objc
+public class DBXTeamMembersRemoveErrorAlreadyTransferredOrDeleted: DBXTeamMembersRemoveError {
+    @objc
+    public init() {
+        let swift = Team.MembersRemoveError.alreadyTransferredOrDeleted
         super.init(swift: swift)
     }
 }
@@ -9636,12 +9892,23 @@ public class DBXTeamMembersRemoveErrorCannotKeepAccountAndTransfer: DBXTeamMembe
 }
 
 /// Cannot keep account and delete the data at the same time. To keep the account the argument wipe_data should
-/// be set to false.
+        /// be set to false.
 @objc
 public class DBXTeamMembersRemoveErrorCannotKeepAccountAndDeleteData: DBXTeamMembersRemoveError {
     @objc
     public init() {
         let swift = Team.MembersRemoveError.cannotKeepAccountAndDeleteData
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot keep account and permanently delete the data at the same time. To keep the account the argument
+        /// permanently_delete_files should be set to false.
+@objc
+public class DBXTeamMembersRemoveErrorCannotKeepAccountAndPermanentlyDelete: DBXTeamMembersRemoveError {
+    @objc
+    public init() {
+        let swift = Team.MembersRemoveError.cannotKeepAccountAndPermanentlyDelete
         super.init(swift: swift)
     }
 }
@@ -9667,7 +9934,7 @@ public class DBXTeamMembersRemoveErrorCannotKeepInvitedUserAccount: DBXTeamMembe
 }
 
 /// Cannot retain team shares when the user's data is marked for deletion on their linked devices. The argument
-/// wipe_data should be set to false.
+        /// wipe_data should be set to false.
 @objc
 public class DBXTeamMembersRemoveErrorCannotRetainSharesWhenDataWiped: DBXTeamMembersRemoveError {
     @objc
@@ -9678,7 +9945,7 @@ public class DBXTeamMembersRemoveErrorCannotRetainSharesWhenDataWiped: DBXTeamMe
 }
 
 /// The user's account must be kept in order to retain team shares. The argument keep_account should be set to
-/// true.
+        /// true.
 @objc
 public class DBXTeamMembersRemoveErrorCannotRetainSharesWhenNoAccountKept: DBXTeamMembersRemoveError {
     @objc
@@ -9689,7 +9956,7 @@ public class DBXTeamMembersRemoveErrorCannotRetainSharesWhenNoAccountKept: DBXTe
 }
 
 /// Externally sharing files, folders, and links must be enabled in team settings in order to retain team shares
-/// for the user.
+        /// for the user.
 @objc
 public class DBXTeamMembersRemoveErrorCannotRetainSharesWhenTeamExternalSharingOff: DBXTeamMembersRemoveError {
     @objc
@@ -9710,7 +9977,7 @@ public class DBXTeamMembersRemoveErrorCannotKeepAccount: DBXTeamMembersRemoveErr
 }
 
 /// This user content is currently being held. To convert this member's account to a Basic account, you'll first
-/// need to remove them from the hold.
+        /// need to remove them from the hold.
 @objc
 public class DBXTeamMembersRemoveErrorCannotKeepAccountUnderLegalHold: DBXTeamMembersRemoveError {
     @objc
@@ -9721,12 +9988,33 @@ public class DBXTeamMembersRemoveErrorCannotKeepAccountUnderLegalHold: DBXTeamMe
 }
 
 /// To convert this member to a Basic account, they'll first need to sign in to Dropbox and agree to the terms
-/// of service.
+        /// of service.
 @objc
 public class DBXTeamMembersRemoveErrorCannotKeepAccountRequiredToSignTos: DBXTeamMembersRemoveError {
     @objc
     public init() {
         let swift = Team.MembersRemoveError.cannotKeepAccountRequiredToSignTos
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files and transfer the data to another user at the same time.
+@objc
+public class DBXTeamMembersRemoveErrorCannotPermanentlyDeleteAndTransfer: DBXTeamMembersRemoveError {
+    @objc
+    public init() {
+        let swift = Team.MembersRemoveError.cannotPermanentlyDeleteAndTransfer
+        super.init(swift: swift)
+    }
+}
+
+/// This user is the active destination of an in-progress file transfer. Wait for the transfer to complete
+        /// before removing this member.
+@objc
+public class DBXTeamMembersRemoveErrorMemberIsTransferDestination: DBXTeamMembersRemoveError {
+    @objc
+    public init() {
+        let swift = Team.MembersRemoveError.memberIsTransferDestination
         super.init(swift: swift)
     }
 }
@@ -9756,17 +10044,17 @@ public class DBXTeamMembersSendWelcomeError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersSendWelcomeErrorUserNotFound? {
-        self as? DBXTeamMembersSendWelcomeErrorUserNotFound
+        return self as? DBXTeamMembersSendWelcomeErrorUserNotFound
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersSendWelcomeErrorUserNotInTeam? {
-        self as? DBXTeamMembersSendWelcomeErrorUserNotInTeam
+        return self as? DBXTeamMembersSendWelcomeErrorUserNotInTeam
     }
 
     @objc
     public var asOther: DBXTeamMembersSendWelcomeErrorOther? {
-        self as? DBXTeamMembersSendWelcomeErrorOther
+        return self as? DBXTeamMembersSendWelcomeErrorOther
     }
 }
 
@@ -9809,10 +10097,10 @@ public class DBXTeamMembersSetPermissions2Arg: NSObject {
     /// The new roles for the member. Send empty list to make user member only. For now, only up to one role is
     /// allowed.
     @objc
-    public var newRoles: [String]? { swift.newRoles }
+    public var newRoles: Array<String>? { swift.newRoles }
 
     @objc
-    public init(user: DBXTeamUserSelectorArg, newRoles: [String]?) {
+    public init(user: DBXTeamUserSelectorArg, newRoles: Array<String>?) {
         self.swift = Team.MembersSetPermissions2Arg(user: user.swift, newRoles: newRoles)
     }
 
@@ -9821,6 +10109,7 @@ public class DBXTeamMembersSetPermissions2Arg: NSObject {
     public init(swift: Team.MembersSetPermissions2Arg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -9857,32 +10146,32 @@ public class DBXTeamMembersSetPermissions2Error: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersSetPermissions2ErrorUserNotFound? {
-        self as? DBXTeamMembersSetPermissions2ErrorUserNotFound
+        return self as? DBXTeamMembersSetPermissions2ErrorUserNotFound
     }
 
     @objc
     public var asLastAdmin: DBXTeamMembersSetPermissions2ErrorLastAdmin? {
-        self as? DBXTeamMembersSetPermissions2ErrorLastAdmin
+        return self as? DBXTeamMembersSetPermissions2ErrorLastAdmin
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersSetPermissions2ErrorUserNotInTeam? {
-        self as? DBXTeamMembersSetPermissions2ErrorUserNotInTeam
+        return self as? DBXTeamMembersSetPermissions2ErrorUserNotInTeam
     }
 
     @objc
     public var asCannotSetPermissions: DBXTeamMembersSetPermissions2ErrorCannotSetPermissions? {
-        self as? DBXTeamMembersSetPermissions2ErrorCannotSetPermissions
+        return self as? DBXTeamMembersSetPermissions2ErrorCannotSetPermissions
     }
 
     @objc
     public var asRoleNotFound: DBXTeamMembersSetPermissions2ErrorRoleNotFound? {
-        self as? DBXTeamMembersSetPermissions2ErrorRoleNotFound
+        return self as? DBXTeamMembersSetPermissions2ErrorRoleNotFound
     }
 
     @objc
     public var asOther: DBXTeamMembersSetPermissions2ErrorOther? {
-        self as? DBXTeamMembersSetPermissions2ErrorOther
+        return self as? DBXTeamMembersSetPermissions2ErrorOther
     }
 }
 
@@ -9954,11 +10243,11 @@ public class DBXTeamMembersSetPermissions2Result: NSObject {
     public var teamMemberId: String { swift.teamMemberId }
     /// The roles after the change. Empty in case the user become a non-admin.
     @objc
-    public var roles: [DBXTeamTeamMemberRole]? { swift.roles?.map { DBXTeamTeamMemberRole(swift: $0) } }
+    public var roles: Array<DBXTeamTeamMemberRole>? { swift.roles?.map { DBXTeamTeamMemberRole(swift: $0) } }
 
     @objc
-    public init(teamMemberId: String, roles: [DBXTeamTeamMemberRole]?) {
-        self.swift = Team.MembersSetPermissions2Result(teamMemberId: teamMemberId, roles: roles?.map(\.swift))
+    public init(teamMemberId: String, roles: Array<DBXTeamTeamMemberRole>?) {
+        self.swift = Team.MembersSetPermissions2Result(teamMemberId: teamMemberId, roles: roles?.map { $0.swift })
     }
 
     let swift: Team.MembersSetPermissions2Result
@@ -9966,6 +10255,7 @@ public class DBXTeamMembersSetPermissions2Result: NSObject {
     public init(swift: Team.MembersSetPermissions2Result) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -9991,6 +10281,7 @@ public class DBXTeamMembersSetPermissionsArg: NSObject {
     public init(swift: Team.MembersSetPermissionsArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -10027,32 +10318,32 @@ public class DBXTeamMembersSetPermissionsError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersSetPermissionsErrorUserNotFound? {
-        self as? DBXTeamMembersSetPermissionsErrorUserNotFound
+        return self as? DBXTeamMembersSetPermissionsErrorUserNotFound
     }
 
     @objc
     public var asLastAdmin: DBXTeamMembersSetPermissionsErrorLastAdmin? {
-        self as? DBXTeamMembersSetPermissionsErrorLastAdmin
+        return self as? DBXTeamMembersSetPermissionsErrorLastAdmin
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersSetPermissionsErrorUserNotInTeam? {
-        self as? DBXTeamMembersSetPermissionsErrorUserNotInTeam
+        return self as? DBXTeamMembersSetPermissionsErrorUserNotInTeam
     }
 
     @objc
     public var asCannotSetPermissions: DBXTeamMembersSetPermissionsErrorCannotSetPermissions? {
-        self as? DBXTeamMembersSetPermissionsErrorCannotSetPermissions
+        return self as? DBXTeamMembersSetPermissionsErrorCannotSetPermissions
     }
 
     @objc
     public var asTeamLicenseLimit: DBXTeamMembersSetPermissionsErrorTeamLicenseLimit? {
-        self as? DBXTeamMembersSetPermissionsErrorTeamLicenseLimit
+        return self as? DBXTeamMembersSetPermissionsErrorTeamLicenseLimit
     }
 
     @objc
     public var asOther: DBXTeamMembersSetPermissionsErrorOther? {
-        self as? DBXTeamMembersSetPermissionsErrorOther
+        return self as? DBXTeamMembersSetPermissionsErrorOther
     }
 }
 
@@ -10137,6 +10428,7 @@ public class DBXTeamMembersSetPermissionsResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -10168,24 +10460,8 @@ public class DBXTeamMembersSetProfileArg: NSObject {
     public var newIsDirectoryRestricted: NSNumber? { swift.newIsDirectoryRestricted as NSNumber? }
 
     @objc
-    public init(
-        user: DBXTeamUserSelectorArg,
-        newEmail: String?,
-        newExternalId: String?,
-        newGivenName: String?,
-        newSurname: String?,
-        newPersistentId: String?,
-        newIsDirectoryRestricted: NSNumber?
-    ) {
-        self.swift = Team.MembersSetProfileArg(
-            user: user.swift,
-            newEmail: newEmail,
-            newExternalId: newExternalId,
-            newGivenName: newGivenName,
-            newSurname: newSurname,
-            newPersistentId: newPersistentId,
-            newIsDirectoryRestricted: newIsDirectoryRestricted?.boolValue
-        )
+    public init(user: DBXTeamUserSelectorArg, newEmail: String?, newExternalId: String?, newGivenName: String?, newSurname: String?, newPersistentId: String?, newIsDirectoryRestricted: NSNumber?) {
+        self.swift = Team.MembersSetProfileArg(user: user.swift, newEmail: newEmail, newExternalId: newExternalId, newGivenName: newGivenName, newSurname: newSurname, newPersistentId: newPersistentId, newIsDirectoryRestricted: newIsDirectoryRestricted?.boolValue)
     }
 
     let swift: Team.MembersSetProfileArg
@@ -10193,6 +10469,7 @@ public class DBXTeamMembersSetProfileArg: NSObject {
     public init(swift: Team.MembersSetProfileArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -10241,62 +10518,62 @@ public class DBXTeamMembersSetProfileError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersSetProfileErrorUserNotFound? {
-        self as? DBXTeamMembersSetProfileErrorUserNotFound
+        return self as? DBXTeamMembersSetProfileErrorUserNotFound
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersSetProfileErrorUserNotInTeam? {
-        self as? DBXTeamMembersSetProfileErrorUserNotInTeam
+        return self as? DBXTeamMembersSetProfileErrorUserNotInTeam
     }
 
     @objc
     public var asExternalIdAndNewExternalIdUnsafe: DBXTeamMembersSetProfileErrorExternalIdAndNewExternalIdUnsafe? {
-        self as? DBXTeamMembersSetProfileErrorExternalIdAndNewExternalIdUnsafe
+        return self as? DBXTeamMembersSetProfileErrorExternalIdAndNewExternalIdUnsafe
     }
 
     @objc
     public var asNoNewDataSpecified: DBXTeamMembersSetProfileErrorNoNewDataSpecified? {
-        self as? DBXTeamMembersSetProfileErrorNoNewDataSpecified
+        return self as? DBXTeamMembersSetProfileErrorNoNewDataSpecified
     }
 
     @objc
     public var asEmailReservedForOtherUser: DBXTeamMembersSetProfileErrorEmailReservedForOtherUser? {
-        self as? DBXTeamMembersSetProfileErrorEmailReservedForOtherUser
+        return self as? DBXTeamMembersSetProfileErrorEmailReservedForOtherUser
     }
 
     @objc
     public var asExternalIdUsedByOtherUser: DBXTeamMembersSetProfileErrorExternalIdUsedByOtherUser? {
-        self as? DBXTeamMembersSetProfileErrorExternalIdUsedByOtherUser
+        return self as? DBXTeamMembersSetProfileErrorExternalIdUsedByOtherUser
     }
 
     @objc
     public var asSetProfileDisallowed: DBXTeamMembersSetProfileErrorSetProfileDisallowed? {
-        self as? DBXTeamMembersSetProfileErrorSetProfileDisallowed
+        return self as? DBXTeamMembersSetProfileErrorSetProfileDisallowed
     }
 
     @objc
     public var asParamCannotBeEmpty: DBXTeamMembersSetProfileErrorParamCannotBeEmpty? {
-        self as? DBXTeamMembersSetProfileErrorParamCannotBeEmpty
+        return self as? DBXTeamMembersSetProfileErrorParamCannotBeEmpty
     }
 
     @objc
     public var asPersistentIdDisabled: DBXTeamMembersSetProfileErrorPersistentIdDisabled? {
-        self as? DBXTeamMembersSetProfileErrorPersistentIdDisabled
+        return self as? DBXTeamMembersSetProfileErrorPersistentIdDisabled
     }
 
     @objc
     public var asPersistentIdUsedByOtherUser: DBXTeamMembersSetProfileErrorPersistentIdUsedByOtherUser? {
-        self as? DBXTeamMembersSetProfileErrorPersistentIdUsedByOtherUser
+        return self as? DBXTeamMembersSetProfileErrorPersistentIdUsedByOtherUser
     }
 
     @objc
     public var asDirectoryRestrictedOff: DBXTeamMembersSetProfileErrorDirectoryRestrictedOff? {
-        self as? DBXTeamMembersSetProfileErrorDirectoryRestrictedOff
+        return self as? DBXTeamMembersSetProfileErrorDirectoryRestrictedOff
     }
 
     @objc
     public var asOther: DBXTeamMembersSetProfileErrorOther? {
-        self as? DBXTeamMembersSetProfileErrorOther
+        return self as? DBXTeamMembersSetProfileErrorOther
     }
 }
 
@@ -10381,7 +10658,7 @@ public class DBXTeamMembersSetProfileErrorParamCannotBeEmpty: DBXTeamMembersSetP
 }
 
 /// Persistent ID is only available to teams with persistent ID SAML configuration. Please contact Dropbox for
-/// more information.
+        /// more information.
 @objc
 public class DBXTeamMembersSetProfileErrorPersistentIdDisabled: DBXTeamMembersSetProfileError {
     @objc
@@ -10442,6 +10719,7 @@ public class DBXTeamMembersSetProfilePhotoArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -10476,27 +10754,27 @@ public class DBXTeamMembersSetProfilePhotoError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersSetProfilePhotoErrorUserNotFound? {
-        self as? DBXTeamMembersSetProfilePhotoErrorUserNotFound
+        return self as? DBXTeamMembersSetProfilePhotoErrorUserNotFound
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersSetProfilePhotoErrorUserNotInTeam? {
-        self as? DBXTeamMembersSetProfilePhotoErrorUserNotInTeam
+        return self as? DBXTeamMembersSetProfilePhotoErrorUserNotInTeam
     }
 
     @objc
     public var asSetProfileDisallowed: DBXTeamMembersSetProfilePhotoErrorSetProfileDisallowed? {
-        self as? DBXTeamMembersSetProfilePhotoErrorSetProfileDisallowed
+        return self as? DBXTeamMembersSetProfilePhotoErrorSetProfileDisallowed
     }
 
     @objc
     public var asPhotoError: DBXTeamMembersSetProfilePhotoErrorPhotoError? {
-        self as? DBXTeamMembersSetProfilePhotoErrorPhotoError
+        return self as? DBXTeamMembersSetProfilePhotoErrorPhotoError
     }
 
     @objc
     public var asOther: DBXTeamMembersSetProfilePhotoErrorOther? {
-        self as? DBXTeamMembersSetProfilePhotoErrorOther
+        return self as? DBXTeamMembersSetProfilePhotoErrorOther
     }
 }
 
@@ -10538,7 +10816,7 @@ public class DBXTeamMembersSetProfilePhotoErrorPhotoError: DBXTeamMembersSetProf
 
     @objc
     public init(_ arg: DBXAccountSetProfilePhotoError) {
-        self.photoError = arg
+        photoError = arg
         let swift = Team.MembersSetProfilePhotoError.photoError(arg.swift)
         super.init(swift: swift)
     }
@@ -10585,32 +10863,32 @@ public class DBXTeamMembersSuspendError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersSuspendErrorUserNotFound? {
-        self as? DBXTeamMembersSuspendErrorUserNotFound
+        return self as? DBXTeamMembersSuspendErrorUserNotFound
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersSuspendErrorUserNotInTeam? {
-        self as? DBXTeamMembersSuspendErrorUserNotInTeam
+        return self as? DBXTeamMembersSuspendErrorUserNotInTeam
     }
 
     @objc
     public var asOther: DBXTeamMembersSuspendErrorOther? {
-        self as? DBXTeamMembersSuspendErrorOther
+        return self as? DBXTeamMembersSuspendErrorOther
     }
 
     @objc
     public var asSuspendInactiveUser: DBXTeamMembersSuspendErrorSuspendInactiveUser? {
-        self as? DBXTeamMembersSuspendErrorSuspendInactiveUser
+        return self as? DBXTeamMembersSuspendErrorSuspendInactiveUser
     }
 
     @objc
     public var asSuspendLastAdmin: DBXTeamMembersSuspendErrorSuspendLastAdmin? {
-        self as? DBXTeamMembersSuspendErrorSuspendLastAdmin
+        return self as? DBXTeamMembersSuspendErrorSuspendLastAdmin
     }
 
     @objc
     public var asTeamLicenseLimit: DBXTeamMembersSuspendErrorTeamLicenseLimit? {
-        self as? DBXTeamMembersSuspendErrorTeamLicenseLimit
+        return self as? DBXTeamMembersSuspendErrorTeamLicenseLimit
     }
 }
 
@@ -10691,6 +10969,12 @@ public class DBXTeamMembersTransferFormerMembersFilesError: NSObject {
             return DBXTeamMembersTransferFormerMembersFilesErrorUserNotInTeam()
         case .other:
             return DBXTeamMembersTransferFormerMembersFilesErrorOther()
+        case .transferInProgress:
+            return DBXTeamMembersTransferFormerMembersFilesErrorTransferInProgress()
+        case .alreadyTransferred:
+            return DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferred()
+        case .alreadyTransferredOrDeleted:
+            return DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferredOrDeleted()
         case .removedAndTransferDestShouldDiffer:
             return DBXTeamMembersTransferFormerMembersFilesErrorRemovedAndTransferDestShouldDiffer()
         case .removedAndTransferAdminShouldDiffer:
@@ -10725,82 +11009,97 @@ public class DBXTeamMembersTransferFormerMembersFilesError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersTransferFormerMembersFilesErrorUserNotFound? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorUserNotFound
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorUserNotFound
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersTransferFormerMembersFilesErrorUserNotInTeam? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorUserNotInTeam
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorUserNotInTeam
     }
 
     @objc
     public var asOther: DBXTeamMembersTransferFormerMembersFilesErrorOther? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorOther
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorOther
+    }
+
+    @objc
+    public var asTransferInProgress: DBXTeamMembersTransferFormerMembersFilesErrorTransferInProgress? {
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorTransferInProgress
+    }
+
+    @objc
+    public var asAlreadyTransferred: DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferred? {
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferred
+    }
+
+    @objc
+    public var asAlreadyTransferredOrDeleted: DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferredOrDeleted? {
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferredOrDeleted
     }
 
     @objc
     public var asRemovedAndTransferDestShouldDiffer: DBXTeamMembersTransferFormerMembersFilesErrorRemovedAndTransferDestShouldDiffer? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorRemovedAndTransferDestShouldDiffer
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorRemovedAndTransferDestShouldDiffer
     }
 
     @objc
     public var asRemovedAndTransferAdminShouldDiffer: DBXTeamMembersTransferFormerMembersFilesErrorRemovedAndTransferAdminShouldDiffer? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorRemovedAndTransferAdminShouldDiffer
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorRemovedAndTransferAdminShouldDiffer
     }
 
     @objc
     public var asTransferDestUserNotFound: DBXTeamMembersTransferFormerMembersFilesErrorTransferDestUserNotFound? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorTransferDestUserNotFound
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorTransferDestUserNotFound
     }
 
     @objc
     public var asTransferDestUserNotInTeam: DBXTeamMembersTransferFormerMembersFilesErrorTransferDestUserNotInTeam? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorTransferDestUserNotInTeam
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorTransferDestUserNotInTeam
     }
 
     @objc
     public var asTransferAdminUserNotInTeam: DBXTeamMembersTransferFormerMembersFilesErrorTransferAdminUserNotInTeam? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorTransferAdminUserNotInTeam
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorTransferAdminUserNotInTeam
     }
 
     @objc
     public var asTransferAdminUserNotFound: DBXTeamMembersTransferFormerMembersFilesErrorTransferAdminUserNotFound? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorTransferAdminUserNotFound
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorTransferAdminUserNotFound
     }
 
     @objc
     public var asUnspecifiedTransferAdminId: DBXTeamMembersTransferFormerMembersFilesErrorUnspecifiedTransferAdminId? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorUnspecifiedTransferAdminId
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorUnspecifiedTransferAdminId
     }
 
     @objc
     public var asTransferAdminIsNotAdmin: DBXTeamMembersTransferFormerMembersFilesErrorTransferAdminIsNotAdmin? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorTransferAdminIsNotAdmin
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorTransferAdminIsNotAdmin
     }
 
     @objc
     public var asRecipientNotVerified: DBXTeamMembersTransferFormerMembersFilesErrorRecipientNotVerified? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorRecipientNotVerified
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorRecipientNotVerified
     }
 
     @objc
     public var asUserDataIsBeingTransferred: DBXTeamMembersTransferFormerMembersFilesErrorUserDataIsBeingTransferred? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorUserDataIsBeingTransferred
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorUserDataIsBeingTransferred
     }
 
     @objc
     public var asUserNotRemoved: DBXTeamMembersTransferFormerMembersFilesErrorUserNotRemoved? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorUserNotRemoved
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorUserNotRemoved
     }
 
     @objc
     public var asUserDataCannotBeTransferred: DBXTeamMembersTransferFormerMembersFilesErrorUserDataCannotBeTransferred? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorUserDataCannotBeTransferred
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorUserDataCannotBeTransferred
     }
 
     @objc
     public var asUserDataAlreadyTransferred: DBXTeamMembersTransferFormerMembersFilesErrorUserDataAlreadyTransferred? {
-        self as? DBXTeamMembersTransferFormerMembersFilesErrorUserDataAlreadyTransferred
+        return self as? DBXTeamMembersTransferFormerMembersFilesErrorUserDataAlreadyTransferred
     }
 }
 
@@ -10830,6 +11129,36 @@ public class DBXTeamMembersTransferFormerMembersFilesErrorOther: DBXTeamMembersT
     @objc
     public init() {
         let swift = Team.MembersTransferFormerMembersFilesError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files while it's being transferred.
+@objc
+public class DBXTeamMembersTransferFormerMembersFilesErrorTransferInProgress: DBXTeamMembersTransferFormerMembersFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersTransferFormerMembersFilesError.transferInProgress
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred.
+@objc
+public class DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferred: DBXTeamMembersTransferFormerMembersFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersTransferFormerMembersFilesError.alreadyTransferred
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred or deleted.
+@objc
+public class DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferredOrDeleted: DBXTeamMembersTransferFormerMembersFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersTransferFormerMembersFilesError.alreadyTransferredOrDeleted
         super.init(swift: swift)
     }
 }
@@ -10982,6 +11311,7 @@ public class DBXTeamMembersUnsuspendArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -11015,27 +11345,27 @@ public class DBXTeamMembersUnsuspendError: NSObject {
 
     @objc
     public var asUserNotFound: DBXTeamMembersUnsuspendErrorUserNotFound? {
-        self as? DBXTeamMembersUnsuspendErrorUserNotFound
+        return self as? DBXTeamMembersUnsuspendErrorUserNotFound
     }
 
     @objc
     public var asUserNotInTeam: DBXTeamMembersUnsuspendErrorUserNotInTeam? {
-        self as? DBXTeamMembersUnsuspendErrorUserNotInTeam
+        return self as? DBXTeamMembersUnsuspendErrorUserNotInTeam
     }
 
     @objc
     public var asOther: DBXTeamMembersUnsuspendErrorOther? {
-        self as? DBXTeamMembersUnsuspendErrorOther
+        return self as? DBXTeamMembersUnsuspendErrorOther
     }
 
     @objc
     public var asUnsuspendNonSuspendedMember: DBXTeamMembersUnsuspendErrorUnsuspendNonSuspendedMember? {
-        self as? DBXTeamMembersUnsuspendErrorUnsuspendNonSuspendedMember
+        return self as? DBXTeamMembersUnsuspendErrorUnsuspendNonSuspendedMember
     }
 
     @objc
     public var asTeamLicenseLimit: DBXTeamMembersUnsuspendErrorTeamLicenseLimit? {
-        self as? DBXTeamMembersUnsuspendErrorTeamLicenseLimit
+        return self as? DBXTeamMembersUnsuspendErrorTeamLicenseLimit
     }
 }
 
@@ -11120,32 +11450,32 @@ public class DBXTeamMobileClientPlatform: NSObject {
 
     @objc
     public var asIphone: DBXTeamMobileClientPlatformIphone? {
-        self as? DBXTeamMobileClientPlatformIphone
+        return self as? DBXTeamMobileClientPlatformIphone
     }
 
     @objc
     public var asIpad: DBXTeamMobileClientPlatformIpad? {
-        self as? DBXTeamMobileClientPlatformIpad
+        return self as? DBXTeamMobileClientPlatformIpad
     }
 
     @objc
     public var asAndroid: DBXTeamMobileClientPlatformAndroid? {
-        self as? DBXTeamMobileClientPlatformAndroid
+        return self as? DBXTeamMobileClientPlatformAndroid
     }
 
     @objc
     public var asWindowsPhone: DBXTeamMobileClientPlatformWindowsPhone? {
-        self as? DBXTeamMobileClientPlatformWindowsPhone
+        return self as? DBXTeamMobileClientPlatformWindowsPhone
     }
 
     @objc
     public var asBlackberry: DBXTeamMobileClientPlatformBlackberry? {
-        self as? DBXTeamMobileClientPlatformBlackberry
+        return self as? DBXTeamMobileClientPlatformBlackberry
     }
 
     @objc
     public var asOther: DBXTeamMobileClientPlatformOther? {
-        self as? DBXTeamMobileClientPlatformOther
+        return self as? DBXTeamMobileClientPlatformOther
     }
 }
 
@@ -11229,30 +11559,8 @@ public class DBXTeamMobileClientSession: DBXTeamDeviceSession {
     public var lastCarrier: String? { subSwift.lastCarrier }
 
     @objc
-    public init(
-        sessionId: String,
-        deviceName: String,
-        clientType: DBXTeamMobileClientPlatform,
-        ipAddress: String?,
-        country: String?,
-        created: Date?,
-        updated: Date?,
-        clientVersion: String?,
-        osVersion: String?,
-        lastCarrier: String?
-    ) {
-        let swift = Team.MobileClientSession(
-            sessionId: sessionId,
-            deviceName: deviceName,
-            clientType: clientType.swift,
-            ipAddress: ipAddress,
-            country: country,
-            created: created,
-            updated: updated,
-            clientVersion: clientVersion,
-            osVersion: osVersion,
-            lastCarrier: lastCarrier
-        )
+    public init(sessionId: String, deviceName: String, clientType: DBXTeamMobileClientPlatform, ipAddress: String?, country: String?, created: Date?, updated: Date?, clientVersion: String?, osVersion: String?, lastCarrier: String?) {
+        let swift = Team.MobileClientSession(sessionId: sessionId, deviceName: deviceName, clientType: clientType.swift, ipAddress: ipAddress, country: country, created: created, updated: updated, clientVersion: clientVersion, osVersion: osVersion, lastCarrier: lastCarrier)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -11263,6 +11571,7 @@ public class DBXTeamMobileClientSession: DBXTeamDeviceSession {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -11284,10 +11593,13 @@ public class DBXTeamNamespaceMetadata: NSObject {
     /// present.
     @objc
     public var teamMemberId: String? { swift.teamMemberId }
+    /// The quota limit in bytes for this namespace tree. Only applicable to team folders.
+    @objc
+    public var quotaLimit: NSNumber { swift.quotaLimit as NSNumber }
 
     @objc
-    public init(name: String, namespaceId: String, namespaceType: DBXTeamNamespaceType, teamMemberId: String?) {
-        self.swift = Team.NamespaceMetadata(name: name, namespaceId: namespaceId, namespaceType: namespaceType.swift, teamMemberId: teamMemberId)
+    public init(name: String, namespaceId: String, namespaceType: DBXTeamNamespaceType, teamMemberId: String?, quotaLimit: NSNumber) {
+        self.swift = Team.NamespaceMetadata(name: name, namespaceId: namespaceId, namespaceType: namespaceType.swift, teamMemberId: teamMemberId, quotaLimit: quotaLimit.int64Value)
     }
 
     let swift: Team.NamespaceMetadata
@@ -11295,6 +11607,7 @@ public class DBXTeamNamespaceMetadata: NSObject {
     public init(swift: Team.NamespaceMetadata) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -11319,6 +11632,8 @@ public class DBXTeamNamespaceType: NSObject {
             return DBXTeamNamespaceTypeTeamFolder()
         case .teamMemberFolder:
             return DBXTeamNamespaceTypeTeamMemberFolder()
+        case .teamMemberRoot:
+            return DBXTeamNamespaceTypeTeamMemberRoot()
         case .other:
             return DBXTeamNamespaceTypeOther()
         }
@@ -11329,27 +11644,32 @@ public class DBXTeamNamespaceType: NSObject {
 
     @objc
     public var asAppFolder: DBXTeamNamespaceTypeAppFolder? {
-        self as? DBXTeamNamespaceTypeAppFolder
+        return self as? DBXTeamNamespaceTypeAppFolder
     }
 
     @objc
     public var asSharedFolder: DBXTeamNamespaceTypeSharedFolder? {
-        self as? DBXTeamNamespaceTypeSharedFolder
+        return self as? DBXTeamNamespaceTypeSharedFolder
     }
 
     @objc
     public var asTeamFolder: DBXTeamNamespaceTypeTeamFolder? {
-        self as? DBXTeamNamespaceTypeTeamFolder
+        return self as? DBXTeamNamespaceTypeTeamFolder
     }
 
     @objc
     public var asTeamMemberFolder: DBXTeamNamespaceTypeTeamMemberFolder? {
-        self as? DBXTeamNamespaceTypeTeamMemberFolder
+        return self as? DBXTeamNamespaceTypeTeamMemberFolder
+    }
+
+    @objc
+    public var asTeamMemberRoot: DBXTeamNamespaceTypeTeamMemberRoot? {
+        return self as? DBXTeamNamespaceTypeTeamMemberRoot
     }
 
     @objc
     public var asOther: DBXTeamNamespaceTypeOther? {
-        self as? DBXTeamNamespaceTypeOther
+        return self as? DBXTeamNamespaceTypeOther
     }
 }
 
@@ -11393,6 +11713,16 @@ public class DBXTeamNamespaceTypeTeamMemberFolder: DBXTeamNamespaceType {
     }
 }
 
+/// Team member's root folder.
+@objc
+public class DBXTeamNamespaceTypeTeamMemberRoot: DBXTeamNamespaceType {
+    @objc
+    public init() {
+        let swift = Team.NamespaceType.teamMemberRoot
+        super.init(swift: swift)
+    }
+}
+
 /// An unspecified error.
 @objc
 public class DBXTeamNamespaceTypeOther: DBXTeamNamespaceType {
@@ -11430,17 +11760,17 @@ public class DBXTeamRemoveCustomQuotaResult: NSObject {
 
     @objc
     public var asSuccess: DBXTeamRemoveCustomQuotaResultSuccess? {
-        self as? DBXTeamRemoveCustomQuotaResultSuccess
+        return self as? DBXTeamRemoveCustomQuotaResultSuccess
     }
 
     @objc
     public var asInvalidUser: DBXTeamRemoveCustomQuotaResultInvalidUser? {
-        self as? DBXTeamRemoveCustomQuotaResultInvalidUser
+        return self as? DBXTeamRemoveCustomQuotaResultInvalidUser
     }
 
     @objc
     public var asOther: DBXTeamRemoveCustomQuotaResultOther? {
-        self as? DBXTeamRemoveCustomQuotaResultOther
+        return self as? DBXTeamRemoveCustomQuotaResultOther
     }
 }
 
@@ -11452,7 +11782,7 @@ public class DBXTeamRemoveCustomQuotaResultSuccess: DBXTeamRemoveCustomQuotaResu
 
     @objc
     public init(_ arg: DBXTeamUserSelectorArg) {
-        self.success = arg
+        success = arg
         let swift = Team.RemoveCustomQuotaResult.success(arg.swift)
         super.init(swift: swift)
     }
@@ -11466,7 +11796,7 @@ public class DBXTeamRemoveCustomQuotaResultInvalidUser: DBXTeamRemoveCustomQuota
 
     @objc
     public init(_ arg: DBXTeamUserSelectorArg) {
-        self.invalidUser = arg
+        invalidUser = arg
         let swift = Team.RemoveCustomQuotaResult.invalidUser(arg.swift)
         super.init(swift: swift)
     }
@@ -11502,6 +11832,7 @@ public class DBXTeamRemovedStatus: NSObject {
     public init(swift: Team.RemovedStatus) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -11539,22 +11870,22 @@ public class DBXTeamResendSecondaryEmailResult: NSObject {
 
     @objc
     public var asSuccess: DBXTeamResendSecondaryEmailResultSuccess? {
-        self as? DBXTeamResendSecondaryEmailResultSuccess
+        return self as? DBXTeamResendSecondaryEmailResultSuccess
     }
 
     @objc
     public var asNotPending: DBXTeamResendSecondaryEmailResultNotPending? {
-        self as? DBXTeamResendSecondaryEmailResultNotPending
+        return self as? DBXTeamResendSecondaryEmailResultNotPending
     }
 
     @objc
     public var asRateLimited: DBXTeamResendSecondaryEmailResultRateLimited? {
-        self as? DBXTeamResendSecondaryEmailResultRateLimited
+        return self as? DBXTeamResendSecondaryEmailResultRateLimited
     }
 
     @objc
     public var asOther: DBXTeamResendSecondaryEmailResultOther? {
-        self as? DBXTeamResendSecondaryEmailResultOther
+        return self as? DBXTeamResendSecondaryEmailResultOther
     }
 }
 
@@ -11566,7 +11897,7 @@ public class DBXTeamResendSecondaryEmailResultSuccess: DBXTeamResendSecondaryEma
 
     @objc
     public init(_ arg: String) {
-        self.success = arg
+        success = arg
         let swift = Team.ResendSecondaryEmailResult.success(arg)
         super.init(swift: swift)
     }
@@ -11580,7 +11911,7 @@ public class DBXTeamResendSecondaryEmailResultNotPending: DBXTeamResendSecondary
 
     @objc
     public init(_ arg: String) {
-        self.notPending = arg
+        notPending = arg
         let swift = Team.ResendSecondaryEmailResult.notPending(arg)
         super.init(swift: swift)
     }
@@ -11594,7 +11925,7 @@ public class DBXTeamResendSecondaryEmailResultRateLimited: DBXTeamResendSecondar
 
     @objc
     public init(_ arg: String) {
-        self.rateLimited = arg
+        rateLimited = arg
         let swift = Team.ResendSecondaryEmailResult.rateLimited(arg)
         super.init(swift: swift)
     }
@@ -11615,11 +11946,11 @@ public class DBXTeamResendSecondaryEmailResultOther: DBXTeamResendSecondaryEmail
 public class DBXTeamResendVerificationEmailArg: NSObject {
     /// List of users and secondary emails to resend verification emails to.
     @objc
-    public var emailsToResend: [DBXTeamUserSecondaryEmailsArg] { swift.emailsToResend.map { DBXTeamUserSecondaryEmailsArg(swift: $0) } }
+    public var emailsToResend: Array<DBXTeamUserSecondaryEmailsArg> { swift.emailsToResend.map { DBXTeamUserSecondaryEmailsArg(swift: $0) } }
 
     @objc
-    public init(emailsToResend: [DBXTeamUserSecondaryEmailsArg]) {
-        self.swift = Team.ResendVerificationEmailArg(emailsToResend: emailsToResend.map(\.swift))
+    public init(emailsToResend: Array<DBXTeamUserSecondaryEmailsArg>) {
+        self.swift = Team.ResendVerificationEmailArg(emailsToResend: emailsToResend.map { $0.swift })
     }
 
     let swift: Team.ResendVerificationEmailArg
@@ -11627,6 +11958,7 @@ public class DBXTeamResendVerificationEmailArg: NSObject {
     public init(swift: Team.ResendVerificationEmailArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -11637,11 +11969,11 @@ public class DBXTeamResendVerificationEmailArg: NSObject {
 public class DBXTeamResendVerificationEmailResult: NSObject {
     /// (no description)
     @objc
-    public var results: [DBXTeamUserResendResult] { swift.results.map { DBXTeamUserResendResult(swift: $0) } }
+    public var results: Array<DBXTeamUserResendResult> { swift.results.map { DBXTeamUserResendResult(swift: $0) } }
 
     @objc
-    public init(results: [DBXTeamUserResendResult]) {
-        self.swift = Team.ResendVerificationEmailResult(results: results.map(\.swift))
+    public init(results: Array<DBXTeamUserResendResult>) {
+        self.swift = Team.ResendVerificationEmailResult(results: results.map { $0.swift })
     }
 
     let swift: Team.ResendVerificationEmailResult
@@ -11649,6 +11981,7 @@ public class DBXTeamResendVerificationEmailResult: NSObject {
     public init(swift: Team.ResendVerificationEmailResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -11675,6 +12008,7 @@ public class DBXTeamRevokeDesktopClientArg: DBXTeamDeviceSessionArg {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -11708,17 +12042,17 @@ public class DBXTeamRevokeDeviceSessionArg: NSObject {
 
     @objc
     public var asWebSession: DBXTeamRevokeDeviceSessionArgWebSession? {
-        self as? DBXTeamRevokeDeviceSessionArgWebSession
+        return self as? DBXTeamRevokeDeviceSessionArgWebSession
     }
 
     @objc
     public var asDesktopClient: DBXTeamRevokeDeviceSessionArgDesktopClient? {
-        self as? DBXTeamRevokeDeviceSessionArgDesktopClient
+        return self as? DBXTeamRevokeDeviceSessionArgDesktopClient
     }
 
     @objc
     public var asMobileClient: DBXTeamRevokeDeviceSessionArgMobileClient? {
-        self as? DBXTeamRevokeDeviceSessionArgMobileClient
+        return self as? DBXTeamRevokeDeviceSessionArgMobileClient
     }
 }
 
@@ -11730,7 +12064,7 @@ public class DBXTeamRevokeDeviceSessionArgWebSession: DBXTeamRevokeDeviceSession
 
     @objc
     public init(_ arg: DBXTeamDeviceSessionArg) {
-        self.webSession = arg
+        webSession = arg
         let swift = Team.RevokeDeviceSessionArg.webSession(arg.swift)
         super.init(swift: swift)
     }
@@ -11744,7 +12078,7 @@ public class DBXTeamRevokeDeviceSessionArgDesktopClient: DBXTeamRevokeDeviceSess
 
     @objc
     public init(_ arg: DBXTeamRevokeDesktopClientArg) {
-        self.desktopClient = arg
+        desktopClient = arg
         let swift = Team.RevokeDeviceSessionArg.desktopClient(arg.subSwift)
         super.init(swift: swift)
     }
@@ -11758,7 +12092,7 @@ public class DBXTeamRevokeDeviceSessionArgMobileClient: DBXTeamRevokeDeviceSessi
 
     @objc
     public init(_ arg: DBXTeamDeviceSessionArg) {
-        self.mobileClient = arg
+        mobileClient = arg
         let swift = Team.RevokeDeviceSessionArg.mobileClient(arg.swift)
         super.init(swift: swift)
     }
@@ -11769,11 +12103,11 @@ public class DBXTeamRevokeDeviceSessionArgMobileClient: DBXTeamRevokeDeviceSessi
 public class DBXTeamRevokeDeviceSessionBatchArg: NSObject {
     /// (no description)
     @objc
-    public var revokeDevices: [DBXTeamRevokeDeviceSessionArg] { swift.revokeDevices.map { DBXTeamRevokeDeviceSessionArg(swift: $0) } }
+    public var revokeDevices: Array<DBXTeamRevokeDeviceSessionArg> { swift.revokeDevices.map { DBXTeamRevokeDeviceSessionArg(swift: $0) } }
 
     @objc
-    public init(revokeDevices: [DBXTeamRevokeDeviceSessionArg]) {
-        self.swift = Team.RevokeDeviceSessionBatchArg(revokeDevices: revokeDevices.map(\.swift))
+    public init(revokeDevices: Array<DBXTeamRevokeDeviceSessionArg>) {
+        self.swift = Team.RevokeDeviceSessionBatchArg(revokeDevices: revokeDevices.map { $0.swift })
     }
 
     let swift: Team.RevokeDeviceSessionBatchArg
@@ -11781,6 +12115,7 @@ public class DBXTeamRevokeDeviceSessionBatchArg: NSObject {
     public init(swift: Team.RevokeDeviceSessionBatchArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -11807,7 +12142,7 @@ public class DBXTeamRevokeDeviceSessionBatchError: NSObject {
 
     @objc
     public var asOther: DBXTeamRevokeDeviceSessionBatchErrorOther? {
-        self as? DBXTeamRevokeDeviceSessionBatchErrorOther
+        return self as? DBXTeamRevokeDeviceSessionBatchErrorOther
     }
 }
 
@@ -11826,11 +12161,11 @@ public class DBXTeamRevokeDeviceSessionBatchErrorOther: DBXTeamRevokeDeviceSessi
 public class DBXTeamRevokeDeviceSessionBatchResult: NSObject {
     /// (no description)
     @objc
-    public var revokeDevicesStatus: [DBXTeamRevokeDeviceSessionStatus] { swift.revokeDevicesStatus.map { DBXTeamRevokeDeviceSessionStatus(swift: $0) } }
+    public var revokeDevicesStatus: Array<DBXTeamRevokeDeviceSessionStatus> { swift.revokeDevicesStatus.map { DBXTeamRevokeDeviceSessionStatus(swift: $0) } }
 
     @objc
-    public init(revokeDevicesStatus: [DBXTeamRevokeDeviceSessionStatus]) {
-        self.swift = Team.RevokeDeviceSessionBatchResult(revokeDevicesStatus: revokeDevicesStatus.map(\.swift))
+    public init(revokeDevicesStatus: Array<DBXTeamRevokeDeviceSessionStatus>) {
+        self.swift = Team.RevokeDeviceSessionBatchResult(revokeDevicesStatus: revokeDevicesStatus.map { $0.swift })
     }
 
     let swift: Team.RevokeDeviceSessionBatchResult
@@ -11838,6 +12173,7 @@ public class DBXTeamRevokeDeviceSessionBatchResult: NSObject {
     public init(swift: Team.RevokeDeviceSessionBatchResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -11868,17 +12204,17 @@ public class DBXTeamRevokeDeviceSessionError: NSObject {
 
     @objc
     public var asDeviceSessionNotFound: DBXTeamRevokeDeviceSessionErrorDeviceSessionNotFound? {
-        self as? DBXTeamRevokeDeviceSessionErrorDeviceSessionNotFound
+        return self as? DBXTeamRevokeDeviceSessionErrorDeviceSessionNotFound
     }
 
     @objc
     public var asMemberNotFound: DBXTeamRevokeDeviceSessionErrorMemberNotFound? {
-        self as? DBXTeamRevokeDeviceSessionErrorMemberNotFound
+        return self as? DBXTeamRevokeDeviceSessionErrorMemberNotFound
     }
 
     @objc
     public var asOther: DBXTeamRevokeDeviceSessionErrorOther? {
-        self as? DBXTeamRevokeDeviceSessionErrorOther
+        return self as? DBXTeamRevokeDeviceSessionErrorOther
     }
 }
 
@@ -11920,9 +12256,7 @@ public class DBXTeamRevokeDeviceSessionStatus: NSObject {
     public var success: NSNumber { swift.success as NSNumber }
     /// The error cause in case of a failure.
     @objc
-    public var errorType: DBXTeamRevokeDeviceSessionError? { guard let swift = swift.errorType else { return nil }
-        return DBXTeamRevokeDeviceSessionError(swift: swift)
-    }
+    public var errorType: DBXTeamRevokeDeviceSessionError? { guard let swift = swift.errorType else { return nil }; return DBXTeamRevokeDeviceSessionError(swift: swift) }
 
     @objc
     public init(success: NSNumber, errorType: DBXTeamRevokeDeviceSessionError?) {
@@ -11934,6 +12268,7 @@ public class DBXTeamRevokeDeviceSessionStatus: NSObject {
     public init(swift: Team.RevokeDeviceSessionStatus) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -11948,8 +12283,8 @@ public class DBXTeamRevokeLinkedApiAppArg: NSObject {
     /// The unique id of the member owning the device.
     @objc
     public var teamMemberId: String { swift.teamMemberId }
-    /// This flag is not longer supported, the application dedicated folder (in case the application uses  one) will
-    /// be kept.
+    /// Field is deprecated. This flag is not longer supported, the application dedicated folder (in case the
+    /// application uses one) will be kept.
     @objc
     public var keepAppFolder: NSNumber { swift.keepAppFolder as NSNumber }
 
@@ -11964,6 +12299,7 @@ public class DBXTeamRevokeLinkedApiAppArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -11973,11 +12309,11 @@ public class DBXTeamRevokeLinkedApiAppArg: NSObject {
 public class DBXTeamRevokeLinkedApiAppBatchArg: NSObject {
     /// (no description)
     @objc
-    public var revokeLinkedApp: [DBXTeamRevokeLinkedApiAppArg] { swift.revokeLinkedApp.map { DBXTeamRevokeLinkedApiAppArg(swift: $0) } }
+    public var revokeLinkedApp: Array<DBXTeamRevokeLinkedApiAppArg> { swift.revokeLinkedApp.map { DBXTeamRevokeLinkedApiAppArg(swift: $0) } }
 
     @objc
-    public init(revokeLinkedApp: [DBXTeamRevokeLinkedApiAppArg]) {
-        self.swift = Team.RevokeLinkedApiAppBatchArg(revokeLinkedApp: revokeLinkedApp.map(\.swift))
+    public init(revokeLinkedApp: Array<DBXTeamRevokeLinkedApiAppArg>) {
+        self.swift = Team.RevokeLinkedApiAppBatchArg(revokeLinkedApp: revokeLinkedApp.map { $0.swift })
     }
 
     let swift: Team.RevokeLinkedApiAppBatchArg
@@ -11985,6 +12321,7 @@ public class DBXTeamRevokeLinkedApiAppBatchArg: NSObject {
     public init(swift: Team.RevokeLinkedApiAppBatchArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -12011,7 +12348,7 @@ public class DBXTeamRevokeLinkedAppBatchError: NSObject {
 
     @objc
     public var asOther: DBXTeamRevokeLinkedAppBatchErrorOther? {
-        self as? DBXTeamRevokeLinkedAppBatchErrorOther
+        return self as? DBXTeamRevokeLinkedAppBatchErrorOther
     }
 }
 
@@ -12030,11 +12367,11 @@ public class DBXTeamRevokeLinkedAppBatchErrorOther: DBXTeamRevokeLinkedAppBatchE
 public class DBXTeamRevokeLinkedAppBatchResult: NSObject {
     /// (no description)
     @objc
-    public var revokeLinkedAppStatus: [DBXTeamRevokeLinkedAppStatus] { swift.revokeLinkedAppStatus.map { DBXTeamRevokeLinkedAppStatus(swift: $0) } }
+    public var revokeLinkedAppStatus: Array<DBXTeamRevokeLinkedAppStatus> { swift.revokeLinkedAppStatus.map { DBXTeamRevokeLinkedAppStatus(swift: $0) } }
 
     @objc
-    public init(revokeLinkedAppStatus: [DBXTeamRevokeLinkedAppStatus]) {
-        self.swift = Team.RevokeLinkedAppBatchResult(revokeLinkedAppStatus: revokeLinkedAppStatus.map(\.swift))
+    public init(revokeLinkedAppStatus: Array<DBXTeamRevokeLinkedAppStatus>) {
+        self.swift = Team.RevokeLinkedAppBatchResult(revokeLinkedAppStatus: revokeLinkedAppStatus.map { $0.swift })
     }
 
     let swift: Team.RevokeLinkedAppBatchResult
@@ -12042,6 +12379,7 @@ public class DBXTeamRevokeLinkedAppBatchResult: NSObject {
     public init(swift: Team.RevokeLinkedAppBatchResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -12074,22 +12412,22 @@ public class DBXTeamRevokeLinkedAppError: NSObject {
 
     @objc
     public var asAppNotFound: DBXTeamRevokeLinkedAppErrorAppNotFound? {
-        self as? DBXTeamRevokeLinkedAppErrorAppNotFound
+        return self as? DBXTeamRevokeLinkedAppErrorAppNotFound
     }
 
     @objc
     public var asMemberNotFound: DBXTeamRevokeLinkedAppErrorMemberNotFound? {
-        self as? DBXTeamRevokeLinkedAppErrorMemberNotFound
+        return self as? DBXTeamRevokeLinkedAppErrorMemberNotFound
     }
 
     @objc
     public var asAppFolderRemovalNotSupported: DBXTeamRevokeLinkedAppErrorAppFolderRemovalNotSupported? {
-        self as? DBXTeamRevokeLinkedAppErrorAppFolderRemovalNotSupported
+        return self as? DBXTeamRevokeLinkedAppErrorAppFolderRemovalNotSupported
     }
 
     @objc
     public var asOther: DBXTeamRevokeLinkedAppErrorOther? {
-        self as? DBXTeamRevokeLinkedAppErrorOther
+        return self as? DBXTeamRevokeLinkedAppErrorOther
     }
 }
 
@@ -12141,9 +12479,7 @@ public class DBXTeamRevokeLinkedAppStatus: NSObject {
     public var success: NSNumber { swift.success as NSNumber }
     /// The error cause in case of a failure.
     @objc
-    public var errorType: DBXTeamRevokeLinkedAppError? { guard let swift = swift.errorType else { return nil }
-        return DBXTeamRevokeLinkedAppError(swift: swift)
-    }
+    public var errorType: DBXTeamRevokeLinkedAppError? { guard let swift = swift.errorType else { return nil }; return DBXTeamRevokeLinkedAppError(swift: swift) }
 
     @objc
     public init(success: NSNumber, errorType: DBXTeamRevokeLinkedAppError?) {
@@ -12156,6 +12492,7 @@ public class DBXTeamRevokeLinkedAppStatus: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -12165,11 +12502,11 @@ public class DBXTeamRevokeLinkedAppStatus: NSObject {
 public class DBXTeamSetCustomQuotaArg: NSObject {
     /// List of users and their custom quotas.
     @objc
-    public var usersAndQuotas: [DBXTeamUserCustomQuotaArg] { swift.usersAndQuotas.map { DBXTeamUserCustomQuotaArg(swift: $0) } }
+    public var usersAndQuotas: Array<DBXTeamUserCustomQuotaArg> { swift.usersAndQuotas.map { DBXTeamUserCustomQuotaArg(swift: $0) } }
 
     @objc
-    public init(usersAndQuotas: [DBXTeamUserCustomQuotaArg]) {
-        self.swift = Team.SetCustomQuotaArg(usersAndQuotas: usersAndQuotas.map(\.swift))
+    public init(usersAndQuotas: Array<DBXTeamUserCustomQuotaArg>) {
+        self.swift = Team.SetCustomQuotaArg(usersAndQuotas: usersAndQuotas.map { $0.swift })
     }
 
     let swift: Team.SetCustomQuotaArg
@@ -12177,6 +12514,7 @@ public class DBXTeamSetCustomQuotaArg: NSObject {
     public init(swift: Team.SetCustomQuotaArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -12207,17 +12545,17 @@ public class DBXTeamSetCustomQuotaError: NSObject {
 
     @objc
     public var asTooManyUsers: DBXTeamSetCustomQuotaErrorTooManyUsers? {
-        self as? DBXTeamSetCustomQuotaErrorTooManyUsers
+        return self as? DBXTeamSetCustomQuotaErrorTooManyUsers
     }
 
     @objc
     public var asOther: DBXTeamSetCustomQuotaErrorOther? {
-        self as? DBXTeamSetCustomQuotaErrorOther
+        return self as? DBXTeamSetCustomQuotaErrorOther
     }
 
     @objc
     public var asSomeUsersAreExcluded: DBXTeamSetCustomQuotaErrorSomeUsersAreExcluded? {
-        self as? DBXTeamSetCustomQuotaErrorSomeUsersAreExcluded
+        return self as? DBXTeamSetCustomQuotaErrorSomeUsersAreExcluded
     }
 }
 
@@ -12257,13 +12595,13 @@ public class DBXTeamSetCustomQuotaErrorSomeUsersAreExcluded: DBXTeamSetCustomQuo
 public class DBXTeamSharingAllowlistAddArgs: NSObject {
     /// List of domains represented by valid string representation (RFC-1034/5).
     @objc
-    public var domains: [String]? { swift.domains }
+    public var domains: Array<String>? { swift.domains }
     /// List of emails represented by valid string representation (RFC-5322/822).
     @objc
-    public var emails: [String]? { swift.emails }
+    public var emails: Array<String>? { swift.emails }
 
     @objc
-    public init(domains: [String]?, emails: [String]?) {
+    public init(domains: Array<String>?, emails: Array<String>?) {
         self.swift = Team.SharingAllowlistAddArgs(domains: domains, emails: emails)
     }
 
@@ -12272,6 +12610,7 @@ public class DBXTeamSharingAllowlistAddArgs: NSObject {
     public init(swift: Team.SharingAllowlistAddArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -12312,37 +12651,37 @@ public class DBXTeamSharingAllowlistAddError: NSObject {
 
     @objc
     public var asMalformedEntry: DBXTeamSharingAllowlistAddErrorMalformedEntry? {
-        self as? DBXTeamSharingAllowlistAddErrorMalformedEntry
+        return self as? DBXTeamSharingAllowlistAddErrorMalformedEntry
     }
 
     @objc
     public var asNoEntriesProvided: DBXTeamSharingAllowlistAddErrorNoEntriesProvided? {
-        self as? DBXTeamSharingAllowlistAddErrorNoEntriesProvided
+        return self as? DBXTeamSharingAllowlistAddErrorNoEntriesProvided
     }
 
     @objc
     public var asTooManyEntriesProvided: DBXTeamSharingAllowlistAddErrorTooManyEntriesProvided? {
-        self as? DBXTeamSharingAllowlistAddErrorTooManyEntriesProvided
+        return self as? DBXTeamSharingAllowlistAddErrorTooManyEntriesProvided
     }
 
     @objc
     public var asTeamLimitReached: DBXTeamSharingAllowlistAddErrorTeamLimitReached? {
-        self as? DBXTeamSharingAllowlistAddErrorTeamLimitReached
+        return self as? DBXTeamSharingAllowlistAddErrorTeamLimitReached
     }
 
     @objc
     public var asUnknownError: DBXTeamSharingAllowlistAddErrorUnknownError? {
-        self as? DBXTeamSharingAllowlistAddErrorUnknownError
+        return self as? DBXTeamSharingAllowlistAddErrorUnknownError
     }
 
     @objc
     public var asEntriesAlreadyExist: DBXTeamSharingAllowlistAddErrorEntriesAlreadyExist? {
-        self as? DBXTeamSharingAllowlistAddErrorEntriesAlreadyExist
+        return self as? DBXTeamSharingAllowlistAddErrorEntriesAlreadyExist
     }
 
     @objc
     public var asOther: DBXTeamSharingAllowlistAddErrorOther? {
-        self as? DBXTeamSharingAllowlistAddErrorOther
+        return self as? DBXTeamSharingAllowlistAddErrorOther
     }
 }
 
@@ -12354,7 +12693,7 @@ public class DBXTeamSharingAllowlistAddErrorMalformedEntry: DBXTeamSharingAllowl
 
     @objc
     public init(_ arg: String) {
-        self.malformedEntry = arg
+        malformedEntry = arg
         let swift = Team.SharingAllowlistAddError.malformedEntry(arg)
         super.init(swift: swift)
     }
@@ -12408,7 +12747,7 @@ public class DBXTeamSharingAllowlistAddErrorEntriesAlreadyExist: DBXTeamSharingA
 
     @objc
     public init(_ arg: String) {
-        self.entriesAlreadyExist = arg
+        entriesAlreadyExist = arg
         let swift = Team.SharingAllowlistAddError.entriesAlreadyExist(arg)
         super.init(swift: swift)
     }
@@ -12427,11 +12766,13 @@ public class DBXTeamSharingAllowlistAddErrorOther: DBXTeamSharingAllowlistAddErr
 /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
 @objc
 public class DBXTeamSharingAllowlistAddResponse: NSObject {
+
     let swift: Team.SharingAllowlistAddResponse
 
     public init(swift: Team.SharingAllowlistAddResponse) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -12455,6 +12796,7 @@ public class DBXTeamSharingAllowlistListArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -12476,6 +12818,7 @@ public class DBXTeamSharingAllowlistListContinueArg: NSObject {
     public init(swift: Team.SharingAllowlistListContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -12504,12 +12847,12 @@ public class DBXTeamSharingAllowlistListContinueError: NSObject {
 
     @objc
     public var asInvalidCursor: DBXTeamSharingAllowlistListContinueErrorInvalidCursor? {
-        self as? DBXTeamSharingAllowlistListContinueErrorInvalidCursor
+        return self as? DBXTeamSharingAllowlistListContinueErrorInvalidCursor
     }
 
     @objc
     public var asOther: DBXTeamSharingAllowlistListContinueErrorOther? {
-        self as? DBXTeamSharingAllowlistListContinueErrorOther
+        return self as? DBXTeamSharingAllowlistListContinueErrorOther
     }
 }
 
@@ -12536,11 +12879,13 @@ public class DBXTeamSharingAllowlistListContinueErrorOther: DBXTeamSharingAllowl
 /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
 @objc
 public class DBXTeamSharingAllowlistListError: NSObject {
+
     let swift: Team.SharingAllowlistListError
 
     public init(swift: Team.SharingAllowlistListError) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -12551,10 +12896,10 @@ public class DBXTeamSharingAllowlistListError: NSObject {
 public class DBXTeamSharingAllowlistListResponse: NSObject {
     /// List of domains represented by valid string representation (RFC-1034/5).
     @objc
-    public var domains: [String] { swift.domains }
+    public var domains: Array<String> { swift.domains }
     /// List of emails represented by valid string representation (RFC-5322/822).
     @objc
-    public var emails: [String] { swift.emails }
+    public var emails: Array<String> { swift.emails }
     /// If this is nonempty, there are more entries that can be fetched with sharingAllowlistListContinue.
     @objc
     public var cursor: String { swift.cursor }
@@ -12563,7 +12908,7 @@ public class DBXTeamSharingAllowlistListResponse: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(domains: [String], emails: [String], cursor: String, hasMore: NSNumber) {
+    public init(domains: Array<String>, emails: Array<String>, cursor: String, hasMore: NSNumber) {
         self.swift = Team.SharingAllowlistListResponse(domains: domains, emails: emails, cursor: cursor, hasMore: hasMore.boolValue)
     }
 
@@ -12572,6 +12917,7 @@ public class DBXTeamSharingAllowlistListResponse: NSObject {
     public init(swift: Team.SharingAllowlistListResponse) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -12582,13 +12928,13 @@ public class DBXTeamSharingAllowlistListResponse: NSObject {
 public class DBXTeamSharingAllowlistRemoveArgs: NSObject {
     /// List of domains represented by valid string representation (RFC-1034/5).
     @objc
-    public var domains: [String]? { swift.domains }
+    public var domains: Array<String>? { swift.domains }
     /// List of emails represented by valid string representation (RFC-5322/822).
     @objc
-    public var emails: [String]? { swift.emails }
+    public var emails: Array<String>? { swift.emails }
 
     @objc
-    public init(domains: [String]?, emails: [String]?) {
+    public init(domains: Array<String>?, emails: Array<String>?) {
         self.swift = Team.SharingAllowlistRemoveArgs(domains: domains, emails: emails)
     }
 
@@ -12597,6 +12943,7 @@ public class DBXTeamSharingAllowlistRemoveArgs: NSObject {
     public init(swift: Team.SharingAllowlistRemoveArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -12635,32 +12982,32 @@ public class DBXTeamSharingAllowlistRemoveError: NSObject {
 
     @objc
     public var asMalformedEntry: DBXTeamSharingAllowlistRemoveErrorMalformedEntry? {
-        self as? DBXTeamSharingAllowlistRemoveErrorMalformedEntry
+        return self as? DBXTeamSharingAllowlistRemoveErrorMalformedEntry
     }
 
     @objc
     public var asEntriesDoNotExist: DBXTeamSharingAllowlistRemoveErrorEntriesDoNotExist? {
-        self as? DBXTeamSharingAllowlistRemoveErrorEntriesDoNotExist
+        return self as? DBXTeamSharingAllowlistRemoveErrorEntriesDoNotExist
     }
 
     @objc
     public var asNoEntriesProvided: DBXTeamSharingAllowlistRemoveErrorNoEntriesProvided? {
-        self as? DBXTeamSharingAllowlistRemoveErrorNoEntriesProvided
+        return self as? DBXTeamSharingAllowlistRemoveErrorNoEntriesProvided
     }
 
     @objc
     public var asTooManyEntriesProvided: DBXTeamSharingAllowlistRemoveErrorTooManyEntriesProvided? {
-        self as? DBXTeamSharingAllowlistRemoveErrorTooManyEntriesProvided
+        return self as? DBXTeamSharingAllowlistRemoveErrorTooManyEntriesProvided
     }
 
     @objc
     public var asUnknownError: DBXTeamSharingAllowlistRemoveErrorUnknownError? {
-        self as? DBXTeamSharingAllowlistRemoveErrorUnknownError
+        return self as? DBXTeamSharingAllowlistRemoveErrorUnknownError
     }
 
     @objc
     public var asOther: DBXTeamSharingAllowlistRemoveErrorOther? {
-        self as? DBXTeamSharingAllowlistRemoveErrorOther
+        return self as? DBXTeamSharingAllowlistRemoveErrorOther
     }
 }
 
@@ -12672,7 +13019,7 @@ public class DBXTeamSharingAllowlistRemoveErrorMalformedEntry: DBXTeamSharingAll
 
     @objc
     public init(_ arg: String) {
-        self.malformedEntry = arg
+        malformedEntry = arg
         let swift = Team.SharingAllowlistRemoveError.malformedEntry(arg)
         super.init(swift: swift)
     }
@@ -12686,7 +13033,7 @@ public class DBXTeamSharingAllowlistRemoveErrorEntriesDoNotExist: DBXTeamSharing
 
     @objc
     public init(_ arg: String) {
-        self.entriesDoNotExist = arg
+        entriesDoNotExist = arg
         let swift = Team.SharingAllowlistRemoveError.entriesDoNotExist(arg)
         super.init(swift: swift)
     }
@@ -12735,11 +13082,13 @@ public class DBXTeamSharingAllowlistRemoveErrorOther: DBXTeamSharingAllowlistRem
 /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
 @objc
 public class DBXTeamSharingAllowlistRemoveResponse: NSObject {
+
     let swift: Team.SharingAllowlistRemoveResponse
 
     public init(swift: Team.SharingAllowlistRemoveResponse) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -12765,6 +13114,7 @@ public class DBXTeamStorageBucket: NSObject {
     public init(swift: Team.StorageBucket) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -12795,17 +13145,17 @@ public class DBXTeamTeamFolderAccessError: NSObject {
 
     @objc
     public var asInvalidTeamFolderId: DBXTeamTeamFolderAccessErrorInvalidTeamFolderId? {
-        self as? DBXTeamTeamFolderAccessErrorInvalidTeamFolderId
+        return self as? DBXTeamTeamFolderAccessErrorInvalidTeamFolderId
     }
 
     @objc
     public var asNoAccess: DBXTeamTeamFolderAccessErrorNoAccess? {
-        self as? DBXTeamTeamFolderAccessErrorNoAccess
+        return self as? DBXTeamTeamFolderAccessErrorNoAccess
     }
 
     @objc
     public var asOther: DBXTeamTeamFolderAccessErrorOther? {
-        self as? DBXTeamTeamFolderAccessErrorOther
+        return self as? DBXTeamTeamFolderAccessErrorOther
     }
 }
 
@@ -12869,22 +13219,22 @@ public class DBXTeamTeamFolderActivateError: NSObject {
 
     @objc
     public var asAccessError: DBXTeamTeamFolderActivateErrorAccessError? {
-        self as? DBXTeamTeamFolderActivateErrorAccessError
+        return self as? DBXTeamTeamFolderActivateErrorAccessError
     }
 
     @objc
     public var asStatusError: DBXTeamTeamFolderActivateErrorStatusError? {
-        self as? DBXTeamTeamFolderActivateErrorStatusError
+        return self as? DBXTeamTeamFolderActivateErrorStatusError
     }
 
     @objc
     public var asTeamSharedDropboxError: DBXTeamTeamFolderActivateErrorTeamSharedDropboxError? {
-        self as? DBXTeamTeamFolderActivateErrorTeamSharedDropboxError
+        return self as? DBXTeamTeamFolderActivateErrorTeamSharedDropboxError
     }
 
     @objc
     public var asOther: DBXTeamTeamFolderActivateErrorOther? {
-        self as? DBXTeamTeamFolderActivateErrorOther
+        return self as? DBXTeamTeamFolderActivateErrorOther
     }
 }
 
@@ -12896,7 +13246,7 @@ public class DBXTeamTeamFolderActivateErrorAccessError: DBXTeamTeamFolderActivat
 
     @objc
     public init(_ arg: DBXTeamTeamFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Team.TeamFolderActivateError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -12910,7 +13260,7 @@ public class DBXTeamTeamFolderActivateErrorStatusError: DBXTeamTeamFolderActivat
 
     @objc
     public init(_ arg: DBXTeamTeamFolderInvalidStatusError) {
-        self.statusError = arg
+        statusError = arg
         let swift = Team.TeamFolderActivateError.statusError(arg.swift)
         super.init(swift: swift)
     }
@@ -12924,7 +13274,7 @@ public class DBXTeamTeamFolderActivateErrorTeamSharedDropboxError: DBXTeamTeamFo
 
     @objc
     public init(_ arg: DBXTeamTeamFolderTeamSharedDropboxError) {
-        self.teamSharedDropboxError = arg
+        teamSharedDropboxError = arg
         let swift = Team.TeamFolderActivateError.teamSharedDropboxError(arg.swift)
         super.init(swift: swift)
     }
@@ -12958,6 +13308,7 @@ public class DBXTeamTeamFolderIdArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -12982,6 +13333,7 @@ public class DBXTeamTeamFolderArchiveArg: DBXTeamTeamFolderIdArg {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -13017,22 +13369,22 @@ public class DBXTeamTeamFolderArchiveError: NSObject {
 
     @objc
     public var asAccessError: DBXTeamTeamFolderArchiveErrorAccessError? {
-        self as? DBXTeamTeamFolderArchiveErrorAccessError
+        return self as? DBXTeamTeamFolderArchiveErrorAccessError
     }
 
     @objc
     public var asStatusError: DBXTeamTeamFolderArchiveErrorStatusError? {
-        self as? DBXTeamTeamFolderArchiveErrorStatusError
+        return self as? DBXTeamTeamFolderArchiveErrorStatusError
     }
 
     @objc
     public var asTeamSharedDropboxError: DBXTeamTeamFolderArchiveErrorTeamSharedDropboxError? {
-        self as? DBXTeamTeamFolderArchiveErrorTeamSharedDropboxError
+        return self as? DBXTeamTeamFolderArchiveErrorTeamSharedDropboxError
     }
 
     @objc
     public var asOther: DBXTeamTeamFolderArchiveErrorOther? {
-        self as? DBXTeamTeamFolderArchiveErrorOther
+        return self as? DBXTeamTeamFolderArchiveErrorOther
     }
 }
 
@@ -13044,7 +13396,7 @@ public class DBXTeamTeamFolderArchiveErrorAccessError: DBXTeamTeamFolderArchiveE
 
     @objc
     public init(_ arg: DBXTeamTeamFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Team.TeamFolderArchiveError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -13058,7 +13410,7 @@ public class DBXTeamTeamFolderArchiveErrorStatusError: DBXTeamTeamFolderArchiveE
 
     @objc
     public init(_ arg: DBXTeamTeamFolderInvalidStatusError) {
-        self.statusError = arg
+        statusError = arg
         let swift = Team.TeamFolderArchiveError.statusError(arg.swift)
         super.init(swift: swift)
     }
@@ -13072,7 +13424,7 @@ public class DBXTeamTeamFolderArchiveErrorTeamSharedDropboxError: DBXTeamTeamFol
 
     @objc
     public init(_ arg: DBXTeamTeamFolderTeamSharedDropboxError) {
-        self.teamSharedDropboxError = arg
+        teamSharedDropboxError = arg
         let swift = Team.TeamFolderArchiveError.teamSharedDropboxError(arg.swift)
         super.init(swift: swift)
     }
@@ -13115,17 +13467,17 @@ public class DBXTeamTeamFolderArchiveJobStatus: NSObject {
 
     @objc
     public var asInProgress: DBXTeamTeamFolderArchiveJobStatusInProgress? {
-        self as? DBXTeamTeamFolderArchiveJobStatusInProgress
+        return self as? DBXTeamTeamFolderArchiveJobStatusInProgress
     }
 
     @objc
     public var asComplete: DBXTeamTeamFolderArchiveJobStatusComplete? {
-        self as? DBXTeamTeamFolderArchiveJobStatusComplete
+        return self as? DBXTeamTeamFolderArchiveJobStatusComplete
     }
 
     @objc
     public var asFailed: DBXTeamTeamFolderArchiveJobStatusFailed? {
-        self as? DBXTeamTeamFolderArchiveJobStatusFailed
+        return self as? DBXTeamTeamFolderArchiveJobStatusFailed
     }
 }
 
@@ -13147,7 +13499,7 @@ public class DBXTeamTeamFolderArchiveJobStatusComplete: DBXTeamTeamFolderArchive
 
     @objc
     public init(_ arg: DBXTeamTeamFolderMetadata) {
-        self.complete = arg
+        complete = arg
         let swift = Team.TeamFolderArchiveJobStatus.complete(arg.swift)
         super.init(swift: swift)
     }
@@ -13161,7 +13513,7 @@ public class DBXTeamTeamFolderArchiveJobStatusFailed: DBXTeamTeamFolderArchiveJo
 
     @objc
     public init(_ arg: DBXTeamTeamFolderArchiveError) {
-        self.failed = arg
+        failed = arg
         let swift = Team.TeamFolderArchiveJobStatus.failed(arg.swift)
         super.init(swift: swift)
     }
@@ -13192,17 +13544,17 @@ public class DBXTeamTeamFolderArchiveLaunch: NSObject {
 
     @objc
     public var asAsyncJobId: DBXTeamTeamFolderArchiveLaunchAsyncJobId? {
-        self as? DBXTeamTeamFolderArchiveLaunchAsyncJobId
+        return self as? DBXTeamTeamFolderArchiveLaunchAsyncJobId
     }
 
     @objc
     public var asComplete: DBXTeamTeamFolderArchiveLaunchComplete? {
-        self as? DBXTeamTeamFolderArchiveLaunchComplete
+        return self as? DBXTeamTeamFolderArchiveLaunchComplete
     }
 }
 
 /// This response indicates that the processing is asynchronous. The string is an id that can be used to obtain
-/// the status of the asynchronous job.
+        /// the status of the asynchronous job.
 @objc
 public class DBXTeamTeamFolderArchiveLaunchAsyncJobId: DBXTeamTeamFolderArchiveLaunch {
     @objc
@@ -13210,7 +13562,7 @@ public class DBXTeamTeamFolderArchiveLaunchAsyncJobId: DBXTeamTeamFolderArchiveL
 
     @objc
     public init(_ arg: String) {
-        self.asyncJobId = arg
+        asyncJobId = arg
         let swift = Team.TeamFolderArchiveLaunch.asyncJobId(arg)
         super.init(swift: swift)
     }
@@ -13224,7 +13576,7 @@ public class DBXTeamTeamFolderArchiveLaunchComplete: DBXTeamTeamFolderArchiveLau
 
     @objc
     public init(_ arg: DBXTeamTeamFolderMetadata) {
-        self.complete = arg
+        complete = arg
         let swift = Team.TeamFolderArchiveLaunch.complete(arg.swift)
         super.init(swift: swift)
     }
@@ -13238,9 +13590,7 @@ public class DBXTeamTeamFolderCreateArg: NSObject {
     public var name: String { swift.name }
     /// The sync setting to apply to this team folder. Only permitted if the team has team selective sync enabled.
     @objc
-    public var syncSetting: DBXFilesSyncSettingArg? { guard let swift = swift.syncSetting else { return nil }
-        return DBXFilesSyncSettingArg(swift: swift)
-    }
+    public var syncSetting: DBXFilesSyncSettingArg? { guard let swift = swift.syncSetting else { return nil }; return DBXFilesSyncSettingArg(swift: swift) }
 
     @objc
     public init(name: String, syncSetting: DBXFilesSyncSettingArg?) {
@@ -13252,6 +13602,7 @@ public class DBXTeamTeamFolderCreateArg: NSObject {
     public init(swift: Team.TeamFolderCreateArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -13277,6 +13628,8 @@ public class DBXTeamTeamFolderCreateError: NSObject {
         case .syncSettingsError(let swiftArg):
             let arg = DBXFilesSyncSettingsError(swift: swiftArg)
             return DBXTeamTeamFolderCreateErrorSyncSettingsError(arg)
+        case .folderCountLimitExceeded:
+            return DBXTeamTeamFolderCreateErrorFolderCountLimitExceeded()
         case .other:
             return DBXTeamTeamFolderCreateErrorOther()
         }
@@ -13287,27 +13640,32 @@ public class DBXTeamTeamFolderCreateError: NSObject {
 
     @objc
     public var asInvalidFolderName: DBXTeamTeamFolderCreateErrorInvalidFolderName? {
-        self as? DBXTeamTeamFolderCreateErrorInvalidFolderName
+        return self as? DBXTeamTeamFolderCreateErrorInvalidFolderName
     }
 
     @objc
     public var asFolderNameAlreadyUsed: DBXTeamTeamFolderCreateErrorFolderNameAlreadyUsed? {
-        self as? DBXTeamTeamFolderCreateErrorFolderNameAlreadyUsed
+        return self as? DBXTeamTeamFolderCreateErrorFolderNameAlreadyUsed
     }
 
     @objc
     public var asFolderNameReserved: DBXTeamTeamFolderCreateErrorFolderNameReserved? {
-        self as? DBXTeamTeamFolderCreateErrorFolderNameReserved
+        return self as? DBXTeamTeamFolderCreateErrorFolderNameReserved
     }
 
     @objc
     public var asSyncSettingsError: DBXTeamTeamFolderCreateErrorSyncSettingsError? {
-        self as? DBXTeamTeamFolderCreateErrorSyncSettingsError
+        return self as? DBXTeamTeamFolderCreateErrorSyncSettingsError
+    }
+
+    @objc
+    public var asFolderCountLimitExceeded: DBXTeamTeamFolderCreateErrorFolderCountLimitExceeded? {
+        return self as? DBXTeamTeamFolderCreateErrorFolderCountLimitExceeded
     }
 
     @objc
     public var asOther: DBXTeamTeamFolderCreateErrorOther? {
-        self as? DBXTeamTeamFolderCreateErrorOther
+        return self as? DBXTeamTeamFolderCreateErrorOther
     }
 }
 
@@ -13349,8 +13707,18 @@ public class DBXTeamTeamFolderCreateErrorSyncSettingsError: DBXTeamTeamFolderCre
 
     @objc
     public init(_ arg: DBXFilesSyncSettingsError) {
-        self.syncSettingsError = arg
+        syncSettingsError = arg
         let swift = Team.TeamFolderCreateError.syncSettingsError(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// The team has reached the maximum number of team folders allowed by its plan.
+@objc
+public class DBXTeamTeamFolderCreateErrorFolderCountLimitExceeded: DBXTeamTeamFolderCreateError {
+    @objc
+    public init() {
+        let swift = Team.TeamFolderCreateError.folderCountLimitExceeded
         super.init(swift: swift)
     }
 }
@@ -13390,12 +13758,12 @@ public class DBXTeamTeamFolderGetInfoItem: NSObject {
 
     @objc
     public var asIdNotFound: DBXTeamTeamFolderGetInfoItemIdNotFound? {
-        self as? DBXTeamTeamFolderGetInfoItemIdNotFound
+        return self as? DBXTeamTeamFolderGetInfoItemIdNotFound
     }
 
     @objc
     public var asTeamFolderMetadata: DBXTeamTeamFolderGetInfoItemTeamFolderMetadata? {
-        self as? DBXTeamTeamFolderGetInfoItemTeamFolderMetadata
+        return self as? DBXTeamTeamFolderGetInfoItemTeamFolderMetadata
     }
 }
 
@@ -13407,7 +13775,7 @@ public class DBXTeamTeamFolderGetInfoItemIdNotFound: DBXTeamTeamFolderGetInfoIte
 
     @objc
     public init(_ arg: String) {
-        self.idNotFound = arg
+        idNotFound = arg
         let swift = Team.TeamFolderGetInfoItem.idNotFound(arg)
         super.init(swift: swift)
     }
@@ -13421,7 +13789,7 @@ public class DBXTeamTeamFolderGetInfoItemTeamFolderMetadata: DBXTeamTeamFolderGe
 
     @objc
     public init(_ arg: DBXTeamTeamFolderMetadata) {
-        self.teamFolderMetadata = arg
+        teamFolderMetadata = arg
         let swift = Team.TeamFolderGetInfoItem.teamFolderMetadata(arg.swift)
         super.init(swift: swift)
     }
@@ -13432,10 +13800,10 @@ public class DBXTeamTeamFolderGetInfoItemTeamFolderMetadata: DBXTeamTeamFolderGe
 public class DBXTeamTeamFolderIdListArg: NSObject {
     /// The list of team folder IDs.
     @objc
-    public var teamFolderIds: [String] { swift.teamFolderIds }
+    public var teamFolderIds: Array<String> { swift.teamFolderIds }
 
     @objc
-    public init(teamFolderIds: [String]) {
+    public init(teamFolderIds: Array<String>) {
         self.swift = Team.TeamFolderIdListArg(teamFolderIds: teamFolderIds)
     }
 
@@ -13444,6 +13812,7 @@ public class DBXTeamTeamFolderIdListArg: NSObject {
     public init(swift: Team.TeamFolderIdListArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -13476,22 +13845,22 @@ public class DBXTeamTeamFolderInvalidStatusError: NSObject {
 
     @objc
     public var asActive: DBXTeamTeamFolderInvalidStatusErrorActive? {
-        self as? DBXTeamTeamFolderInvalidStatusErrorActive
+        return self as? DBXTeamTeamFolderInvalidStatusErrorActive
     }
 
     @objc
     public var asArchived: DBXTeamTeamFolderInvalidStatusErrorArchived? {
-        self as? DBXTeamTeamFolderInvalidStatusErrorArchived
+        return self as? DBXTeamTeamFolderInvalidStatusErrorArchived
     }
 
     @objc
     public var asArchiveInProgress: DBXTeamTeamFolderInvalidStatusErrorArchiveInProgress? {
-        self as? DBXTeamTeamFolderInvalidStatusErrorArchiveInProgress
+        return self as? DBXTeamTeamFolderInvalidStatusErrorArchiveInProgress
     }
 
     @objc
     public var asOther: DBXTeamTeamFolderInvalidStatusErrorOther? {
-        self as? DBXTeamTeamFolderInvalidStatusErrorOther
+        return self as? DBXTeamTeamFolderInvalidStatusErrorOther
     }
 }
 
@@ -13553,6 +13922,7 @@ public class DBXTeamTeamFolderListArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -13574,6 +13944,7 @@ public class DBXTeamTeamFolderListContinueArg: NSObject {
     public init(swift: Team.TeamFolderListContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -13602,12 +13973,12 @@ public class DBXTeamTeamFolderListContinueError: NSObject {
 
     @objc
     public var asInvalidCursor: DBXTeamTeamFolderListContinueErrorInvalidCursor? {
-        self as? DBXTeamTeamFolderListContinueErrorInvalidCursor
+        return self as? DBXTeamTeamFolderListContinueErrorInvalidCursor
     }
 
     @objc
     public var asOther: DBXTeamTeamFolderListContinueErrorOther? {
-        self as? DBXTeamTeamFolderListContinueErrorOther
+        return self as? DBXTeamTeamFolderListContinueErrorOther
     }
 }
 
@@ -13649,6 +14020,7 @@ public class DBXTeamTeamFolderListError: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -13658,7 +14030,7 @@ public class DBXTeamTeamFolderListError: NSObject {
 public class DBXTeamTeamFolderListResult: NSObject {
     /// List of all team folders in the authenticated team.
     @objc
-    public var teamFolders: [DBXTeamTeamFolderMetadata] { swift.teamFolders.map { DBXTeamTeamFolderMetadata(swift: $0) } }
+    public var teamFolders: Array<DBXTeamTeamFolderMetadata> { swift.teamFolders.map { DBXTeamTeamFolderMetadata(swift: $0) } }
     /// Pass the cursor into teamFolderListContinue to obtain additional team folders.
     @objc
     public var cursor: String { swift.cursor }
@@ -13668,8 +14040,8 @@ public class DBXTeamTeamFolderListResult: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(teamFolders: [DBXTeamTeamFolderMetadata], cursor: String, hasMore: NSNumber) {
-        self.swift = Team.TeamFolderListResult(teamFolders: teamFolders.map(\.swift), cursor: cursor, hasMore: hasMore.boolValue)
+    public init(teamFolders: Array<DBXTeamTeamFolderMetadata>, cursor: String, hasMore: NSNumber) {
+        self.swift = Team.TeamFolderListResult(teamFolders: teamFolders.map { $0.swift }, cursor: cursor, hasMore: hasMore.boolValue)
     }
 
     let swift: Team.TeamFolderListResult
@@ -13677,6 +14049,7 @@ public class DBXTeamTeamFolderListResult: NSObject {
     public init(swift: Team.TeamFolderListResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -13702,25 +14075,14 @@ public class DBXTeamTeamFolderMetadata: NSObject {
     public var syncSetting: DBXFilesSyncSetting { DBXFilesSyncSetting(swift: swift.syncSetting) }
     /// Sync settings applied to contents of this team folder.
     @objc
-    public var contentSyncSettings: [DBXFilesContentSyncSetting] { swift.contentSyncSettings.map { DBXFilesContentSyncSetting(swift: $0) } }
+    public var contentSyncSettings: Array<DBXFilesContentSyncSetting> { swift.contentSyncSettings.map { DBXFilesContentSyncSetting(swift: $0) } }
+    /// The quota limit in bytes for this team folder namespace tree.
+    @objc
+    public var quotaLimit: NSNumber { swift.quotaLimit as NSNumber }
 
     @objc
-    public init(
-        teamFolderId: String,
-        name: String,
-        status: DBXTeamTeamFolderStatus,
-        isTeamSharedDropbox: NSNumber,
-        syncSetting: DBXFilesSyncSetting,
-        contentSyncSettings: [DBXFilesContentSyncSetting]
-    ) {
-        self.swift = Team.TeamFolderMetadata(
-            teamFolderId: teamFolderId,
-            name: name,
-            status: status.swift,
-            isTeamSharedDropbox: isTeamSharedDropbox.boolValue,
-            syncSetting: syncSetting.swift,
-            contentSyncSettings: contentSyncSettings.map(\.swift)
-        )
+    public init(teamFolderId: String, name: String, status: DBXTeamTeamFolderStatus, isTeamSharedDropbox: NSNumber, syncSetting: DBXFilesSyncSetting, contentSyncSettings: Array<DBXFilesContentSyncSetting>, quotaLimit: NSNumber) {
+        self.swift = Team.TeamFolderMetadata(teamFolderId: teamFolderId, name: name, status: status.swift, isTeamSharedDropbox: isTeamSharedDropbox.boolValue, syncSetting: syncSetting.swift, contentSyncSettings: contentSyncSettings.map { $0.swift }, quotaLimit: quotaLimit.int64Value)
     }
 
     let swift: Team.TeamFolderMetadata
@@ -13728,6 +14090,7 @@ public class DBXTeamTeamFolderMetadata: NSObject {
     public init(swift: Team.TeamFolderMetadata) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -13763,22 +14126,22 @@ public class DBXTeamTeamFolderPermanentlyDeleteError: NSObject {
 
     @objc
     public var asAccessError: DBXTeamTeamFolderPermanentlyDeleteErrorAccessError? {
-        self as? DBXTeamTeamFolderPermanentlyDeleteErrorAccessError
+        return self as? DBXTeamTeamFolderPermanentlyDeleteErrorAccessError
     }
 
     @objc
     public var asStatusError: DBXTeamTeamFolderPermanentlyDeleteErrorStatusError? {
-        self as? DBXTeamTeamFolderPermanentlyDeleteErrorStatusError
+        return self as? DBXTeamTeamFolderPermanentlyDeleteErrorStatusError
     }
 
     @objc
     public var asTeamSharedDropboxError: DBXTeamTeamFolderPermanentlyDeleteErrorTeamSharedDropboxError? {
-        self as? DBXTeamTeamFolderPermanentlyDeleteErrorTeamSharedDropboxError
+        return self as? DBXTeamTeamFolderPermanentlyDeleteErrorTeamSharedDropboxError
     }
 
     @objc
     public var asOther: DBXTeamTeamFolderPermanentlyDeleteErrorOther? {
-        self as? DBXTeamTeamFolderPermanentlyDeleteErrorOther
+        return self as? DBXTeamTeamFolderPermanentlyDeleteErrorOther
     }
 }
 
@@ -13790,7 +14153,7 @@ public class DBXTeamTeamFolderPermanentlyDeleteErrorAccessError: DBXTeamTeamFold
 
     @objc
     public init(_ arg: DBXTeamTeamFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Team.TeamFolderPermanentlyDeleteError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -13804,7 +14167,7 @@ public class DBXTeamTeamFolderPermanentlyDeleteErrorStatusError: DBXTeamTeamFold
 
     @objc
     public init(_ arg: DBXTeamTeamFolderInvalidStatusError) {
-        self.statusError = arg
+        statusError = arg
         let swift = Team.TeamFolderPermanentlyDeleteError.statusError(arg.swift)
         super.init(swift: swift)
     }
@@ -13818,7 +14181,7 @@ public class DBXTeamTeamFolderPermanentlyDeleteErrorTeamSharedDropboxError: DBXT
 
     @objc
     public init(_ arg: DBXTeamTeamFolderTeamSharedDropboxError) {
-        self.teamSharedDropboxError = arg
+        teamSharedDropboxError = arg
         let swift = Team.TeamFolderPermanentlyDeleteError.teamSharedDropboxError(arg.swift)
         super.init(swift: swift)
     }
@@ -13854,6 +14217,7 @@ public class DBXTeamTeamFolderRenameArg: DBXTeamTeamFolderIdArg {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -13895,37 +14259,37 @@ public class DBXTeamTeamFolderRenameError: NSObject {
 
     @objc
     public var asAccessError: DBXTeamTeamFolderRenameErrorAccessError? {
-        self as? DBXTeamTeamFolderRenameErrorAccessError
+        return self as? DBXTeamTeamFolderRenameErrorAccessError
     }
 
     @objc
     public var asStatusError: DBXTeamTeamFolderRenameErrorStatusError? {
-        self as? DBXTeamTeamFolderRenameErrorStatusError
+        return self as? DBXTeamTeamFolderRenameErrorStatusError
     }
 
     @objc
     public var asTeamSharedDropboxError: DBXTeamTeamFolderRenameErrorTeamSharedDropboxError? {
-        self as? DBXTeamTeamFolderRenameErrorTeamSharedDropboxError
+        return self as? DBXTeamTeamFolderRenameErrorTeamSharedDropboxError
     }
 
     @objc
     public var asOther: DBXTeamTeamFolderRenameErrorOther? {
-        self as? DBXTeamTeamFolderRenameErrorOther
+        return self as? DBXTeamTeamFolderRenameErrorOther
     }
 
     @objc
     public var asInvalidFolderName: DBXTeamTeamFolderRenameErrorInvalidFolderName? {
-        self as? DBXTeamTeamFolderRenameErrorInvalidFolderName
+        return self as? DBXTeamTeamFolderRenameErrorInvalidFolderName
     }
 
     @objc
     public var asFolderNameAlreadyUsed: DBXTeamTeamFolderRenameErrorFolderNameAlreadyUsed? {
-        self as? DBXTeamTeamFolderRenameErrorFolderNameAlreadyUsed
+        return self as? DBXTeamTeamFolderRenameErrorFolderNameAlreadyUsed
     }
 
     @objc
     public var asFolderNameReserved: DBXTeamTeamFolderRenameErrorFolderNameReserved? {
-        self as? DBXTeamTeamFolderRenameErrorFolderNameReserved
+        return self as? DBXTeamTeamFolderRenameErrorFolderNameReserved
     }
 }
 
@@ -13937,7 +14301,7 @@ public class DBXTeamTeamFolderRenameErrorAccessError: DBXTeamTeamFolderRenameErr
 
     @objc
     public init(_ arg: DBXTeamTeamFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Team.TeamFolderRenameError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -13951,7 +14315,7 @@ public class DBXTeamTeamFolderRenameErrorStatusError: DBXTeamTeamFolderRenameErr
 
     @objc
     public init(_ arg: DBXTeamTeamFolderInvalidStatusError) {
-        self.statusError = arg
+        statusError = arg
         let swift = Team.TeamFolderRenameError.statusError(arg.swift)
         super.init(swift: swift)
     }
@@ -13965,7 +14329,7 @@ public class DBXTeamTeamFolderRenameErrorTeamSharedDropboxError: DBXTeamTeamFold
 
     @objc
     public init(_ arg: DBXTeamTeamFolderTeamSharedDropboxError) {
-        self.teamSharedDropboxError = arg
+        teamSharedDropboxError = arg
         let swift = Team.TeamFolderRenameError.teamSharedDropboxError(arg.swift)
         super.init(swift: swift)
     }
@@ -14011,6 +14375,107 @@ public class DBXTeamTeamFolderRenameErrorFolderNameReserved: DBXTeamTeamFolderRe
     }
 }
 
+/// Objective-C compatible TeamFolderRestoreError union
+@objc
+public class DBXTeamTeamFolderRestoreError: NSObject {
+    let swift: Team.TeamFolderRestoreError
+
+    public init(swift: Team.TeamFolderRestoreError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.TeamFolderRestoreError) -> DBXTeamTeamFolderRestoreError {
+        switch swift {
+        case .accessError(let swiftArg):
+            let arg = DBXTeamTeamFolderAccessError(swift: swiftArg)
+            return DBXTeamTeamFolderRestoreErrorAccessError(arg)
+        case .statusError(let swiftArg):
+            let arg = DBXTeamTeamFolderInvalidStatusError(swift: swiftArg)
+            return DBXTeamTeamFolderRestoreErrorStatusError(arg)
+        case .teamSharedDropboxError(let swiftArg):
+            let arg = DBXTeamTeamFolderTeamSharedDropboxError(swift: swiftArg)
+            return DBXTeamTeamFolderRestoreErrorTeamSharedDropboxError(arg)
+        case .other:
+            return DBXTeamTeamFolderRestoreErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asAccessError: DBXTeamTeamFolderRestoreErrorAccessError? {
+        return self as? DBXTeamTeamFolderRestoreErrorAccessError
+    }
+
+    @objc
+    public var asStatusError: DBXTeamTeamFolderRestoreErrorStatusError? {
+        return self as? DBXTeamTeamFolderRestoreErrorStatusError
+    }
+
+    @objc
+    public var asTeamSharedDropboxError: DBXTeamTeamFolderRestoreErrorTeamSharedDropboxError? {
+        return self as? DBXTeamTeamFolderRestoreErrorTeamSharedDropboxError
+    }
+
+    @objc
+    public var asOther: DBXTeamTeamFolderRestoreErrorOther? {
+        return self as? DBXTeamTeamFolderRestoreErrorOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamTeamFolderRestoreErrorAccessError: DBXTeamTeamFolderRestoreError {
+    @objc
+    public var accessError: DBXTeamTeamFolderAccessError
+
+    @objc
+    public init(_ arg: DBXTeamTeamFolderAccessError) {
+        accessError = arg
+        let swift = Team.TeamFolderRestoreError.accessError(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamTeamFolderRestoreErrorStatusError: DBXTeamTeamFolderRestoreError {
+    @objc
+    public var statusError: DBXTeamTeamFolderInvalidStatusError
+
+    @objc
+    public init(_ arg: DBXTeamTeamFolderInvalidStatusError) {
+        statusError = arg
+        let swift = Team.TeamFolderRestoreError.statusError(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamTeamFolderRestoreErrorTeamSharedDropboxError: DBXTeamTeamFolderRestoreError {
+    @objc
+    public var teamSharedDropboxError: DBXTeamTeamFolderTeamSharedDropboxError
+
+    @objc
+    public init(_ arg: DBXTeamTeamFolderTeamSharedDropboxError) {
+        teamSharedDropboxError = arg
+        let swift = Team.TeamFolderRestoreError.teamSharedDropboxError(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamTeamFolderRestoreErrorOther: DBXTeamTeamFolderRestoreError {
+    @objc
+    public init() {
+        let swift = Team.TeamFolderRestoreError.other
+        super.init(swift: swift)
+    }
+}
+
 /// Objective-C compatible TeamFolderStatus union
 @objc
 public class DBXTeamTeamFolderStatus: NSObject {
@@ -14028,6 +14493,8 @@ public class DBXTeamTeamFolderStatus: NSObject {
             return DBXTeamTeamFolderStatusArchived()
         case .archiveInProgress:
             return DBXTeamTeamFolderStatusArchiveInProgress()
+        case .inactive:
+            return DBXTeamTeamFolderStatusInactive()
         case .other:
             return DBXTeamTeamFolderStatusOther()
         }
@@ -14038,22 +14505,27 @@ public class DBXTeamTeamFolderStatus: NSObject {
 
     @objc
     public var asActive: DBXTeamTeamFolderStatusActive? {
-        self as? DBXTeamTeamFolderStatusActive
+        return self as? DBXTeamTeamFolderStatusActive
     }
 
     @objc
     public var asArchived: DBXTeamTeamFolderStatusArchived? {
-        self as? DBXTeamTeamFolderStatusArchived
+        return self as? DBXTeamTeamFolderStatusArchived
     }
 
     @objc
     public var asArchiveInProgress: DBXTeamTeamFolderStatusArchiveInProgress? {
-        self as? DBXTeamTeamFolderStatusArchiveInProgress
+        return self as? DBXTeamTeamFolderStatusArchiveInProgress
+    }
+
+    @objc
+    public var asInactive: DBXTeamTeamFolderStatusInactive? {
+        return self as? DBXTeamTeamFolderStatusInactive
     }
 
     @objc
     public var asOther: DBXTeamTeamFolderStatusOther? {
-        self as? DBXTeamTeamFolderStatusOther
+        return self as? DBXTeamTeamFolderStatusOther
     }
 }
 
@@ -14067,7 +14539,7 @@ public class DBXTeamTeamFolderStatusActive: DBXTeamTeamFolderStatus {
     }
 }
 
-/// The team folder is not accessible outside of the team folder manager.
+/// The team folder is archived and is not accessible outside of the team folder manager.
 @objc
 public class DBXTeamTeamFolderStatusArchived: DBXTeamTeamFolderStatus {
     @objc
@@ -14077,12 +14549,23 @@ public class DBXTeamTeamFolderStatusArchived: DBXTeamTeamFolderStatus {
     }
 }
 
-/// The team folder is not accessible outside of the team folder manager.
+/// The team folder is in the process of being archived and is not accessible outside of the team folder
+        /// manager.
 @objc
 public class DBXTeamTeamFolderStatusArchiveInProgress: DBXTeamTeamFolderStatus {
     @objc
     public init() {
         let swift = Team.TeamFolderStatus.archiveInProgress
+        super.init(swift: swift)
+    }
+}
+
+/// The team folder is unmounted and can be restored.
+@objc
+public class DBXTeamTeamFolderStatusInactive: DBXTeamTeamFolderStatus {
+    @objc
+    public init() {
+        let swift = Team.TeamFolderStatus.inactive
         super.init(swift: swift)
     }
 }
@@ -14120,12 +14603,12 @@ public class DBXTeamTeamFolderTeamSharedDropboxError: NSObject {
 
     @objc
     public var asDisallowed: DBXTeamTeamFolderTeamSharedDropboxErrorDisallowed? {
-        self as? DBXTeamTeamFolderTeamSharedDropboxErrorDisallowed
+        return self as? DBXTeamTeamFolderTeamSharedDropboxErrorDisallowed
     }
 
     @objc
     public var asOther: DBXTeamTeamFolderTeamSharedDropboxErrorOther? {
-        self as? DBXTeamTeamFolderTeamSharedDropboxErrorOther
+        return self as? DBXTeamTeamFolderTeamSharedDropboxErrorOther
     }
 }
 
@@ -14155,21 +14638,14 @@ public class DBXTeamTeamFolderUpdateSyncSettingsArg: DBXTeamTeamFolderIdArg {
     /// Sync setting to apply to the team folder itself. Only meaningful if the team folder is not a shared team
     /// root.
     @objc
-    public var syncSetting: DBXFilesSyncSettingArg? { guard let swift = subSwift.syncSetting else { return nil }
-        return DBXFilesSyncSettingArg(swift: swift)
-    }
-
+    public var syncSetting: DBXFilesSyncSettingArg? { guard let swift = subSwift.syncSetting else { return nil }; return DBXFilesSyncSettingArg(swift: swift) }
     /// Sync settings to apply to contents of this team folder.
     @objc
-    public var contentSyncSettings: [DBXFilesContentSyncSettingArg]? { subSwift.contentSyncSettings?.map { DBXFilesContentSyncSettingArg(swift: $0) } }
+    public var contentSyncSettings: Array<DBXFilesContentSyncSettingArg>? { subSwift.contentSyncSettings?.map { DBXFilesContentSyncSettingArg(swift: $0) } }
 
     @objc
-    public init(teamFolderId: String, syncSetting: DBXFilesSyncSettingArg?, contentSyncSettings: [DBXFilesContentSyncSettingArg]?) {
-        let swift = Team.TeamFolderUpdateSyncSettingsArg(
-            teamFolderId: teamFolderId,
-            syncSetting: syncSetting?.swift,
-            contentSyncSettings: contentSyncSettings?.map(\.swift)
-        )
+    public init(teamFolderId: String, syncSetting: DBXFilesSyncSettingArg?, contentSyncSettings: Array<DBXFilesContentSyncSettingArg>?) {
+        let swift = Team.TeamFolderUpdateSyncSettingsArg(teamFolderId: teamFolderId, syncSetting: syncSetting?.swift, contentSyncSettings: contentSyncSettings?.map { $0.swift })
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -14180,6 +14656,7 @@ public class DBXTeamTeamFolderUpdateSyncSettingsArg: DBXTeamTeamFolderIdArg {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -14218,27 +14695,27 @@ public class DBXTeamTeamFolderUpdateSyncSettingsError: NSObject {
 
     @objc
     public var asAccessError: DBXTeamTeamFolderUpdateSyncSettingsErrorAccessError? {
-        self as? DBXTeamTeamFolderUpdateSyncSettingsErrorAccessError
+        return self as? DBXTeamTeamFolderUpdateSyncSettingsErrorAccessError
     }
 
     @objc
     public var asStatusError: DBXTeamTeamFolderUpdateSyncSettingsErrorStatusError? {
-        self as? DBXTeamTeamFolderUpdateSyncSettingsErrorStatusError
+        return self as? DBXTeamTeamFolderUpdateSyncSettingsErrorStatusError
     }
 
     @objc
     public var asTeamSharedDropboxError: DBXTeamTeamFolderUpdateSyncSettingsErrorTeamSharedDropboxError? {
-        self as? DBXTeamTeamFolderUpdateSyncSettingsErrorTeamSharedDropboxError
+        return self as? DBXTeamTeamFolderUpdateSyncSettingsErrorTeamSharedDropboxError
     }
 
     @objc
     public var asOther: DBXTeamTeamFolderUpdateSyncSettingsErrorOther? {
-        self as? DBXTeamTeamFolderUpdateSyncSettingsErrorOther
+        return self as? DBXTeamTeamFolderUpdateSyncSettingsErrorOther
     }
 
     @objc
     public var asSyncSettingsError: DBXTeamTeamFolderUpdateSyncSettingsErrorSyncSettingsError? {
-        self as? DBXTeamTeamFolderUpdateSyncSettingsErrorSyncSettingsError
+        return self as? DBXTeamTeamFolderUpdateSyncSettingsErrorSyncSettingsError
     }
 }
 
@@ -14250,7 +14727,7 @@ public class DBXTeamTeamFolderUpdateSyncSettingsErrorAccessError: DBXTeamTeamFol
 
     @objc
     public init(_ arg: DBXTeamTeamFolderAccessError) {
-        self.accessError = arg
+        accessError = arg
         let swift = Team.TeamFolderUpdateSyncSettingsError.accessError(arg.swift)
         super.init(swift: swift)
     }
@@ -14264,7 +14741,7 @@ public class DBXTeamTeamFolderUpdateSyncSettingsErrorStatusError: DBXTeamTeamFol
 
     @objc
     public init(_ arg: DBXTeamTeamFolderInvalidStatusError) {
-        self.statusError = arg
+        statusError = arg
         let swift = Team.TeamFolderUpdateSyncSettingsError.statusError(arg.swift)
         super.init(swift: swift)
     }
@@ -14278,7 +14755,7 @@ public class DBXTeamTeamFolderUpdateSyncSettingsErrorTeamSharedDropboxError: DBX
 
     @objc
     public init(_ arg: DBXTeamTeamFolderTeamSharedDropboxError) {
-        self.teamSharedDropboxError = arg
+        teamSharedDropboxError = arg
         let swift = Team.TeamFolderUpdateSyncSettingsError.teamSharedDropboxError(arg.swift)
         super.init(swift: swift)
     }
@@ -14302,7 +14779,7 @@ public class DBXTeamTeamFolderUpdateSyncSettingsErrorSyncSettingsError: DBXTeamT
 
     @objc
     public init(_ arg: DBXFilesSyncSettingsError) {
-        self.syncSettingsError = arg
+        syncSettingsError = arg
         let swift = Team.TeamFolderUpdateSyncSettingsError.syncSettingsError(arg.swift)
         super.init(swift: swift)
     }
@@ -14331,22 +14808,8 @@ public class DBXTeamTeamGetInfoResult: NSObject {
     public var policies: DBXTeamPoliciesTeamMemberPolicies { DBXTeamPoliciesTeamMemberPolicies(swift: swift.policies) }
 
     @objc
-    public init(
-        name: String,
-        teamId: String,
-        numLicensedUsers: NSNumber,
-        numProvisionedUsers: NSNumber,
-        policies: DBXTeamPoliciesTeamMemberPolicies,
-        numUsedLicenses: NSNumber
-    ) {
-        self.swift = Team.TeamGetInfoResult(
-            name: name,
-            teamId: teamId,
-            numLicensedUsers: numLicensedUsers.uint32Value,
-            numProvisionedUsers: numProvisionedUsers.uint32Value,
-            policies: policies.swift,
-            numUsedLicenses: numUsedLicenses.uint32Value
-        )
+    public init(name: String, teamId: String, numLicensedUsers: NSNumber, numProvisionedUsers: NSNumber, policies: DBXTeamPoliciesTeamMemberPolicies, numUsedLicenses: NSNumber) {
+        self.swift = Team.TeamGetInfoResult(name: name, teamId: teamId, numLicensedUsers: numLicensedUsers.uint32Value, numProvisionedUsers: numProvisionedUsers.uint32Value, policies: policies.swift, numUsedLicenses: numUsedLicenses.uint32Value)
     }
 
     let swift: Team.TeamGetInfoResult
@@ -14354,6 +14817,7 @@ public class DBXTeamTeamGetInfoResult: NSObject {
     public init(swift: Team.TeamGetInfoResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -14380,6 +14844,7 @@ public class DBXTeamTeamMemberInfo: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -14392,11 +14857,11 @@ public class DBXTeamTeamMemberInfoV2: NSObject {
     public var profile: DBXTeamTeamMemberProfile { DBXTeamTeamMemberProfile(swift: swift.profile) }
     /// The user's roles in the team.
     @objc
-    public var roles: [DBXTeamTeamMemberRole]? { swift.roles?.map { DBXTeamTeamMemberRole(swift: $0) } }
+    public var roles: Array<DBXTeamTeamMemberRole>? { swift.roles?.map { DBXTeamTeamMemberRole(swift: $0) } }
 
     @objc
-    public init(profile: DBXTeamTeamMemberProfile, roles: [DBXTeamTeamMemberRole]?) {
-        self.swift = Team.TeamMemberInfoV2(profile: profile.subSwift, roles: roles?.map(\.swift))
+    public init(profile: DBXTeamTeamMemberProfile, roles: Array<DBXTeamTeamMemberRole>?) {
+        self.swift = Team.TeamMemberInfoV2(profile: profile.subSwift, roles: roles?.map { $0.swift })
     }
 
     let swift: Team.TeamMemberInfoV2
@@ -14404,6 +14869,7 @@ public class DBXTeamTeamMemberInfoV2: NSObject {
     public init(swift: Team.TeamMemberInfoV2) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -14427,6 +14893,7 @@ public class DBXTeamTeamMemberInfoV2Result: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -14436,50 +14903,17 @@ public class DBXTeamTeamMemberInfoV2Result: NSObject {
 public class DBXTeamTeamMemberProfile: DBXTeamMemberProfile {
     /// List of group IDs of groups that the user belongs to.
     @objc
-    public var groups: [String] { subSwift.groups }
-    /// The namespace id of the user's root folder.
+    public var groups: Array<String> { subSwift.groups }
+    /// The namespace id of the user's member folder.
     @objc
     public var memberFolderId: String { subSwift.memberFolderId }
+    /// The namespace id of the user's root folder.
+    @objc
+    public var rootFolderId: String { subSwift.rootFolderId }
 
     @objc
-    public init(
-        teamMemberId: String,
-        email: String,
-        emailVerified: NSNumber,
-        status: DBXTeamTeamMemberStatus,
-        name: DBXUsersName,
-        membershipType: DBXTeamTeamMembershipType,
-        groups: [String],
-        memberFolderId: String,
-        externalId: String?,
-        accountId: String?,
-        secondaryEmails: [DBXSecondaryEmailsSecondaryEmail]?,
-        invitedOn: Date?,
-        joinedOn: Date?,
-        suspendedOn: Date?,
-        persistentId: String?,
-        isDirectoryRestricted: NSNumber?,
-        profilePhotoUrl: String?
-    ) {
-        let swift = Team.TeamMemberProfile(
-            teamMemberId: teamMemberId,
-            email: email,
-            emailVerified: emailVerified.boolValue,
-            status: status.swift,
-            name: name.swift,
-            membershipType: membershipType.swift,
-            groups: groups,
-            memberFolderId: memberFolderId,
-            externalId: externalId,
-            accountId: accountId,
-            secondaryEmails: secondaryEmails?.map(\.swift),
-            invitedOn: invitedOn,
-            joinedOn: joinedOn,
-            suspendedOn: suspendedOn,
-            persistentId: persistentId,
-            isDirectoryRestricted: isDirectoryRestricted?.boolValue,
-            profilePhotoUrl: profilePhotoUrl
-        )
+    public init(teamMemberId: String, email: String, emailVerified: NSNumber, status: DBXTeamTeamMemberStatus, name: DBXUsersName, membershipType: DBXTeamTeamMembershipType, groups: Array<String>, memberFolderId: String, rootFolderId: String, externalId: String?, accountId: String?, secondaryEmails: Array<DBXSecondaryEmailsSecondaryEmail>?, invitedOn: Date?, joinedOn: Date?, suspendedOn: Date?, persistentId: String?, isDirectoryRestricted: NSNumber?, profilePhotoUrl: String?) {
+        let swift = Team.TeamMemberProfile(teamMemberId: teamMemberId, email: email, emailVerified: emailVerified.boolValue, status: status.swift, name: name.swift, membershipType: membershipType.swift, groups: groups, memberFolderId: memberFolderId, rootFolderId: rootFolderId, externalId: externalId, accountId: accountId, secondaryEmails: secondaryEmails?.map { $0.swift }, invitedOn: invitedOn, joinedOn: joinedOn, suspendedOn: suspendedOn, persistentId: persistentId, isDirectoryRestricted: isDirectoryRestricted?.boolValue, profilePhotoUrl: profilePhotoUrl)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -14490,6 +14924,7 @@ public class DBXTeamTeamMemberProfile: DBXTeamMemberProfile {
         self.subSwift = swift
         super.init(swift: swift)
     }
+
 
     @objc
     public override var description: String { subSwift.description }
@@ -14519,6 +14954,7 @@ public class DBXTeamTeamMemberRole: NSObject {
     public init(swift: Team.TeamMemberRole) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -14552,22 +14988,22 @@ public class DBXTeamTeamMemberStatus: NSObject {
 
     @objc
     public var asActive: DBXTeamTeamMemberStatusActive? {
-        self as? DBXTeamTeamMemberStatusActive
+        return self as? DBXTeamTeamMemberStatusActive
     }
 
     @objc
     public var asInvited: DBXTeamTeamMemberStatusInvited? {
-        self as? DBXTeamTeamMemberStatusInvited
+        return self as? DBXTeamTeamMemberStatusInvited
     }
 
     @objc
     public var asSuspended: DBXTeamTeamMemberStatusSuspended? {
-        self as? DBXTeamTeamMemberStatusSuspended
+        return self as? DBXTeamTeamMemberStatusSuspended
     }
 
     @objc
     public var asRemoved: DBXTeamTeamMemberStatusRemoved? {
-        self as? DBXTeamTeamMemberStatusRemoved
+        return self as? DBXTeamTeamMemberStatusRemoved
     }
 }
 
@@ -14592,7 +15028,7 @@ public class DBXTeamTeamMemberStatusInvited: DBXTeamTeamMemberStatus {
 }
 
 /// User is no longer a member of the team, but the account can be un-suspended, re-establishing the user as a
-/// team member.
+        /// team member.
 @objc
 public class DBXTeamTeamMemberStatusSuspended: DBXTeamTeamMemberStatus {
     @objc
@@ -14603,7 +15039,7 @@ public class DBXTeamTeamMemberStatusSuspended: DBXTeamTeamMemberStatus {
 }
 
 /// User is no longer a member of the team. Removed users are only listed when include_removed is true in
-/// members/list.
+        /// members/list.
 @objc
 public class DBXTeamTeamMemberStatusRemoved: DBXTeamTeamMemberStatus {
     @objc
@@ -14611,7 +15047,7 @@ public class DBXTeamTeamMemberStatusRemoved: DBXTeamTeamMemberStatus {
 
     @objc
     public init(_ arg: DBXTeamRemovedStatus) {
-        self.removed = arg
+        removed = arg
         let swift = Team.TeamMemberStatus.removed(arg.swift)
         super.init(swift: swift)
     }
@@ -14640,12 +15076,12 @@ public class DBXTeamTeamMembershipType: NSObject {
 
     @objc
     public var asFull: DBXTeamTeamMembershipTypeFull? {
-        self as? DBXTeamTeamMembershipTypeFull
+        return self as? DBXTeamTeamMembershipTypeFull
     }
 
     @objc
     public var asLimited: DBXTeamTeamMembershipTypeLimited? {
-        self as? DBXTeamTeamMembershipTypeLimited
+        return self as? DBXTeamTeamMembershipTypeLimited
     }
 }
 
@@ -14659,7 +15095,8 @@ public class DBXTeamTeamMembershipTypeFull: DBXTeamTeamMembershipType {
     }
 }
 
-/// User does not have access to the shared quota and team admins have restricted administrative control.
+/// Field is deprecated. User does not have access to the shared quota and team admins have restricted
+        /// administrative control.
 @objc
 public class DBXTeamTeamMembershipTypeLimited: DBXTeamTeamMembershipType {
     @objc
@@ -14672,7 +15109,7 @@ public class DBXTeamTeamMembershipTypeLimited: DBXTeamTeamMembershipType {
 /// Objective-C compatible TeamNamespacesListArg struct
 @objc
 public class DBXTeamTeamNamespacesListArg: NSObject {
-    /// Specifying a value here has no effect.
+    /// Field is deprecated. Specifying a value here has no effect.
     @objc
     public var limit: NSNumber { swift.limit as NSNumber }
 
@@ -14686,6 +15123,7 @@ public class DBXTeamTeamNamespacesListArg: NSObject {
     public init(swift: Team.TeamNamespacesListArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -14708,6 +15146,7 @@ public class DBXTeamTeamNamespacesListContinueArg: NSObject {
     public init(swift: Team.TeamNamespacesListContinueArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -14736,12 +15175,12 @@ public class DBXTeamTeamNamespacesListError: NSObject {
 
     @objc
     public var asInvalidArg: DBXTeamTeamNamespacesListErrorInvalidArg? {
-        self as? DBXTeamTeamNamespacesListErrorInvalidArg
+        return self as? DBXTeamTeamNamespacesListErrorInvalidArg
     }
 
     @objc
     public var asOther: DBXTeamTeamNamespacesListErrorOther? {
-        self as? DBXTeamTeamNamespacesListErrorOther
+        return self as? DBXTeamTeamNamespacesListErrorOther
     }
 }
 
@@ -14790,17 +15229,17 @@ public class DBXTeamTeamNamespacesListContinueError: NSObject {
 
     @objc
     public var asInvalidArg: DBXTeamTeamNamespacesListContinueErrorInvalidArg? {
-        self as? DBXTeamTeamNamespacesListContinueErrorInvalidArg
+        return self as? DBXTeamTeamNamespacesListContinueErrorInvalidArg
     }
 
     @objc
     public var asOther: DBXTeamTeamNamespacesListContinueErrorOther? {
-        self as? DBXTeamTeamNamespacesListContinueErrorOther
+        return self as? DBXTeamTeamNamespacesListContinueErrorOther
     }
 
     @objc
     public var asInvalidCursor: DBXTeamTeamNamespacesListContinueErrorInvalidCursor? {
-        self as? DBXTeamTeamNamespacesListContinueErrorInvalidCursor
+        return self as? DBXTeamTeamNamespacesListContinueErrorInvalidCursor
     }
 }
 
@@ -14839,7 +15278,7 @@ public class DBXTeamTeamNamespacesListContinueErrorInvalidCursor: DBXTeamTeamNam
 public class DBXTeamTeamNamespacesListResult: NSObject {
     /// List of all namespaces the team can access.
     @objc
-    public var namespaces: [DBXTeamNamespaceMetadata] { swift.namespaces.map { DBXTeamNamespaceMetadata(swift: $0) } }
+    public var namespaces: Array<DBXTeamNamespaceMetadata> { swift.namespaces.map { DBXTeamNamespaceMetadata(swift: $0) } }
     /// Pass the cursor into namespacesListContinue to obtain additional namespaces. Note that duplicate namespaces
     /// may be returned.
     @objc
@@ -14849,8 +15288,8 @@ public class DBXTeamTeamNamespacesListResult: NSObject {
     public var hasMore: NSNumber { swift.hasMore as NSNumber }
 
     @objc
-    public init(namespaces: [DBXTeamNamespaceMetadata], cursor: String, hasMore: NSNumber) {
-        self.swift = Team.TeamNamespacesListResult(namespaces: namespaces.map(\.swift), cursor: cursor, hasMore: hasMore.boolValue)
+    public init(namespaces: Array<DBXTeamNamespaceMetadata>, cursor: String, hasMore: NSNumber) {
+        self.swift = Team.TeamNamespacesListResult(namespaces: namespaces.map { $0.swift }, cursor: cursor, hasMore: hasMore.boolValue)
     }
 
     let swift: Team.TeamNamespacesListResult
@@ -14858,6 +15297,7 @@ public class DBXTeamTeamNamespacesListResult: NSObject {
     public init(swift: Team.TeamNamespacesListResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -14890,22 +15330,22 @@ public class DBXTeamTeamReportFailureReason: NSObject {
 
     @objc
     public var asTemporaryError: DBXTeamTeamReportFailureReasonTemporaryError? {
-        self as? DBXTeamTeamReportFailureReasonTemporaryError
+        return self as? DBXTeamTeamReportFailureReasonTemporaryError
     }
 
     @objc
     public var asManyReportsAtOnce: DBXTeamTeamReportFailureReasonManyReportsAtOnce? {
-        self as? DBXTeamTeamReportFailureReasonManyReportsAtOnce
+        return self as? DBXTeamTeamReportFailureReasonManyReportsAtOnce
     }
 
     @objc
     public var asTooMuchData: DBXTeamTeamReportFailureReasonTooMuchData? {
-        self as? DBXTeamTeamReportFailureReasonTooMuchData
+        return self as? DBXTeamTeamReportFailureReasonTooMuchData
     }
 
     @objc
     public var asOther: DBXTeamTeamReportFailureReasonOther? {
-        self as? DBXTeamTeamReportFailureReasonOther
+        return self as? DBXTeamTeamReportFailureReasonOther
     }
 }
 
@@ -14974,22 +15414,22 @@ public class DBXTeamTokenGetAuthenticatedAdminError: NSObject {
 
     @objc
     public var asMappingNotFound: DBXTeamTokenGetAuthenticatedAdminErrorMappingNotFound? {
-        self as? DBXTeamTokenGetAuthenticatedAdminErrorMappingNotFound
+        return self as? DBXTeamTokenGetAuthenticatedAdminErrorMappingNotFound
     }
 
     @objc
     public var asAdminNotActive: DBXTeamTokenGetAuthenticatedAdminErrorAdminNotActive? {
-        self as? DBXTeamTokenGetAuthenticatedAdminErrorAdminNotActive
+        return self as? DBXTeamTokenGetAuthenticatedAdminErrorAdminNotActive
     }
 
     @objc
     public var asOther: DBXTeamTokenGetAuthenticatedAdminErrorOther? {
-        self as? DBXTeamTokenGetAuthenticatedAdminErrorOther
+        return self as? DBXTeamTokenGetAuthenticatedAdminErrorOther
     }
 }
 
 /// The current token is not associated with a team admin, because mappings were not recorded when the token was
-/// created. Consider re-authorizing a new access token to record its authenticating admin.
+        /// created. Consider re-authorizing a new access token to record its authenticating admin.
 @objc
 public class DBXTeamTokenGetAuthenticatedAdminErrorMappingNotFound: DBXTeamTokenGetAuthenticatedAdminError {
     @objc
@@ -15000,7 +15440,7 @@ public class DBXTeamTokenGetAuthenticatedAdminErrorMappingNotFound: DBXTeamToken
 }
 
 /// Either the team admin that authorized this token is no longer an active member of the team or no longer a
-/// team admin.
+        /// team admin.
 @objc
 public class DBXTeamTokenGetAuthenticatedAdminErrorAdminNotActive: DBXTeamTokenGetAuthenticatedAdminError {
     @objc
@@ -15038,6 +15478,7 @@ public class DBXTeamTokenGetAuthenticatedAdminResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -15068,22 +15509,22 @@ public class DBXTeamUploadApiRateLimitValue: NSObject {
 
     @objc
     public var asUnlimited: DBXTeamUploadApiRateLimitValueUnlimited? {
-        self as? DBXTeamUploadApiRateLimitValueUnlimited
+        return self as? DBXTeamUploadApiRateLimitValueUnlimited
     }
 
     @objc
     public var asLimit: DBXTeamUploadApiRateLimitValueLimit? {
-        self as? DBXTeamUploadApiRateLimitValueLimit
+        return self as? DBXTeamUploadApiRateLimitValueLimit
     }
 
     @objc
     public var asOther: DBXTeamUploadApiRateLimitValueOther? {
-        self as? DBXTeamUploadApiRateLimitValueOther
+        return self as? DBXTeamUploadApiRateLimitValueOther
     }
 }
 
-/// This team has unlimited upload API quota. So far both server version account and legacy  account type have
-/// unlimited monthly upload api quota.
+/// This team has unlimited upload API quota. So far both server version account and legacy account type have
+        /// unlimited monthly upload api quota.
 @objc
 public class DBXTeamUploadApiRateLimitValueUnlimited: DBXTeamUploadApiRateLimitValue {
     @objc
@@ -15101,7 +15542,7 @@ public class DBXTeamUploadApiRateLimitValueLimit: DBXTeamUploadApiRateLimitValue
 
     @objc
     public init(_ arg: NSNumber) {
-        self.limit = arg
+        limit = arg
         let swift = Team.UploadApiRateLimitValue.limit(arg.uint32Value)
         super.init(swift: swift)
     }
@@ -15152,27 +15593,27 @@ public class DBXTeamUserAddResult: NSObject {
 
     @objc
     public var asSuccess: DBXTeamUserAddResultSuccess? {
-        self as? DBXTeamUserAddResultSuccess
+        return self as? DBXTeamUserAddResultSuccess
     }
 
     @objc
     public var asInvalidUser: DBXTeamUserAddResultInvalidUser? {
-        self as? DBXTeamUserAddResultInvalidUser
+        return self as? DBXTeamUserAddResultInvalidUser
     }
 
     @objc
     public var asUnverified: DBXTeamUserAddResultUnverified? {
-        self as? DBXTeamUserAddResultUnverified
+        return self as? DBXTeamUserAddResultUnverified
     }
 
     @objc
     public var asPlaceholderUser: DBXTeamUserAddResultPlaceholderUser? {
-        self as? DBXTeamUserAddResultPlaceholderUser
+        return self as? DBXTeamUserAddResultPlaceholderUser
     }
 
     @objc
     public var asOther: DBXTeamUserAddResultOther? {
-        self as? DBXTeamUserAddResultOther
+        return self as? DBXTeamUserAddResultOther
     }
 }
 
@@ -15184,7 +15625,7 @@ public class DBXTeamUserAddResultSuccess: DBXTeamUserAddResult {
 
     @objc
     public init(_ arg: DBXTeamUserSecondaryEmailsResult) {
-        self.success = arg
+        success = arg
         let swift = Team.UserAddResult.success(arg.swift)
         super.init(swift: swift)
     }
@@ -15198,7 +15639,7 @@ public class DBXTeamUserAddResultInvalidUser: DBXTeamUserAddResult {
 
     @objc
     public init(_ arg: DBXTeamUserSelectorArg) {
-        self.invalidUser = arg
+        invalidUser = arg
         let swift = Team.UserAddResult.invalidUser(arg.swift)
         super.init(swift: swift)
     }
@@ -15212,7 +15653,7 @@ public class DBXTeamUserAddResultUnverified: DBXTeamUserAddResult {
 
     @objc
     public init(_ arg: DBXTeamUserSelectorArg) {
-        self.unverified = arg
+        unverified = arg
         let swift = Team.UserAddResult.unverified(arg.swift)
         super.init(swift: swift)
     }
@@ -15226,7 +15667,7 @@ public class DBXTeamUserAddResultPlaceholderUser: DBXTeamUserAddResult {
 
     @objc
     public init(_ arg: DBXTeamUserSelectorArg) {
-        self.placeholderUser = arg
+        placeholderUser = arg
         let swift = Team.UserAddResult.placeholderUser(arg.swift)
         super.init(swift: swift)
     }
@@ -15263,11 +15704,12 @@ public class DBXTeamUserCustomQuotaArg: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
 
-/// User and their custom quota in GB (1 TB = 1024 GB).  No quota returns if the user has no custom quota set.
+/// User and their custom quota in GB (1 TB = 1024 GB). No quota returns if the user has no custom quota set.
 @objc
 public class DBXTeamUserCustomQuotaResult: NSObject {
     /// (no description)
@@ -15288,6 +15730,7 @@ public class DBXTeamUserCustomQuotaResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
@@ -15300,11 +15743,11 @@ public class DBXTeamUserDeleteEmailsResult: NSObject {
     public var user: DBXTeamUserSelectorArg { DBXTeamUserSelectorArg(swift: swift.user) }
     /// (no description)
     @objc
-    public var results: [DBXTeamDeleteSecondaryEmailResult] { swift.results.map { DBXTeamDeleteSecondaryEmailResult(swift: $0) } }
+    public var results: Array<DBXTeamDeleteSecondaryEmailResult> { swift.results.map { DBXTeamDeleteSecondaryEmailResult(swift: $0) } }
 
     @objc
-    public init(user: DBXTeamUserSelectorArg, results: [DBXTeamDeleteSecondaryEmailResult]) {
-        self.swift = Team.UserDeleteEmailsResult(user: user.swift, results: results.map(\.swift))
+    public init(user: DBXTeamUserSelectorArg, results: Array<DBXTeamDeleteSecondaryEmailResult>) {
+        self.swift = Team.UserDeleteEmailsResult(user: user.swift, results: results.map { $0.swift })
     }
 
     let swift: Team.UserDeleteEmailsResult
@@ -15312,6 +15755,7 @@ public class DBXTeamUserDeleteEmailsResult: NSObject {
     public init(swift: Team.UserDeleteEmailsResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -15346,17 +15790,17 @@ public class DBXTeamUserDeleteResult: NSObject {
 
     @objc
     public var asSuccess: DBXTeamUserDeleteResultSuccess? {
-        self as? DBXTeamUserDeleteResultSuccess
+        return self as? DBXTeamUserDeleteResultSuccess
     }
 
     @objc
     public var asInvalidUser: DBXTeamUserDeleteResultInvalidUser? {
-        self as? DBXTeamUserDeleteResultInvalidUser
+        return self as? DBXTeamUserDeleteResultInvalidUser
     }
 
     @objc
     public var asOther: DBXTeamUserDeleteResultOther? {
-        self as? DBXTeamUserDeleteResultOther
+        return self as? DBXTeamUserDeleteResultOther
     }
 }
 
@@ -15368,7 +15812,7 @@ public class DBXTeamUserDeleteResultSuccess: DBXTeamUserDeleteResult {
 
     @objc
     public init(_ arg: DBXTeamUserDeleteEmailsResult) {
-        self.success = arg
+        success = arg
         let swift = Team.UserDeleteResult.success(arg.swift)
         super.init(swift: swift)
     }
@@ -15382,7 +15826,7 @@ public class DBXTeamUserDeleteResultInvalidUser: DBXTeamUserDeleteResult {
 
     @objc
     public init(_ arg: DBXTeamUserSelectorArg) {
-        self.invalidUser = arg
+        invalidUser = arg
         let swift = Team.UserDeleteResult.invalidUser(arg.swift)
         super.init(swift: swift)
     }
@@ -15406,11 +15850,11 @@ public class DBXTeamUserResendEmailsResult: NSObject {
     public var user: DBXTeamUserSelectorArg { DBXTeamUserSelectorArg(swift: swift.user) }
     /// (no description)
     @objc
-    public var results: [DBXTeamResendSecondaryEmailResult] { swift.results.map { DBXTeamResendSecondaryEmailResult(swift: $0) } }
+    public var results: Array<DBXTeamResendSecondaryEmailResult> { swift.results.map { DBXTeamResendSecondaryEmailResult(swift: $0) } }
 
     @objc
-    public init(user: DBXTeamUserSelectorArg, results: [DBXTeamResendSecondaryEmailResult]) {
-        self.swift = Team.UserResendEmailsResult(user: user.swift, results: results.map(\.swift))
+    public init(user: DBXTeamUserSelectorArg, results: Array<DBXTeamResendSecondaryEmailResult>) {
+        self.swift = Team.UserResendEmailsResult(user: user.swift, results: results.map { $0.swift })
     }
 
     let swift: Team.UserResendEmailsResult
@@ -15418,6 +15862,7 @@ public class DBXTeamUserResendEmailsResult: NSObject {
     public init(swift: Team.UserResendEmailsResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -15452,17 +15897,17 @@ public class DBXTeamUserResendResult: NSObject {
 
     @objc
     public var asSuccess: DBXTeamUserResendResultSuccess? {
-        self as? DBXTeamUserResendResultSuccess
+        return self as? DBXTeamUserResendResultSuccess
     }
 
     @objc
     public var asInvalidUser: DBXTeamUserResendResultInvalidUser? {
-        self as? DBXTeamUserResendResultInvalidUser
+        return self as? DBXTeamUserResendResultInvalidUser
     }
 
     @objc
     public var asOther: DBXTeamUserResendResultOther? {
-        self as? DBXTeamUserResendResultOther
+        return self as? DBXTeamUserResendResultOther
     }
 }
 
@@ -15474,7 +15919,7 @@ public class DBXTeamUserResendResultSuccess: DBXTeamUserResendResult {
 
     @objc
     public init(_ arg: DBXTeamUserResendEmailsResult) {
-        self.success = arg
+        success = arg
         let swift = Team.UserResendResult.success(arg.swift)
         super.init(swift: swift)
     }
@@ -15488,7 +15933,7 @@ public class DBXTeamUserResendResultInvalidUser: DBXTeamUserResendResult {
 
     @objc
     public init(_ arg: DBXTeamUserSelectorArg) {
-        self.invalidUser = arg
+        invalidUser = arg
         let swift = Team.UserResendResult.invalidUser(arg.swift)
         super.init(swift: swift)
     }
@@ -15512,10 +15957,10 @@ public class DBXTeamUserSecondaryEmailsArg: NSObject {
     public var user: DBXTeamUserSelectorArg { DBXTeamUserSelectorArg(swift: swift.user) }
     /// (no description)
     @objc
-    public var secondaryEmails: [String] { swift.secondaryEmails }
+    public var secondaryEmails: Array<String> { swift.secondaryEmails }
 
     @objc
-    public init(user: DBXTeamUserSelectorArg, secondaryEmails: [String]) {
+    public init(user: DBXTeamUserSelectorArg, secondaryEmails: Array<String>) {
         self.swift = Team.UserSecondaryEmailsArg(user: user.swift, secondaryEmails: secondaryEmails)
     }
 
@@ -15524,6 +15969,7 @@ public class DBXTeamUserSecondaryEmailsArg: NSObject {
     public init(swift: Team.UserSecondaryEmailsArg) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -15537,11 +15983,11 @@ public class DBXTeamUserSecondaryEmailsResult: NSObject {
     public var user: DBXTeamUserSelectorArg { DBXTeamUserSelectorArg(swift: swift.user) }
     /// (no description)
     @objc
-    public var results: [DBXTeamAddSecondaryEmailResult] { swift.results.map { DBXTeamAddSecondaryEmailResult(swift: $0) } }
+    public var results: Array<DBXTeamAddSecondaryEmailResult> { swift.results.map { DBXTeamAddSecondaryEmailResult(swift: $0) } }
 
     @objc
-    public init(user: DBXTeamUserSelectorArg, results: [DBXTeamAddSecondaryEmailResult]) {
-        self.swift = Team.UserSecondaryEmailsResult(user: user.swift, results: results.map(\.swift))
+    public init(user: DBXTeamUserSelectorArg, results: Array<DBXTeamAddSecondaryEmailResult>) {
+        self.swift = Team.UserSecondaryEmailsResult(user: user.swift, results: results.map { $0.swift })
     }
 
     let swift: Team.UserSecondaryEmailsResult
@@ -15549,6 +15995,7 @@ public class DBXTeamUserSecondaryEmailsResult: NSObject {
     public init(swift: Team.UserSecondaryEmailsResult) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -15582,17 +16029,17 @@ public class DBXTeamUserSelectorArg: NSObject {
 
     @objc
     public var asTeamMemberId: DBXTeamUserSelectorArgTeamMemberId? {
-        self as? DBXTeamUserSelectorArgTeamMemberId
+        return self as? DBXTeamUserSelectorArgTeamMemberId
     }
 
     @objc
     public var asExternalId: DBXTeamUserSelectorArgExternalId? {
-        self as? DBXTeamUserSelectorArgExternalId
+        return self as? DBXTeamUserSelectorArgExternalId
     }
 
     @objc
     public var asEmail: DBXTeamUserSelectorArgEmail? {
-        self as? DBXTeamUserSelectorArgEmail
+        return self as? DBXTeamUserSelectorArgEmail
     }
 }
 
@@ -15604,7 +16051,7 @@ public class DBXTeamUserSelectorArgTeamMemberId: DBXTeamUserSelectorArg {
 
     @objc
     public init(_ arg: String) {
-        self.teamMemberId = arg
+        teamMemberId = arg
         let swift = Team.UserSelectorArg.teamMemberId(arg)
         super.init(swift: swift)
     }
@@ -15618,7 +16065,7 @@ public class DBXTeamUserSelectorArgExternalId: DBXTeamUserSelectorArg {
 
     @objc
     public init(_ arg: String) {
-        self.externalId = arg
+        externalId = arg
         let swift = Team.UserSelectorArg.externalId(arg)
         super.init(swift: swift)
     }
@@ -15632,7 +16079,7 @@ public class DBXTeamUserSelectorArgEmail: DBXTeamUserSelectorArg {
 
     @objc
     public init(_ arg: String) {
-        self.email = arg
+        email = arg
         let swift = Team.UserSelectorArg.email(arg)
         super.init(swift: swift)
     }
@@ -15666,17 +16113,17 @@ public class DBXTeamUsersSelectorArg: NSObject {
 
     @objc
     public var asTeamMemberIds: DBXTeamUsersSelectorArgTeamMemberIds? {
-        self as? DBXTeamUsersSelectorArgTeamMemberIds
+        return self as? DBXTeamUsersSelectorArgTeamMemberIds
     }
 
     @objc
     public var asExternalIds: DBXTeamUsersSelectorArgExternalIds? {
-        self as? DBXTeamUsersSelectorArgExternalIds
+        return self as? DBXTeamUsersSelectorArgExternalIds
     }
 
     @objc
     public var asEmails: DBXTeamUsersSelectorArgEmails? {
-        self as? DBXTeamUsersSelectorArgEmails
+        return self as? DBXTeamUsersSelectorArgEmails
     }
 }
 
@@ -15684,11 +16131,11 @@ public class DBXTeamUsersSelectorArg: NSObject {
 @objc
 public class DBXTeamUsersSelectorArgTeamMemberIds: DBXTeamUsersSelectorArg {
     @objc
-    public var teamMemberIds: [String]
+    public var teamMemberIds: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.teamMemberIds = arg
+    public init(_ arg: Array<String>) {
+        teamMemberIds = arg
         let swift = Team.UsersSelectorArg.teamMemberIds(arg)
         super.init(swift: swift)
     }
@@ -15698,11 +16145,11 @@ public class DBXTeamUsersSelectorArgTeamMemberIds: DBXTeamUsersSelectorArg {
 @objc
 public class DBXTeamUsersSelectorArgExternalIds: DBXTeamUsersSelectorArg {
     @objc
-    public var externalIds: [String]
+    public var externalIds: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.externalIds = arg
+    public init(_ arg: Array<String>) {
+        externalIds = arg
         let swift = Team.UsersSelectorArg.externalIds(arg)
         super.init(swift: swift)
     }
@@ -15712,12 +16159,13 @@ public class DBXTeamUsersSelectorArgExternalIds: DBXTeamUsersSelectorArg {
 @objc
 public class DBXTeamUsersSelectorArgEmails: DBXTeamUsersSelectorArg {
     @objc
-    public var emails: [String]
+    public var emails: Array<String>
 
     @objc
-    public init(_ arg: [String]) {
-        self.emails = arg
+    public init(_ arg: Array<String>) {
+        emails = arg
         let swift = Team.UsersSelectorArg.emails(arg)
         super.init(swift: swift)
     }
 }
+

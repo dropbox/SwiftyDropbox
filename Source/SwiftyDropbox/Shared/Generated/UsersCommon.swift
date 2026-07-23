@@ -29,43 +29,42 @@ public class UsersCommon {
             }
         }
     }
-
     public class AccountTypeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: AccountType) throws -> JSON {
             switch value {
-            case .basic:
-                var d = [String: JSON]()
-                d[".tag"] = .str("basic")
-                return .dictionary(d)
-            case .pro:
-                var d = [String: JSON]()
-                d[".tag"] = .str("pro")
-                return .dictionary(d)
-            case .business:
-                var d = [String: JSON]()
-                d[".tag"] = .str("business")
-                return .dictionary(d)
+                case .basic:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("basic")
+                    return .dictionary(d)
+                case .pro:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("pro")
+                    return .dictionary(d)
+                case .business:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("business")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> AccountType {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "basic":
-                    return AccountType.basic
-                case "pro":
-                    return AccountType.pro
-                case "business":
-                    return AccountType.business
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "basic":
+                            return AccountType.basic
+                        case "pro":
+                            return AccountType.pro
+                        case "business":
+                            return AccountType.business
+                        default:
+                            throw JSONSerializerError.unknownTag(type: AccountType.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: AccountType.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: AccountType.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: AccountType.self, json: json)
             }
         }
     }
+
 }

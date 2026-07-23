@@ -29,42 +29,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class CameraUploadsPolicyStateSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: CameraUploadsPolicyState) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> CameraUploadsPolicyState {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return CameraUploadsPolicyState.disabled
-                case "enabled":
-                    return CameraUploadsPolicyState.enabled
-                case "other":
-                    return CameraUploadsPolicyState.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return CameraUploadsPolicyState.disabled
+                        case "enabled":
+                            return CameraUploadsPolicyState.enabled
+                        case "other":
+                            return CameraUploadsPolicyState.other
+                        default:
+                            return CameraUploadsPolicyState.other
+                    }
                 default:
-                    return CameraUploadsPolicyState.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: CameraUploadsPolicyState.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: CameraUploadsPolicyState.self, json: json)
             }
         }
     }
@@ -92,48 +90,153 @@ public class TeamPolicies {
             }
         }
     }
-
     public class ComputerBackupPolicyStateSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ComputerBackupPolicyState) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .default_:
-                var d = [String: JSON]()
-                d[".tag"] = .str("default")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ComputerBackupPolicyState {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return ComputerBackupPolicyState.disabled
-                case "enabled":
-                    return ComputerBackupPolicyState.enabled
-                case "default":
-                    return ComputerBackupPolicyState.default_
-                case "other":
-                    return ComputerBackupPolicyState.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return ComputerBackupPolicyState.disabled
+                        case "enabled":
+                            return ComputerBackupPolicyState.enabled
+                        case "default":
+                            return ComputerBackupPolicyState.default_
+                        case "other":
+                            return ComputerBackupPolicyState.other
+                        default:
+                            return ComputerBackupPolicyState.other
+                    }
                 default:
-                    return ComputerBackupPolicyState.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ComputerBackupPolicyState.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ComputerBackupPolicyState.self, json: json)
+            }
+        }
+    }
+
+    /// Policy governing default expiration date for new links shared outside the team.
+    public enum DefaultLinkExpirationDaysPolicy: CustomStringConvertible, JSONRepresentable {
+        /// New links shared outside the team default to no expiration date.
+        case none
+        /// New links shared outside the team default to expire in one day.
+        case day1
+        /// New links shared outside the team default to expire in three days.
+        case day3
+        /// New links shared outside the team default to expire in seven days.
+        case day7
+        /// New links shared outside the team default to expire in 30 days.
+        case day30
+        /// New links shared outside the team default to expire in 90 days.
+        case day90
+        /// New links shared outside the team default to expire in 180 days.
+        case day180
+        /// New links shared outside the team default to expire in 365 days.
+        case year1
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try DefaultLinkExpirationDaysPolicySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DefaultLinkExpirationDaysPolicySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for DefaultLinkExpirationDaysPolicy: \(error)"
+            }
+        }
+    }
+    public class DefaultLinkExpirationDaysPolicySerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: DefaultLinkExpirationDaysPolicy) throws -> JSON {
+            switch value {
+                case .none:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("none")
+                    return .dictionary(d)
+                case .day1:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("day_1")
+                    return .dictionary(d)
+                case .day3:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("day_3")
+                    return .dictionary(d)
+                case .day7:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("day_7")
+                    return .dictionary(d)
+                case .day30:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("day_30")
+                    return .dictionary(d)
+                case .day90:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("day_90")
+                    return .dictionary(d)
+                case .day180:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("day_180")
+                    return .dictionary(d)
+                case .year1:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("year_1")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        public func deserialize(_ json: JSON) throws -> DefaultLinkExpirationDaysPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "none":
+                            return DefaultLinkExpirationDaysPolicy.none
+                        case "day_1":
+                            return DefaultLinkExpirationDaysPolicy.day1
+                        case "day_3":
+                            return DefaultLinkExpirationDaysPolicy.day3
+                        case "day_7":
+                            return DefaultLinkExpirationDaysPolicy.day7
+                        case "day_30":
+                            return DefaultLinkExpirationDaysPolicy.day30
+                        case "day_90":
+                            return DefaultLinkExpirationDaysPolicy.day90
+                        case "day_180":
+                            return DefaultLinkExpirationDaysPolicy.day180
+                        case "year_1":
+                            return DefaultLinkExpirationDaysPolicy.year1
+                        case "other":
+                            return DefaultLinkExpirationDaysPolicy.other
+                        default:
+                            return DefaultLinkExpirationDaysPolicy.other
+                    }
+                default:
+                    throw JSONSerializerError.deserializeError(type: DefaultLinkExpirationDaysPolicy.self, json: json)
             }
         }
     }
@@ -161,48 +264,105 @@ public class TeamPolicies {
             }
         }
     }
-
     public class EmmStateSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: EmmState) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .optional:
-                var d = [String: JSON]()
-                d[".tag"] = .str("optional")
-                return .dictionary(d)
-            case .required:
-                var d = [String: JSON]()
-                d[".tag"] = .str("required")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .optional:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("optional")
+                    return .dictionary(d)
+                case .required:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("required")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> EmmState {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return EmmState.disabled
-                case "optional":
-                    return EmmState.optional
-                case "required":
-                    return EmmState.required
-                case "other":
-                    return EmmState.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return EmmState.disabled
+                        case "optional":
+                            return EmmState.optional
+                        case "required":
+                            return EmmState.required
+                        case "other":
+                            return EmmState.other
+                        default:
+                            return EmmState.other
+                    }
                 default:
-                    return EmmState.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: EmmState.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: EmmState.self, json: json)
+            }
+        }
+    }
+
+    /// Policy governing whether new links shared outside the team require passwords.
+    public enum EnforceLinkPasswordPolicy: CustomStringConvertible, JSONRepresentable {
+        /// New links shared outside the team do not require passwords.
+        case optional
+        /// New links shared outside the team require passwords.
+        case required
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try EnforceLinkPasswordPolicySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try EnforceLinkPasswordPolicySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for EnforceLinkPasswordPolicy: \(error)"
+            }
+        }
+    }
+    public class EnforceLinkPasswordPolicySerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: EnforceLinkPasswordPolicy) throws -> JSON {
+            switch value {
+                case .optional:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("optional")
+                    return .dictionary(d)
+                case .required:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("required")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        public func deserialize(_ json: JSON) throws -> EnforceLinkPasswordPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "optional":
+                            return EnforceLinkPasswordPolicy.optional
+                        case "required":
+                            return EnforceLinkPasswordPolicy.required
+                        case "other":
+                            return EnforceLinkPasswordPolicy.other
+                        default:
+                            return EnforceLinkPasswordPolicy.other
+                    }
+                default:
+                    throw JSONSerializerError.deserializeError(type: EnforceLinkPasswordPolicy.self, json: json)
             }
         }
     }
@@ -230,48 +390,46 @@ public class TeamPolicies {
             }
         }
     }
-
     public class ExternalDriveBackupPolicyStateSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ExternalDriveBackupPolicyState) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .default_:
-                var d = [String: JSON]()
-                d[".tag"] = .str("default")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ExternalDriveBackupPolicyState {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return ExternalDriveBackupPolicyState.disabled
-                case "enabled":
-                    return ExternalDriveBackupPolicyState.enabled
-                case "default":
-                    return ExternalDriveBackupPolicyState.default_
-                case "other":
-                    return ExternalDriveBackupPolicyState.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return ExternalDriveBackupPolicyState.disabled
+                        case "enabled":
+                            return ExternalDriveBackupPolicyState.enabled
+                        case "default":
+                            return ExternalDriveBackupPolicyState.default_
+                        case "other":
+                            return ExternalDriveBackupPolicyState.other
+                        default:
+                            return ExternalDriveBackupPolicyState.other
+                    }
                 default:
-                    return ExternalDriveBackupPolicyState.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ExternalDriveBackupPolicyState.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ExternalDriveBackupPolicyState.self, json: json)
             }
         }
     }
@@ -297,42 +455,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class FileLockingPolicyStateSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: FileLockingPolicyState) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> FileLockingPolicyState {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return FileLockingPolicyState.disabled
-                case "enabled":
-                    return FileLockingPolicyState.enabled
-                case "other":
-                    return FileLockingPolicyState.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return FileLockingPolicyState.disabled
+                        case "enabled":
+                            return FileLockingPolicyState.enabled
+                        case "other":
+                            return FileLockingPolicyState.other
+                        default:
+                            return FileLockingPolicyState.other
+                    }
                 default:
-                    return FileLockingPolicyState.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: FileLockingPolicyState.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: FileLockingPolicyState.self, json: json)
             }
         }
     }
@@ -345,6 +501,8 @@ public class TeamPolicies {
         case enabled
         /// Team admin has default value based on team tier.
         case default_
+        /// Team admin has chosen to do File Provider Migration immediately for the team.
+        case immediate
         /// An unspecified error.
         case other
 
@@ -360,48 +518,52 @@ public class TeamPolicies {
             }
         }
     }
-
     public class FileProviderMigrationPolicyStateSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: FileProviderMigrationPolicyState) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .default_:
-                var d = [String: JSON]()
-                d[".tag"] = .str("default")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
+                case .immediate:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("immediate")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> FileProviderMigrationPolicyState {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return FileProviderMigrationPolicyState.disabled
-                case "enabled":
-                    return FileProviderMigrationPolicyState.enabled
-                case "default":
-                    return FileProviderMigrationPolicyState.default_
-                case "other":
-                    return FileProviderMigrationPolicyState.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return FileProviderMigrationPolicyState.disabled
+                        case "enabled":
+                            return FileProviderMigrationPolicyState.enabled
+                        case "default":
+                            return FileProviderMigrationPolicyState.default_
+                        case "immediate":
+                            return FileProviderMigrationPolicyState.immediate
+                        case "other":
+                            return FileProviderMigrationPolicyState.other
+                        default:
+                            return FileProviderMigrationPolicyState.other
+                    }
                 default:
-                    return FileProviderMigrationPolicyState.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: FileProviderMigrationPolicyState.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: FileProviderMigrationPolicyState.self, json: json)
             }
         }
     }
@@ -425,36 +587,34 @@ public class TeamPolicies {
             }
         }
     }
-
     public class GroupCreationSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: GroupCreation) throws -> JSON {
             switch value {
-            case .adminsAndMembers:
-                var d = [String: JSON]()
-                d[".tag"] = .str("admins_and_members")
-                return .dictionary(d)
-            case .adminsOnly:
-                var d = [String: JSON]()
-                d[".tag"] = .str("admins_only")
-                return .dictionary(d)
+                case .adminsAndMembers:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("admins_and_members")
+                    return .dictionary(d)
+                case .adminsOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("admins_only")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> GroupCreation {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "admins_and_members":
-                    return GroupCreation.adminsAndMembers
-                case "admins_only":
-                    return GroupCreation.adminsOnly
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "admins_and_members":
+                            return GroupCreation.adminsAndMembers
+                        case "admins_only":
+                            return GroupCreation.adminsOnly
+                        default:
+                            throw JSONSerializerError.unknownTag(type: GroupCreation.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: GroupCreation.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: GroupCreation.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: GroupCreation.self, json: json)
             }
         }
     }
@@ -480,42 +640,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class OfficeAddInPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: OfficeAddInPolicy) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> OfficeAddInPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return OfficeAddInPolicy.disabled
-                case "enabled":
-                    return OfficeAddInPolicy.enabled
-                case "other":
-                    return OfficeAddInPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return OfficeAddInPolicy.disabled
+                        case "enabled":
+                            return OfficeAddInPolicy.enabled
+                        case "other":
+                            return OfficeAddInPolicy.other
+                        default:
+                            return OfficeAddInPolicy.other
+                    }
                 default:
-                    return OfficeAddInPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: OfficeAddInPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: OfficeAddInPolicy.self, json: json)
             }
         }
     }
@@ -541,42 +699,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class PaperDefaultFolderPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDefaultFolderPolicy) throws -> JSON {
             switch value {
-            case .everyoneInTeam:
-                var d = [String: JSON]()
-                d[".tag"] = .str("everyone_in_team")
-                return .dictionary(d)
-            case .inviteOnly:
-                var d = [String: JSON]()
-                d[".tag"] = .str("invite_only")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .everyoneInTeam:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("everyone_in_team")
+                    return .dictionary(d)
+                case .inviteOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("invite_only")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDefaultFolderPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "everyone_in_team":
-                    return PaperDefaultFolderPolicy.everyoneInTeam
-                case "invite_only":
-                    return PaperDefaultFolderPolicy.inviteOnly
-                case "other":
-                    return PaperDefaultFolderPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "everyone_in_team":
+                            return PaperDefaultFolderPolicy.everyoneInTeam
+                        case "invite_only":
+                            return PaperDefaultFolderPolicy.inviteOnly
+                        case "other":
+                            return PaperDefaultFolderPolicy.other
+                        default:
+                            return PaperDefaultFolderPolicy.other
+                    }
                 default:
-                    return PaperDefaultFolderPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDefaultFolderPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PaperDefaultFolderPolicy.self, json: json)
             }
         }
     }
@@ -603,42 +759,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class PaperDeploymentPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDeploymentPolicy) throws -> JSON {
             switch value {
-            case .full:
-                var d = [String: JSON]()
-                d[".tag"] = .str("full")
-                return .dictionary(d)
-            case .partial:
-                var d = [String: JSON]()
-                d[".tag"] = .str("partial")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .full:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("full")
+                    return .dictionary(d)
+                case .partial:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("partial")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDeploymentPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "full":
-                    return PaperDeploymentPolicy.full
-                case "partial":
-                    return PaperDeploymentPolicy.partial
-                case "other":
-                    return PaperDeploymentPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "full":
+                            return PaperDeploymentPolicy.full
+                        case "partial":
+                            return PaperDeploymentPolicy.partial
+                        case "other":
+                            return PaperDeploymentPolicy.other
+                        default:
+                            return PaperDeploymentPolicy.other
+                    }
                 default:
-                    return PaperDeploymentPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDeploymentPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PaperDeploymentPolicy.self, json: json)
             }
         }
     }
@@ -664,42 +818,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class PaperDesktopPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperDesktopPolicy) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PaperDesktopPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return PaperDesktopPolicy.disabled
-                case "enabled":
-                    return PaperDesktopPolicy.enabled
-                case "other":
-                    return PaperDesktopPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return PaperDesktopPolicy.disabled
+                        case "enabled":
+                            return PaperDesktopPolicy.enabled
+                        case "other":
+                            return PaperDesktopPolicy.other
+                        default:
+                            return PaperDesktopPolicy.other
+                    }
                 default:
-                    return PaperDesktopPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperDesktopPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PaperDesktopPolicy.self, json: json)
             }
         }
     }
@@ -727,48 +879,46 @@ public class TeamPolicies {
             }
         }
     }
-
     public class PaperEnabledPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PaperEnabledPolicy) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .unspecified:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unspecified")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .unspecified:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unspecified")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PaperEnabledPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return PaperEnabledPolicy.disabled
-                case "enabled":
-                    return PaperEnabledPolicy.enabled
-                case "unspecified":
-                    return PaperEnabledPolicy.unspecified
-                case "other":
-                    return PaperEnabledPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return PaperEnabledPolicy.disabled
+                        case "enabled":
+                            return PaperEnabledPolicy.enabled
+                        case "unspecified":
+                            return PaperEnabledPolicy.unspecified
+                        case "other":
+                            return PaperEnabledPolicy.other
+                        default:
+                            return PaperEnabledPolicy.other
+                    }
                 default:
-                    return PaperEnabledPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PaperEnabledPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PaperEnabledPolicy.self, json: json)
             }
         }
     }
@@ -794,53 +944,53 @@ public class TeamPolicies {
             }
         }
     }
-
     public class PasswordControlModeSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PasswordControlMode) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PasswordControlMode {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return PasswordControlMode.disabled
-                case "enabled":
-                    return PasswordControlMode.enabled
-                case "other":
-                    return PasswordControlMode.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return PasswordControlMode.disabled
+                        case "enabled":
+                            return PasswordControlMode.enabled
+                        case "other":
+                            return PasswordControlMode.other
+                        default:
+                            return PasswordControlMode.other
+                    }
                 default:
-                    return PasswordControlMode.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PasswordControlMode.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PasswordControlMode.self, json: json)
             }
         }
     }
 
     /// The PasswordStrengthPolicy union
     public enum PasswordStrengthPolicy: CustomStringConvertible, JSONRepresentable {
-        /// User passwords will adhere to the minimal password strength policy.
+        /// User passwords will not adhere to a password strength policy.
         case minimalRequirements
-        /// User passwords will adhere to the moderate password strength policy.
+        /// User passwords will adhere to the strong password strength policy. Note that product surfaces refer to this
+        /// as the strong policy but the value must be kept as is for backwards compatability.
         case moderatePassword
-        /// User passwords will adhere to the very strong password strength policy.
+        /// User passwords will adhere to the very strong password strength policy. Note that product surfaces refer to
+        /// this as the very strong policy but the value must be kept as is for backwards compatability.
         case strongPassword
         /// An unspecified error.
         case other
@@ -857,48 +1007,46 @@ public class TeamPolicies {
             }
         }
     }
-
     public class PasswordStrengthPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: PasswordStrengthPolicy) throws -> JSON {
             switch value {
-            case .minimalRequirements:
-                var d = [String: JSON]()
-                d[".tag"] = .str("minimal_requirements")
-                return .dictionary(d)
-            case .moderatePassword:
-                var d = [String: JSON]()
-                d[".tag"] = .str("moderate_password")
-                return .dictionary(d)
-            case .strongPassword:
-                var d = [String: JSON]()
-                d[".tag"] = .str("strong_password")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .minimalRequirements:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("minimal_requirements")
+                    return .dictionary(d)
+                case .moderatePassword:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("moderate_password")
+                    return .dictionary(d)
+                case .strongPassword:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("strong_password")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> PasswordStrengthPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "minimal_requirements":
-                    return PasswordStrengthPolicy.minimalRequirements
-                case "moderate_password":
-                    return PasswordStrengthPolicy.moderatePassword
-                case "strong_password":
-                    return PasswordStrengthPolicy.strongPassword
-                case "other":
-                    return PasswordStrengthPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "minimal_requirements":
+                            return PasswordStrengthPolicy.minimalRequirements
+                        case "moderate_password":
+                            return PasswordStrengthPolicy.moderatePassword
+                        case "strong_password":
+                            return PasswordStrengthPolicy.strongPassword
+                        case "other":
+                            return PasswordStrengthPolicy.other
+                        default:
+                            return PasswordStrengthPolicy.other
+                    }
                 default:
-                    return PasswordStrengthPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: PasswordStrengthPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: PasswordStrengthPolicy.self, json: json)
             }
         }
     }
@@ -924,42 +1072,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class RolloutMethodSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: RolloutMethod) throws -> JSON {
             switch value {
-            case .unlinkAll:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unlink_all")
-                return .dictionary(d)
-            case .unlinkMostInactive:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unlink_most_inactive")
-                return .dictionary(d)
-            case .addMemberToExceptions:
-                var d = [String: JSON]()
-                d[".tag"] = .str("add_member_to_exceptions")
-                return .dictionary(d)
+                case .unlinkAll:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unlink_all")
+                    return .dictionary(d)
+                case .unlinkMostInactive:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("unlink_most_inactive")
+                    return .dictionary(d)
+                case .addMemberToExceptions:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("add_member_to_exceptions")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> RolloutMethod {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "unlink_all":
-                    return RolloutMethod.unlinkAll
-                case "unlink_most_inactive":
-                    return RolloutMethod.unlinkMostInactive
-                case "add_member_to_exceptions":
-                    return RolloutMethod.addMemberToExceptions
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "unlink_all":
+                            return RolloutMethod.unlinkAll
+                        case "unlink_most_inactive":
+                            return RolloutMethod.unlinkMostInactive
+                        case "add_member_to_exceptions":
+                            return RolloutMethod.addMemberToExceptions
+                        default:
+                            throw JSONSerializerError.unknownTag(type: RolloutMethod.self, json: json, tag: tag)
+                    }
                 default:
-                    throw JSONSerializerError.unknownTag(type: RolloutMethod.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: RolloutMethod.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: RolloutMethod.self, json: json)
             }
         }
     }
@@ -985,42 +1131,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class SharedFolderBlanketLinkRestrictionPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: SharedFolderBlanketLinkRestrictionPolicy) throws -> JSON {
             switch value {
-            case .members:
-                var d = [String: JSON]()
-                d[".tag"] = .str("members")
-                return .dictionary(d)
-            case .anyone:
-                var d = [String: JSON]()
-                d[".tag"] = .str("anyone")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .members:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("members")
+                    return .dictionary(d)
+                case .anyone:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("anyone")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> SharedFolderBlanketLinkRestrictionPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "members":
-                    return SharedFolderBlanketLinkRestrictionPolicy.members
-                case "anyone":
-                    return SharedFolderBlanketLinkRestrictionPolicy.anyone
-                case "other":
-                    return SharedFolderBlanketLinkRestrictionPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "members":
+                            return SharedFolderBlanketLinkRestrictionPolicy.members
+                        case "anyone":
+                            return SharedFolderBlanketLinkRestrictionPolicy.anyone
+                        case "other":
+                            return SharedFolderBlanketLinkRestrictionPolicy.other
+                        default:
+                            return SharedFolderBlanketLinkRestrictionPolicy.other
+                    }
                 default:
-                    return SharedFolderBlanketLinkRestrictionPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SharedFolderBlanketLinkRestrictionPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: SharedFolderBlanketLinkRestrictionPolicy.self, json: json)
             }
         }
     }
@@ -1046,42 +1190,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class SharedFolderJoinPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: SharedFolderJoinPolicy) throws -> JSON {
             switch value {
-            case .fromTeamOnly:
-                var d = [String: JSON]()
-                d[".tag"] = .str("from_team_only")
-                return .dictionary(d)
-            case .fromAnyone:
-                var d = [String: JSON]()
-                d[".tag"] = .str("from_anyone")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .fromTeamOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("from_team_only")
+                    return .dictionary(d)
+                case .fromAnyone:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("from_anyone")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> SharedFolderJoinPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "from_team_only":
-                    return SharedFolderJoinPolicy.fromTeamOnly
-                case "from_anyone":
-                    return SharedFolderJoinPolicy.fromAnyone
-                case "other":
-                    return SharedFolderJoinPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "from_team_only":
+                            return SharedFolderJoinPolicy.fromTeamOnly
+                        case "from_anyone":
+                            return SharedFolderJoinPolicy.fromAnyone
+                        case "other":
+                            return SharedFolderJoinPolicy.other
+                        default:
+                            return SharedFolderJoinPolicy.other
+                    }
                 default:
-                    return SharedFolderJoinPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SharedFolderJoinPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: SharedFolderJoinPolicy.self, json: json)
             }
         }
     }
@@ -1092,6 +1234,8 @@ public class TeamPolicies {
         case team
         /// Anyone can be a member of a folder shared by a team member.
         case anyone
+        /// Only a teammate and approved people can be a member of a folder shared by a team member.
+        case teamAndApproved
         /// An unspecified error.
         case other
 
@@ -1107,42 +1251,46 @@ public class TeamPolicies {
             }
         }
     }
-
     public class SharedFolderMemberPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: SharedFolderMemberPolicy) throws -> JSON {
             switch value {
-            case .team:
-                var d = [String: JSON]()
-                d[".tag"] = .str("team")
-                return .dictionary(d)
-            case .anyone:
-                var d = [String: JSON]()
-                d[".tag"] = .str("anyone")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .team:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team")
+                    return .dictionary(d)
+                case .anyone:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("anyone")
+                    return .dictionary(d)
+                case .teamAndApproved:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_and_approved")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> SharedFolderMemberPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "team":
-                    return SharedFolderMemberPolicy.team
-                case "anyone":
-                    return SharedFolderMemberPolicy.anyone
-                case "other":
-                    return SharedFolderMemberPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "team":
+                            return SharedFolderMemberPolicy.team
+                        case "anyone":
+                            return SharedFolderMemberPolicy.anyone
+                        case "team_and_approved":
+                            return SharedFolderMemberPolicy.teamAndApproved
+                        case "other":
+                            return SharedFolderMemberPolicy.other
+                        default:
+                            return SharedFolderMemberPolicy.other
+                    }
                 default:
-                    return SharedFolderMemberPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SharedFolderMemberPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: SharedFolderMemberPolicy.self, json: json)
             }
         }
     }
@@ -1177,54 +1325,119 @@ public class TeamPolicies {
             }
         }
     }
-
     public class SharedLinkCreatePolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: SharedLinkCreatePolicy) throws -> JSON {
             switch value {
-            case .defaultPublic:
-                var d = [String: JSON]()
-                d[".tag"] = .str("default_public")
-                return .dictionary(d)
-            case .defaultTeamOnly:
-                var d = [String: JSON]()
-                d[".tag"] = .str("default_team_only")
-                return .dictionary(d)
-            case .teamOnly:
-                var d = [String: JSON]()
-                d[".tag"] = .str("team_only")
-                return .dictionary(d)
-            case .defaultNoOne:
-                var d = [String: JSON]()
-                d[".tag"] = .str("default_no_one")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .defaultPublic:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default_public")
+                    return .dictionary(d)
+                case .defaultTeamOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default_team_only")
+                    return .dictionary(d)
+                case .teamOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_only")
+                    return .dictionary(d)
+                case .defaultNoOne:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default_no_one")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> SharedLinkCreatePolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "default_public":
-                    return SharedLinkCreatePolicy.defaultPublic
-                case "default_team_only":
-                    return SharedLinkCreatePolicy.defaultTeamOnly
-                case "team_only":
-                    return SharedLinkCreatePolicy.teamOnly
-                case "default_no_one":
-                    return SharedLinkCreatePolicy.defaultNoOne
-                case "other":
-                    return SharedLinkCreatePolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "default_public":
+                            return SharedLinkCreatePolicy.defaultPublic
+                        case "default_team_only":
+                            return SharedLinkCreatePolicy.defaultTeamOnly
+                        case "team_only":
+                            return SharedLinkCreatePolicy.teamOnly
+                        case "default_no_one":
+                            return SharedLinkCreatePolicy.defaultNoOne
+                        case "other":
+                            return SharedLinkCreatePolicy.other
+                        default:
+                            return SharedLinkCreatePolicy.other
+                    }
                 default:
-                    return SharedLinkCreatePolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SharedLinkCreatePolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: SharedLinkCreatePolicy.self, json: json)
+            }
+        }
+    }
+
+    /// The SharedLinkDefaultPermissionsPolicy union
+    public enum SharedLinkDefaultPermissionsPolicy: CustomStringConvertible, JSONRepresentable {
+        /// No team default. Member defaults used instead.
+        case default_
+        /// Default to edit when creating new sharing links
+        case edit
+        /// Default to view-only when creating new sharing links
+        case view
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try SharedLinkDefaultPermissionsPolicySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try SharedLinkDefaultPermissionsPolicySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for SharedLinkDefaultPermissionsPolicy: \(error)"
+            }
+        }
+    }
+    public class SharedLinkDefaultPermissionsPolicySerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: SharedLinkDefaultPermissionsPolicy) throws -> JSON {
+            switch value {
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
+                case .edit:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("edit")
+                    return .dictionary(d)
+                case .view:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("view")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        public func deserialize(_ json: JSON) throws -> SharedLinkDefaultPermissionsPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "default":
+                            return SharedLinkDefaultPermissionsPolicy.default_
+                        case "edit":
+                            return SharedLinkDefaultPermissionsPolicy.edit
+                        case "view":
+                            return SharedLinkDefaultPermissionsPolicy.view
+                        case "other":
+                            return SharedLinkDefaultPermissionsPolicy.other
+                        default:
+                            return SharedLinkDefaultPermissionsPolicy.other
+                    }
+                default:
+                    throw JSONSerializerError.deserializeError(type: SharedLinkDefaultPermissionsPolicy.self, json: json)
             }
         }
     }
@@ -1250,42 +1463,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class ShowcaseDownloadPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ShowcaseDownloadPolicy) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ShowcaseDownloadPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return ShowcaseDownloadPolicy.disabled
-                case "enabled":
-                    return ShowcaseDownloadPolicy.enabled
-                case "other":
-                    return ShowcaseDownloadPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return ShowcaseDownloadPolicy.disabled
+                        case "enabled":
+                            return ShowcaseDownloadPolicy.enabled
+                        case "other":
+                            return ShowcaseDownloadPolicy.other
+                        default:
+                            return ShowcaseDownloadPolicy.other
+                    }
                 default:
-                    return ShowcaseDownloadPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ShowcaseDownloadPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ShowcaseDownloadPolicy.self, json: json)
             }
         }
     }
@@ -1311,42 +1522,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class ShowcaseEnabledPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ShowcaseEnabledPolicy) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ShowcaseEnabledPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return ShowcaseEnabledPolicy.disabled
-                case "enabled":
-                    return ShowcaseEnabledPolicy.enabled
-                case "other":
-                    return ShowcaseEnabledPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return ShowcaseEnabledPolicy.disabled
+                        case "enabled":
+                            return ShowcaseEnabledPolicy.enabled
+                        case "other":
+                            return ShowcaseEnabledPolicy.other
+                        default:
+                            return ShowcaseEnabledPolicy.other
+                    }
                 default:
-                    return ShowcaseEnabledPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ShowcaseEnabledPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ShowcaseEnabledPolicy.self, json: json)
             }
         }
     }
@@ -1372,42 +1581,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class ShowcaseExternalSharingPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: ShowcaseExternalSharingPolicy) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> ShowcaseExternalSharingPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return ShowcaseExternalSharingPolicy.disabled
-                case "enabled":
-                    return ShowcaseExternalSharingPolicy.enabled
-                case "other":
-                    return ShowcaseExternalSharingPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return ShowcaseExternalSharingPolicy.disabled
+                        case "enabled":
+                            return ShowcaseExternalSharingPolicy.enabled
+                        case "other":
+                            return ShowcaseExternalSharingPolicy.other
+                        default:
+                            return ShowcaseExternalSharingPolicy.other
+                    }
                 default:
-                    return ShowcaseExternalSharingPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: ShowcaseExternalSharingPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: ShowcaseExternalSharingPolicy.self, json: json)
             }
         }
     }
@@ -1433,42 +1640,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class SmartSyncPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: SmartSyncPolicy) throws -> JSON {
             switch value {
-            case .local:
-                var d = [String: JSON]()
-                d[".tag"] = .str("local")
-                return .dictionary(d)
-            case .onDemand:
-                var d = [String: JSON]()
-                d[".tag"] = .str("on_demand")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .local:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("local")
+                    return .dictionary(d)
+                case .onDemand:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("on_demand")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> SmartSyncPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "local":
-                    return SmartSyncPolicy.local
-                case "on_demand":
-                    return SmartSyncPolicy.onDemand
-                case "other":
-                    return SmartSyncPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "local":
+                            return SmartSyncPolicy.local
+                        case "on_demand":
+                            return SmartSyncPolicy.onDemand
+                        case "other":
+                            return SmartSyncPolicy.other
+                        default:
+                            return SmartSyncPolicy.other
+                    }
                 default:
-                    return SmartSyncPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SmartSyncPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: SmartSyncPolicy.self, json: json)
             }
         }
     }
@@ -1494,42 +1699,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class SmarterSmartSyncPolicyStateSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: SmarterSmartSyncPolicyState) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> SmarterSmartSyncPolicyState {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return SmarterSmartSyncPolicyState.disabled
-                case "enabled":
-                    return SmarterSmartSyncPolicyState.enabled
-                case "other":
-                    return SmarterSmartSyncPolicyState.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return SmarterSmartSyncPolicyState.disabled
+                        case "enabled":
+                            return SmarterSmartSyncPolicyState.enabled
+                        case "other":
+                            return SmarterSmartSyncPolicyState.other
+                        default:
+                            return SmarterSmartSyncPolicyState.other
+                    }
                 default:
-                    return SmarterSmartSyncPolicyState.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SmarterSmartSyncPolicyState.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: SmarterSmartSyncPolicyState.self, json: json)
             }
         }
     }
@@ -1557,48 +1760,46 @@ public class TeamPolicies {
             }
         }
     }
-
     public class SsoPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: SsoPolicy) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .optional:
-                var d = [String: JSON]()
-                d[".tag"] = .str("optional")
-                return .dictionary(d)
-            case .required:
-                var d = [String: JSON]()
-                d[".tag"] = .str("required")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .optional:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("optional")
+                    return .dictionary(d)
+                case .required:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("required")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> SsoPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return SsoPolicy.disabled
-                case "optional":
-                    return SsoPolicy.optional
-                case "required":
-                    return SsoPolicy.required
-                case "other":
-                    return SsoPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return SsoPolicy.disabled
+                        case "optional":
+                            return SsoPolicy.optional
+                        case "required":
+                            return SsoPolicy.required
+                        case "other":
+                            return SsoPolicy.other
+                        default:
+                            return SsoPolicy.other
+                    }
                 default:
-                    return SsoPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SsoPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: SsoPolicy.self, json: json)
             }
         }
     }
@@ -1624,42 +1825,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class SuggestMembersPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: SuggestMembersPolicy) throws -> JSON {
             switch value {
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .enabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("enabled")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> SuggestMembersPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "disabled":
-                    return SuggestMembersPolicy.disabled
-                case "enabled":
-                    return SuggestMembersPolicy.enabled
-                case "other":
-                    return SuggestMembersPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "disabled":
+                            return SuggestMembersPolicy.disabled
+                        case "enabled":
+                            return SuggestMembersPolicy.enabled
+                        case "other":
+                            return SuggestMembersPolicy.other
+                        default:
+                            return SuggestMembersPolicy.other
+                    }
                 default:
-                    return SuggestMembersPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SuggestMembersPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: SuggestMembersPolicy.self, json: json)
             }
         }
     }
@@ -1677,16 +1876,14 @@ public class TeamPolicies {
         public let officeAddin: TeamPolicies.OfficeAddInPolicy
         /// The team policy on if teammembers are allowed to suggest users for admins to invite to the team.
         public let suggestMembersPolicy: TeamPolicies.SuggestMembersPolicy
-        public init(
-            sharing: TeamPolicies.TeamSharingPolicies,
-            emmState: TeamPolicies.EmmState,
-            officeAddin: TeamPolicies.OfficeAddInPolicy,
-            suggestMembersPolicy: TeamPolicies.SuggestMembersPolicy
-        ) {
+        /// Policy for deciding whether members can edit team folders at the top level of the team space.
+        public let topLevelContentPolicy: TeamPolicies.TopLevelContentPolicy
+        public init(sharing: TeamPolicies.TeamSharingPolicies, emmState: TeamPolicies.EmmState, officeAddin: TeamPolicies.OfficeAddInPolicy, suggestMembersPolicy: TeamPolicies.SuggestMembersPolicy, topLevelContentPolicy: TeamPolicies.TopLevelContentPolicy) {
             self.sharing = sharing
             self.emmState = emmState
             self.officeAddin = officeAddin
             self.suggestMembersPolicy = suggestMembersPolicy
+            self.topLevelContentPolicy = topLevelContentPolicy
         }
 
         func json() throws -> JSON {
@@ -1701,29 +1898,29 @@ public class TeamPolicies {
             }
         }
     }
-
     public class TeamMemberPoliciesSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TeamMemberPolicies) throws -> JSON {
             let output = [
-                "sharing": try TeamPolicies.TeamSharingPoliciesSerializer().serialize(value.sharing),
-                "emm_state": try TeamPolicies.EmmStateSerializer().serialize(value.emmState),
-                "office_addin": try TeamPolicies.OfficeAddInPolicySerializer().serialize(value.officeAddin),
-                "suggest_members_policy": try TeamPolicies.SuggestMembersPolicySerializer().serialize(value.suggestMembersPolicy),
+            "sharing": try TeamPolicies.TeamSharingPoliciesSerializer().serialize(value.sharing),
+            "emm_state": try TeamPolicies.EmmStateSerializer().serialize(value.emmState),
+            "office_addin": try TeamPolicies.OfficeAddInPolicySerializer().serialize(value.officeAddin),
+            "suggest_members_policy": try TeamPolicies.SuggestMembersPolicySerializer().serialize(value.suggestMembersPolicy),
+            "top_level_content_policy": try TeamPolicies.TopLevelContentPolicySerializer().serialize(value.topLevelContentPolicy),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> TeamMemberPolicies {
             switch json {
-            case .dictionary(let dict):
-                let sharing = try TeamPolicies.TeamSharingPoliciesSerializer().deserialize(dict["sharing"] ?? .null)
-                let emmState = try TeamPolicies.EmmStateSerializer().deserialize(dict["emm_state"] ?? .null)
-                let officeAddin = try TeamPolicies.OfficeAddInPolicySerializer().deserialize(dict["office_addin"] ?? .null)
-                let suggestMembersPolicy = try TeamPolicies.SuggestMembersPolicySerializer().deserialize(dict["suggest_members_policy"] ?? .null)
-                return TeamMemberPolicies(sharing: sharing, emmState: emmState, officeAddin: officeAddin, suggestMembersPolicy: suggestMembersPolicy)
-            default:
-                throw JSONSerializerError.deserializeError(type: TeamMemberPolicies.self, json: json)
+                case .dictionary(let dict):
+                    let sharing = try TeamPolicies.TeamSharingPoliciesSerializer().deserialize(dict["sharing"] ?? .null)
+                    let emmState = try TeamPolicies.EmmStateSerializer().deserialize(dict["emm_state"] ?? .null)
+                    let officeAddin = try TeamPolicies.OfficeAddInPolicySerializer().deserialize(dict["office_addin"] ?? .null)
+                    let suggestMembersPolicy = try TeamPolicies.SuggestMembersPolicySerializer().deserialize(dict["suggest_members_policy"] ?? .null)
+                    let topLevelContentPolicy = try TeamPolicies.TopLevelContentPolicySerializer().deserialize(dict["top_level_content_policy"] ?? .null)
+                    return TeamMemberPolicies(sharing: sharing, emmState: emmState, officeAddin: officeAddin, suggestMembersPolicy: suggestMembersPolicy, topLevelContentPolicy: topLevelContentPolicy)
+                default:
+                    throw JSONSerializerError.deserializeError(type: TeamMemberPolicies.self, json: json)
             }
         }
     }
@@ -1740,18 +1937,21 @@ public class TeamPolicies {
         public let groupCreationPolicy: TeamPolicies.GroupCreation
         /// Who can view links to content in shared folders.
         public let sharedFolderLinkRestrictionPolicy: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy
-        public init(
-            sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy,
-            sharedFolderJoinPolicy: TeamPolicies.SharedFolderJoinPolicy,
-            sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy,
-            groupCreationPolicy: TeamPolicies.GroupCreation,
-            sharedFolderLinkRestrictionPolicy: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy
-        ) {
+        /// If passwords are required for new links shared outside the team.
+        public let enforceLinkPasswordPolicy: TeamPolicies.EnforceLinkPasswordPolicy
+        /// Default expiration date for new links shared outside the team.
+        public let defaultLinkExpirationDaysPolicy: TeamPolicies.DefaultLinkExpirationDaysPolicy
+        /// Default access level for new links shared by team members.
+        public let sharedLinkDefaultPermissionsPolicy: TeamPolicies.SharedLinkDefaultPermissionsPolicy
+        public init(sharedFolderMemberPolicy: TeamPolicies.SharedFolderMemberPolicy, sharedFolderJoinPolicy: TeamPolicies.SharedFolderJoinPolicy, sharedLinkCreatePolicy: TeamPolicies.SharedLinkCreatePolicy, groupCreationPolicy: TeamPolicies.GroupCreation, sharedFolderLinkRestrictionPolicy: TeamPolicies.SharedFolderBlanketLinkRestrictionPolicy, enforceLinkPasswordPolicy: TeamPolicies.EnforceLinkPasswordPolicy, defaultLinkExpirationDaysPolicy: TeamPolicies.DefaultLinkExpirationDaysPolicy, sharedLinkDefaultPermissionsPolicy: TeamPolicies.SharedLinkDefaultPermissionsPolicy) {
             self.sharedFolderMemberPolicy = sharedFolderMemberPolicy
             self.sharedFolderJoinPolicy = sharedFolderJoinPolicy
             self.sharedLinkCreatePolicy = sharedLinkCreatePolicy
             self.groupCreationPolicy = groupCreationPolicy
             self.sharedFolderLinkRestrictionPolicy = sharedFolderLinkRestrictionPolicy
+            self.enforceLinkPasswordPolicy = enforceLinkPasswordPolicy
+            self.defaultLinkExpirationDaysPolicy = defaultLinkExpirationDaysPolicy
+            self.sharedLinkDefaultPermissionsPolicy = sharedLinkDefaultPermissionsPolicy
         }
 
         func json() throws -> JSON {
@@ -1766,40 +1966,94 @@ public class TeamPolicies {
             }
         }
     }
-
     public class TeamSharingPoliciesSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TeamSharingPolicies) throws -> JSON {
             let output = [
-                "shared_folder_member_policy": try TeamPolicies.SharedFolderMemberPolicySerializer().serialize(value.sharedFolderMemberPolicy),
-                "shared_folder_join_policy": try TeamPolicies.SharedFolderJoinPolicySerializer().serialize(value.sharedFolderJoinPolicy),
-                "shared_link_create_policy": try TeamPolicies.SharedLinkCreatePolicySerializer().serialize(value.sharedLinkCreatePolicy),
-                "group_creation_policy": try TeamPolicies.GroupCreationSerializer().serialize(value.groupCreationPolicy),
-                "shared_folder_link_restriction_policy": try TeamPolicies.SharedFolderBlanketLinkRestrictionPolicySerializer()
-                    .serialize(value.sharedFolderLinkRestrictionPolicy),
+            "shared_folder_member_policy": try TeamPolicies.SharedFolderMemberPolicySerializer().serialize(value.sharedFolderMemberPolicy),
+            "shared_folder_join_policy": try TeamPolicies.SharedFolderJoinPolicySerializer().serialize(value.sharedFolderJoinPolicy),
+            "shared_link_create_policy": try TeamPolicies.SharedLinkCreatePolicySerializer().serialize(value.sharedLinkCreatePolicy),
+            "group_creation_policy": try TeamPolicies.GroupCreationSerializer().serialize(value.groupCreationPolicy),
+            "shared_folder_link_restriction_policy": try TeamPolicies.SharedFolderBlanketLinkRestrictionPolicySerializer().serialize(value.sharedFolderLinkRestrictionPolicy),
+            "enforce_link_password_policy": try TeamPolicies.EnforceLinkPasswordPolicySerializer().serialize(value.enforceLinkPasswordPolicy),
+            "default_link_expiration_days_policy": try TeamPolicies.DefaultLinkExpirationDaysPolicySerializer().serialize(value.defaultLinkExpirationDaysPolicy),
+            "shared_link_default_permissions_policy": try TeamPolicies.SharedLinkDefaultPermissionsPolicySerializer().serialize(value.sharedLinkDefaultPermissionsPolicy),
             ]
             return .dictionary(output)
         }
-
         public func deserialize(_ json: JSON) throws -> TeamSharingPolicies {
             switch json {
-            case .dictionary(let dict):
-                let sharedFolderMemberPolicy = try TeamPolicies.SharedFolderMemberPolicySerializer()
-                    .deserialize(dict["shared_folder_member_policy"] ?? .null)
-                let sharedFolderJoinPolicy = try TeamPolicies.SharedFolderJoinPolicySerializer().deserialize(dict["shared_folder_join_policy"] ?? .null)
-                let sharedLinkCreatePolicy = try TeamPolicies.SharedLinkCreatePolicySerializer().deserialize(dict["shared_link_create_policy"] ?? .null)
-                let groupCreationPolicy = try TeamPolicies.GroupCreationSerializer().deserialize(dict["group_creation_policy"] ?? .null)
-                let sharedFolderLinkRestrictionPolicy = try TeamPolicies.SharedFolderBlanketLinkRestrictionPolicySerializer()
-                    .deserialize(dict["shared_folder_link_restriction_policy"] ?? .null)
-                return TeamSharingPolicies(
-                    sharedFolderMemberPolicy: sharedFolderMemberPolicy,
-                    sharedFolderJoinPolicy: sharedFolderJoinPolicy,
-                    sharedLinkCreatePolicy: sharedLinkCreatePolicy,
-                    groupCreationPolicy: groupCreationPolicy,
-                    sharedFolderLinkRestrictionPolicy: sharedFolderLinkRestrictionPolicy
-                )
-            default:
-                throw JSONSerializerError.deserializeError(type: TeamSharingPolicies.self, json: json)
+                case .dictionary(let dict):
+                    let sharedFolderMemberPolicy = try TeamPolicies.SharedFolderMemberPolicySerializer().deserialize(dict["shared_folder_member_policy"] ?? .null)
+                    let sharedFolderJoinPolicy = try TeamPolicies.SharedFolderJoinPolicySerializer().deserialize(dict["shared_folder_join_policy"] ?? .null)
+                    let sharedLinkCreatePolicy = try TeamPolicies.SharedLinkCreatePolicySerializer().deserialize(dict["shared_link_create_policy"] ?? .null)
+                    let groupCreationPolicy = try TeamPolicies.GroupCreationSerializer().deserialize(dict["group_creation_policy"] ?? .null)
+                    let sharedFolderLinkRestrictionPolicy = try TeamPolicies.SharedFolderBlanketLinkRestrictionPolicySerializer().deserialize(dict["shared_folder_link_restriction_policy"] ?? .null)
+                    let enforceLinkPasswordPolicy = try TeamPolicies.EnforceLinkPasswordPolicySerializer().deserialize(dict["enforce_link_password_policy"] ?? .null)
+                    let defaultLinkExpirationDaysPolicy = try TeamPolicies.DefaultLinkExpirationDaysPolicySerializer().deserialize(dict["default_link_expiration_days_policy"] ?? .null)
+                    let sharedLinkDefaultPermissionsPolicy = try TeamPolicies.SharedLinkDefaultPermissionsPolicySerializer().deserialize(dict["shared_link_default_permissions_policy"] ?? .null)
+                    return TeamSharingPolicies(sharedFolderMemberPolicy: sharedFolderMemberPolicy, sharedFolderJoinPolicy: sharedFolderJoinPolicy, sharedLinkCreatePolicy: sharedLinkCreatePolicy, groupCreationPolicy: groupCreationPolicy, sharedFolderLinkRestrictionPolicy: sharedFolderLinkRestrictionPolicy, enforceLinkPasswordPolicy: enforceLinkPasswordPolicy, defaultLinkExpirationDaysPolicy: defaultLinkExpirationDaysPolicy, sharedLinkDefaultPermissionsPolicy: sharedLinkDefaultPermissionsPolicy)
+                default:
+                    throw JSONSerializerError.deserializeError(type: TeamSharingPolicies.self, json: json)
+            }
+        }
+    }
+
+    /// The TopLevelContentPolicy union
+    public enum TopLevelContentPolicy: CustomStringConvertible, JSONRepresentable {
+        /// Only admins can edit team folders at the top level of the team space.
+        case adminOnly
+        /// Everyone on the team can edit team folders at the top level of the team space.
+        case everyone
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try TopLevelContentPolicySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TopLevelContentPolicySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for TopLevelContentPolicy: \(error)"
+            }
+        }
+    }
+    public class TopLevelContentPolicySerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: TopLevelContentPolicy) throws -> JSON {
+            switch value {
+                case .adminOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("admin_only")
+                    return .dictionary(d)
+                case .everyone:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("everyone")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        public func deserialize(_ json: JSON) throws -> TopLevelContentPolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "admin_only":
+                            return TopLevelContentPolicy.adminOnly
+                        case "everyone":
+                            return TopLevelContentPolicy.everyone
+                        case "other":
+                            return TopLevelContentPolicy.other
+                        default:
+                            return TopLevelContentPolicy.other
+                    }
+                default:
+                    throw JSONSerializerError.deserializeError(type: TopLevelContentPolicy.self, json: json)
             }
         }
     }
@@ -1825,42 +2079,40 @@ public class TeamPolicies {
             }
         }
     }
-
     public class TwoStepVerificationPolicySerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TwoStepVerificationPolicy) throws -> JSON {
             switch value {
-            case .requireTfaEnable:
-                var d = [String: JSON]()
-                d[".tag"] = .str("require_tfa_enable")
-                return .dictionary(d)
-            case .requireTfaDisable:
-                var d = [String: JSON]()
-                d[".tag"] = .str("require_tfa_disable")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .requireTfaEnable:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("require_tfa_enable")
+                    return .dictionary(d)
+                case .requireTfaDisable:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("require_tfa_disable")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> TwoStepVerificationPolicy {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "require_tfa_enable":
-                    return TwoStepVerificationPolicy.requireTfaEnable
-                case "require_tfa_disable":
-                    return TwoStepVerificationPolicy.requireTfaDisable
-                case "other":
-                    return TwoStepVerificationPolicy.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "require_tfa_enable":
+                            return TwoStepVerificationPolicy.requireTfaEnable
+                        case "require_tfa_disable":
+                            return TwoStepVerificationPolicy.requireTfaDisable
+                        case "other":
+                            return TwoStepVerificationPolicy.other
+                        default:
+                            return TwoStepVerificationPolicy.other
+                    }
                 default:
-                    return TwoStepVerificationPolicy.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: TwoStepVerificationPolicy.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: TwoStepVerificationPolicy.self, json: json)
             }
         }
     }
@@ -1888,49 +2140,48 @@ public class TeamPolicies {
             }
         }
     }
-
     public class TwoStepVerificationStateSerializer: JSONSerializer {
-        public init() {}
+        public init() { }
         public func serialize(_ value: TwoStepVerificationState) throws -> JSON {
             switch value {
-            case .required:
-                var d = [String: JSON]()
-                d[".tag"] = .str("required")
-                return .dictionary(d)
-            case .optional:
-                var d = [String: JSON]()
-                d[".tag"] = .str("optional")
-                return .dictionary(d)
-            case .disabled:
-                var d = [String: JSON]()
-                d[".tag"] = .str("disabled")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
+                case .required:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("required")
+                    return .dictionary(d)
+                case .optional:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("optional")
+                    return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
             }
         }
-
         public func deserialize(_ json: JSON) throws -> TwoStepVerificationState {
             switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "required":
-                    return TwoStepVerificationState.required
-                case "optional":
-                    return TwoStepVerificationState.optional
-                case "disabled":
-                    return TwoStepVerificationState.disabled
-                case "other":
-                    return TwoStepVerificationState.other
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "required":
+                            return TwoStepVerificationState.required
+                        case "optional":
+                            return TwoStepVerificationState.optional
+                        case "disabled":
+                            return TwoStepVerificationState.disabled
+                        case "other":
+                            return TwoStepVerificationState.other
+                        default:
+                            return TwoStepVerificationState.other
+                    }
                 default:
-                    return TwoStepVerificationState.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: TwoStepVerificationState.self, json: json)
+                    throw JSONSerializerError.deserializeError(type: TwoStepVerificationState.self, json: json)
             }
         }
     }
+
 }

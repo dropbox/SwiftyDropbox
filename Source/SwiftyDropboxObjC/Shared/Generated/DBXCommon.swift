@@ -10,6 +10,32 @@ import SwiftyDropbox
 /// Objective-C compatible datatypes for the common namespace
 /// For Swift see common
 
+/// Objective-C compatible DropboxDuration struct
+@objc
+public class DBXCommonDropboxDuration: NSObject {
+    /// (no description)
+    @objc
+    public var seconds: NSNumber { swift.seconds as NSNumber }
+    /// (no description)
+    @objc
+    public var nanos: NSNumber { swift.nanos as NSNumber }
+
+    @objc
+    public init(seconds: NSNumber, nanos: NSNumber) {
+        self.swift = Common.DropboxDuration(seconds: seconds.int64Value, nanos: nanos.int32Value)
+    }
+
+    let swift: Common.DropboxDuration
+
+    public init(swift: Common.DropboxDuration) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
 /// Objective-C compatible PathRoot union
 @objc
 public class DBXCommonPathRoot: NSObject {
@@ -39,22 +65,22 @@ public class DBXCommonPathRoot: NSObject {
 
     @objc
     public var asHome: DBXCommonPathRootHome? {
-        self as? DBXCommonPathRootHome
+        return self as? DBXCommonPathRootHome
     }
 
     @objc
     public var asRoot: DBXCommonPathRootRoot? {
-        self as? DBXCommonPathRootRoot
+        return self as? DBXCommonPathRootRoot
     }
 
     @objc
     public var asNamespaceId: DBXCommonPathRootNamespaceId? {
-        self as? DBXCommonPathRootNamespaceId
+        return self as? DBXCommonPathRootNamespaceId
     }
 
     @objc
     public var asOther: DBXCommonPathRootOther? {
-        self as? DBXCommonPathRootOther
+        return self as? DBXCommonPathRootOther
     }
 }
 
@@ -69,7 +95,7 @@ public class DBXCommonPathRootHome: DBXCommonPathRoot {
 }
 
 /// Paths are relative to the authenticating user's root namespace (This results in invalidRoot in PathRootError
-/// if the user's root namespace has changed.).
+        /// if the user's root namespace has changed.).
 @objc
 public class DBXCommonPathRootRoot: DBXCommonPathRoot {
     @objc
@@ -77,14 +103,14 @@ public class DBXCommonPathRootRoot: DBXCommonPathRoot {
 
     @objc
     public init(_ arg: String) {
-        self.root = arg
+        root = arg
         let swift = Common.PathRoot.root(arg)
         super.init(swift: swift)
     }
 }
 
 /// Paths are relative to given namespace id (This results in noPermission in PathRootError if you don't have
-/// access to this namespace.).
+        /// access to this namespace.).
 @objc
 public class DBXCommonPathRootNamespaceId: DBXCommonPathRoot {
     @objc
@@ -92,7 +118,7 @@ public class DBXCommonPathRootNamespaceId: DBXCommonPathRoot {
 
     @objc
     public init(_ arg: String) {
-        self.namespaceId = arg
+        namespaceId = arg
         let swift = Common.PathRoot.namespaceId(arg)
         super.init(swift: swift)
     }
@@ -134,22 +160,22 @@ public class DBXCommonPathRootError: NSObject {
 
     @objc
     public var asInvalidRoot: DBXCommonPathRootErrorInvalidRoot? {
-        self as? DBXCommonPathRootErrorInvalidRoot
+        return self as? DBXCommonPathRootErrorInvalidRoot
     }
 
     @objc
     public var asNoPermission: DBXCommonPathRootErrorNoPermission? {
-        self as? DBXCommonPathRootErrorNoPermission
+        return self as? DBXCommonPathRootErrorNoPermission
     }
 
     @objc
     public var asOther: DBXCommonPathRootErrorOther? {
-        self as? DBXCommonPathRootErrorOther
+        return self as? DBXCommonPathRootErrorOther
     }
 }
 
 /// The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error is the user's
-/// latest root info.
+        /// latest root info.
 @objc
 public class DBXCommonPathRootErrorInvalidRoot: DBXCommonPathRootError {
     @objc
@@ -157,13 +183,13 @@ public class DBXCommonPathRootErrorInvalidRoot: DBXCommonPathRootError {
 
     @objc
     public init(_ arg: DBXCommonRootInfo) {
-        self.invalidRoot = arg
+        invalidRoot = arg
         let swift = Common.PathRootError.invalidRoot(arg.swift)
         super.init(swift: swift)
     }
 }
 
-/// You don't have permission to access the namespace id in Dropbox-API-Path-Root  header.
+/// You don't have permission to access the namespace id in Dropbox-API-Path-Root header.
 @objc
 public class DBXCommonPathRootErrorNoPermission: DBXCommonPathRootError {
     @objc
@@ -187,7 +213,8 @@ public class DBXCommonPathRootErrorOther: DBXCommonPathRootError {
 @objc
 public class DBXCommonRootInfo: NSObject {
     /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team root if the user
-    /// is member of a team with a separate team root. Otherwise it will be same as homeNamespaceId in RootInfo.
+    /// is member of a team with a separate team root, or the user root if user is member of a team with
+    /// separate distinct roots for users. Otherwise it will be the same as homeNamespaceId in RootInfo.
     @objc
     public var rootNamespaceId: String { swift.rootNamespaceId }
     /// The namespace ID for user's home namespace.
@@ -241,6 +268,7 @@ public class DBXCommonTeamRootInfo: DBXCommonRootInfo {
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
 }
@@ -249,6 +277,17 @@ public class DBXCommonTeamRootInfo: DBXCommonRootInfo {
 /// separate root namespace.
 @objc
 public class DBXCommonUserRootInfo: DBXCommonRootInfo {
+    /// The path for user's home directory under the distinct user root.
+    @objc
+    public var homePath: String? { subSwift.homePath }
+
+    @objc
+    public init(rootNamespaceId: String, homeNamespaceId: String, homePath: String?) {
+        let swift = Common.UserRootInfo(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId, homePath: homePath)
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
     let subSwift: Common.UserRootInfo
 
     public init(swift: Common.UserRootInfo) {
@@ -256,6 +295,8 @@ public class DBXCommonUserRootInfo: DBXCommonRootInfo {
         super.init(swift: swift)
     }
 
+
     @objc
     public override var description: String { subSwift.description }
 }
+

@@ -35,10 +35,10 @@ public class ContactsRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Contacts.DeleteManualContactsError` object on failure.
-    @discardableResult public func deleteManualContactsBatch(emailAddresses: [String])
-        -> RpcRequest<VoidSerializer, Contacts.DeleteManualContactsErrorSerializer> {
+    @discardableResult public func deleteManualContactsBatch(emailAddresses: Array<String>) -> RpcRequest<VoidSerializer, Contacts.DeleteManualContactsErrorSerializer> {
         let route = Contacts.deleteManualContactsBatch
         let serverArgs = Contacts.DeleteManualContactsArg(emailAddresses: emailAddresses)
         return client.request(route, serverArgs: serverArgs)
     }
+
 }

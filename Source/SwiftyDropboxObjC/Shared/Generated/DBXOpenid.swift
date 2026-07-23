@@ -33,12 +33,12 @@ public class DBXOpenidOpenIdError: NSObject {
 
     @objc
     public var asIncorrectOpenidScopes: DBXOpenidOpenIdErrorIncorrectOpenidScopes? {
-        self as? DBXOpenidOpenIdErrorIncorrectOpenidScopes
+        return self as? DBXOpenidOpenIdErrorIncorrectOpenidScopes
     }
 
     @objc
     public var asOther: DBXOpenidOpenIdErrorOther? {
-        self as? DBXOpenidOpenIdErrorOther
+        return self as? DBXOpenidOpenIdErrorOther
     }
 }
 
@@ -65,11 +65,13 @@ public class DBXOpenidOpenIdErrorOther: DBXOpenidOpenIdError {
 /// No Parameters
 @objc
 public class DBXOpenidUserInfoArgs: NSObject {
+
     let swift: Openid.UserInfoArgs
 
     public init(swift: Openid.UserInfoArgs) {
         self.swift = swift
     }
+
 
     @objc
     public override var description: String { swift.description }
@@ -99,12 +101,12 @@ public class DBXOpenidUserInfoError: NSObject {
 
     @objc
     public var asOpenidError: DBXOpenidUserInfoErrorOpenidError? {
-        self as? DBXOpenidUserInfoErrorOpenidError
+        return self as? DBXOpenidUserInfoErrorOpenidError
     }
 
     @objc
     public var asOther: DBXOpenidUserInfoErrorOther? {
-        self as? DBXOpenidUserInfoErrorOther
+        return self as? DBXOpenidUserInfoErrorOther
     }
 }
 
@@ -116,7 +118,7 @@ public class DBXOpenidUserInfoErrorOpenidError: DBXOpenidUserInfoError {
 
     @objc
     public init(_ arg: DBXOpenidOpenIdError) {
-        self.openidError = arg
+        openidError = arg
         let swift = Openid.UserInfoError.openidError(arg.swift)
         super.init(swift: swift)
     }
@@ -157,14 +159,7 @@ public class DBXOpenidUserInfoResult: NSObject {
 
     @objc
     public init(familyName: String?, givenName: String?, email: String?, emailVerified: NSNumber?, iss: String, sub: String) {
-        self.swift = Openid.UserInfoResult(
-            familyName: familyName,
-            givenName: givenName,
-            email: email,
-            emailVerified: emailVerified?.boolValue,
-            iss: iss,
-            sub: sub
-        )
+        self.swift = Openid.UserInfoResult(familyName: familyName, givenName: givenName, email: email, emailVerified: emailVerified?.boolValue, iss: iss, sub: sub)
     }
 
     let swift: Openid.UserInfoResult
@@ -173,6 +168,8 @@ public class DBXOpenidUserInfoResult: NSObject {
         self.swift = swift
     }
 
+
     @objc
     public override var description: String { swift.description }
 }
+

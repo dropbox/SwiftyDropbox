@@ -32,7 +32,9 @@ public class DBXOpenidRoutes: NSObject {
         let swift = swift.userinfo()
         return DBXOpenidUserinfoRpcRequest(swift: swift)
     }
+
 }
+
 
 @objc
 public class DBXOpenidUserinfoRpcRequest: NSObject, DBXRequest {
@@ -46,7 +48,7 @@ public class DBXOpenidUserinfoRpcRequest: NSObject, DBXRequest {
     @discardableResult public func response(
         completionHandler: @escaping (DBXOpenidUserInfoResult?, DBXOpenidUserInfoError?, DBXCallError?) -> Void
     ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
+        self.response(queue: nil, completionHandler: completionHandler)
     }
 
     @objc
@@ -66,7 +68,7 @@ public class DBXOpenidUserinfoRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXOpenidUserInfoResult?
+            var objc: DBXOpenidUserInfoResult? = nil
             if let swift = result {
                 objc = DBXOpenidUserInfoResult(swift: swift)
             }
@@ -100,3 +102,4 @@ public class DBXOpenidUserinfoRpcRequest: NSObject, DBXRequest {
         swift.cancel()
     }
 }
+
