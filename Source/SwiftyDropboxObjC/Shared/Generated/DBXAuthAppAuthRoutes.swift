@@ -52,7 +52,7 @@ public class DBXAuthTokenFromOauth1RpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXAuthTokenFromOAuth1Result?
+            var objc: DBXAuthTokenFromOAuth1Result? = nil
             if let swift = result {
                 objc = DBXAuthTokenFromOAuth1Result(swift: swift)
             }

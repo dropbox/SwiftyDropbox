@@ -27,6 +27,11 @@ public class DBXAuthAccessError: NSObject {
         case .paperAccessDenied(let swiftArg):
             let arg = DBXAuthPaperAccessError(swift: swiftArg)
             return DBXAuthAccessErrorPaperAccessDenied(arg)
+        case .teamAccessDenied:
+            return DBXAuthAccessErrorTeamAccessDenied()
+        case .noPermission(let swiftArg):
+            let arg = DBXAuthNoPermissionError(swift: swiftArg)
+            return DBXAuthAccessErrorNoPermission(arg)
         case .other:
             return DBXAuthAccessErrorOther()
         }
@@ -43,6 +48,16 @@ public class DBXAuthAccessError: NSObject {
     @objc
     public var asPaperAccessDenied: DBXAuthAccessErrorPaperAccessDenied? {
         self as? DBXAuthAccessErrorPaperAccessDenied
+    }
+
+    @objc
+    public var asTeamAccessDenied: DBXAuthAccessErrorTeamAccessDenied? {
+        self as? DBXAuthAccessErrorTeamAccessDenied
+    }
+
+    @objc
+    public var asNoPermission: DBXAuthAccessErrorNoPermission? {
+        self as? DBXAuthAccessErrorNoPermission
     }
 
     @objc
@@ -75,6 +90,30 @@ public class DBXAuthAccessErrorPaperAccessDenied: DBXAuthAccessError {
     public init(_ arg: DBXAuthPaperAccessError) {
         self.paperAccessDenied = arg
         let swift = Auth.AccessError.paperAccessDenied(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// Team doesn't have permission to access.
+@objc
+public class DBXAuthAccessErrorTeamAccessDenied: DBXAuthAccessError {
+    @objc
+    public init() {
+        let swift = Auth.AccessError.teamAccessDenied
+        super.init(swift: swift)
+    }
+}
+
+/// Caller does not have permission to access the resource.
+@objc
+public class DBXAuthAccessErrorNoPermission: DBXAuthAccessError {
+    @objc
+    public var noPermission: DBXAuthNoPermissionError
+
+    @objc
+    public init(_ arg: DBXAuthNoPermissionError) {
+        self.noPermission = arg
+        let swift = Auth.AccessError.noPermission(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -313,6 +352,64 @@ public class DBXAuthInvalidAccountTypeErrorOther: DBXAuthInvalidAccountTypeError
     @objc
     public init() {
         let swift = Auth.InvalidAccountTypeError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible NoPermissionError union
+@objc
+public class DBXAuthNoPermissionError: NSObject {
+    let swift: Auth.NoPermissionError
+
+    public init(swift: Auth.NoPermissionError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Auth.NoPermissionError) -> DBXAuthNoPermissionError {
+        switch swift {
+        case .unauthorizedAccountIdUsage(let swiftArg):
+            let arg = DBXAuthUnauthorizedAccountIdUsageError(swift: swiftArg)
+            return DBXAuthNoPermissionErrorUnauthorizedAccountIdUsage(arg)
+        case .other:
+            return DBXAuthNoPermissionErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asUnauthorizedAccountIdUsage: DBXAuthNoPermissionErrorUnauthorizedAccountIdUsage? {
+        self as? DBXAuthNoPermissionErrorUnauthorizedAccountIdUsage
+    }
+
+    @objc
+    public var asOther: DBXAuthNoPermissionErrorOther? {
+        self as? DBXAuthNoPermissionErrorOther
+    }
+}
+
+/// Current caller does not have permission to access the account information for one or more of the specified
+/// account IDs.
+@objc
+public class DBXAuthNoPermissionErrorUnauthorizedAccountIdUsage: DBXAuthNoPermissionError {
+    @objc
+    public var unauthorizedAccountIdUsage: DBXAuthUnauthorizedAccountIdUsageError
+
+    @objc
+    public init(_ arg: DBXAuthUnauthorizedAccountIdUsageError) {
+        self.unauthorizedAccountIdUsage = arg
+        let swift = Auth.NoPermissionError.unauthorizedAccountIdUsage(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXAuthNoPermissionErrorOther: DBXAuthNoPermissionError {
+    @objc
+    public init() {
+        let swift = Auth.NoPermissionError.other
         super.init(swift: swift)
     }
 }
@@ -611,6 +708,28 @@ public class DBXAuthTokenScopeError: NSObject {
     let swift: Auth.TokenScopeError
 
     public init(swift: Auth.TokenScopeError) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible UnauthorizedAccountIdUsageError struct
+@objc
+public class DBXAuthUnauthorizedAccountIdUsageError: NSObject {
+    /// The account IDs that the caller does not have permission to use.
+    @objc
+    public var unauthorizedAccountIds: [String] { swift.unauthorizedAccountIds }
+
+    @objc
+    public init(unauthorizedAccountIds: [String]) {
+        self.swift = Auth.UnauthorizedAccountIdUsageError(unauthorizedAccountIds: unauthorizedAccountIds)
+    }
+
+    let swift: Auth.UnauthorizedAccountIdUsageError
+
+    public init(swift: Auth.UnauthorizedAccountIdUsageError) {
         self.swift = swift
     }
 

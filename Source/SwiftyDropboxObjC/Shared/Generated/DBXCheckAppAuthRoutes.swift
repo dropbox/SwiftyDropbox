@@ -27,7 +27,7 @@ public class DBXCheckAppAuthRoutes: NSObject {
     /// - parameter query: The string that you'd like to be echoed back to you.
     ///
     /// - returns: Through the response callback, the caller will receive a `Check.EchoResult` object on success or a
-    /// `Void` object on failure.
+    /// `Check.EchoError` object on failure.
     @objc
     @discardableResult public func app(query: String) -> DBXCheckAppRpcRequest {
         let swift = swift.app(query: query)
@@ -40,7 +40,7 @@ public class DBXCheckAppAuthRoutes: NSObject {
     /// infrastructure is working and that the app key and secret valid.
     ///
     /// - returns: Through the response callback, the caller will receive a `Check.EchoResult` object on success or a
-    /// `Void` object on failure.
+    /// `Check.EchoError` object on failure.
     @objc
     @discardableResult public func app() -> DBXCheckAppRpcRequest {
         let swift = swift.app()
@@ -50,15 +50,15 @@ public class DBXCheckAppAuthRoutes: NSObject {
 
 @objc
 public class DBXCheckAppRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Check.EchoResultSerializer, VoidSerializer>
+    var swift: RpcRequest<Check.EchoResultSerializer, Check.EchoErrorSerializer>
 
-    init(swift: RpcRequest<Check.EchoResultSerializer, VoidSerializer>) {
+    init(swift: RpcRequest<Check.EchoResultSerializer, Check.EchoErrorSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXCheckEchoResult?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXCheckEchoResult?, DBXCheckEchoError?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -66,14 +66,25 @@ public class DBXCheckAppRpcRequest: NSObject, DBXRequest {
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXCheckEchoResult?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXCheckEchoResult?, DBXCheckEchoError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXCheckEchoResult?
+            var routeError: DBXCheckEchoError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXCheckEchoError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXCheckEchoResult? = nil
             if let swift = result {
                 objc = DBXCheckEchoResult(swift: swift)
             }
-            completionHandler(objc, error?.objc)
+            completionHandler(objc, routeError, callError)
         }
         return self
     }

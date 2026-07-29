@@ -10,6 +10,31 @@ import SwiftyDropbox
 /// Objective-C compatible datatypes for the common namespace
 /// For Swift see common
 
+/// Objective-C compatible DropboxDuration struct
+@objc
+public class DBXCommonDropboxDuration: NSObject {
+    /// (no description)
+    @objc
+    public var seconds: NSNumber { swift.seconds as NSNumber }
+    /// (no description)
+    @objc
+    public var nanos: NSNumber { swift.nanos as NSNumber }
+
+    @objc
+    public init(seconds: NSNumber, nanos: NSNumber) {
+        self.swift = Common.DropboxDuration(seconds: seconds.int64Value, nanos: nanos.int32Value)
+    }
+
+    let swift: Common.DropboxDuration
+
+    public init(swift: Common.DropboxDuration) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
 /// Objective-C compatible PathRoot union
 @objc
 public class DBXCommonPathRoot: NSObject {
@@ -163,7 +188,7 @@ public class DBXCommonPathRootErrorInvalidRoot: DBXCommonPathRootError {
     }
 }
 
-/// You don't have permission to access the namespace id in Dropbox-API-Path-Root  header.
+/// You don't have permission to access the namespace id in Dropbox-API-Path-Root header.
 @objc
 public class DBXCommonPathRootErrorNoPermission: DBXCommonPathRootError {
     @objc
@@ -187,7 +212,8 @@ public class DBXCommonPathRootErrorOther: DBXCommonPathRootError {
 @objc
 public class DBXCommonRootInfo: NSObject {
     /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team root if the user
-    /// is member of a team with a separate team root. Otherwise it will be same as homeNamespaceId in RootInfo.
+    /// is member of a team with a separate team root, or the user root if user is member of a team with
+    /// separate distinct roots for users. Otherwise it will be the same as homeNamespaceId in RootInfo.
     @objc
     public var rootNamespaceId: String { swift.rootNamespaceId }
     /// The namespace ID for user's home namespace.
@@ -249,6 +275,17 @@ public class DBXCommonTeamRootInfo: DBXCommonRootInfo {
 /// separate root namespace.
 @objc
 public class DBXCommonUserRootInfo: DBXCommonRootInfo {
+    /// The path for user's home directory under the distinct user root.
+    @objc
+    public var homePath: String? { subSwift.homePath }
+
+    @objc
+    public init(rootNamespaceId: String, homeNamespaceId: String, homePath: String?) {
+        let swift = Common.UserRootInfo(rootNamespaceId: rootNamespaceId, homeNamespaceId: homeNamespaceId, homePath: homePath)
+        self.subSwift = swift
+        super.init(swift: swift)
+    }
+
     let subSwift: Common.UserRootInfo
 
     public init(swift: Common.UserRootInfo) {

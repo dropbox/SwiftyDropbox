@@ -267,7 +267,7 @@ public class DBXTeamAddSecondaryEmailResultReachedLimit: DBXTeamAddSecondaryEmai
     }
 }
 
-/// A transient error occurred. Please try again later.
+/// Field is deprecated. A transient error occurred. Please try again later.
 @objc
 public class DBXTeamAddSecondaryEmailResultTransientError: DBXTeamAddSecondaryEmailResult {
     @objc
@@ -700,6 +700,972 @@ public class DBXTeamBaseTeamFolderErrorOther: DBXTeamBaseTeamFolderError {
     }
 }
 
+/// Launches one action-specific bulk suspend job.
+@objc
+public class DBXTeamBulkSuspendArg: NSObject {
+    /// Must contain between 1 and 500 targets. The launch handler also rejects duplicate client item IDs and
+    /// duplicate member selectors.
+    @objc
+    public var members: [DBXTeamBulkSuspendMemberTarget] { swift.members.map { DBXTeamBulkSuspendMemberTarget(swift: $0) } }
+
+    @objc
+    public init(members: [DBXTeamBulkSuspendMemberTarget]) {
+        self.swift = Team.BulkSuspendArg(members: members.map(\.swift))
+    }
+
+    let swift: Team.BulkSuspendArg
+
+    public init(swift: Team.BulkSuspendArg) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible BulkSuspendComplete struct
+@objc
+public class DBXTeamBulkSuspendComplete: NSObject {
+    /// (no description)
+    @objc
+    public var requested: NSNumber { swift.requested as NSNumber }
+    /// (no description)
+    @objc
+    public var suspended: NSNumber { swift.suspended as NSNumber }
+    /// (no description)
+    @objc
+    public var failed: NSNumber { swift.failed as NSNumber }
+    /// (no description)
+    @objc
+    public var unknown: NSNumber { swift.unknown as NSNumber }
+    /// (no description)
+    @objc
+    public var reportDelivery: DBXTeamBulkSuspendReportDeliveryStatus { DBXTeamBulkSuspendReportDeliveryStatus(swift: swift.reportDelivery) }
+
+    @objc
+    public init(requested: NSNumber, suspended: NSNumber, failed: NSNumber, unknown: NSNumber, reportDelivery: DBXTeamBulkSuspendReportDeliveryStatus) {
+        self.swift = Team.BulkSuspendComplete(
+            requested: requested.int64Value,
+            suspended: suspended.int64Value,
+            failed: failed.int64Value,
+            unknown: unknown.int64Value,
+            reportDelivery: reportDelivery.swift
+        )
+    }
+
+    let swift: Team.BulkSuspendComplete
+
+    public init(swift: Team.BulkSuspendComplete) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// A typed launch rejection. Authorization failures continue to use the API v2 authentication/permission error
+/// surface.
+@objc
+public class DBXTeamBulkSuspendError: NSObject {
+    let swift: Team.BulkSuspendError
+
+    public init(swift: Team.BulkSuspendError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.BulkSuspendError) -> DBXTeamBulkSuspendError {
+        switch swift {
+        case .invalidRequest:
+            return DBXTeamBulkSuspendErrorInvalidRequest()
+        case .tooManyMembers:
+            return DBXTeamBulkSuspendErrorTooManyMembers()
+        case .duplicateClientItemId:
+            return DBXTeamBulkSuspendErrorDuplicateClientItemId()
+        case .duplicateTeamMemberId:
+            return DBXTeamBulkSuspendErrorDuplicateTeamMemberId()
+        case .actingAdmin:
+            return DBXTeamBulkSuspendErrorActingAdmin()
+        case .lastAdmin:
+            return DBXTeamBulkSuspendErrorLastAdmin()
+        case .other:
+            return DBXTeamBulkSuspendErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asInvalidRequest: DBXTeamBulkSuspendErrorInvalidRequest? {
+        self as? DBXTeamBulkSuspendErrorInvalidRequest
+    }
+
+    @objc
+    public var asTooManyMembers: DBXTeamBulkSuspendErrorTooManyMembers? {
+        self as? DBXTeamBulkSuspendErrorTooManyMembers
+    }
+
+    @objc
+    public var asDuplicateClientItemId: DBXTeamBulkSuspendErrorDuplicateClientItemId? {
+        self as? DBXTeamBulkSuspendErrorDuplicateClientItemId
+    }
+
+    @objc
+    public var asDuplicateTeamMemberId: DBXTeamBulkSuspendErrorDuplicateTeamMemberId? {
+        self as? DBXTeamBulkSuspendErrorDuplicateTeamMemberId
+    }
+
+    @objc
+    public var asActingAdmin: DBXTeamBulkSuspendErrorActingAdmin? {
+        self as? DBXTeamBulkSuspendErrorActingAdmin
+    }
+
+    @objc
+    public var asLastAdmin: DBXTeamBulkSuspendErrorLastAdmin? {
+        self as? DBXTeamBulkSuspendErrorLastAdmin
+    }
+
+    @objc
+    public var asOther: DBXTeamBulkSuspendErrorOther? {
+        self as? DBXTeamBulkSuspendErrorOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendErrorInvalidRequest: DBXTeamBulkSuspendError {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendError.invalidRequest
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendErrorTooManyMembers: DBXTeamBulkSuspendError {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendError.tooManyMembers
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendErrorDuplicateClientItemId: DBXTeamBulkSuspendError {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendError.duplicateClientItemId
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendErrorDuplicateTeamMemberId: DBXTeamBulkSuspendError {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendError.duplicateTeamMemberId
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendErrorActingAdmin: DBXTeamBulkSuspendError {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendError.actingAdmin
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendErrorLastAdmin: DBXTeamBulkSuspendError {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendError.lastAdmin
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendErrorOther: DBXTeamBulkSuspendError {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Coarse job state. Live row progress and report contents are intentionally omitted; callers receive row details
+/// in the terminal email report.
+@objc
+public class DBXTeamBulkSuspendJobStatus: NSObject {
+    let swift: Team.BulkSuspendJobStatus
+
+    public init(swift: Team.BulkSuspendJobStatus) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.BulkSuspendJobStatus) -> DBXTeamBulkSuspendJobStatus {
+        switch swift {
+        case .inProgress:
+            return DBXTeamBulkSuspendJobStatusInProgress()
+        case .complete(let swiftArg):
+            let arg = DBXTeamBulkSuspendComplete(swift: swiftArg)
+            return DBXTeamBulkSuspendJobStatusComplete(arg)
+        case .failed(let swiftArg):
+            let arg = DBXTeamBulkSuspendTaskFailure(swift: swiftArg)
+            return DBXTeamBulkSuspendJobStatusFailed(arg)
+        case .other:
+            return DBXTeamBulkSuspendJobStatusOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asInProgress: DBXTeamBulkSuspendJobStatusInProgress? {
+        self as? DBXTeamBulkSuspendJobStatusInProgress
+    }
+
+    @objc
+    public var asComplete: DBXTeamBulkSuspendJobStatusComplete? {
+        self as? DBXTeamBulkSuspendJobStatusComplete
+    }
+
+    @objc
+    public var asFailed: DBXTeamBulkSuspendJobStatusFailed? {
+        self as? DBXTeamBulkSuspendJobStatusFailed
+    }
+
+    @objc
+    public var asOther: DBXTeamBulkSuspendJobStatusOther? {
+        self as? DBXTeamBulkSuspendJobStatusOther
+    }
+}
+
+/// The asynchronous job is still in progress.
+@objc
+public class DBXTeamBulkSuspendJobStatusInProgress: DBXTeamBulkSuspendJobStatus {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendJobStatus.inProgress
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendJobStatusComplete: DBXTeamBulkSuspendJobStatus {
+    @objc
+    public var complete: DBXTeamBulkSuspendComplete
+
+    @objc
+    public init(_ arg: DBXTeamBulkSuspendComplete) {
+        self.complete = arg
+        let swift = Team.BulkSuspendJobStatus.complete(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendJobStatusFailed: DBXTeamBulkSuspendJobStatus {
+    @objc
+    public var failed: DBXTeamBulkSuspendTaskFailure
+
+    @objc
+    public init(_ arg: DBXTeamBulkSuspendTaskFailure) {
+        self.failed = arg
+        let swift = Team.BulkSuspendJobStatus.failed(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendJobStatusOther: DBXTeamBulkSuspendJobStatus {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendJobStatus.other
+        super.init(swift: swift)
+    }
+}
+
+/// One member selected for suspension. The opaque client item ID correlates the eventual report row with the
+/// caller's input without sending CSV data.
+@objc
+public class DBXTeamBulkSuspendMemberTarget: NSObject {
+    /// (no description)
+    @objc
+    public var clientItemId: String { swift.clientItemId }
+    /// (no description)
+    @objc
+    public var suspendArg: DBXTeamMembersDeactivateArg { DBXTeamMembersDeactivateArg(swift: swift.suspendArg) }
+
+    @objc
+    public init(clientItemId: String, suspendArg: DBXTeamMembersDeactivateArg) {
+        self.swift = Team.BulkSuspendMemberTarget(clientItemId: clientItemId, suspendArg: suspendArg.subSwift)
+    }
+
+    let swift: Team.BulkSuspendMemberTarget
+
+    public init(swift: Team.BulkSuspendMemberTarget) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible BulkSuspendReportDeliveryStatus union
+@objc
+public class DBXTeamBulkSuspendReportDeliveryStatus: NSObject {
+    let swift: Team.BulkSuspendReportDeliveryStatus
+
+    public init(swift: Team.BulkSuspendReportDeliveryStatus) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.BulkSuspendReportDeliveryStatus) -> DBXTeamBulkSuspendReportDeliveryStatus {
+        switch swift {
+        case .bulkSuspendReportDeliveryStatusUnspecified:
+            return DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusUnspecified()
+        case .bulkSuspendReportDeliveryStatusPending:
+            return DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusPending()
+        case .bulkSuspendReportDeliveryStatusDelivered:
+            return DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusDelivered()
+        case .bulkSuspendReportDeliveryStatusFailed:
+            return DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusFailed()
+        case .other:
+            return DBXTeamBulkSuspendReportDeliveryStatusOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asBulkSuspendReportDeliveryStatusUnspecified: DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusUnspecified? {
+        self as? DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusUnspecified
+    }
+
+    @objc
+    public var asBulkSuspendReportDeliveryStatusPending: DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusPending? {
+        self as? DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusPending
+    }
+
+    @objc
+    public var asBulkSuspendReportDeliveryStatusDelivered: DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusDelivered? {
+        self as? DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusDelivered
+    }
+
+    @objc
+    public var asBulkSuspendReportDeliveryStatusFailed: DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusFailed? {
+        self as? DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusFailed
+    }
+
+    @objc
+    public var asOther: DBXTeamBulkSuspendReportDeliveryStatusOther? {
+        self as? DBXTeamBulkSuspendReportDeliveryStatusOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusUnspecified: DBXTeamBulkSuspendReportDeliveryStatus {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendReportDeliveryStatus.bulkSuspendReportDeliveryStatusUnspecified
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusPending: DBXTeamBulkSuspendReportDeliveryStatus {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendReportDeliveryStatus.bulkSuspendReportDeliveryStatusPending
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusDelivered: DBXTeamBulkSuspendReportDeliveryStatus {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendReportDeliveryStatus.bulkSuspendReportDeliveryStatusDelivered
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendReportDeliveryStatusBulkSuspendReportDeliveryStatusFailed: DBXTeamBulkSuspendReportDeliveryStatus {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendReportDeliveryStatus.bulkSuspendReportDeliveryStatusFailed
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendReportDeliveryStatusOther: DBXTeamBulkSuspendReportDeliveryStatus {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendReportDeliveryStatus.other
+        super.init(swift: swift)
+    }
+}
+
+/// Error that can be returned whenever a struct derived from UserSelectorArg is used.
+@objc
+public class DBXTeamUserSelectorError: NSObject {
+    let swift: Team.UserSelectorError
+
+    public init(swift: Team.UserSelectorError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.UserSelectorError) -> DBXTeamUserSelectorError {
+        switch swift {
+        case .userNotFound:
+            return DBXTeamUserSelectorErrorUserNotFound()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asUserNotFound: DBXTeamUserSelectorErrorUserNotFound? {
+        self as? DBXTeamUserSelectorErrorUserNotFound
+    }
+}
+
+/// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+@objc
+public class DBXTeamUserSelectorErrorUserNotFound: DBXTeamUserSelectorError {
+    @objc
+    public init() {
+        let swift = Team.UserSelectorError.userNotFound
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible MembersDeactivateError union
+@objc
+public class DBXTeamMembersDeactivateError: NSObject {
+    let swift: Team.MembersDeactivateError
+
+    public init(swift: Team.MembersDeactivateError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.MembersDeactivateError) -> DBXTeamMembersDeactivateError {
+        switch swift {
+        case .userNotFound:
+            return DBXTeamMembersDeactivateErrorUserNotFound()
+        case .userNotInTeam:
+            return DBXTeamMembersDeactivateErrorUserNotInTeam()
+        case .other:
+            return DBXTeamMembersDeactivateErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asUserNotFound: DBXTeamMembersDeactivateErrorUserNotFound? {
+        self as? DBXTeamMembersDeactivateErrorUserNotFound
+    }
+
+    @objc
+    public var asUserNotInTeam: DBXTeamMembersDeactivateErrorUserNotInTeam? {
+        self as? DBXTeamMembersDeactivateErrorUserNotInTeam
+    }
+
+    @objc
+    public var asOther: DBXTeamMembersDeactivateErrorOther? {
+        self as? DBXTeamMembersDeactivateErrorOther
+    }
+}
+
+/// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+@objc
+public class DBXTeamMembersDeactivateErrorUserNotFound: DBXTeamMembersDeactivateError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeactivateError.userNotFound
+        super.init(swift: swift)
+    }
+}
+
+/// The user is not a member of the team.
+@objc
+public class DBXTeamMembersDeactivateErrorUserNotInTeam: DBXTeamMembersDeactivateError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeactivateError.userNotInTeam
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersDeactivateErrorOther: DBXTeamMembersDeactivateError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeactivateError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible MembersSuspendError union
+@objc
+public class DBXTeamMembersSuspendError: NSObject {
+    let swift: Team.MembersSuspendError
+
+    public init(swift: Team.MembersSuspendError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.MembersSuspendError) -> DBXTeamMembersSuspendError {
+        switch swift {
+        case .userNotFound:
+            return DBXTeamMembersSuspendErrorUserNotFound()
+        case .userNotInTeam:
+            return DBXTeamMembersSuspendErrorUserNotInTeam()
+        case .other:
+            return DBXTeamMembersSuspendErrorOther()
+        case .suspendInactiveUser:
+            return DBXTeamMembersSuspendErrorSuspendInactiveUser()
+        case .suspendLastAdmin:
+            return DBXTeamMembersSuspendErrorSuspendLastAdmin()
+        case .teamLicenseLimit:
+            return DBXTeamMembersSuspendErrorTeamLicenseLimit()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asUserNotFound: DBXTeamMembersSuspendErrorUserNotFound? {
+        self as? DBXTeamMembersSuspendErrorUserNotFound
+    }
+
+    @objc
+    public var asUserNotInTeam: DBXTeamMembersSuspendErrorUserNotInTeam? {
+        self as? DBXTeamMembersSuspendErrorUserNotInTeam
+    }
+
+    @objc
+    public var asOther: DBXTeamMembersSuspendErrorOther? {
+        self as? DBXTeamMembersSuspendErrorOther
+    }
+
+    @objc
+    public var asSuspendInactiveUser: DBXTeamMembersSuspendErrorSuspendInactiveUser? {
+        self as? DBXTeamMembersSuspendErrorSuspendInactiveUser
+    }
+
+    @objc
+    public var asSuspendLastAdmin: DBXTeamMembersSuspendErrorSuspendLastAdmin? {
+        self as? DBXTeamMembersSuspendErrorSuspendLastAdmin
+    }
+
+    @objc
+    public var asTeamLicenseLimit: DBXTeamMembersSuspendErrorTeamLicenseLimit? {
+        self as? DBXTeamMembersSuspendErrorTeamLicenseLimit
+    }
+}
+
+/// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+@objc
+public class DBXTeamMembersSuspendErrorUserNotFound: DBXTeamMembersSuspendError {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendError.userNotFound
+        super.init(swift: swift)
+    }
+}
+
+/// The user is not a member of the team.
+@objc
+public class DBXTeamMembersSuspendErrorUserNotInTeam: DBXTeamMembersSuspendError {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendError.userNotInTeam
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendErrorOther: DBXTeamMembersSuspendError {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendError.other
+        super.init(swift: swift)
+    }
+}
+
+/// The user is not active, so it cannot be suspended.
+@objc
+public class DBXTeamMembersSuspendErrorSuspendInactiveUser: DBXTeamMembersSuspendError {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendError.suspendInactiveUser
+        super.init(swift: swift)
+    }
+}
+
+/// The user is the last admin of the team, so it cannot be suspended.
+@objc
+public class DBXTeamMembersSuspendErrorSuspendLastAdmin: DBXTeamMembersSuspendError {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendError.suspendLastAdmin
+        super.init(swift: swift)
+    }
+}
+
+/// Team is full. The organization has no available licenses.
+@objc
+public class DBXTeamMembersSuspendErrorTeamLicenseLimit: DBXTeamMembersSuspendError {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendError.teamLicenseLimit
+        super.init(swift: swift)
+    }
+}
+
+/// Stable machine-readable reasons used by the terminal row report.
+@objc
+public class DBXTeamBulkSuspendRowFailure: NSObject {
+    let swift: Team.BulkSuspendRowFailure
+
+    public init(swift: Team.BulkSuspendRowFailure) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.BulkSuspendRowFailure) -> DBXTeamBulkSuspendRowFailure {
+        switch swift {
+        case .userNotFound:
+            return DBXTeamBulkSuspendRowFailureUserNotFound()
+        case .userNotInTeam:
+            return DBXTeamBulkSuspendRowFailureUserNotInTeam()
+        case .other:
+            return DBXTeamBulkSuspendRowFailureOther()
+        case .suspendInactiveUser:
+            return DBXTeamBulkSuspendRowFailureSuspendInactiveUser()
+        case .suspendLastAdmin:
+            return DBXTeamBulkSuspendRowFailureSuspendLastAdmin()
+        case .teamLicenseLimit:
+            return DBXTeamBulkSuspendRowFailureTeamLicenseLimit()
+        case .protectedActingAdmin:
+            return DBXTeamBulkSuspendRowFailureProtectedActingAdmin()
+        case .permissionChanged:
+            return DBXTeamBulkSuspendRowFailurePermissionChanged()
+        case .suspendFailed:
+            return DBXTeamBulkSuspendRowFailureSuspendFailed()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asUserNotFound: DBXTeamBulkSuspendRowFailureUserNotFound? {
+        self as? DBXTeamBulkSuspendRowFailureUserNotFound
+    }
+
+    @objc
+    public var asUserNotInTeam: DBXTeamBulkSuspendRowFailureUserNotInTeam? {
+        self as? DBXTeamBulkSuspendRowFailureUserNotInTeam
+    }
+
+    @objc
+    public var asOther: DBXTeamBulkSuspendRowFailureOther? {
+        self as? DBXTeamBulkSuspendRowFailureOther
+    }
+
+    @objc
+    public var asSuspendInactiveUser: DBXTeamBulkSuspendRowFailureSuspendInactiveUser? {
+        self as? DBXTeamBulkSuspendRowFailureSuspendInactiveUser
+    }
+
+    @objc
+    public var asSuspendLastAdmin: DBXTeamBulkSuspendRowFailureSuspendLastAdmin? {
+        self as? DBXTeamBulkSuspendRowFailureSuspendLastAdmin
+    }
+
+    @objc
+    public var asTeamLicenseLimit: DBXTeamBulkSuspendRowFailureTeamLicenseLimit? {
+        self as? DBXTeamBulkSuspendRowFailureTeamLicenseLimit
+    }
+
+    @objc
+    public var asProtectedActingAdmin: DBXTeamBulkSuspendRowFailureProtectedActingAdmin? {
+        self as? DBXTeamBulkSuspendRowFailureProtectedActingAdmin
+    }
+
+    @objc
+    public var asPermissionChanged: DBXTeamBulkSuspendRowFailurePermissionChanged? {
+        self as? DBXTeamBulkSuspendRowFailurePermissionChanged
+    }
+
+    @objc
+    public var asSuspendFailed: DBXTeamBulkSuspendRowFailureSuspendFailed? {
+        self as? DBXTeamBulkSuspendRowFailureSuspendFailed
+    }
+}
+
+/// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+@objc
+public class DBXTeamBulkSuspendRowFailureUserNotFound: DBXTeamBulkSuspendRowFailure {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendRowFailure.userNotFound
+        super.init(swift: swift)
+    }
+}
+
+/// The user is not a member of the team.
+@objc
+public class DBXTeamBulkSuspendRowFailureUserNotInTeam: DBXTeamBulkSuspendRowFailure {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendRowFailure.userNotInTeam
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendRowFailureOther: DBXTeamBulkSuspendRowFailure {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendRowFailure.other
+        super.init(swift: swift)
+    }
+}
+
+/// The user is not active, so it cannot be suspended.
+@objc
+public class DBXTeamBulkSuspendRowFailureSuspendInactiveUser: DBXTeamBulkSuspendRowFailure {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendRowFailure.suspendInactiveUser
+        super.init(swift: swift)
+    }
+}
+
+/// The user is the last admin of the team, so it cannot be suspended.
+@objc
+public class DBXTeamBulkSuspendRowFailureSuspendLastAdmin: DBXTeamBulkSuspendRowFailure {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendRowFailure.suspendLastAdmin
+        super.init(swift: swift)
+    }
+}
+
+/// Team is full. The organization has no available licenses.
+@objc
+public class DBXTeamBulkSuspendRowFailureTeamLicenseLimit: DBXTeamBulkSuspendRowFailure {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendRowFailure.teamLicenseLimit
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendRowFailureProtectedActingAdmin: DBXTeamBulkSuspendRowFailure {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendRowFailure.protectedActingAdmin
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendRowFailurePermissionChanged: DBXTeamBulkSuspendRowFailure {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendRowFailure.permissionChanged
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendRowFailureSuspendFailed: DBXTeamBulkSuspendRowFailure {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendRowFailure.suspendFailed
+        super.init(swift: swift)
+    }
+}
+
+/// The terminal outcome for one requested member. Row outcomes are delivered in the report rather than embedded in
+/// the status response.
+@objc
+public class DBXTeamBulkSuspendRowOutcome: NSObject {
+    let swift: Team.BulkSuspendRowOutcome
+
+    public init(swift: Team.BulkSuspendRowOutcome) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.BulkSuspendRowOutcome) -> DBXTeamBulkSuspendRowOutcome {
+        switch swift {
+        case .suspended:
+            return DBXTeamBulkSuspendRowOutcomeSuspended()
+        case .failed(let swiftArg):
+            let arg = DBXTeamBulkSuspendRowFailure(swift: swiftArg)
+            return DBXTeamBulkSuspendRowOutcomeFailed(arg)
+        case .unknown:
+            return DBXTeamBulkSuspendRowOutcomeUnknown()
+        case .other:
+            return DBXTeamBulkSuspendRowOutcomeOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asSuspended: DBXTeamBulkSuspendRowOutcomeSuspended? {
+        self as? DBXTeamBulkSuspendRowOutcomeSuspended
+    }
+
+    @objc
+    public var asFailed: DBXTeamBulkSuspendRowOutcomeFailed? {
+        self as? DBXTeamBulkSuspendRowOutcomeFailed
+    }
+
+    @objc
+    public var asUnknown: DBXTeamBulkSuspendRowOutcomeUnknown? {
+        self as? DBXTeamBulkSuspendRowOutcomeUnknown
+    }
+
+    @objc
+    public var asOther: DBXTeamBulkSuspendRowOutcomeOther? {
+        self as? DBXTeamBulkSuspendRowOutcomeOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendRowOutcomeSuspended: DBXTeamBulkSuspendRowOutcome {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendRowOutcome.suspended
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendRowOutcomeFailed: DBXTeamBulkSuspendRowOutcome {
+    @objc
+    public var failed: DBXTeamBulkSuspendRowFailure
+
+    @objc
+    public init(_ arg: DBXTeamBulkSuspendRowFailure) {
+        self.failed = arg
+        let swift = Team.BulkSuspendRowOutcome.failed(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendRowOutcomeUnknown: DBXTeamBulkSuspendRowOutcome {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendRowOutcome.unknown
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendRowOutcomeOther: DBXTeamBulkSuspendRowOutcome {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendRowOutcome.other
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible BulkSuspendTaskFailure union
+@objc
+public class DBXTeamBulkSuspendTaskFailure: NSObject {
+    let swift: Team.BulkSuspendTaskFailure
+
+    public init(swift: Team.BulkSuspendTaskFailure) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.BulkSuspendTaskFailure) -> DBXTeamBulkSuspendTaskFailure {
+        switch swift {
+        case .unusableResult:
+            return DBXTeamBulkSuspendTaskFailureUnusableResult()
+        case .other:
+            return DBXTeamBulkSuspendTaskFailureOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asUnusableResult: DBXTeamBulkSuspendTaskFailureUnusableResult? {
+        self as? DBXTeamBulkSuspendTaskFailureUnusableResult
+    }
+
+    @objc
+    public var asOther: DBXTeamBulkSuspendTaskFailureOther? {
+        self as? DBXTeamBulkSuspendTaskFailureOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendTaskFailureUnusableResult: DBXTeamBulkSuspendTaskFailure {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendTaskFailure.unusableResult
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamBulkSuspendTaskFailureOther: DBXTeamBulkSuspendTaskFailure {
+    @objc
+    public init() {
+        let swift = Team.BulkSuspendTaskFailure.other
+        super.init(swift: swift)
+    }
+}
+
 /// Error returned when getting member custom quota.
 @objc
 public class DBXTeamCustomQuotaError: NSObject {
@@ -856,7 +1822,7 @@ public class DBXTeamCustomQuotaUsersArg: NSObject {
 /// Input arguments that can be provided for most reports.
 @objc
 public class DBXTeamDateRange: NSObject {
-    /// Optional starting date (inclusive). If start_date is None or too long ago, this field will  be set to 6
+    /// Optional starting date (inclusive). If start_date is None or too long ago, this field will be set to 6
     /// months ago.
     @objc
     public var startDate: Date? { swift.startDate }
@@ -1250,7 +2216,7 @@ public class DBXTeamDevicesActive: NSObject {
     /// Array of number of linked android devices with activity.
     @objc
     public var android: [NSNumber] { swift.android.compactMap { $0 as NSNumber? } }
-    /// Array of number of other linked devices (blackberry, windows phone, etc)  with activity.
+    /// Array of number of other linked devices (blackberry, windows phone, etc) with activity.
     @objc
     public var other: [NSNumber] { swift.other.compactMap { $0 as NSNumber? } }
     /// Array of total number of linked clients with activity.
@@ -1642,6 +2608,8 @@ public class DBXTeamFeature: NSObject {
             return DBXTeamFeatureHasTeamFileEvents()
         case .hasTeamSelectiveSync:
             return DBXTeamFeatureHasTeamSelectiveSync()
+        case .hasDistinctMemberHomes:
+            return DBXTeamFeatureHasDistinctMemberHomes()
         case .other:
             return DBXTeamFeatureOther()
         }
@@ -1668,6 +2636,11 @@ public class DBXTeamFeature: NSObject {
     @objc
     public var asHasTeamSelectiveSync: DBXTeamFeatureHasTeamSelectiveSync? {
         self as? DBXTeamFeatureHasTeamSelectiveSync
+    }
+
+    @objc
+    public var asHasDistinctMemberHomes: DBXTeamFeatureHasDistinctMemberHomes? {
+        self as? DBXTeamFeatureHasDistinctMemberHomes
     }
 
     @objc
@@ -1716,6 +2689,16 @@ public class DBXTeamFeatureHasTeamSelectiveSync: DBXTeamFeature {
     }
 }
 
+/// Does this team have team member folder.
+@objc
+public class DBXTeamFeatureHasDistinctMemberHomes: DBXTeamFeature {
+    @objc
+    public init() {
+        let swift = Team.Feature.hasDistinctMemberHomes
+        super.init(swift: swift)
+    }
+}
+
 /// An unspecified error.
 @objc
 public class DBXTeamFeatureOther: DBXTeamFeature {
@@ -1750,6 +2733,9 @@ public class DBXTeamFeatureValue: NSObject {
         case .hasTeamSelectiveSync(let swiftArg):
             let arg = DBXTeamHasTeamSelectiveSyncValue(swift: swiftArg)
             return DBXTeamFeatureValueHasTeamSelectiveSync(arg)
+        case .hasDistinctMemberHomes(let swiftArg):
+            let arg = DBXTeamHasDistinctMemberHomesValue(swift: swiftArg)
+            return DBXTeamFeatureValueHasDistinctMemberHomes(arg)
         case .other:
             return DBXTeamFeatureValueOther()
         }
@@ -1776,6 +2762,11 @@ public class DBXTeamFeatureValue: NSObject {
     @objc
     public var asHasTeamSelectiveSync: DBXTeamFeatureValueHasTeamSelectiveSync? {
         self as? DBXTeamFeatureValueHasTeamSelectiveSync
+    }
+
+    @objc
+    public var asHasDistinctMemberHomes: DBXTeamFeatureValueHasDistinctMemberHomes? {
+        self as? DBXTeamFeatureValueHasDistinctMemberHomes
     }
 
     @objc
@@ -1836,6 +2827,20 @@ public class DBXTeamFeatureValueHasTeamSelectiveSync: DBXTeamFeatureValue {
     public init(_ arg: DBXTeamHasTeamSelectiveSyncValue) {
         self.hasTeamSelectiveSync = arg
         let swift = Team.FeatureValue.hasTeamSelectiveSync(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamFeatureValueHasDistinctMemberHomes: DBXTeamFeatureValue {
+    @objc
+    public var hasDistinctMemberHomes: DBXTeamHasDistinctMemberHomesValue
+
+    @objc
+    public init(_ arg: DBXTeamHasDistinctMemberHomesValue) {
+        self.hasDistinctMemberHomes = arg
+        let swift = Team.FeatureValue.hasDistinctMemberHomes(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -2871,8 +3876,8 @@ public class DBXTeamGroupMemberSetAccessTypeErrorUserCannotBeManagerOfCompanyMan
 /// Objective-C compatible IncludeMembersArg struct
 @objc
 public class DBXTeamIncludeMembersArg: NSObject {
-    /// Whether to return the list of members in the group.  Note that the default value will cause all the group
-    /// members  to be returned in the response. This may take a long time for large groups.
+    /// Whether to return the list of members in the group. Note that the default value will cause all the group
+    /// members to be returned in the response. This may take a long time for large groups.
     @objc
     public var returnMembers: NSNumber { swift.returnMembers as NSNumber }
 
@@ -3114,9 +4119,9 @@ public class DBXTeamGroupMembersChangeResult: NSObject {
     /// The group info after member change operation has been performed.
     @objc
     public var groupInfo: DBXTeamGroupFullInfo { DBXTeamGroupFullInfo(swift: swift.groupInfo) }
-    /// For legacy purposes async_job_id will always return one space ' '. Formerly, it was an ID that was used to
-    /// obtain the status of granting/revoking group-owned resources. It's no longer necessary because the async
-    /// processing now happens automatically.
+    /// Field is deprecated. For legacy purposes async_job_id will always return one space ' '. Formerly, it was an
+    /// ID that was used to obtain the status of granting/revoking group-owned resources. It's no longer
+    /// necessary because the async processing now happens automatically.
     @objc
     public var asyncJobId: String { swift.asyncJobId }
 
@@ -3428,19 +4433,14 @@ public class DBXTeamGroupMembersSetAccessTypeArg: DBXTeamGroupMemberSelector {
     /// New group access type the user will have.
     @objc
     public var accessType: DBXTeamGroupAccessType { DBXTeamGroupAccessType(swift: subSwift.accessType) }
-    /// Whether to return the list of members in the group.  Note that the default value will cause all the group
-    /// members  to be returned in the response. This may take a long time for large groups.
+    /// Whether to return the list of members in the group. Note that the default value will cause all the group
+    /// members to be returned in the response. This may take a long time for large groups.
     @objc
     public var returnMembers: NSNumber { subSwift.returnMembers as NSNumber }
 
     @objc
     public init(group: DBXTeamGroupSelector, user: DBXTeamUserSelectorArg, accessType: DBXTeamGroupAccessType, returnMembers: NSNumber) {
-        let swift = Team.GroupMembersSetAccessTypeArg(
-            group: group.swift,
-            user: user.swift,
-            accessType: accessType.swift,
-            returnMembers: returnMembers.boolValue
-        )
+        let swift = Team.GroupMembersSetAccessTypeArg(group: group.swift, user: user.swift, accessType: accessType.swift, returnMembers: returnMembers.boolValue)
         self.subSwift = swift
         super.init(swift: swift)
     }
@@ -4200,6 +5200,63 @@ public class DBXTeamGroupsSelectorGroupExternalIds: DBXTeamGroupsSelector {
     public init(_ arg: [String]) {
         self.groupExternalIds = arg
         let swift = Team.GroupsSelector.groupExternalIds(arg)
+        super.init(swift: swift)
+    }
+}
+
+/// The value for hasDistinctMemberHomes in Feature.
+@objc
+public class DBXTeamHasDistinctMemberHomesValue: NSObject {
+    let swift: Team.HasDistinctMemberHomesValue
+
+    public init(swift: Team.HasDistinctMemberHomesValue) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.HasDistinctMemberHomesValue) -> DBXTeamHasDistinctMemberHomesValue {
+        switch swift {
+        case .hasDistinctMemberHomes(let swiftArg):
+            let arg = NSNumber(value: swiftArg)
+            return DBXTeamHasDistinctMemberHomesValueHasDistinctMemberHomes(arg)
+        case .other:
+            return DBXTeamHasDistinctMemberHomesValueOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asHasDistinctMemberHomes: DBXTeamHasDistinctMemberHomesValueHasDistinctMemberHomes? {
+        self as? DBXTeamHasDistinctMemberHomesValueHasDistinctMemberHomes
+    }
+
+    @objc
+    public var asOther: DBXTeamHasDistinctMemberHomesValueOther? {
+        self as? DBXTeamHasDistinctMemberHomesValueOther
+    }
+}
+
+/// Does this team have distinct team member homes.
+@objc
+public class DBXTeamHasDistinctMemberHomesValueHasDistinctMemberHomes: DBXTeamHasDistinctMemberHomesValue {
+    @objc
+    public var hasDistinctMemberHomes: NSNumber
+
+    @objc
+    public init(_ arg: NSNumber) {
+        self.hasDistinctMemberHomes = arg
+        let swift = Team.HasDistinctMemberHomesValue.hasDistinctMemberHomes(arg.boolValue)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamHasDistinctMemberHomesValueOther: DBXTeamHasDistinctMemberHomesValue {
+    @objc
+    public init() {
+        let swift = Team.HasDistinctMemberHomesValue.other
         super.init(swift: swift)
     }
 }
@@ -7651,41 +8708,6 @@ public class DBXTeamMemberProfile: NSObject {
     public override var description: String { swift.description }
 }
 
-/// Error that can be returned whenever a struct derived from UserSelectorArg is used.
-@objc
-public class DBXTeamUserSelectorError: NSObject {
-    let swift: Team.UserSelectorError
-
-    public init(swift: Team.UserSelectorError) {
-        self.swift = swift
-    }
-
-    public static func factory(swift: Team.UserSelectorError) -> DBXTeamUserSelectorError {
-        switch swift {
-        case .userNotFound:
-            return DBXTeamUserSelectorErrorUserNotFound()
-        }
-    }
-
-    @objc
-    public override var description: String { swift.description }
-
-    @objc
-    public var asUserNotFound: DBXTeamUserSelectorErrorUserNotFound? {
-        self as? DBXTeamUserSelectorErrorUserNotFound
-    }
-}
-
-/// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-@objc
-public class DBXTeamUserSelectorErrorUserNotFound: DBXTeamUserSelectorError {
-    @objc
-    public init() {
-        let swift = Team.UserSelectorError.userNotFound
-        super.init(swift: swift)
-    }
-}
-
 /// Objective-C compatible MemberSelectorError union
 @objc
 public class DBXTeamMemberSelectorError: NSObject {
@@ -8205,23 +9227,29 @@ public class DBXTeamMembersDeactivateArg: DBXTeamMembersDeactivateBaseArg {
     public override var description: String { subSwift.description }
 }
 
-/// Objective-C compatible MembersDeactivateError union
+/// Objective-C compatible MembersPermanentlyDeleteFilesError union
 @objc
-public class DBXTeamMembersDeactivateError: NSObject {
-    let swift: Team.MembersDeactivateError
+public class DBXTeamMembersPermanentlyDeleteFilesError: NSObject {
+    let swift: Team.MembersPermanentlyDeleteFilesError
 
-    public init(swift: Team.MembersDeactivateError) {
+    public init(swift: Team.MembersPermanentlyDeleteFilesError) {
         self.swift = swift
     }
 
-    public static func factory(swift: Team.MembersDeactivateError) -> DBXTeamMembersDeactivateError {
+    public static func factory(swift: Team.MembersPermanentlyDeleteFilesError) -> DBXTeamMembersPermanentlyDeleteFilesError {
         switch swift {
         case .userNotFound:
-            return DBXTeamMembersDeactivateErrorUserNotFound()
+            return DBXTeamMembersPermanentlyDeleteFilesErrorUserNotFound()
         case .userNotInTeam:
-            return DBXTeamMembersDeactivateErrorUserNotInTeam()
+            return DBXTeamMembersPermanentlyDeleteFilesErrorUserNotInTeam()
         case .other:
-            return DBXTeamMembersDeactivateErrorOther()
+            return DBXTeamMembersPermanentlyDeleteFilesErrorOther()
+        case .transferInProgress:
+            return DBXTeamMembersPermanentlyDeleteFilesErrorTransferInProgress()
+        case .alreadyTransferred:
+            return DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferred()
+        case .alreadyTransferredOrDeleted:
+            return DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferredOrDeleted()
         }
     }
 
@@ -8229,47 +9257,229 @@ public class DBXTeamMembersDeactivateError: NSObject {
     public override var description: String { swift.description }
 
     @objc
-    public var asUserNotFound: DBXTeamMembersDeactivateErrorUserNotFound? {
-        self as? DBXTeamMembersDeactivateErrorUserNotFound
+    public var asUserNotFound: DBXTeamMembersPermanentlyDeleteFilesErrorUserNotFound? {
+        self as? DBXTeamMembersPermanentlyDeleteFilesErrorUserNotFound
     }
 
     @objc
-    public var asUserNotInTeam: DBXTeamMembersDeactivateErrorUserNotInTeam? {
-        self as? DBXTeamMembersDeactivateErrorUserNotInTeam
+    public var asUserNotInTeam: DBXTeamMembersPermanentlyDeleteFilesErrorUserNotInTeam? {
+        self as? DBXTeamMembersPermanentlyDeleteFilesErrorUserNotInTeam
     }
 
     @objc
-    public var asOther: DBXTeamMembersDeactivateErrorOther? {
-        self as? DBXTeamMembersDeactivateErrorOther
+    public var asOther: DBXTeamMembersPermanentlyDeleteFilesErrorOther? {
+        self as? DBXTeamMembersPermanentlyDeleteFilesErrorOther
+    }
+
+    @objc
+    public var asTransferInProgress: DBXTeamMembersPermanentlyDeleteFilesErrorTransferInProgress? {
+        self as? DBXTeamMembersPermanentlyDeleteFilesErrorTransferInProgress
+    }
+
+    @objc
+    public var asAlreadyTransferred: DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferred? {
+        self as? DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferred
+    }
+
+    @objc
+    public var asAlreadyTransferredOrDeleted: DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferredOrDeleted? {
+        self as? DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferredOrDeleted
     }
 }
 
 /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
 @objc
-public class DBXTeamMembersDeactivateErrorUserNotFound: DBXTeamMembersDeactivateError {
+public class DBXTeamMembersPermanentlyDeleteFilesErrorUserNotFound: DBXTeamMembersPermanentlyDeleteFilesError {
     @objc
     public init() {
-        let swift = Team.MembersDeactivateError.userNotFound
+        let swift = Team.MembersPermanentlyDeleteFilesError.userNotFound
         super.init(swift: swift)
     }
 }
 
 /// The user is not a member of the team.
 @objc
-public class DBXTeamMembersDeactivateErrorUserNotInTeam: DBXTeamMembersDeactivateError {
+public class DBXTeamMembersPermanentlyDeleteFilesErrorUserNotInTeam: DBXTeamMembersPermanentlyDeleteFilesError {
     @objc
     public init() {
-        let swift = Team.MembersDeactivateError.userNotInTeam
+        let swift = Team.MembersPermanentlyDeleteFilesError.userNotInTeam
         super.init(swift: swift)
     }
 }
 
 /// An unspecified error.
 @objc
-public class DBXTeamMembersDeactivateErrorOther: DBXTeamMembersDeactivateError {
+public class DBXTeamMembersPermanentlyDeleteFilesErrorOther: DBXTeamMembersPermanentlyDeleteFilesError {
     @objc
     public init() {
-        let swift = Team.MembersDeactivateError.other
+        let swift = Team.MembersPermanentlyDeleteFilesError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files while it's being transferred.
+@objc
+public class DBXTeamMembersPermanentlyDeleteFilesErrorTransferInProgress: DBXTeamMembersPermanentlyDeleteFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersPermanentlyDeleteFilesError.transferInProgress
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred.
+@objc
+public class DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferred: DBXTeamMembersPermanentlyDeleteFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersPermanentlyDeleteFilesError.alreadyTransferred
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred or deleted.
+@objc
+public class DBXTeamMembersPermanentlyDeleteFilesErrorAlreadyTransferredOrDeleted: DBXTeamMembersPermanentlyDeleteFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersPermanentlyDeleteFilesError.alreadyTransferredOrDeleted
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible MembersDeleteFormerMemberFilesError union
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesError: NSObject {
+    let swift: Team.MembersDeleteFormerMemberFilesError
+
+    public init(swift: Team.MembersDeleteFormerMemberFilesError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.MembersDeleteFormerMemberFilesError) -> DBXTeamMembersDeleteFormerMemberFilesError {
+        switch swift {
+        case .userNotFound:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorUserNotFound()
+        case .userNotInTeam:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorUserNotInTeam()
+        case .other:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorOther()
+        case .transferInProgress:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorTransferInProgress()
+        case .alreadyTransferred:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferred()
+        case .alreadyTransferredOrDeleted:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferredOrDeleted()
+        case .userNotRemoved:
+            return DBXTeamMembersDeleteFormerMemberFilesErrorUserNotRemoved()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asUserNotFound: DBXTeamMembersDeleteFormerMemberFilesErrorUserNotFound? {
+        self as? DBXTeamMembersDeleteFormerMemberFilesErrorUserNotFound
+    }
+
+    @objc
+    public var asUserNotInTeam: DBXTeamMembersDeleteFormerMemberFilesErrorUserNotInTeam? {
+        self as? DBXTeamMembersDeleteFormerMemberFilesErrorUserNotInTeam
+    }
+
+    @objc
+    public var asOther: DBXTeamMembersDeleteFormerMemberFilesErrorOther? {
+        self as? DBXTeamMembersDeleteFormerMemberFilesErrorOther
+    }
+
+    @objc
+    public var asTransferInProgress: DBXTeamMembersDeleteFormerMemberFilesErrorTransferInProgress? {
+        self as? DBXTeamMembersDeleteFormerMemberFilesErrorTransferInProgress
+    }
+
+    @objc
+    public var asAlreadyTransferred: DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferred? {
+        self as? DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferred
+    }
+
+    @objc
+    public var asAlreadyTransferredOrDeleted: DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferredOrDeleted? {
+        self as? DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferredOrDeleted
+    }
+
+    @objc
+    public var asUserNotRemoved: DBXTeamMembersDeleteFormerMemberFilesErrorUserNotRemoved? {
+        self as? DBXTeamMembersDeleteFormerMemberFilesErrorUserNotRemoved
+    }
+}
+
+/// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorUserNotFound: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.userNotFound
+        super.init(swift: swift)
+    }
+}
+
+/// The user is not a member of the team.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorUserNotInTeam: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.userNotInTeam
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorOther: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files while it's being transferred.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorTransferInProgress: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.transferInProgress
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferred: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.alreadyTransferred
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred or deleted.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorAlreadyTransferredOrDeleted: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.alreadyTransferredOrDeleted
+        super.init(swift: swift)
+    }
+}
+
+/// User has not been removed from the team.
+@objc
+public class DBXTeamMembersDeleteFormerMemberFilesErrorUserNotRemoved: DBXTeamMembersDeleteFormerMemberFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersDeleteFormerMemberFilesError.userNotRemoved
         super.init(swift: swift)
     }
 }
@@ -8380,6 +9590,28 @@ public class DBXTeamMembersDeleteProfilePhotoErrorOther: DBXTeamMembersDeletePro
         let swift = Team.MembersDeleteProfilePhotoError.other
         super.init(swift: swift)
     }
+}
+
+/// Exactly one of team_member_id, email, or external_id must be provided to identify a former team member.
+@objc
+public class DBXTeamMembersFormerMemberArg: NSObject {
+    /// Identity of user whose files will be permanently deleted.
+    @objc
+    public var user: DBXTeamUserSelectorArg { DBXTeamUserSelectorArg(swift: swift.user) }
+
+    @objc
+    public init(user: DBXTeamUserSelectorArg) {
+        self.swift = Team.MembersFormerMemberArg(user: user.swift)
+    }
+
+    let swift: Team.MembersFormerMemberArg
+
+    public init(swift: Team.MembersFormerMemberArg) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
 }
 
 /// Available TeamMemberRole for the connected team. To be used with membersSetAdminPermissionsV2.
@@ -9051,7 +10283,7 @@ public class DBXTeamMembersRemoveArg: DBXTeamMembersDeactivateArg {
     }
 
     /// Downgrade the member to a Basic account. The user will retain the email address associated with their
-    /// Dropbox  account and data in their account that is not restricted to team members. In order to keep the
+    /// Dropbox account and data in their account that is not restricted to team members. In order to keep the
     /// account the argument wipeData should be set to false.
     @objc
     public var keepAccount: NSNumber { subSubSwift.keepAccount as NSNumber }
@@ -9061,6 +10293,10 @@ public class DBXTeamMembersRemoveArg: DBXTeamMembersDeactivateArg {
     /// relationships, the arguments wipeData should be set to false and keepAccount should be set to true.
     @objc
     public var retainTeamShares: NSNumber { subSubSwift.retainTeamShares as NSNumber }
+    /// Permanently delete the data in the deleted member's account. After permanent deletion, the data is no longer
+    /// available to be transferred to a different user.
+    @objc
+    public var permanentlyDeleteFiles: NSNumber { subSubSwift.permanentlyDeleteFiles as NSNumber }
 
     @objc
     public init(
@@ -9069,7 +10305,8 @@ public class DBXTeamMembersRemoveArg: DBXTeamMembersDeactivateArg {
         transferDestId: DBXTeamUserSelectorArg?,
         transferAdminId: DBXTeamUserSelectorArg?,
         keepAccount: NSNumber,
-        retainTeamShares: NSNumber
+        retainTeamShares: NSNumber,
+        permanentlyDeleteFiles: NSNumber
     ) {
         let swift = Team.MembersRemoveArg(
             user: user.swift,
@@ -9077,7 +10314,8 @@ public class DBXTeamMembersRemoveArg: DBXTeamMembersDeactivateArg {
             transferDestId: transferDestId?.swift,
             transferAdminId: transferAdminId?.swift,
             keepAccount: keepAccount.boolValue,
-            retainTeamShares: retainTeamShares.boolValue
+            retainTeamShares: retainTeamShares.boolValue,
+            permanentlyDeleteFiles: permanentlyDeleteFiles.boolValue
         )
         self.subSubSwift = swift
         super.init(swift: swift)
@@ -9111,6 +10349,12 @@ public class DBXTeamMembersTransferFilesError: NSObject {
             return DBXTeamMembersTransferFilesErrorUserNotInTeam()
         case .other:
             return DBXTeamMembersTransferFilesErrorOther()
+        case .transferInProgress:
+            return DBXTeamMembersTransferFilesErrorTransferInProgress()
+        case .alreadyTransferred:
+            return DBXTeamMembersTransferFilesErrorAlreadyTransferred()
+        case .alreadyTransferredOrDeleted:
+            return DBXTeamMembersTransferFilesErrorAlreadyTransferredOrDeleted()
         case .removedAndTransferDestShouldDiffer:
             return DBXTeamMembersTransferFilesErrorRemovedAndTransferDestShouldDiffer()
         case .removedAndTransferAdminShouldDiffer:
@@ -9148,6 +10392,21 @@ public class DBXTeamMembersTransferFilesError: NSObject {
     @objc
     public var asOther: DBXTeamMembersTransferFilesErrorOther? {
         self as? DBXTeamMembersTransferFilesErrorOther
+    }
+
+    @objc
+    public var asTransferInProgress: DBXTeamMembersTransferFilesErrorTransferInProgress? {
+        self as? DBXTeamMembersTransferFilesErrorTransferInProgress
+    }
+
+    @objc
+    public var asAlreadyTransferred: DBXTeamMembersTransferFilesErrorAlreadyTransferred? {
+        self as? DBXTeamMembersTransferFilesErrorAlreadyTransferred
+    }
+
+    @objc
+    public var asAlreadyTransferredOrDeleted: DBXTeamMembersTransferFilesErrorAlreadyTransferredOrDeleted? {
+        self as? DBXTeamMembersTransferFilesErrorAlreadyTransferredOrDeleted
     }
 
     @objc
@@ -9222,6 +10481,36 @@ public class DBXTeamMembersTransferFilesErrorOther: DBXTeamMembersTransferFilesE
     @objc
     public init() {
         let swift = Team.MembersTransferFilesError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files while it's being transferred.
+@objc
+public class DBXTeamMembersTransferFilesErrorTransferInProgress: DBXTeamMembersTransferFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersTransferFilesError.transferInProgress
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred.
+@objc
+public class DBXTeamMembersTransferFilesErrorAlreadyTransferred: DBXTeamMembersTransferFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersTransferFilesError.alreadyTransferred
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred or deleted.
+@objc
+public class DBXTeamMembersTransferFilesErrorAlreadyTransferredOrDeleted: DBXTeamMembersTransferFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersTransferFilesError.alreadyTransferredOrDeleted
         super.init(swift: swift)
     }
 }
@@ -9333,6 +10622,12 @@ public class DBXTeamMembersRemoveError: NSObject {
             return DBXTeamMembersRemoveErrorUserNotInTeam()
         case .other:
             return DBXTeamMembersRemoveErrorOther()
+        case .transferInProgress:
+            return DBXTeamMembersRemoveErrorTransferInProgress()
+        case .alreadyTransferred:
+            return DBXTeamMembersRemoveErrorAlreadyTransferred()
+        case .alreadyTransferredOrDeleted:
+            return DBXTeamMembersRemoveErrorAlreadyTransferredOrDeleted()
         case .removedAndTransferDestShouldDiffer:
             return DBXTeamMembersRemoveErrorRemovedAndTransferDestShouldDiffer()
         case .removedAndTransferAdminShouldDiffer:
@@ -9357,6 +10652,8 @@ public class DBXTeamMembersRemoveError: NSObject {
             return DBXTeamMembersRemoveErrorCannotKeepAccountAndTransfer()
         case .cannotKeepAccountAndDeleteData:
             return DBXTeamMembersRemoveErrorCannotKeepAccountAndDeleteData()
+        case .cannotKeepAccountAndPermanentlyDelete:
+            return DBXTeamMembersRemoveErrorCannotKeepAccountAndPermanentlyDelete()
         case .emailAddressTooLongToBeDisabled:
             return DBXTeamMembersRemoveErrorEmailAddressTooLongToBeDisabled()
         case .cannotKeepInvitedUserAccount:
@@ -9373,6 +10670,10 @@ public class DBXTeamMembersRemoveError: NSObject {
             return DBXTeamMembersRemoveErrorCannotKeepAccountUnderLegalHold()
         case .cannotKeepAccountRequiredToSignTos:
             return DBXTeamMembersRemoveErrorCannotKeepAccountRequiredToSignTos()
+        case .cannotPermanentlyDeleteAndTransfer:
+            return DBXTeamMembersRemoveErrorCannotPermanentlyDeleteAndTransfer()
+        case .memberIsTransferDestination:
+            return DBXTeamMembersRemoveErrorMemberIsTransferDestination()
         }
     }
 
@@ -9392,6 +10693,21 @@ public class DBXTeamMembersRemoveError: NSObject {
     @objc
     public var asOther: DBXTeamMembersRemoveErrorOther? {
         self as? DBXTeamMembersRemoveErrorOther
+    }
+
+    @objc
+    public var asTransferInProgress: DBXTeamMembersRemoveErrorTransferInProgress? {
+        self as? DBXTeamMembersRemoveErrorTransferInProgress
+    }
+
+    @objc
+    public var asAlreadyTransferred: DBXTeamMembersRemoveErrorAlreadyTransferred? {
+        self as? DBXTeamMembersRemoveErrorAlreadyTransferred
+    }
+
+    @objc
+    public var asAlreadyTransferredOrDeleted: DBXTeamMembersRemoveErrorAlreadyTransferredOrDeleted? {
+        self as? DBXTeamMembersRemoveErrorAlreadyTransferredOrDeleted
     }
 
     @objc
@@ -9455,6 +10771,11 @@ public class DBXTeamMembersRemoveError: NSObject {
     }
 
     @objc
+    public var asCannotKeepAccountAndPermanentlyDelete: DBXTeamMembersRemoveErrorCannotKeepAccountAndPermanentlyDelete? {
+        self as? DBXTeamMembersRemoveErrorCannotKeepAccountAndPermanentlyDelete
+    }
+
+    @objc
     public var asEmailAddressTooLongToBeDisabled: DBXTeamMembersRemoveErrorEmailAddressTooLongToBeDisabled? {
         self as? DBXTeamMembersRemoveErrorEmailAddressTooLongToBeDisabled
     }
@@ -9493,6 +10814,16 @@ public class DBXTeamMembersRemoveError: NSObject {
     public var asCannotKeepAccountRequiredToSignTos: DBXTeamMembersRemoveErrorCannotKeepAccountRequiredToSignTos? {
         self as? DBXTeamMembersRemoveErrorCannotKeepAccountRequiredToSignTos
     }
+
+    @objc
+    public var asCannotPermanentlyDeleteAndTransfer: DBXTeamMembersRemoveErrorCannotPermanentlyDeleteAndTransfer? {
+        self as? DBXTeamMembersRemoveErrorCannotPermanentlyDeleteAndTransfer
+    }
+
+    @objc
+    public var asMemberIsTransferDestination: DBXTeamMembersRemoveErrorMemberIsTransferDestination? {
+        self as? DBXTeamMembersRemoveErrorMemberIsTransferDestination
+    }
 }
 
 /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
@@ -9521,6 +10852,36 @@ public class DBXTeamMembersRemoveErrorOther: DBXTeamMembersRemoveError {
     @objc
     public init() {
         let swift = Team.MembersRemoveError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files while it's being transferred.
+@objc
+public class DBXTeamMembersRemoveErrorTransferInProgress: DBXTeamMembersRemoveError {
+    @objc
+    public init() {
+        let swift = Team.MembersRemoveError.transferInProgress
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred.
+@objc
+public class DBXTeamMembersRemoveErrorAlreadyTransferred: DBXTeamMembersRemoveError {
+    @objc
+    public init() {
+        let swift = Team.MembersRemoveError.alreadyTransferred
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred or deleted.
+@objc
+public class DBXTeamMembersRemoveErrorAlreadyTransferredOrDeleted: DBXTeamMembersRemoveError {
+    @objc
+    public init() {
+        let swift = Team.MembersRemoveError.alreadyTransferredOrDeleted
         super.init(swift: swift)
     }
 }
@@ -9646,6 +11007,17 @@ public class DBXTeamMembersRemoveErrorCannotKeepAccountAndDeleteData: DBXTeamMem
     }
 }
 
+/// Cannot keep account and permanently delete the data at the same time. To keep the account the argument
+/// permanently_delete_files should be set to false.
+@objc
+public class DBXTeamMembersRemoveErrorCannotKeepAccountAndPermanentlyDelete: DBXTeamMembersRemoveError {
+    @objc
+    public init() {
+        let swift = Team.MembersRemoveError.cannotKeepAccountAndPermanentlyDelete
+        super.init(swift: swift)
+    }
+}
+
 /// The email address of the user is too long to be disabled.
 @objc
 public class DBXTeamMembersRemoveErrorEmailAddressTooLongToBeDisabled: DBXTeamMembersRemoveError {
@@ -9727,6 +11099,27 @@ public class DBXTeamMembersRemoveErrorCannotKeepAccountRequiredToSignTos: DBXTea
     @objc
     public init() {
         let swift = Team.MembersRemoveError.cannotKeepAccountRequiredToSignTos
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files and transfer the data to another user at the same time.
+@objc
+public class DBXTeamMembersRemoveErrorCannotPermanentlyDeleteAndTransfer: DBXTeamMembersRemoveError {
+    @objc
+    public init() {
+        let swift = Team.MembersRemoveError.cannotPermanentlyDeleteAndTransfer
+        super.init(swift: swift)
+    }
+}
+
+/// This user is the active destination of an in-progress file transfer. Wait for the transfer to complete
+/// before removing this member.
+@objc
+public class DBXTeamMembersRemoveErrorMemberIsTransferDestination: DBXTeamMembersRemoveError {
+    @objc
+    public init() {
+        let swift = Team.MembersRemoveError.memberIsTransferDestination
         super.init(swift: swift)
     }
 }
@@ -10554,126 +11947,6 @@ public class DBXTeamMembersSetProfilePhotoErrorOther: DBXTeamMembersSetProfilePh
     }
 }
 
-/// Objective-C compatible MembersSuspendError union
-@objc
-public class DBXTeamMembersSuspendError: NSObject {
-    let swift: Team.MembersSuspendError
-
-    public init(swift: Team.MembersSuspendError) {
-        self.swift = swift
-    }
-
-    public static func factory(swift: Team.MembersSuspendError) -> DBXTeamMembersSuspendError {
-        switch swift {
-        case .userNotFound:
-            return DBXTeamMembersSuspendErrorUserNotFound()
-        case .userNotInTeam:
-            return DBXTeamMembersSuspendErrorUserNotInTeam()
-        case .other:
-            return DBXTeamMembersSuspendErrorOther()
-        case .suspendInactiveUser:
-            return DBXTeamMembersSuspendErrorSuspendInactiveUser()
-        case .suspendLastAdmin:
-            return DBXTeamMembersSuspendErrorSuspendLastAdmin()
-        case .teamLicenseLimit:
-            return DBXTeamMembersSuspendErrorTeamLicenseLimit()
-        }
-    }
-
-    @objc
-    public override var description: String { swift.description }
-
-    @objc
-    public var asUserNotFound: DBXTeamMembersSuspendErrorUserNotFound? {
-        self as? DBXTeamMembersSuspendErrorUserNotFound
-    }
-
-    @objc
-    public var asUserNotInTeam: DBXTeamMembersSuspendErrorUserNotInTeam? {
-        self as? DBXTeamMembersSuspendErrorUserNotInTeam
-    }
-
-    @objc
-    public var asOther: DBXTeamMembersSuspendErrorOther? {
-        self as? DBXTeamMembersSuspendErrorOther
-    }
-
-    @objc
-    public var asSuspendInactiveUser: DBXTeamMembersSuspendErrorSuspendInactiveUser? {
-        self as? DBXTeamMembersSuspendErrorSuspendInactiveUser
-    }
-
-    @objc
-    public var asSuspendLastAdmin: DBXTeamMembersSuspendErrorSuspendLastAdmin? {
-        self as? DBXTeamMembersSuspendErrorSuspendLastAdmin
-    }
-
-    @objc
-    public var asTeamLicenseLimit: DBXTeamMembersSuspendErrorTeamLicenseLimit? {
-        self as? DBXTeamMembersSuspendErrorTeamLicenseLimit
-    }
-}
-
-/// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-@objc
-public class DBXTeamMembersSuspendErrorUserNotFound: DBXTeamMembersSuspendError {
-    @objc
-    public init() {
-        let swift = Team.MembersSuspendError.userNotFound
-        super.init(swift: swift)
-    }
-}
-
-/// The user is not a member of the team.
-@objc
-public class DBXTeamMembersSuspendErrorUserNotInTeam: DBXTeamMembersSuspendError {
-    @objc
-    public init() {
-        let swift = Team.MembersSuspendError.userNotInTeam
-        super.init(swift: swift)
-    }
-}
-
-/// An unspecified error.
-@objc
-public class DBXTeamMembersSuspendErrorOther: DBXTeamMembersSuspendError {
-    @objc
-    public init() {
-        let swift = Team.MembersSuspendError.other
-        super.init(swift: swift)
-    }
-}
-
-/// The user is not active, so it cannot be suspended.
-@objc
-public class DBXTeamMembersSuspendErrorSuspendInactiveUser: DBXTeamMembersSuspendError {
-    @objc
-    public init() {
-        let swift = Team.MembersSuspendError.suspendInactiveUser
-        super.init(swift: swift)
-    }
-}
-
-/// The user is the last admin of the team, so it cannot be suspended.
-@objc
-public class DBXTeamMembersSuspendErrorSuspendLastAdmin: DBXTeamMembersSuspendError {
-    @objc
-    public init() {
-        let swift = Team.MembersSuspendError.suspendLastAdmin
-        super.init(swift: swift)
-    }
-}
-
-/// Team is full. The organization has no available licenses.
-@objc
-public class DBXTeamMembersSuspendErrorTeamLicenseLimit: DBXTeamMembersSuspendError {
-    @objc
-    public init() {
-        let swift = Team.MembersSuspendError.teamLicenseLimit
-        super.init(swift: swift)
-    }
-}
-
 /// Objective-C compatible MembersTransferFormerMembersFilesError union
 @objc
 public class DBXTeamMembersTransferFormerMembersFilesError: NSObject {
@@ -10691,6 +11964,12 @@ public class DBXTeamMembersTransferFormerMembersFilesError: NSObject {
             return DBXTeamMembersTransferFormerMembersFilesErrorUserNotInTeam()
         case .other:
             return DBXTeamMembersTransferFormerMembersFilesErrorOther()
+        case .transferInProgress:
+            return DBXTeamMembersTransferFormerMembersFilesErrorTransferInProgress()
+        case .alreadyTransferred:
+            return DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferred()
+        case .alreadyTransferredOrDeleted:
+            return DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferredOrDeleted()
         case .removedAndTransferDestShouldDiffer:
             return DBXTeamMembersTransferFormerMembersFilesErrorRemovedAndTransferDestShouldDiffer()
         case .removedAndTransferAdminShouldDiffer:
@@ -10736,6 +12015,21 @@ public class DBXTeamMembersTransferFormerMembersFilesError: NSObject {
     @objc
     public var asOther: DBXTeamMembersTransferFormerMembersFilesErrorOther? {
         self as? DBXTeamMembersTransferFormerMembersFilesErrorOther
+    }
+
+    @objc
+    public var asTransferInProgress: DBXTeamMembersTransferFormerMembersFilesErrorTransferInProgress? {
+        self as? DBXTeamMembersTransferFormerMembersFilesErrorTransferInProgress
+    }
+
+    @objc
+    public var asAlreadyTransferred: DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferred? {
+        self as? DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferred
+    }
+
+    @objc
+    public var asAlreadyTransferredOrDeleted: DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferredOrDeleted? {
+        self as? DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferredOrDeleted
     }
 
     @objc
@@ -10830,6 +12124,36 @@ public class DBXTeamMembersTransferFormerMembersFilesErrorOther: DBXTeamMembersT
     @objc
     public init() {
         let swift = Team.MembersTransferFormerMembersFilesError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files while it's being transferred.
+@objc
+public class DBXTeamMembersTransferFormerMembersFilesErrorTransferInProgress: DBXTeamMembersTransferFormerMembersFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersTransferFormerMembersFilesError.transferInProgress
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred.
+@objc
+public class DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferred: DBXTeamMembersTransferFormerMembersFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersTransferFormerMembersFilesError.alreadyTransferred
+        super.init(swift: swift)
+    }
+}
+
+/// Cannot permanently delete files that have already been transferred or deleted.
+@objc
+public class DBXTeamMembersTransferFormerMembersFilesErrorAlreadyTransferredOrDeleted: DBXTeamMembersTransferFormerMembersFilesError {
+    @objc
+    public init() {
+        let swift = Team.MembersTransferFormerMembersFilesError.alreadyTransferredOrDeleted
         super.init(swift: swift)
     }
 }
@@ -11284,10 +12608,19 @@ public class DBXTeamNamespaceMetadata: NSObject {
     /// present.
     @objc
     public var teamMemberId: String? { swift.teamMemberId }
+    /// The quota limit in bytes for this namespace tree. Only applicable to team folders.
+    @objc
+    public var quotaLimit: NSNumber { swift.quotaLimit as NSNumber }
 
     @objc
-    public init(name: String, namespaceId: String, namespaceType: DBXTeamNamespaceType, teamMemberId: String?) {
-        self.swift = Team.NamespaceMetadata(name: name, namespaceId: namespaceId, namespaceType: namespaceType.swift, teamMemberId: teamMemberId)
+    public init(name: String, namespaceId: String, namespaceType: DBXTeamNamespaceType, teamMemberId: String?, quotaLimit: NSNumber) {
+        self.swift = Team.NamespaceMetadata(
+            name: name,
+            namespaceId: namespaceId,
+            namespaceType: namespaceType.swift,
+            teamMemberId: teamMemberId,
+            quotaLimit: quotaLimit.int64Value
+        )
     }
 
     let swift: Team.NamespaceMetadata
@@ -11319,6 +12652,8 @@ public class DBXTeamNamespaceType: NSObject {
             return DBXTeamNamespaceTypeTeamFolder()
         case .teamMemberFolder:
             return DBXTeamNamespaceTypeTeamMemberFolder()
+        case .teamMemberRoot:
+            return DBXTeamNamespaceTypeTeamMemberRoot()
         case .other:
             return DBXTeamNamespaceTypeOther()
         }
@@ -11345,6 +12680,11 @@ public class DBXTeamNamespaceType: NSObject {
     @objc
     public var asTeamMemberFolder: DBXTeamNamespaceTypeTeamMemberFolder? {
         self as? DBXTeamNamespaceTypeTeamMemberFolder
+    }
+
+    @objc
+    public var asTeamMemberRoot: DBXTeamNamespaceTypeTeamMemberRoot? {
+        self as? DBXTeamNamespaceTypeTeamMemberRoot
     }
 
     @objc
@@ -11389,6 +12729,16 @@ public class DBXTeamNamespaceTypeTeamMemberFolder: DBXTeamNamespaceType {
     @objc
     public init() {
         let swift = Team.NamespaceType.teamMemberFolder
+        super.init(swift: swift)
+    }
+}
+
+/// Team member's root folder.
+@objc
+public class DBXTeamNamespaceTypeTeamMemberRoot: DBXTeamNamespaceType {
+    @objc
+    public init() {
+        let swift = Team.NamespaceType.teamMemberRoot
         super.init(swift: swift)
     }
 }
@@ -11948,8 +13298,8 @@ public class DBXTeamRevokeLinkedApiAppArg: NSObject {
     /// The unique id of the member owning the device.
     @objc
     public var teamMemberId: String { swift.teamMemberId }
-    /// This flag is not longer supported, the application dedicated folder (in case the application uses  one) will
-    /// be kept.
+    /// Field is deprecated. This flag is not longer supported, the application dedicated folder (in case the
+    /// application uses one) will be kept.
     @objc
     public var keepAppFolder: NSNumber { swift.keepAppFolder as NSNumber }
 
@@ -12861,6 +14211,8 @@ public class DBXTeamTeamFolderActivateError: NSObject {
             return DBXTeamTeamFolderActivateErrorTeamSharedDropboxError(arg)
         case .other:
             return DBXTeamTeamFolderActivateErrorOther()
+        case .folderCountLimitExceeded:
+            return DBXTeamTeamFolderActivateErrorFolderCountLimitExceeded()
         }
     }
 
@@ -12885,6 +14237,11 @@ public class DBXTeamTeamFolderActivateError: NSObject {
     @objc
     public var asOther: DBXTeamTeamFolderActivateErrorOther? {
         self as? DBXTeamTeamFolderActivateErrorOther
+    }
+
+    @objc
+    public var asFolderCountLimitExceeded: DBXTeamTeamFolderActivateErrorFolderCountLimitExceeded? {
+        self as? DBXTeamTeamFolderActivateErrorFolderCountLimitExceeded
     }
 }
 
@@ -12936,6 +14293,16 @@ public class DBXTeamTeamFolderActivateErrorOther: DBXTeamTeamFolderActivateError
     @objc
     public init() {
         let swift = Team.TeamFolderActivateError.other
+        super.init(swift: swift)
+    }
+}
+
+/// The team has reached the maximum number of team folders allowed by its plan.
+@objc
+public class DBXTeamTeamFolderActivateErrorFolderCountLimitExceeded: DBXTeamTeamFolderActivateError {
+    @objc
+    public init() {
+        let swift = Team.TeamFolderActivateError.folderCountLimitExceeded
         super.init(swift: swift)
     }
 }
@@ -13277,6 +14644,8 @@ public class DBXTeamTeamFolderCreateError: NSObject {
         case .syncSettingsError(let swiftArg):
             let arg = DBXFilesSyncSettingsError(swift: swiftArg)
             return DBXTeamTeamFolderCreateErrorSyncSettingsError(arg)
+        case .folderCountLimitExceeded:
+            return DBXTeamTeamFolderCreateErrorFolderCountLimitExceeded()
         case .other:
             return DBXTeamTeamFolderCreateErrorOther()
         }
@@ -13303,6 +14672,11 @@ public class DBXTeamTeamFolderCreateError: NSObject {
     @objc
     public var asSyncSettingsError: DBXTeamTeamFolderCreateErrorSyncSettingsError? {
         self as? DBXTeamTeamFolderCreateErrorSyncSettingsError
+    }
+
+    @objc
+    public var asFolderCountLimitExceeded: DBXTeamTeamFolderCreateErrorFolderCountLimitExceeded? {
+        self as? DBXTeamTeamFolderCreateErrorFolderCountLimitExceeded
     }
 
     @objc
@@ -13351,6 +14725,16 @@ public class DBXTeamTeamFolderCreateErrorSyncSettingsError: DBXTeamTeamFolderCre
     public init(_ arg: DBXFilesSyncSettingsError) {
         self.syncSettingsError = arg
         let swift = Team.TeamFolderCreateError.syncSettingsError(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// The team has reached the maximum number of team folders allowed by its plan.
+@objc
+public class DBXTeamTeamFolderCreateErrorFolderCountLimitExceeded: DBXTeamTeamFolderCreateError {
+    @objc
+    public init() {
+        let swift = Team.TeamFolderCreateError.folderCountLimitExceeded
         super.init(swift: swift)
     }
 }
@@ -13703,6 +15087,9 @@ public class DBXTeamTeamFolderMetadata: NSObject {
     /// Sync settings applied to contents of this team folder.
     @objc
     public var contentSyncSettings: [DBXFilesContentSyncSetting] { swift.contentSyncSettings.map { DBXFilesContentSyncSetting(swift: $0) } }
+    /// The quota limit in bytes for this team folder namespace tree.
+    @objc
+    public var quotaLimit: NSNumber { swift.quotaLimit as NSNumber }
 
     @objc
     public init(
@@ -13711,7 +15098,8 @@ public class DBXTeamTeamFolderMetadata: NSObject {
         status: DBXTeamTeamFolderStatus,
         isTeamSharedDropbox: NSNumber,
         syncSetting: DBXFilesSyncSetting,
-        contentSyncSettings: [DBXFilesContentSyncSetting]
+        contentSyncSettings: [DBXFilesContentSyncSetting],
+        quotaLimit: NSNumber
     ) {
         self.swift = Team.TeamFolderMetadata(
             teamFolderId: teamFolderId,
@@ -13719,7 +15107,8 @@ public class DBXTeamTeamFolderMetadata: NSObject {
             status: status.swift,
             isTeamSharedDropbox: isTeamSharedDropbox.boolValue,
             syncSetting: syncSetting.swift,
-            contentSyncSettings: contentSyncSettings.map(\.swift)
+            contentSyncSettings: contentSyncSettings.map(\.swift),
+            quotaLimit: quotaLimit.int64Value
         )
     }
 
@@ -14011,6 +15400,124 @@ public class DBXTeamTeamFolderRenameErrorFolderNameReserved: DBXTeamTeamFolderRe
     }
 }
 
+/// Objective-C compatible TeamFolderRestoreError union
+@objc
+public class DBXTeamTeamFolderRestoreError: NSObject {
+    let swift: Team.TeamFolderRestoreError
+
+    public init(swift: Team.TeamFolderRestoreError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.TeamFolderRestoreError) -> DBXTeamTeamFolderRestoreError {
+        switch swift {
+        case .accessError(let swiftArg):
+            let arg = DBXTeamTeamFolderAccessError(swift: swiftArg)
+            return DBXTeamTeamFolderRestoreErrorAccessError(arg)
+        case .statusError(let swiftArg):
+            let arg = DBXTeamTeamFolderInvalidStatusError(swift: swiftArg)
+            return DBXTeamTeamFolderRestoreErrorStatusError(arg)
+        case .teamSharedDropboxError(let swiftArg):
+            let arg = DBXTeamTeamFolderTeamSharedDropboxError(swift: swiftArg)
+            return DBXTeamTeamFolderRestoreErrorTeamSharedDropboxError(arg)
+        case .other:
+            return DBXTeamTeamFolderRestoreErrorOther()
+        case .folderCountLimitExceeded:
+            return DBXTeamTeamFolderRestoreErrorFolderCountLimitExceeded()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asAccessError: DBXTeamTeamFolderRestoreErrorAccessError? {
+        self as? DBXTeamTeamFolderRestoreErrorAccessError
+    }
+
+    @objc
+    public var asStatusError: DBXTeamTeamFolderRestoreErrorStatusError? {
+        self as? DBXTeamTeamFolderRestoreErrorStatusError
+    }
+
+    @objc
+    public var asTeamSharedDropboxError: DBXTeamTeamFolderRestoreErrorTeamSharedDropboxError? {
+        self as? DBXTeamTeamFolderRestoreErrorTeamSharedDropboxError
+    }
+
+    @objc
+    public var asOther: DBXTeamTeamFolderRestoreErrorOther? {
+        self as? DBXTeamTeamFolderRestoreErrorOther
+    }
+
+    @objc
+    public var asFolderCountLimitExceeded: DBXTeamTeamFolderRestoreErrorFolderCountLimitExceeded? {
+        self as? DBXTeamTeamFolderRestoreErrorFolderCountLimitExceeded
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamTeamFolderRestoreErrorAccessError: DBXTeamTeamFolderRestoreError {
+    @objc
+    public var accessError: DBXTeamTeamFolderAccessError
+
+    @objc
+    public init(_ arg: DBXTeamTeamFolderAccessError) {
+        self.accessError = arg
+        let swift = Team.TeamFolderRestoreError.accessError(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamTeamFolderRestoreErrorStatusError: DBXTeamTeamFolderRestoreError {
+    @objc
+    public var statusError: DBXTeamTeamFolderInvalidStatusError
+
+    @objc
+    public init(_ arg: DBXTeamTeamFolderInvalidStatusError) {
+        self.statusError = arg
+        let swift = Team.TeamFolderRestoreError.statusError(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamTeamFolderRestoreErrorTeamSharedDropboxError: DBXTeamTeamFolderRestoreError {
+    @objc
+    public var teamSharedDropboxError: DBXTeamTeamFolderTeamSharedDropboxError
+
+    @objc
+    public init(_ arg: DBXTeamTeamFolderTeamSharedDropboxError) {
+        self.teamSharedDropboxError = arg
+        let swift = Team.TeamFolderRestoreError.teamSharedDropboxError(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamTeamFolderRestoreErrorOther: DBXTeamTeamFolderRestoreError {
+    @objc
+    public init() {
+        let swift = Team.TeamFolderRestoreError.other
+        super.init(swift: swift)
+    }
+}
+
+/// The team has reached the maximum number of team folders allowed by its plan.
+@objc
+public class DBXTeamTeamFolderRestoreErrorFolderCountLimitExceeded: DBXTeamTeamFolderRestoreError {
+    @objc
+    public init() {
+        let swift = Team.TeamFolderRestoreError.folderCountLimitExceeded
+        super.init(swift: swift)
+    }
+}
+
 /// Objective-C compatible TeamFolderStatus union
 @objc
 public class DBXTeamTeamFolderStatus: NSObject {
@@ -14028,6 +15535,8 @@ public class DBXTeamTeamFolderStatus: NSObject {
             return DBXTeamTeamFolderStatusArchived()
         case .archiveInProgress:
             return DBXTeamTeamFolderStatusArchiveInProgress()
+        case .inactive:
+            return DBXTeamTeamFolderStatusInactive()
         case .other:
             return DBXTeamTeamFolderStatusOther()
         }
@@ -14052,6 +15561,11 @@ public class DBXTeamTeamFolderStatus: NSObject {
     }
 
     @objc
+    public var asInactive: DBXTeamTeamFolderStatusInactive? {
+        self as? DBXTeamTeamFolderStatusInactive
+    }
+
+    @objc
     public var asOther: DBXTeamTeamFolderStatusOther? {
         self as? DBXTeamTeamFolderStatusOther
     }
@@ -14067,7 +15581,7 @@ public class DBXTeamTeamFolderStatusActive: DBXTeamTeamFolderStatus {
     }
 }
 
-/// The team folder is not accessible outside of the team folder manager.
+/// The team folder is archived and is not accessible outside of the team folder manager.
 @objc
 public class DBXTeamTeamFolderStatusArchived: DBXTeamTeamFolderStatus {
     @objc
@@ -14077,12 +15591,23 @@ public class DBXTeamTeamFolderStatusArchived: DBXTeamTeamFolderStatus {
     }
 }
 
-/// The team folder is not accessible outside of the team folder manager.
+/// The team folder is in the process of being archived and is not accessible outside of the team folder
+/// manager.
 @objc
 public class DBXTeamTeamFolderStatusArchiveInProgress: DBXTeamTeamFolderStatus {
     @objc
     public init() {
         let swift = Team.TeamFolderStatus.archiveInProgress
+        super.init(swift: swift)
+    }
+}
+
+/// The team folder is unmounted and can be restored.
+@objc
+public class DBXTeamTeamFolderStatusInactive: DBXTeamTeamFolderStatus {
+    @objc
+    public init() {
+        let swift = Team.TeamFolderStatus.inactive
         super.init(swift: swift)
     }
 }
@@ -14437,9 +15962,12 @@ public class DBXTeamTeamMemberProfile: DBXTeamMemberProfile {
     /// List of group IDs of groups that the user belongs to.
     @objc
     public var groups: [String] { subSwift.groups }
-    /// The namespace id of the user's root folder.
+    /// The namespace id of the user's member folder.
     @objc
     public var memberFolderId: String { subSwift.memberFolderId }
+    /// The namespace id of the user's root folder.
+    @objc
+    public var rootFolderId: String { subSwift.rootFolderId }
 
     @objc
     public init(
@@ -14451,6 +15979,7 @@ public class DBXTeamTeamMemberProfile: DBXTeamMemberProfile {
         membershipType: DBXTeamTeamMembershipType,
         groups: [String],
         memberFolderId: String,
+        rootFolderId: String,
         externalId: String?,
         accountId: String?,
         secondaryEmails: [DBXSecondaryEmailsSecondaryEmail]?,
@@ -14470,6 +15999,7 @@ public class DBXTeamTeamMemberProfile: DBXTeamMemberProfile {
             membershipType: membershipType.swift,
             groups: groups,
             memberFolderId: memberFolderId,
+            rootFolderId: rootFolderId,
             externalId: externalId,
             accountId: accountId,
             secondaryEmails: secondaryEmails?.map(\.swift),
@@ -14659,7 +16189,8 @@ public class DBXTeamTeamMembershipTypeFull: DBXTeamTeamMembershipType {
     }
 }
 
-/// User does not have access to the shared quota and team admins have restricted administrative control.
+/// Field is deprecated. User does not have access to the shared quota and team admins have restricted
+/// administrative control.
 @objc
 public class DBXTeamTeamMembershipTypeLimited: DBXTeamTeamMembershipType {
     @objc
@@ -14672,7 +16203,7 @@ public class DBXTeamTeamMembershipTypeLimited: DBXTeamTeamMembershipType {
 /// Objective-C compatible TeamNamespacesListArg struct
 @objc
 public class DBXTeamTeamNamespacesListArg: NSObject {
-    /// Specifying a value here has no effect.
+    /// Field is deprecated. Specifying a value here has no effect.
     @objc
     public var limit: NSNumber { swift.limit as NSNumber }
 
@@ -15082,7 +16613,7 @@ public class DBXTeamUploadApiRateLimitValue: NSObject {
     }
 }
 
-/// This team has unlimited upload API quota. So far both server version account and legacy  account type have
+/// This team has unlimited upload API quota. So far both server version account and legacy account type have
 /// unlimited monthly upload api quota.
 @objc
 public class DBXTeamUploadApiRateLimitValueUnlimited: DBXTeamUploadApiRateLimitValue {
@@ -15267,7 +16798,7 @@ public class DBXTeamUserCustomQuotaArg: NSObject {
     public override var description: String { swift.description }
 }
 
-/// User and their custom quota in GB (1 TB = 1024 GB).  No quota returns if the user has no custom quota set.
+/// User and their custom quota in GB (1 TB = 1024 GB). No quota returns if the user has no custom quota set.
 @objc
 public class DBXTeamUserCustomQuotaResult: NSObject {
     /// (no description)
