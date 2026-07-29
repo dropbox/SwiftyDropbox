@@ -8,7 +8,7 @@ import Foundation
 
 enum Utilities {
     static func utf8Decode(_ data: Data) -> String {
-        NSString(data: data, encoding: String.Encoding.utf8.rawValue)! as String
+        String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii) ?? ""
     }
 
     static func asciiEscape(_ s: String) -> String {
