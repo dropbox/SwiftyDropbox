@@ -121,7 +121,7 @@ public enum LogHelper {
         _ level: LogLevel,
         _ message: String
     ) {
-        log(backgroundSessionLogLevel, "bg session - \(message)")
+        log(level, "bg session - \(message)")
     }
 }
 
