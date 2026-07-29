@@ -25,7 +25,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     /// - parameter quiet: Whether added members should be notified via email and device notifications of their
     /// invitation.
     /// - parameter accessLevel: AccessLevel union object, describing what access level we want to give new members.
-    /// - parameter addMessageAsComment: If the custom message should be added as a comment on the file.
+    /// - parameter addMessageAsComment: If the custom message should be added as a comment on the file. Only meant for
+    /// Paper files.
+    /// - parameter fpSealedResult: Field is only returned for "internal" callers. The FingerprintJS Sealed Client
+    /// Result value
     ///
     /// - returns: Through the response callback, the caller will receive a `Array<Sharing.FileMemberActionResult>`
     /// object on success or a `Sharing.AddFileMemberError` object on failure.
@@ -34,8 +37,9 @@ public class SharingRoutes: DropboxTransportClientOwning {
         members: [Sharing.MemberSelector],
         customMessage: String? = nil,
         quiet: Bool = false,
-        accessLevel: Sharing.AccessLevel = .viewer,
-        addMessageAsComment: Bool = false
+        accessLevel: Sharing.AccessLevel? = nil,
+        addMessageAsComment: Bool = false,
+        fpSealedResult: String? = nil
     ) -> RpcRequest<ArraySerializer<Sharing.FileMemberActionResultSerializer>, Sharing.AddFileMemberErrorSerializer> {
         let route = Sharing.addFileMember
         let serverArgs = Sharing.AddFileMemberArgs(
@@ -44,7 +48,8 @@ public class SharingRoutes: DropboxTransportClientOwning {
             customMessage: customMessage,
             quiet: quiet,
             accessLevel: accessLevel,
-            addMessageAsComment: addMessageAsComment
+            addMessageAsComment: addMessageAsComment,
+            fpSealedResult: fpSealedResult
         )
         return client.request(route, serverArgs: serverArgs)
     }
@@ -60,6 +65,8 @@ public class SharingRoutes: DropboxTransportClientOwning {
     /// folder.
     /// - parameter quiet: Whether added members should be notified via email and device notifications of their invite.
     /// - parameter customMessage: Optional message to display to added members in their invitation.
+    /// - parameter fpSealedResult: Field is only returned for "internal" callers. The FingerprintJS Sealed Client
+    /// Result value
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.AddFolderMemberError` object on failure.
@@ -67,10 +74,17 @@ public class SharingRoutes: DropboxTransportClientOwning {
         sharedFolderId: String,
         members: [Sharing.AddMember],
         quiet: Bool = false,
-        customMessage: String? = nil
+        customMessage: String? = nil,
+        fpSealedResult: String? = nil
     ) -> RpcRequest<VoidSerializer, Sharing.AddFolderMemberErrorSerializer> {
         let route = Sharing.addFolderMember
-        let serverArgs = Sharing.AddFolderMemberArg(sharedFolderId: sharedFolderId, members: members, quiet: quiet, customMessage: customMessage)
+        let serverArgs = Sharing.AddFolderMemberArg(
+            sharedFolderId: sharedFolderId,
+            members: members,
+            quiet: quiet,
+            customMessage: customMessage,
+            fpSealedResult: fpSealedResult
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -98,8 +112,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.RemoveMemberJobStatus` object on
     /// success or a `Async.PollError` object on failure.
-    @discardableResult public func checkRemoveMemberJobStatus(asyncJobId: String)
-        -> RpcRequest<Sharing.RemoveMemberJobStatusSerializer, Async.PollErrorSerializer> {
+    @discardableResult public func checkRemoveMemberJobStatus(asyncJobId: String) -> RpcRequest<
+        Sharing.RemoveMemberJobStatusSerializer,
+        Async.PollErrorSerializer
+    > {
         let route = Sharing.checkRemoveMemberJobStatus
         let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
@@ -123,30 +139,31 @@ public class SharingRoutes: DropboxTransportClientOwning {
     /// Create a shared link. If a shared link already exists for the given path, that link is returned. Previously, it
     /// was technically possible to break a shared link by moving or renaming the corresponding file or folder. In
     /// the future, this will no longer be the case, so your app shouldn't rely on this behavior. Instead, if your
-    /// app needs to revoke a shared link, use revokeSharedLink.
+    /// app needs to revoke a shared link, use revoke_shared_link. DEPRECATED: Use create_shared_link_with_settings
+    /// instead.
     ///
     /// - scope: sharing.write
     ///
     /// - parameter path: The path to share.
+    /// - parameter shortUrl: Field is deprecated. None
     /// - parameter pendingUpload: If it's okay to share a path that does not yet exist, set this to either file in
     /// PendingUploadMode or folder in PendingUploadMode to indicate whether to assume it's a file or folder.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.PathLinkMetadata` object on success
     /// or a `Sharing.CreateSharedLinkError` object on failure.
-    @available(*, unavailable, message: "createSharedLink is deprecated. Use createSharedLinkWithSettings.")
-    @discardableResult public func createSharedLink(
-        path: String,
-        shortUrl: Bool = false,
-        pendingUpload: Sharing.PendingUploadMode? = nil
-    ) -> RpcRequest<Sharing.PathLinkMetadataSerializer, Sharing.CreateSharedLinkErrorSerializer> {
+    @available(*, unavailable, message: "createSharedLink is deprecated.")
+    @discardableResult public func createSharedLink(path: String, shortUrl: Bool = false, pendingUpload: Sharing.PendingUploadMode? = nil) -> RpcRequest<
+        Sharing.PathLinkMetadataSerializer,
+        Sharing.CreateSharedLinkErrorSerializer
+    > {
         let route = Sharing.createSharedLink
         let serverArgs = Sharing.CreateSharedLinkArg(path: path, shortUrl: shortUrl, pendingUpload: pendingUpload)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Create a shared link with custom settings. If no settings are given then the default visibility is public_ in
-    /// RequestedVisibility (The resolved visibility, though, may depend on other aspects such as team and shared
-    /// folder settings).
+    /// Create a shared link with custom settings. If no settings are given then the default visibility is
+    /// RequestedVisibility.public (The resolved visibility, though, may depend on other aspects such as team and
+    /// shared folder settings).
     ///
     /// - scope: sharing.write
     ///
@@ -155,10 +172,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.CreateSharedLinkWithSettingsError` object on failure.
-    @discardableResult public func createSharedLinkWithSettings(
-        path: String,
-        settings: Sharing.SharedLinkSettings? = nil
-    ) -> RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.CreateSharedLinkWithSettingsErrorSerializer> {
+    @discardableResult public func createSharedLinkWithSettings(path: String, settings: Sharing.SharedLinkSettings? = nil) -> RpcRequest<
+        Sharing.SharedLinkMetadataSerializer,
+        Sharing.CreateSharedLinkWithSettingsErrorSerializer
+    > {
         let route = Sharing.createSharedLinkWithSettings
         let serverArgs = Sharing.CreateSharedLinkWithSettingsArg(path: path, settings: settings)
         return client.request(route, serverArgs: serverArgs)
@@ -170,15 +187,15 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter file: The file to query.
     /// - parameter actions: A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
-    /// response's permissions in SharedFileMetadata field describing the actions the  authenticated user can
-    /// perform on the file.
+    /// response's permissions in SharedFileMetadata field describing the actions the authenticated user can perform
+    /// on the file.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFileMetadata` object on
     /// success or a `Sharing.GetFileMetadataError` object on failure.
-    @discardableResult public func getFileMetadata(
-        file: String,
-        actions: [Sharing.FileAction]? = nil
-    ) -> RpcRequest<Sharing.SharedFileMetadataSerializer, Sharing.GetFileMetadataErrorSerializer> {
+    @discardableResult public func getFileMetadata(file: String, actions: [Sharing.FileAction]? = nil) -> RpcRequest<
+        Sharing.SharedFileMetadataSerializer,
+        Sharing.GetFileMetadataErrorSerializer
+    > {
         let route = Sharing.getFileMetadata
         let serverArgs = Sharing.GetFileMetadataArg(file: file, actions: actions)
         return client.request(route, serverArgs: serverArgs)
@@ -190,15 +207,15 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter files: The files to query.
     /// - parameter actions: A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
-    /// response's permissions in SharedFileMetadata field describing the actions the  authenticated user can
-    /// perform on the file.
+    /// response's permissions in SharedFileMetadata field describing the actions the authenticated user can perform
+    /// on the file.
     ///
     /// - returns: Through the response callback, the caller will receive a `Array<Sharing.GetFileMetadataBatchResult>`
     /// object on success or a `Sharing.SharingUserError` object on failure.
-    @discardableResult public func getFileMetadataBatch(
-        files: [String],
-        actions: [Sharing.FileAction]? = nil
-    ) -> RpcRequest<ArraySerializer<Sharing.GetFileMetadataBatchResultSerializer>, Sharing.SharingUserErrorSerializer> {
+    @discardableResult public func getFileMetadataBatch(files: [String], actions: [Sharing.FileAction]? = nil) -> RpcRequest<
+        ArraySerializer<Sharing.GetFileMetadataBatchResultSerializer>,
+        Sharing.SharingUserErrorSerializer
+    > {
         let route = Sharing.getFileMetadataBatch
         let serverArgs = Sharing.GetFileMetadataBatchArg(files: files, actions: actions)
         return client.request(route, serverArgs: serverArgs)
@@ -210,21 +227,22 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter sharedFolderId: The ID for the shared folder.
     /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can
+    /// response's permissions in SharedFolderMetadata field describing the actions the authenticated user can
     /// perform on the folder.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMetadata` object on
     /// success or a `Sharing.SharedFolderAccessError` object on failure.
-    @discardableResult public func getFolderMetadata(
-        sharedFolderId: String,
-        actions: [Sharing.FolderAction]? = nil
-    ) -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.SharedFolderAccessErrorSerializer> {
+    @discardableResult public func getFolderMetadata(sharedFolderId: String, actions: [Sharing.FolderAction]? = nil) -> RpcRequest<
+        Sharing.SharedFolderMetadataSerializer,
+        Sharing.SharedFolderAccessErrorSerializer
+    > {
         let route = Sharing.getFolderMetadata
         let serverArgs = Sharing.GetMetadataArgs(sharedFolderId: sharedFolderId, actions: actions)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Download the shared link's file from a user's Dropbox.
+    /// Download the shared link's file from a user's Dropbox. This is a download-style endpoint that returns the file
+    /// content.
     ///
     /// - scope: sharing.read
     ///
@@ -239,19 +257,17 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.GetSharedLinkFileError` object on failure.
-    @discardableResult public func getSharedLinkFile(
-        url: String,
-        path: String? = nil,
-        linkPassword: String? = nil,
-        overwrite: Bool = false,
-        destination: URL
-    ) -> DownloadRequestFile<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer> {
+    @discardableResult public func getSharedLinkFile(url: String, path: String? = nil, linkPassword: String? = nil, overwrite: Bool = false, destination: URL) -> DownloadRequestFile<
+        Sharing.SharedLinkMetadataSerializer,
+        Sharing.GetSharedLinkFileErrorSerializer
+    > {
         let route = Sharing.getSharedLinkFile
         let serverArgs = Sharing.GetSharedLinkMetadataArg(url: url, path: path, linkPassword: linkPassword)
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
     }
 
-    /// Download the shared link's file from a user's Dropbox.
+    /// Download the shared link's file from a user's Dropbox. This is a download-style endpoint that returns the file
+    /// content.
     ///
     /// - scope: sharing.read
     ///
@@ -262,11 +278,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.GetSharedLinkFileError` object on failure.
-    @discardableResult public func getSharedLinkFile(
-        url: String,
-        path: String? = nil,
-        linkPassword: String? = nil
-    ) -> DownloadRequestMemory<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer> {
+    @discardableResult public func getSharedLinkFile(url: String, path: String? = nil, linkPassword: String? = nil) -> DownloadRequestMemory<
+        Sharing.SharedLinkMetadataSerializer,
+        Sharing.GetSharedLinkFileErrorSerializer
+    > {
         let route = Sharing.getSharedLinkFile
         let serverArgs = Sharing.GetSharedLinkMetadataArg(url: url, path: path, linkPassword: linkPassword)
         return client.request(route, serverArgs: serverArgs)
@@ -282,21 +297,21 @@ public class SharingRoutes: DropboxTransportClientOwning {
     /// - parameter linkPassword: If the shared link has a password, this parameter can be used.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
-    /// success or a `Sharing.SharedLinkError` object on failure.
-    @discardableResult public func getSharedLinkMetadata(
-        url: String,
-        path: String? = nil,
-        linkPassword: String? = nil
-    ) -> RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.SharedLinkErrorSerializer> {
+    /// success or a `Sharing.SharedLinkMetadataError` object on failure.
+    @discardableResult public func getSharedLinkMetadata(url: String, path: String? = nil, linkPassword: String? = nil) -> RpcRequest<
+        Sharing.SharedLinkMetadataSerializer,
+        Sharing.SharedLinkMetadataErrorSerializer
+    > {
         let route = Sharing.getSharedLinkMetadata
         let serverArgs = Sharing.GetSharedLinkMetadataArg(url: url, path: path, linkPassword: linkPassword)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Returns a list of LinkMetadata objects for this user, including collection links. If no path is given, returns a
-    /// list of all shared links for the current user, including collection links, up to a maximum of 1000 links. If
-    /// a non-empty path is given, returns a list of all shared links that allow access to the given path.
-    /// Collection links are never returned in this case.
+    /// DEPRECATED: Use list_shared_links instead. This endpoint will be retired in October 2026. Returns a list of
+    /// LinkMetadata objects for this user, including collection links. If no path is given, returns a list of all
+    /// shared links for the current user, including collection links, up to a maximum of 1000 links. If a non-empty
+    /// path is given, returns a list of all shared links that allow access to the given path. Collection links are
+    /// never returned in this case.
     ///
     /// - scope: sharing.read
     ///
@@ -304,9 +319,11 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.GetSharedLinksResult` object on
     /// success or a `Sharing.GetSharedLinksError` object on failure.
-    @available(*, unavailable, message: "getSharedLinks is deprecated. Use listSharedLinks.")
-    @discardableResult public func getSharedLinks(path: String? = nil)
-        -> RpcRequest<Sharing.GetSharedLinksResultSerializer, Sharing.GetSharedLinksErrorSerializer> {
+    @available(*, unavailable, message: "getSharedLinks is deprecated.")
+    @discardableResult public func getSharedLinks(path: String? = nil) -> RpcRequest<
+        Sharing.GetSharedLinksResultSerializer,
+        Sharing.GetSharedLinksErrorSerializer
+    > {
         let route = Sharing.getSharedLinks
         let serverArgs = Sharing.GetSharedLinksArg(path: path)
         return client.request(route, serverArgs: serverArgs)
@@ -323,12 +340,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFileMembers` object on
     /// success or a `Sharing.ListFileMembersError` object on failure.
-    @discardableResult public func listFileMembers(
-        file: String,
-        actions: [Sharing.MemberAction]? = nil,
-        includeInherited: Bool = true,
-        limit: UInt32 = 100
-    ) -> RpcRequest<Sharing.SharedFileMembersSerializer, Sharing.ListFileMembersErrorSerializer> {
+    @discardableResult public func listFileMembers(file: String, actions: [Sharing.MemberAction]? = nil, includeInherited: Bool = true, limit: UInt32 = 100) -> RpcRequest<
+        Sharing.SharedFileMembersSerializer,
+        Sharing.ListFileMembersErrorSerializer
+    > {
         let route = Sharing.listFileMembers
         let serverArgs = Sharing.ListFileMembersArg(file: file, actions: actions, includeInherited: includeInherited, limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -342,14 +357,14 @@ public class SharingRoutes: DropboxTransportClientOwning {
     /// - scope: sharing.read
     ///
     /// - parameter files: Files for which to return members.
-    /// - parameter limit: Number of members to return max per query. Defaults to 10 if no limit is specified.
+    /// - parameter limit: Number of members to return max per query. Defaults to 1000 if no limit is specified.
     ///
     /// - returns: Through the response callback, the caller will receive a `Array<Sharing.ListFileMembersBatchResult>`
     /// object on success or a `Sharing.SharingUserError` object on failure.
-    @discardableResult public func listFileMembersBatch(
-        files: [String],
-        limit: UInt32 = 10
-    ) -> RpcRequest<ArraySerializer<Sharing.ListFileMembersBatchResultSerializer>, Sharing.SharingUserErrorSerializer> {
+    @discardableResult public func listFileMembersBatch(files: [String], limit: UInt32 = 1_000) -> RpcRequest<
+        ArraySerializer<Sharing.ListFileMembersBatchResultSerializer>,
+        Sharing.SharingUserErrorSerializer
+    > {
         let route = Sharing.listFileMembersBatch
         let serverArgs = Sharing.ListFileMembersBatchArg(files: files, limit: limit)
         return client.request(route, serverArgs: serverArgs)
@@ -365,8 +380,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFileMembers` object on
     /// success or a `Sharing.ListFileMembersContinueError` object on failure.
-    @discardableResult public func listFileMembersContinue(cursor: String)
-        -> RpcRequest<Sharing.SharedFileMembersSerializer, Sharing.ListFileMembersContinueErrorSerializer> {
+    @discardableResult public func listFileMembersContinue(cursor: String) -> RpcRequest<
+        Sharing.SharedFileMembersSerializer,
+        Sharing.ListFileMembersContinueErrorSerializer
+    > {
         let route = Sharing.listFileMembersContinue
         let serverArgs = Sharing.ListFileMembersContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -376,17 +393,20 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - scope: sharing.read
     ///
-    /// - parameter sharedFolderId: The ID for the shared folder.
+    /// - parameter sharedFolderId: The ID for the shared folder. When path is provided, the folder ID will be extracted
+    /// from the path instead.
+    /// - parameter path: Optional path to get inherited members. When omitted, uses shared_folder_id to return direct
+    /// members. When provided, extracts folder ID from this path and returns users who have access through parent
+    /// shared folder.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMembers` object on
     /// success or a `Sharing.SharedFolderAccessError` object on failure.
-    @discardableResult public func listFolderMembers(
-        sharedFolderId: String,
-        actions: [Sharing.MemberAction]? = nil,
-        limit: UInt32 = 1_000
-    ) -> RpcRequest<Sharing.SharedFolderMembersSerializer, Sharing.SharedFolderAccessErrorSerializer> {
+    @discardableResult public func listFolderMembers(sharedFolderId: String, actions: [Sharing.MemberAction]? = nil, limit: UInt32 = 1_000, path: String? = nil) -> RpcRequest<
+        Sharing.SharedFolderMembersSerializer,
+        Sharing.SharedFolderAccessErrorSerializer
+    > {
         let route = Sharing.listFolderMembers
-        let serverArgs = Sharing.ListFolderMembersArgs(sharedFolderId: sharedFolderId, actions: actions, limit: limit)
+        let serverArgs = Sharing.ListFolderMembersArgs(sharedFolderId: sharedFolderId, actions: actions, limit: limit, path: path)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -398,8 +418,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMembers` object on
     /// success or a `Sharing.ListFolderMembersContinueError` object on failure.
-    @discardableResult public func listFolderMembersContinue(cursor: String)
-        -> RpcRequest<Sharing.SharedFolderMembersSerializer, Sharing.ListFolderMembersContinueErrorSerializer> {
+    @discardableResult public func listFolderMembersContinue(cursor: String) -> RpcRequest<
+        Sharing.SharedFolderMembersSerializer,
+        Sharing.ListFolderMembersContinueErrorSerializer
+    > {
         let route = Sharing.listFolderMembersContinue
         let serverArgs = Sharing.ListFolderMembersContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -411,15 +433,15 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter limit: The maximum number of results to return per request.
     /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can
+    /// response's permissions in SharedFolderMetadata field describing the actions the authenticated user can
     /// perform on the folder.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
     /// success or a `Void` object on failure.
-    @discardableResult public func listFolders(
-        limit: UInt32 = 1_000,
-        actions: [Sharing.FolderAction]? = nil
-    ) -> RpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer> {
+    @discardableResult public func listFolders(limit: UInt32 = 1_000, actions: [Sharing.FolderAction]? = nil) -> RpcRequest<
+        Sharing.ListFoldersResultSerializer,
+        VoidSerializer
+    > {
         let route = Sharing.listFolders
         let serverArgs = Sharing.ListFoldersArgs(limit: limit, actions: actions)
         return client.request(route, serverArgs: serverArgs)
@@ -434,8 +456,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
     /// success or a `Sharing.ListFoldersContinueError` object on failure.
-    @discardableResult public func listFoldersContinue(cursor: String)
-        -> RpcRequest<Sharing.ListFoldersResultSerializer, Sharing.ListFoldersContinueErrorSerializer> {
+    @discardableResult public func listFoldersContinue(cursor: String) -> RpcRequest<
+        Sharing.ListFoldersResultSerializer,
+        Sharing.ListFoldersContinueErrorSerializer
+    > {
         let route = Sharing.listFoldersContinue
         let serverArgs = Sharing.ListFoldersContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -447,15 +471,15 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - parameter limit: The maximum number of results to return per request.
     /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can
+    /// response's permissions in SharedFolderMetadata field describing the actions the authenticated user can
     /// perform on the folder.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
     /// success or a `Void` object on failure.
-    @discardableResult public func listMountableFolders(
-        limit: UInt32 = 1_000,
-        actions: [Sharing.FolderAction]? = nil
-    ) -> RpcRequest<Sharing.ListFoldersResultSerializer, VoidSerializer> {
+    @discardableResult public func listMountableFolders(limit: UInt32 = 1_000, actions: [Sharing.FolderAction]? = nil) -> RpcRequest<
+        Sharing.ListFoldersResultSerializer,
+        VoidSerializer
+    > {
         let route = Sharing.listMountableFolders
         let serverArgs = Sharing.ListFoldersArgs(limit: limit, actions: actions)
         return client.request(route, serverArgs: serverArgs)
@@ -470,29 +494,30 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.ListFoldersResult` object on
     /// success or a `Sharing.ListFoldersContinueError` object on failure.
-    @discardableResult public func listMountableFoldersContinue(cursor: String)
-        -> RpcRequest<Sharing.ListFoldersResultSerializer, Sharing.ListFoldersContinueErrorSerializer> {
+    @discardableResult public func listMountableFoldersContinue(cursor: String) -> RpcRequest<
+        Sharing.ListFoldersResultSerializer,
+        Sharing.ListFoldersContinueErrorSerializer
+    > {
         let route = Sharing.listMountableFoldersContinue
         let serverArgs = Sharing.ListFoldersContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Returns a list of all files shared with current user.  Does not include files the user has received via shared
-    /// folders, and does  not include unclaimed invitations.
+    /// Returns a list of all files shared with current user.
     ///
     /// - scope: sharing.read
     ///
     /// - parameter limit: Number of files to return max per query. Defaults to 100 if no limit is specified.
     /// - parameter actions: A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
-    /// response's permissions in SharedFileMetadata field describing the actions the  authenticated user can
-    /// perform on the file.
+    /// response's permissions in SharedFileMetadata field describing the actions the authenticated user can perform
+    /// on the file.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.ListFilesResult` object on success
     /// or a `Sharing.SharingUserError` object on failure.
-    @discardableResult public func listReceivedFiles(
-        limit: UInt32 = 100,
-        actions: [Sharing.FileAction]? = nil
-    ) -> RpcRequest<Sharing.ListFilesResultSerializer, Sharing.SharingUserErrorSerializer> {
+    @discardableResult public func listReceivedFiles(limit: UInt32 = 100, actions: [Sharing.FileAction]? = nil) -> RpcRequest<
+        Sharing.ListFilesResultSerializer,
+        Sharing.SharingUserErrorSerializer
+    > {
         let route = Sharing.listReceivedFiles
         let serverArgs = Sharing.ListFilesArg(limit: limit, actions: actions)
         return client.request(route, serverArgs: serverArgs)
@@ -506,8 +531,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.ListFilesResult` object on success
     /// or a `Sharing.ListFilesContinueError` object on failure.
-    @discardableResult public func listReceivedFilesContinue(cursor: String)
-        -> RpcRequest<Sharing.ListFilesResultSerializer, Sharing.ListFilesContinueErrorSerializer> {
+    @discardableResult public func listReceivedFilesContinue(cursor: String) -> RpcRequest<
+        Sharing.ListFilesResultSerializer,
+        Sharing.ListFilesContinueErrorSerializer
+    > {
         let route = Sharing.listReceivedFilesContinue
         let serverArgs = Sharing.ListFilesContinueArg(cursor: cursor)
         return client.request(route, serverArgs: serverArgs)
@@ -515,11 +542,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
 
     /// List shared links of this user. If no path is given, returns a list of all shared links for the current user.
     /// For members of business teams using team space and member folders, returns all shared links in the team
-    /// member's home folder unless the team space ID is specified in the request header. For more information,
-    /// refer to the Namespace Guide https://www.dropbox.com/developers/reference/namespace-guide. If a non-empty
-    /// path is given, returns a list of all shared links that allow access to the given path - direct links to the
-    /// given path and links to parent folders of the given path. Links to parent folders can be suppressed by
-    /// setting direct_only to true.
+    /// member's home folder unless the team space ID is specified in the request header. If a non-empty path is
+    /// given, returns a list of all shared links that allow access to the given path - direct links to the given
+    /// path and links to parent folders of the given path. Links to parent folders can be suppressed by setting
+    /// direct_only to true.
     ///
     /// - scope: sharing.read
     ///
@@ -529,20 +555,19 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.ListSharedLinksResult` object on
     /// success or a `Sharing.ListSharedLinksError` object on failure.
-    @discardableResult public func listSharedLinks(
-        path: String? = nil,
-        cursor: String? = nil,
-        directOnly: Bool? = nil
-    ) -> RpcRequest<Sharing.ListSharedLinksResultSerializer, Sharing.ListSharedLinksErrorSerializer> {
+    @discardableResult public func listSharedLinks(path: String? = nil, cursor: String? = nil, directOnly: Bool? = nil) -> RpcRequest<
+        Sharing.ListSharedLinksResultSerializer,
+        Sharing.ListSharedLinksErrorSerializer
+    > {
         let route = Sharing.listSharedLinks
         let serverArgs = Sharing.ListSharedLinksArg(path: path, cursor: cursor, directOnly: directOnly)
         return client.request(route, serverArgs: serverArgs)
     }
 
     /// Modify the shared link's settings. If the requested visibility conflict with the shared links policy of the team
-    /// or the shared folder (in case the linked file is part of a shared folder) then the resolvedVisibility in
-    /// LinkPermissions of the returned SharedLinkMetadata will reflect the actual visibility of the shared link and
-    /// the requestedVisibility in LinkPermissions will reflect the requested visibility.
+    /// or the shared folder (in case the linked file is part of a shared folder) then the
+    /// LinkPermissions.resolved_visibility of the returned SharedLinkMetadata will reflect the actual visibility of
+    /// the shared link and the LinkPermissions.requested_visibility will reflect the requested visibility.
     ///
     /// - scope: sharing.write
     ///
@@ -552,11 +577,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedLinkMetadata` object on
     /// success or a `Sharing.ModifySharedLinkSettingsError` object on failure.
-    @discardableResult public func modifySharedLinkSettings(
-        url: String,
-        settings: Sharing.SharedLinkSettings,
-        removeExpiration: Bool = false
-    ) -> RpcRequest<Sharing.SharedLinkMetadataSerializer, Sharing.ModifySharedLinkSettingsErrorSerializer> {
+    @discardableResult public func modifySharedLinkSettings(url: String, settings: Sharing.SharedLinkSettings, removeExpiration: Bool = false) -> RpcRequest<
+        Sharing.SharedLinkMetadataSerializer,
+        Sharing.ModifySharedLinkSettingsErrorSerializer
+    > {
         let route = Sharing.modifySharedLinkSettings
         let serverArgs = Sharing.ModifySharedLinkSettingsArgs(url: url, settings: settings, removeExpiration: removeExpiration)
         return client.request(route, serverArgs: serverArgs)
@@ -571,15 +595,31 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMetadata` object on
     /// success or a `Sharing.MountFolderError` object on failure.
-    @discardableResult public func mountFolder(sharedFolderId: String)
-        -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.MountFolderErrorSerializer> {
+    @discardableResult public func mountFolder(sharedFolderId: String) -> RpcRequest<Sharing.SharedFolderMetadataSerializer, Sharing.MountFolderErrorSerializer> {
         let route = Sharing.mountFolder
         let serverArgs = Sharing.MountFolderArg(sharedFolderId: sharedFolderId)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// The current user relinquishes their membership in the designated file. Note that the current user may still have
-    /// inherited access to this file through the parent folder.
+    /// Removes all self-removable access from a file or folder for the current user. Best-effort and idempotent:
+    /// attempts to drop link-visitor associations and explicit ACL membership.
+    ///
+    /// - scope: private:sharing.write
+    ///
+    /// - parameter fileId: The id for the file or folder.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Sharing.RelinquishAccessResult` object on
+    /// success or a `Sharing.RelinquishAccessError` object on failure.
+    @discardableResult public func relinquishAccess(fileId: String) -> RpcRequest<
+        Sharing.RelinquishAccessResultSerializer,
+        Sharing.RelinquishAccessErrorSerializer
+    > {
+        let route = Sharing.relinquishAccess
+        let serverArgs = Sharing.RelinquishAccessArg(fileId: fileId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// The current user relinquishes their membership in the designated file.
     ///
     /// - scope: sharing.write
     ///
@@ -605,10 +645,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
     /// or a `Sharing.RelinquishFolderMembershipError` object on failure.
-    @discardableResult public func relinquishFolderMembership(
-        sharedFolderId: String,
-        leaveACopy: Bool = false
-    ) -> RpcRequest<Async.LaunchEmptyResultSerializer, Sharing.RelinquishFolderMembershipErrorSerializer> {
+    @discardableResult public func relinquishFolderMembership(sharedFolderId: String, leaveACopy: Bool = false) -> RpcRequest<
+        Async.LaunchEmptyResultSerializer,
+        Sharing.RelinquishFolderMembershipErrorSerializer
+    > {
         let route = Sharing.relinquishFolderMembership
         let serverArgs = Sharing.RelinquishFolderMembershipArg(sharedFolderId: sharedFolderId, leaveACopy: leaveACopy)
         return client.request(route, serverArgs: serverArgs)
@@ -624,11 +664,11 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.FileMemberActionIndividualResult`
     /// object on success or a `Sharing.RemoveFileMemberError` object on failure.
-    @available(*, unavailable, message: "removeFileMember is deprecated. Use removeFileMember2.")
-    @discardableResult public func removeFileMember(
-        file: String,
-        member: Sharing.MemberSelector
-    ) -> RpcRequest<Sharing.FileMemberActionIndividualResultSerializer, Sharing.RemoveFileMemberErrorSerializer> {
+    @available(*, unavailable, message: "removeFileMember is deprecated.")
+    @discardableResult public func removeFileMember(file: String, member: Sharing.MemberSelector) -> RpcRequest<
+        Sharing.FileMemberActionIndividualResultSerializer,
+        Sharing.RemoveFileMemberErrorSerializer
+    > {
         let route = Sharing.removeFileMember
         let serverArgs = Sharing.RemoveFileMemberArg(file: file, member: member)
         return client.request(route, serverArgs: serverArgs)
@@ -644,10 +684,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.FileMemberRemoveActionResult`
     /// object on success or a `Sharing.RemoveFileMemberError` object on failure.
-    @discardableResult public func removeFileMember2(
-        file: String,
-        member: Sharing.MemberSelector
-    ) -> RpcRequest<Sharing.FileMemberRemoveActionResultSerializer, Sharing.RemoveFileMemberErrorSerializer> {
+    @discardableResult public func removeFileMember2(file: String, member: Sharing.MemberSelector) -> RpcRequest<
+        Sharing.FileMemberRemoveActionResultSerializer,
+        Sharing.RemoveFileMemberErrorSerializer
+    > {
         let route = Sharing.removeFileMember2
         let serverArgs = Sharing.RemoveFileMemberArg(file: file, member: member)
         return client.request(route, serverArgs: serverArgs)
@@ -665,11 +705,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Sharing.RemoveFolderMemberError` object on failure.
-    @discardableResult public func removeFolderMember(
-        sharedFolderId: String,
-        member: Sharing.MemberSelector,
-        leaveACopy: Bool
-    ) -> RpcRequest<Async.LaunchResultBaseSerializer, Sharing.RemoveFolderMemberErrorSerializer> {
+    @discardableResult public func removeFolderMember(sharedFolderId: String, member: Sharing.MemberSelector, leaveACopy: Bool) -> RpcRequest<
+        Async.LaunchResultBaseSerializer,
+        Sharing.RemoveFolderMemberErrorSerializer
+    > {
         let route = Sharing.removeFolderMember
         let serverArgs = Sharing.RemoveFolderMemberArg(sharedFolderId: sharedFolderId, member: member, leaveACopy: leaveACopy)
         return client.request(route, serverArgs: serverArgs)
@@ -677,7 +716,7 @@ public class SharingRoutes: DropboxTransportClientOwning {
 
     /// Revoke a shared link. Note that even after revoking a shared link to a file, the file may be accessible if there
     /// are shared links leading to any of the file parent folders. To list all shared links that enable access to a
-    /// specific file, you can use the listSharedLinks with the file as the path in ListSharedLinksArg argument.
+    /// specific file, you can use the list_shared_links with the file as the ListSharedLinksArg.path argument.
     ///
     /// - scope: sharing.write
     ///
@@ -702,11 +741,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.ShareFolderLaunch` object on
     /// success or a `Sharing.SetAccessInheritanceError` object on failure.
-    @discardableResult public func setAccessInheritance(
-        sharedFolderId: String,
-        accessInheritance: Sharing
-            .AccessInheritance = .inherit
-    ) -> RpcRequest<Sharing.ShareFolderLaunchSerializer, Sharing.SetAccessInheritanceErrorSerializer> {
+    @discardableResult public func setAccessInheritance(sharedFolderId: String, accessInheritance: Sharing.AccessInheritance = .inherit) -> RpcRequest<
+        Sharing.ShareFolderLaunchSerializer,
+        Sharing.SetAccessInheritanceErrorSerializer
+    > {
         let route = Sharing.setAccessInheritance
         let serverArgs = Sharing.SetAccessInheritanceArg(sharedFolderId: sharedFolderId, accessInheritance: accessInheritance)
         return client.request(route, serverArgs: serverArgs)
@@ -720,7 +758,7 @@ public class SharingRoutes: DropboxTransportClientOwning {
     /// - scope: sharing.write
     ///
     /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can
+    /// response's permissions in SharedFolderMetadata field describing the actions the authenticated user can
     /// perform on the folder.
     /// - parameter linkSettings: Settings on the link for this folder.
     ///
@@ -762,10 +800,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.TransferFolderError` object on failure.
-    @discardableResult public func transferFolder(
-        sharedFolderId: String,
-        toDropboxId: String
-    ) -> RpcRequest<VoidSerializer, Sharing.TransferFolderErrorSerializer> {
+    @discardableResult public func transferFolder(sharedFolderId: String, toDropboxId: String) -> RpcRequest<
+        VoidSerializer,
+        Sharing.TransferFolderErrorSerializer
+    > {
         let route = Sharing.transferFolder
         let serverArgs = Sharing.TransferFolderArg(sharedFolderId: sharedFolderId, toDropboxId: toDropboxId)
         return client.request(route, serverArgs: serverArgs)
@@ -799,8 +837,9 @@ public class SharingRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Allows a shared folder owner to unshare the folder. You'll need to call checkJobStatus to determine if the
-    /// action has completed successfully.
+    /// Allows a shared folder owner to unshare the folder. Unshare will not work in following cases: The shared folder
+    /// contains shared folders OR the shared folder is inside another shared folder. You'll need to call
+    /// checkJobStatus to determine if the action has completed successfully.
     ///
     /// - scope: sharing.write
     ///
@@ -811,10 +850,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchEmptyResult` object on success
     /// or a `Sharing.UnshareFolderError` object on failure.
-    @discardableResult public func unshareFolder(
-        sharedFolderId: String,
-        leaveACopy: Bool = false
-    ) -> RpcRequest<Async.LaunchEmptyResultSerializer, Sharing.UnshareFolderErrorSerializer> {
+    @discardableResult public func unshareFolder(sharedFolderId: String, leaveACopy: Bool = false) -> RpcRequest<
+        Async.LaunchEmptyResultSerializer,
+        Sharing.UnshareFolderErrorSerializer
+    > {
         let route = Sharing.unshareFolder
         let serverArgs = Sharing.UnshareFolderArg(sharedFolderId: sharedFolderId, leaveACopy: leaveACopy)
         return client.request(route, serverArgs: serverArgs)
@@ -830,13 +869,36 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.MemberAccessLevelResult` object on
     /// success or a `Sharing.FileMemberActionError` object on failure.
-    @discardableResult public func updateFileMember(
-        file: String,
-        member: Sharing.MemberSelector,
-        accessLevel: Sharing.AccessLevel
-    ) -> RpcRequest<Sharing.MemberAccessLevelResultSerializer, Sharing.FileMemberActionErrorSerializer> {
+    @discardableResult public func updateFileMember(file: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) -> RpcRequest<
+        Sharing.MemberAccessLevelResultSerializer,
+        Sharing.FileMemberActionErrorSerializer
+    > {
         let route = Sharing.updateFileMember
         let serverArgs = Sharing.UpdateFileMemberArgs(file: file, member: member, accessLevel: accessLevel)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Update the viewer info policy of a file.
+    ///
+    /// - scope: sharing.write
+    ///
+    /// - parameter file: File that we are changing the policy for.
+    /// - parameter actions: A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
+    /// response's permissions in SharedFileMetadata field describing the actions the authenticated user can perform
+    /// on the file.
+    /// - parameter linkSettings: Field is deprecated. Settings on the link for the file.
+    /// - parameter viewerInfoPolicy: The presence and seen state policy on the file.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFileMetadata` object on
+    /// success or a `Sharing.UpdateFilePolicyError` object on failure.
+    @discardableResult public func updateFilePolicy(
+        file: String,
+        actions: [Sharing.FileAction]? = nil,
+        linkSettings: Sharing.LinkSettings? = nil,
+        viewerInfoPolicy: Sharing.ViewerInfoPolicy? = nil
+    ) -> RpcRequest<Sharing.SharedFileMetadataSerializer, Sharing.UpdateFilePolicyErrorSerializer> {
+        let route = Sharing.updateFilePolicy
+        let serverArgs = Sharing.UpdateFilePolicyArg(file: file, actions: actions, linkSettings: linkSettings, viewerInfoPolicy: viewerInfoPolicy)
         return client.request(route, serverArgs: serverArgs)
     }
 
@@ -851,11 +913,10 @@ public class SharingRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.MemberAccessLevelResult` object on
     /// success or a `Sharing.UpdateFolderMemberError` object on failure.
-    @discardableResult public func updateFolderMember(
-        sharedFolderId: String,
-        member: Sharing.MemberSelector,
-        accessLevel: Sharing.AccessLevel
-    ) -> RpcRequest<Sharing.MemberAccessLevelResultSerializer, Sharing.UpdateFolderMemberErrorSerializer> {
+    @discardableResult public func updateFolderMember(sharedFolderId: String, member: Sharing.MemberSelector, accessLevel: Sharing.AccessLevel) -> RpcRequest<
+        Sharing.MemberAccessLevelResultSerializer,
+        Sharing.UpdateFolderMemberErrorSerializer
+    > {
         let route = Sharing.updateFolderMember
         let serverArgs = Sharing.UpdateFolderMemberArg(sharedFolderId: sharedFolderId, member: member, accessLevel: accessLevel)
         return client.request(route, serverArgs: serverArgs)
@@ -875,7 +936,7 @@ public class SharingRoutes: DropboxTransportClientOwning {
     /// The current user must be on a team to set this policy to members in SharedLinkPolicy.
     /// - parameter linkSettings: Settings on the link for this folder.
     /// - parameter actions: A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's permissions in SharedFolderMetadata field describing the actions the  authenticated user can
+    /// response's permissions in SharedFolderMetadata field describing the actions the authenticated user can
     /// perform on the folder.
     ///
     /// - returns: Through the response callback, the caller will receive a `Sharing.SharedFolderMetadata` object on

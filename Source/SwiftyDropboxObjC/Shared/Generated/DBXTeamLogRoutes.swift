@@ -120,7 +120,7 @@ public class DBXTeamLogGetEventsRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamLogGetTeamEventsResult?
+            var objc: DBXTeamLogGetTeamEventsResult? = nil
             if let swift = result {
                 objc = DBXTeamLogGetTeamEventsResult(swift: swift)
             }
@@ -187,7 +187,7 @@ public class DBXTeamLogGetEventsContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXTeamLogGetTeamEventsResult?
+            var objc: DBXTeamLogGetTeamEventsResult? = nil
             if let swift = result {
                 objc = DBXTeamLogGetTeamEventsResult(swift: swift)
             }

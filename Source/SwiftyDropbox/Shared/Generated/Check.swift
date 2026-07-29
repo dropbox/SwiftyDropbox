@@ -50,6 +50,59 @@ public class Check {
         }
     }
 
+    /// EchoError contains the error returned from the Dropbox servers.
+    public enum EchoError: CustomStringConvertible, JSONRepresentable {
+        /// The request was successful.
+        case userRequested
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try EchoErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try EchoErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for EchoError: \(error)"
+            }
+        }
+    }
+
+    public class EchoErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: EchoError) throws -> JSON {
+            switch value {
+            case .userRequested:
+                var d = [String: JSON]()
+                d[".tag"] = .str("user_requested")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> EchoError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "user_requested":
+                    return EchoError.userRequested
+                case "other":
+                    return EchoError.other
+                default:
+                    return EchoError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: EchoError.self, json: json)
+            }
+        }
+    }
+
     /// EchoResult contains the result returned from the Dropbox servers.
     public class EchoResult: CustomStringConvertible, JSONRepresentable {
         /// If everything worked correctly, this would be the same as query.
@@ -101,7 +154,7 @@ public class Check {
         deprecated: false,
         argSerializer: Check.EchoArgSerializer(),
         responseSerializer: Check.EchoResultSerializer(),
-        errorSerializer: Serialization._VoidSerializer,
+        errorSerializer: Check.EchoErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.app],
             host: .api,
@@ -115,7 +168,7 @@ public class Check {
         deprecated: false,
         argSerializer: Check.EchoArgSerializer(),
         responseSerializer: Check.EchoResultSerializer(),
-        errorSerializer: Serialization._VoidSerializer,
+        errorSerializer: Check.EchoErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.user],
             host: .api,
