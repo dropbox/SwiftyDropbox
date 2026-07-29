@@ -15,6 +15,8 @@ public class DropboxAppBase: DropboxTransportClientOwning {
     public var check: CheckAppAuthRoutes!
     /// Routes within the files namespace. See FilesAppAuthRoutes for details.
     public var files: FilesAppAuthRoutes!
+    /// Routes within the riviera namespace. See RivieraAppAuthRoutes for details.
+    public var riviera: RivieraAppAuthRoutes!
     /// Routes within the sharing namespace. See SharingAppAuthRoutes for details.
     public var sharing: SharingAppAuthRoutes!
 
@@ -24,6 +26,7 @@ public class DropboxAppBase: DropboxTransportClientOwning {
         self.auth = AuthAppAuthRoutes(client: client)
         self.check = CheckAppAuthRoutes(client: client)
         self.files = FilesAppAuthRoutes(client: client)
+        self.riviera = RivieraAppAuthRoutes(client: client)
         self.sharing = SharingAppAuthRoutes(client: client)
     }
 }

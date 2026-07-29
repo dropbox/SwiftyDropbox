@@ -32,6 +32,58 @@ public class DBXCheckEchoArg: NSObject {
     public override var description: String { swift.description }
 }
 
+/// EchoError contains the error returned from the Dropbox servers.
+@objc
+public class DBXCheckEchoError: NSObject {
+    let swift: Check.EchoError
+
+    public init(swift: Check.EchoError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Check.EchoError) -> DBXCheckEchoError {
+        switch swift {
+        case .userRequested:
+            return DBXCheckEchoErrorUserRequested()
+        case .other:
+            return DBXCheckEchoErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asUserRequested: DBXCheckEchoErrorUserRequested? {
+        self as? DBXCheckEchoErrorUserRequested
+    }
+
+    @objc
+    public var asOther: DBXCheckEchoErrorOther? {
+        self as? DBXCheckEchoErrorOther
+    }
+}
+
+/// The request was successful.
+@objc
+public class DBXCheckEchoErrorUserRequested: DBXCheckEchoError {
+    @objc
+    public init() {
+        let swift = Check.EchoError.userRequested
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXCheckEchoErrorOther: DBXCheckEchoError {
+    @objc
+    public init() {
+        let swift = Check.EchoError.other
+        super.init(swift: swift)
+    }
+}
+
 /// EchoResult contains the result returned from the Dropbox servers.
 @objc
 public class DBXCheckEchoResult: NSObject {

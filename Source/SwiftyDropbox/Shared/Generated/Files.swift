@@ -181,7 +181,7 @@ public class Files {
         /// If true, DeletedMetadata will be returned for deleted file or folder, otherwise notFound in LookupError will
         /// be returned.
         public let includeDeleted: Bool
-        /// If true, the results will include a flag for each file indicating whether or not  that file has any explicit
+        /// If true, the results will include a flag for each file indicating whether or not that file has any explicit
         /// members.
         public let includeHasExplicitSharedMembers: Bool
         /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set if there exists property data
@@ -194,7 +194,7 @@ public class Files {
             includeHasExplicitSharedMembers: Bool = false,
             includePropertyGroups: FileProperties.TemplateFilterBase? = nil
         ) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
             self.includeMediaInfo = includeMediaInfo
             self.includeDeleted = includeDeleted
@@ -234,10 +234,10 @@ public class Files {
                 let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
                 let includeMediaInfo = try Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
                 let includeDeleted = try Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
-                let includeHasExplicitSharedMembers = try Serialization._BoolSerializer
-                    .deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
-                let includePropertyGroups = try NullableSerializer(FileProperties.TemplateFilterBaseSerializer())
-                    .deserialize(dict["include_property_groups"] ?? .null)
+                let includeHasExplicitSharedMembers = try Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
+                let includePropertyGroups = try NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).deserialize(
+                    dict["include_property_groups"] ?? .null
+                )
                 return GetMetadataArg(
                     path: path,
                     includeMediaInfo: includeMediaInfo,
@@ -253,8 +253,8 @@ public class Files {
 
     /// The AlphaGetMetadataArg struct
     public class AlphaGetMetadataArg: Files.GetMetadataArg {
-        /// If set to a valid list of template IDs, propertyGroups in FileMetadata is set for files with custom
-        /// properties.
+        /// Field is deprecated. If set to a valid list of template IDs, propertyGroups in FileMetadata is set for files
+        /// with custom properties.
         public let includePropertyTemplates: [String]?
         public init(
             path: String,
@@ -293,8 +293,7 @@ public class Files {
                 "include_deleted": try Serialization._BoolSerializer.serialize(value.includeDeleted),
                 "include_has_explicit_shared_members": try Serialization._BoolSerializer.serialize(value.includeHasExplicitSharedMembers),
                 "include_property_groups": try NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).serialize(value.includePropertyGroups),
-                "include_property_templates": try NullableSerializer(ArraySerializer(Serialization._StringSerializer))
-                    .serialize(value.includePropertyTemplates),
+                "include_property_templates": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.includePropertyTemplates),
             ]
             return .dictionary(output)
         }
@@ -305,12 +304,13 @@ public class Files {
                 let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
                 let includeMediaInfo = try Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
                 let includeDeleted = try Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
-                let includeHasExplicitSharedMembers = try Serialization._BoolSerializer
-                    .deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
-                let includePropertyGroups = try NullableSerializer(FileProperties.TemplateFilterBaseSerializer())
-                    .deserialize(dict["include_property_groups"] ?? .null)
-                let includePropertyTemplates = try NullableSerializer(ArraySerializer(Serialization._StringSerializer))
-                    .deserialize(dict["include_property_templates"] ?? .null)
+                let includeHasExplicitSharedMembers = try Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
+                let includePropertyGroups = try NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).deserialize(
+                    dict["include_property_groups"] ?? .null
+                )
+                let includePropertyTemplates = try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(
+                    dict["include_property_templates"] ?? .null
+                )
                 return AlphaGetMetadataArg(
                     path: path,
                     includeMediaInfo: includeMediaInfo,
@@ -459,7 +459,7 @@ public class Files {
             propertyGroups: [FileProperties.PropertyGroup]? = nil,
             strictConflict: Bool = false
         ) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/(.|[\\r\\n])*)?)|(id:.*)")(path)
             self.path = path
             self.mode = mode
             self.autorename = autorename
@@ -505,8 +505,9 @@ public class Files {
                 let autorename = try Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
                 let clientModified = try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
                 let mute = try Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
-                let propertyGroups = try NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer()))
-                    .deserialize(dict["property_groups"] ?? .null)
+                let propertyGroups = try NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(
+                    dict["property_groups"] ?? .null
+                )
                 let strictConflict = try Serialization._BoolSerializer.deserialize(dict["strict_conflict"] ?? .number(0))
                 return CommitInfo(
                     path: path,
@@ -624,7 +625,7 @@ public class Files {
         /// If there's a conflict, have the Dropbox server try to autorename the folder to avoid the conflict.
         public let autorename: Bool
         public init(path: String, autorename: Bool = false) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
             self.autorename = autorename
         }
@@ -674,7 +675,7 @@ public class Files {
         /// Whether to force the create to happen asynchronously.
         public let forceAsync: Bool
         public init(paths: [String], autorename: Bool = false, forceAsync: Bool = false) {
-            arrayValidator(maxItems: 10_000, itemValidator: stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)"))(paths)
+            arrayValidator(maxItems: 10_000, itemValidator: stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/(.|[\\r\\n])*)?)"))(paths)
             self.paths = paths
             self.autorename = autorename
             self.forceAsync = forceAsync
@@ -905,7 +906,7 @@ public class Files {
         }
     }
 
-    /// The FileOpsResult struct
+    /// Result for File Operations
     public class FileOpsResult: CustomStringConvertible, JSONRepresentable {
         func json() throws -> JSON {
             try FileOpsResultSerializer().serialize(self)
@@ -1218,7 +1219,7 @@ public class Files {
         /// a folder.
         public let parentRev: String?
         public init(path: String, parentRev: String? = nil) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/(.|[\\r\\n])*)?)|(id:.*)")(path)
             self.path = path
             nullableValidator(stringValidator(minLength: 9, pattern: "[0-9a-f]+"))(parentRev)
             self.parentRev = parentRev
@@ -1302,8 +1303,8 @@ public class Files {
 
     /// The DeleteBatchError union
     public enum DeleteBatchError: CustomStringConvertible, JSONRepresentable {
-        /// Use tooManyWriteOperations in DeleteError. deleteBatch now provides smaller granularity about which entry
-        /// has failed because of this.
+        /// Field is deprecated. Use tooManyWriteOperations in DeleteError. deleteBatch now provides smaller granularity
+        /// about which entry has failed because of this.
         case tooManyWriteOperations
         /// An unspecified error.
         case other
@@ -1754,7 +1755,8 @@ public class Files {
         /// won't be returned by listFolderContinue. This field will be null if the file or folder is not
         /// mounted.
         public let pathDisplay: String?
-        /// Please use parentSharedFolderId in FileSharingInfo or parentSharedFolderId in FolderSharingInfo instead.
+        /// Field is deprecated. Please use parentSharedFolderId in FileSharingInfo or parentSharedFolderId in
+        /// FolderSharingInfo instead.
         public let parentSharedFolderId: String?
         /// The preview URL of the file.
         public let previewUrl: String?
@@ -1838,6 +1840,20 @@ public class Files {
 
     /// Indicates that there used to be a file or folder at this path, but it no longer exists.
     public class DeletedMetadata: Files.Metadata {
+        /// If present, indicates whether this deleted entry can be restored.
+        public let isRestorable: Bool?
+        public init(
+            name: String,
+            pathLower: String? = nil,
+            pathDisplay: String? = nil,
+            parentSharedFolderId: String? = nil,
+            previewUrl: String? = nil,
+            isRestorable: Bool? = nil
+        ) {
+            self.isRestorable = isRestorable
+            super.init(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, previewUrl: previewUrl)
+        }
+
         public override var description: String {
             do {
                 return "\(SerializeUtil.prepareJSONForSerialization(try DeletedMetadataSerializer().serialize(self)))"
@@ -1856,6 +1872,7 @@ public class Files {
                 "path_display": try NullableSerializer(Serialization._StringSerializer).serialize(value.pathDisplay),
                 "parent_shared_folder_id": try NullableSerializer(Serialization._StringSerializer).serialize(value.parentSharedFolderId),
                 "preview_url": try NullableSerializer(Serialization._StringSerializer).serialize(value.previewUrl),
+                "is_restorable": try NullableSerializer(Serialization._BoolSerializer).serialize(value.isRestorable),
             ]
             return .dictionary(output)
         }
@@ -1868,12 +1885,14 @@ public class Files {
                 let pathDisplay = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["path_display"] ?? .null)
                 let parentSharedFolderId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["parent_shared_folder_id"] ?? .null)
                 let previewUrl = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["preview_url"] ?? .null)
+                let isRestorable = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_restorable"] ?? .null)
                 return DeletedMetadata(
                     name: name,
                     pathLower: pathLower,
                     pathDisplay: pathDisplay,
                     parentSharedFolderId: parentSharedFolderId,
-                    previewUrl: previewUrl
+                    previewUrl: previewUrl,
+                    isRestorable: isRestorable
                 )
             default:
                 throw JSONSerializerError.deserializeError(type: DeletedMetadata.self, json: json)
@@ -1933,10 +1952,10 @@ public class Files {
     public class DownloadArg: CustomStringConvertible, JSONRepresentable {
         /// The path of the file to download.
         public let path: String
-        /// Please specify revision in path instead.
+        /// Field is deprecated. Please specify revision in path instead.
         public let rev: String?
         public init(path: String, rev: String? = nil) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
             nullableValidator(stringValidator(minLength: 9, pattern: "[0-9a-f]+"))(rev)
             self.rev = rev
@@ -2044,7 +2063,7 @@ public class Files {
         /// The path of the folder to download.
         public let path: String
         public init(path: String) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
         }
 
@@ -2201,7 +2220,7 @@ public class Files {
         /// export_as in file metadata) will be used.
         public let exportFormat: String?
         public init(path: String, exportFormat: String? = nil) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
             nullableValidator(stringValidator())(exportFormat)
             self.exportFormat = exportFormat
@@ -2756,12 +2775,7 @@ public class Files {
                 let lockholderName = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["lockholder_name"] ?? .null)
                 let lockholderAccountId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["lockholder_account_id"] ?? .null)
                 let created = try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["created"] ?? .null)
-                return FileLockMetadata(
-                    isLockholder: isLockholder,
-                    lockholderName: lockholderName,
-                    lockholderAccountId: lockholderAccountId,
-                    created: created
-                )
+                return FileLockMetadata(isLockholder: isLockholder, lockholderName: lockholderName, lockholderAccountId: lockholderAccountId, created: created)
             default:
                 throw JSONSerializerError.deserializeError(type: FileLockMetadata.self, json: json)
             }
@@ -2798,16 +2812,18 @@ public class Files {
         public let exportInfo: Files.ExportInfo?
         /// Additional information if the file has custom properties with the property template specified.
         public let propertyGroups: [FileProperties.PropertyGroup]?
-        /// This flag will only be present if include_has_explicit_shared_members  is true in listFolder or getMetadata.
-        /// If this  flag is present, it will be true if this file has any explicit shared  members. This is
-        /// different from sharing_info in that this could be true  in the case where a file has explicit
-        /// members but is not contained within  a shared folder.
+        /// This flag will only be present if include_has_explicit_shared_members is true in listFolder or getMetadata.
+        /// If this flag is present, it will be true if this file has any explicit shared members. This is
+        /// different from sharing_info in that this could be true in the case where a file has explicit members
+        /// but is not contained within a shared folder.
         public let hasExplicitSharedMembers: Bool?
         /// A hash of the file content. This field can be used to verify data integrity. For more information see our
         /// Content hash https://www.dropbox.com/developers/reference/content-hash page.
         public let contentHash: String?
         /// If present, the metadata associated with the file's current lock.
         public let fileLockInfo: Files.FileLockMetadata?
+        /// If present, indicates whether this file revision can be restored.
+        public let isRestorable: Bool?
         public init(
             name: String,
             id: String,
@@ -2827,7 +2843,8 @@ public class Files {
             propertyGroups: [FileProperties.PropertyGroup]? = nil,
             hasExplicitSharedMembers: Bool? = nil,
             contentHash: String? = nil,
-            fileLockInfo: Files.FileLockMetadata? = nil
+            fileLockInfo: Files.FileLockMetadata? = nil,
+            isRestorable: Bool? = nil
         ) {
             stringValidator(minLength: 1)(id)
             self.id = id
@@ -2847,6 +2864,7 @@ public class Files {
             nullableValidator(stringValidator(minLength: 64, maxLength: 64))(contentHash)
             self.contentHash = contentHash
             self.fileLockInfo = fileLockInfo
+            self.isRestorable = isRestorable
             super.init(name: name, pathLower: pathLower, pathDisplay: pathDisplay, parentSharedFolderId: parentSharedFolderId, previewUrl: previewUrl)
         }
 
@@ -2882,6 +2900,7 @@ public class Files {
                 "has_explicit_shared_members": try NullableSerializer(Serialization._BoolSerializer).serialize(value.hasExplicitSharedMembers),
                 "content_hash": try NullableSerializer(Serialization._StringSerializer).serialize(value.contentHash),
                 "file_lock_info": try NullableSerializer(Files.FileLockMetadataSerializer()).serialize(value.fileLockInfo),
+                "is_restorable": try NullableSerializer(Serialization._BoolSerializer).serialize(value.isRestorable),
             ]
             return .dictionary(output)
         }
@@ -2904,12 +2923,13 @@ public class Files {
                 let sharingInfo = try NullableSerializer(Files.FileSharingInfoSerializer()).deserialize(dict["sharing_info"] ?? .null)
                 let isDownloadable = try Serialization._BoolSerializer.deserialize(dict["is_downloadable"] ?? .number(1))
                 let exportInfo = try NullableSerializer(Files.ExportInfoSerializer()).deserialize(dict["export_info"] ?? .null)
-                let propertyGroups = try NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer()))
-                    .deserialize(dict["property_groups"] ?? .null)
-                let hasExplicitSharedMembers = try NullableSerializer(Serialization._BoolSerializer)
-                    .deserialize(dict["has_explicit_shared_members"] ?? .null)
+                let propertyGroups = try NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(
+                    dict["property_groups"] ?? .null
+                )
+                let hasExplicitSharedMembers = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["has_explicit_shared_members"] ?? .null)
                 let contentHash = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["content_hash"] ?? .null)
                 let fileLockInfo = try NullableSerializer(Files.FileLockMetadataSerializer()).deserialize(dict["file_lock_info"] ?? .null)
+                let isRestorable = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["is_restorable"] ?? .null)
                 return FileMetadata(
                     name: name,
                     id: id,
@@ -2929,7 +2949,8 @@ public class Files {
                     propertyGroups: propertyGroups,
                     hasExplicitSharedMembers: hasExplicitSharedMembers,
                     contentHash: contentHash,
-                    fileLockInfo: fileLockInfo
+                    fileLockInfo: fileLockInfo,
+                    isRestorable: isRestorable
                 )
             default:
                 throw JSONSerializerError.deserializeError(type: FileMetadata.self, json: json)
@@ -3090,7 +3111,7 @@ public class Files {
     public class FolderMetadata: Files.Metadata {
         /// A unique identifier for the folder.
         public let id: String
-        /// Please use sharingInfo instead.
+        /// Field is deprecated. Please use sharingInfo instead.
         public let sharedFolderId: String?
         /// Set if the folder is contained in a shared folder or is a shared folder mount point.
         public let sharingInfo: Files.FolderSharingInfo?
@@ -3155,8 +3176,9 @@ public class Files {
                 let previewUrl = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["preview_url"] ?? .null)
                 let sharedFolderId = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["shared_folder_id"] ?? .null)
                 let sharingInfo = try NullableSerializer(Files.FolderSharingInfoSerializer()).deserialize(dict["sharing_info"] ?? .null)
-                let propertyGroups = try NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer()))
-                    .deserialize(dict["property_groups"] ?? .null)
+                let propertyGroups = try NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(
+                    dict["property_groups"] ?? .null
+                )
                 return FolderMetadata(
                     name: name,
                     id: id,
@@ -3244,7 +3266,7 @@ public class Files {
         /// The path to the file or folder you want to get a copy reference to.
         public let path: String
         public init(path: String) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
         }
 
@@ -3476,7 +3498,7 @@ public class Files {
         /// The path to the file you want a temporary link to.
         public let path: String
         public init(path: String) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
         }
 
@@ -3646,8 +3668,8 @@ public class Files {
         /// Contains the path and other optional modifiers for the future upload commit. Equivalent to the parameters
         /// provided to upload.
         public let commitInfo: Files.CommitInfo
-        /// How long before this link expires, in seconds.  Attempting to start an upload with this link longer than
-        /// this period  of time after link creation will result in an error.
+        /// How long before this link expires, in seconds. Attempting to start an upload with this link longer than this
+        /// period of time after link creation will result in an error.
         public let duration: Double
         public init(commitInfo: Files.CommitInfo, duration: Double = 14_400.0) {
             self.commitInfo = commitInfo
@@ -4146,14 +4168,17 @@ public class Files {
         /// A unique identifier for the file.
         public let path: String
         /// If true, the list folder operation will be applied recursively to all subfolders and the response will
-        /// contain contents of all subfolders.
+        /// contain contents of all subfolders. In some cases, setting recursive in ListFolderArg to true may
+        /// lead to performance issues or errors, especially when traversing folder structures with a large
+        /// number of items. A workaround for such cases is to set recursive in ListFolderArg to false and
+        /// traverse subfolders one at a time.
         public let recursive: Bool
-        /// If true, mediaInfo in FileMetadata is set for photo and video. This parameter will no longer have an effect
-        /// starting December 2, 2019.
+        /// Field is deprecated. If true, mediaInfo in FileMetadata is set for photo and video. This parameter will no
+        /// longer have an effect starting December 2, 2019.
         public let includeMediaInfo: Bool
         /// If true, the results will include entries for files and folders that used to exist but were deleted.
         public let includeDeleted: Bool
-        /// If true, the results will include a flag for each file indicating whether or not  that file has any explicit
+        /// If true, the results will include a flag for each file indicating whether or not that file has any explicit
         /// members.
         public let includeHasExplicitSharedMembers: Bool
         /// If true, the results will include entries under mounted folders which includes app folder, shared folder and
@@ -4171,6 +4196,8 @@ public class Files {
         public let includePropertyGroups: FileProperties.TemplateFilterBase?
         /// If true, include files that are not downloadable, i.e. Google Docs.
         public let includeNonDownloadableFiles: Bool
+        /// If true, each returned deleted entry will include whether that entry can be restored.
+        public let includeRestorableInfo: Bool
         public init(
             path: String,
             recursive: Bool = false,
@@ -4181,9 +4208,10 @@ public class Files {
             limit: UInt32? = nil,
             sharedLink: Files.SharedLink? = nil,
             includePropertyGroups: FileProperties.TemplateFilterBase? = nil,
-            includeNonDownloadableFiles: Bool = true
+            includeNonDownloadableFiles: Bool = true,
+            includeRestorableInfo: Bool = false
         ) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
             self.recursive = recursive
             self.includeMediaInfo = includeMediaInfo
@@ -4195,6 +4223,7 @@ public class Files {
             self.sharedLink = sharedLink
             self.includePropertyGroups = includePropertyGroups
             self.includeNonDownloadableFiles = includeNonDownloadableFiles
+            self.includeRestorableInfo = includeRestorableInfo
         }
 
         func json() throws -> JSON {
@@ -4224,6 +4253,7 @@ public class Files {
                 "shared_link": try NullableSerializer(Files.SharedLinkSerializer()).serialize(value.sharedLink),
                 "include_property_groups": try NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).serialize(value.includePropertyGroups),
                 "include_non_downloadable_files": try Serialization._BoolSerializer.serialize(value.includeNonDownloadableFiles),
+                "include_restorable_info": try Serialization._BoolSerializer.serialize(value.includeRestorableInfo),
             ]
             return .dictionary(output)
         }
@@ -4235,14 +4265,15 @@ public class Files {
                 let recursive = try Serialization._BoolSerializer.deserialize(dict["recursive"] ?? .number(0))
                 let includeMediaInfo = try Serialization._BoolSerializer.deserialize(dict["include_media_info"] ?? .number(0))
                 let includeDeleted = try Serialization._BoolSerializer.deserialize(dict["include_deleted"] ?? .number(0))
-                let includeHasExplicitSharedMembers = try Serialization._BoolSerializer
-                    .deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
+                let includeHasExplicitSharedMembers = try Serialization._BoolSerializer.deserialize(dict["include_has_explicit_shared_members"] ?? .number(0))
                 let includeMountedFolders = try Serialization._BoolSerializer.deserialize(dict["include_mounted_folders"] ?? .number(1))
                 let limit = try NullableSerializer(Serialization._UInt32Serializer).deserialize(dict["limit"] ?? .null)
                 let sharedLink = try NullableSerializer(Files.SharedLinkSerializer()).deserialize(dict["shared_link"] ?? .null)
-                let includePropertyGroups = try NullableSerializer(FileProperties.TemplateFilterBaseSerializer())
-                    .deserialize(dict["include_property_groups"] ?? .null)
+                let includePropertyGroups = try NullableSerializer(FileProperties.TemplateFilterBaseSerializer()).deserialize(
+                    dict["include_property_groups"] ?? .null
+                )
                 let includeNonDownloadableFiles = try Serialization._BoolSerializer.deserialize(dict["include_non_downloadable_files"] ?? .number(1))
+                let includeRestorableInfo = try Serialization._BoolSerializer.deserialize(dict["include_restorable_info"] ?? .number(0))
                 return ListFolderArg(
                     path: path,
                     recursive: recursive,
@@ -4253,7 +4284,8 @@ public class Files {
                     limit: limit,
                     sharedLink: sharedLink,
                     includePropertyGroups: includePropertyGroups,
-                    includeNonDownloadableFiles: includeNonDownloadableFiles
+                    includeNonDownloadableFiles: includeNonDownloadableFiles,
+                    includeRestorableInfo: includeRestorableInfo
                 )
             default:
                 throw JSONSerializerError.deserializeError(type: ListFolderArg.self, json: json)
@@ -4681,12 +4713,21 @@ public class Files {
         public let mode: Files.ListRevisionsMode
         /// The maximum number of revision entries returned.
         public let limit: UInt64
-        public init(path: String, mode: Files.ListRevisionsMode = .path, limit: UInt64 = 10) {
-            stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/.*)?)")(path)
+        /// If set, ListRevisions will only return revisions prior to before_rev. Can be set using the last revision
+        /// from a previous call to list_revisions to fetch the next page of revisions. Only supported in path
+        /// mode.
+        public let beforeRev: String?
+        /// If true, each returned revision will include whether that revision can be restored.
+        public let includeRestorableInfo: Bool
+        public init(path: String, mode: Files.ListRevisionsMode = .path, limit: UInt64 = 10, beforeRev: String? = nil, includeRestorableInfo: Bool = false) {
+            stringValidator(pattern: "/(.|[\\r\\n])*|id:.*|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
             self.mode = mode
             comparableValidator(minValue: 1, maxValue: 100)(limit)
             self.limit = limit
+            nullableValidator(stringValidator(minLength: 9, pattern: "[0-9a-f]+"))(beforeRev)
+            self.beforeRev = beforeRev
+            self.includeRestorableInfo = includeRestorableInfo
         }
 
         func json() throws -> JSON {
@@ -4709,6 +4750,8 @@ public class Files {
                 "path": try Serialization._StringSerializer.serialize(value.path),
                 "mode": try Files.ListRevisionsModeSerializer().serialize(value.mode),
                 "limit": try Serialization._UInt64Serializer.serialize(value.limit),
+                "before_rev": try NullableSerializer(Serialization._StringSerializer).serialize(value.beforeRev),
+                "include_restorable_info": try Serialization._BoolSerializer.serialize(value.includeRestorableInfo),
             ]
             return .dictionary(output)
         }
@@ -4719,7 +4762,9 @@ public class Files {
                 let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
                 let mode = try Files.ListRevisionsModeSerializer().deserialize(dict["mode"] ?? Files.ListRevisionsModeSerializer().serialize(.path))
                 let limit = try Serialization._UInt64Serializer.deserialize(dict["limit"] ?? .number(10))
-                return ListRevisionsArg(path: path, mode: mode, limit: limit)
+                let beforeRev = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["before_rev"] ?? .null)
+                let includeRestorableInfo = try Serialization._BoolSerializer.deserialize(dict["include_restorable_info"] ?? .number(0))
+                return ListRevisionsArg(path: path, mode: mode, limit: limit, beforeRev: beforeRev, includeRestorableInfo: includeRestorableInfo)
             default:
                 throw JSONSerializerError.deserializeError(type: ListRevisionsArg.self, json: json)
             }
@@ -4730,6 +4775,10 @@ public class Files {
     public enum ListRevisionsError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.LookupError)
+        /// The revision in before_rev is invalid.
+        case invalidBeforeRev
+        /// The before_rev argument is only supported in path mode.
+        case beforeRevNotSupported
         /// An unspecified error.
         case other
 
@@ -4754,6 +4803,14 @@ public class Files {
                 var d = try ["path": Files.LookupErrorSerializer().serialize(arg)]
                 d[".tag"] = .str("path")
                 return .dictionary(d)
+            case .invalidBeforeRev:
+                var d = [String: JSON]()
+                d[".tag"] = .str("invalid_before_rev")
+                return .dictionary(d)
+            case .beforeRevNotSupported:
+                var d = [String: JSON]()
+                d[".tag"] = .str("before_rev_not_supported")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -4769,6 +4826,10 @@ public class Files {
                 case "path":
                     let v = try Files.LookupErrorSerializer().deserialize(d["path"] ?? .null)
                     return ListRevisionsError.path(v)
+                case "invalid_before_rev":
+                    return ListRevisionsError.invalidBeforeRev
+                case "before_rev_not_supported":
+                    return ListRevisionsError.beforeRevNotSupported
                 case "other":
                     return ListRevisionsError.other
                 default:
@@ -4844,16 +4905,21 @@ public class Files {
 
     /// The ListRevisionsResult struct
     public class ListRevisionsResult: CustomStringConvertible, JSONRepresentable {
-        /// If the file identified by the latest revision in the response is either deleted or moved.
+        /// If the file identified by the latest revision in the response is either deleted or moved. If before_rev is
+        /// set, this refers to the latest revision of the file older than before_rev.
         public let isDeleted: Bool
         /// The time of deletion if the file was deleted.
         public let serverDeleted: Date?
         /// The revisions for the file. Only revisions that are not deleted will show up here.
         public let entries: [Files.FileMetadata]
-        public init(isDeleted: Bool, entries: [Files.FileMetadata], serverDeleted: Date? = nil) {
+        /// If true, then there are more entries available. Call list_revisions again with before_rev equal to the
+        /// revision of the last returned entry to retrieve the rest.
+        public let hasMore: Bool
+        public init(isDeleted: Bool, entries: [Files.FileMetadata], hasMore: Bool, serverDeleted: Date? = nil) {
             self.isDeleted = isDeleted
             self.serverDeleted = serverDeleted
             self.entries = entries
+            self.hasMore = hasMore
         }
 
         func json() throws -> JSON {
@@ -4875,6 +4941,7 @@ public class Files {
             let output = [
                 "is_deleted": try Serialization._BoolSerializer.serialize(value.isDeleted),
                 "entries": try ArraySerializer(Files.FileMetadataSerializer()).serialize(value.entries),
+                "has_more": try Serialization._BoolSerializer.serialize(value.hasMore),
                 "server_deleted": try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).serialize(value.serverDeleted),
             ]
             return .dictionary(output)
@@ -4885,8 +4952,9 @@ public class Files {
             case .dictionary(let dict):
                 let isDeleted = try Serialization._BoolSerializer.deserialize(dict["is_deleted"] ?? .null)
                 let entries = try ArraySerializer(Files.FileMetadataSerializer()).deserialize(dict["entries"] ?? .null)
+                let hasMore = try Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .null)
                 let serverDeleted = try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["server_deleted"] ?? .null)
-                return ListRevisionsResult(isDeleted: isDeleted, entries: entries, serverDeleted: serverDeleted)
+                return ListRevisionsResult(isDeleted: isDeleted, entries: entries, hasMore: hasMore, serverDeleted: serverDeleted)
             default:
                 throw JSONSerializerError.deserializeError(type: ListRevisionsResult.self, json: json)
             }
@@ -4939,7 +5007,7 @@ public class Files {
         /// Path in the user's Dropbox to a file.
         public let path: String
         public init(path: String) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/(.|[\\r\\n])*)?)|(id:.*)")(path)
             self.path = path
         }
 
@@ -5173,7 +5241,7 @@ public class Files {
     public class LockFileResult: CustomStringConvertible, JSONRepresentable {
         /// Metadata of the file.
         public let metadata: Files.Metadata
-        /// The file lock state after the operation.
+        /// Field is deprecated. The file lock state after the operation.
         public let lock: Files.FileLock
         public init(metadata: Files.Metadata, lock: Files.FileLock) {
             self.metadata = metadata
@@ -5379,7 +5447,8 @@ public class Files {
     public enum MediaInfo: CustomStringConvertible, JSONRepresentable {
         /// Indicate the photo/video is still under processing and metadata is not available yet.
         case pending
-        /// The metadata for the photo/video.
+        /// The metadata for the photo/video. Uses MediaMetadataAbstract to preserve photo/video subtypes (e.g.
+        /// VideoMetadata.duration).
         case metadata(Files.MediaMetadata)
 
         func json() throws -> JSON {
@@ -6197,7 +6266,7 @@ public class Files {
         /// revision of the doc or error revision_mismatch will be returned.
         public let paperRevision: Int64?
         public init(path: String, importFormat: Files.ImportFormat, docUpdatePolicy: Files.PaperDocUpdatePolicy, paperRevision: Int64? = nil) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/(.|[\\r\\n])*)?)|(id:.*)")(path)
             self.path = path
             self.importFormat = importFormat
             self.docUpdatePolicy = docUpdatePolicy
@@ -6546,10 +6615,10 @@ public class Files {
     public class PreviewArg: CustomStringConvertible, JSONRepresentable {
         /// The path of the file to preview.
         public let path: String
-        /// Please specify revision in path instead.
+        /// Field is deprecated. Please specify revision in path instead.
         public let rev: String?
         public init(path: String, rev: String? = nil) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
             nullableValidator(stringValidator(minLength: 9, pattern: "[0-9a-f]+"))(rev)
             self.rev = rev
@@ -6594,7 +6663,7 @@ public class Files {
     public enum PreviewError: CustomStringConvertible, JSONRepresentable {
         /// An error occurs when downloading metadata for the file.
         case path(Files.LookupError)
-        /// This preview generation is still in progress and the file is not ready  for preview yet.
+        /// This preview generation is still in progress and the file is not ready for preview yet.
         case inProgress
         /// The file extension is not supported preview generation.
         case unsupportedExtension
@@ -6715,9 +6784,9 @@ public class Files {
         /// Path in the user's Dropbox that is the destination.
         public let toPath: String
         public init(fromPath: String, toPath: String) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(fromPath)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/(.|[\\r\\n])*)?)|(id:.*)")(fromPath)
             self.fromPath = fromPath
-            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(toPath)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/(.|[\\r\\n])*)?)|(id:.*)")(toPath)
             self.toPath = toPath
         }
 
@@ -6758,7 +6827,7 @@ public class Files {
 
     /// The RelocationArg struct
     public class RelocationArg: Files.RelocationPath {
-        /// This flag has no effect.
+        /// Field is deprecated. This flag has no effect.
         public let allowSharedFolder: Bool
         /// If there's a conflict, have the Dropbox server try to autorename the file to avoid the conflict.
         public let autorename: Bool
@@ -6817,7 +6886,7 @@ public class Files {
 
     /// The RelocationBatchArg struct
     public class RelocationBatchArg: Files.RelocationBatchArgBase {
-        /// This flag has no effect.
+        /// Field is deprecated. This flag has no effect.
         public let allowSharedFolder: Bool
         /// Allow moves by owner even if it would result in an ownership transfer for the content being moved. This does
         /// not apply to copies.
@@ -7850,7 +7919,7 @@ public class Files {
         /// The revision to restore.
         public let rev: String
         public init(path: String, rev: String) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
             stringValidator(minLength: 9, pattern: "[0-9a-f]+")(rev)
             self.rev = rev
@@ -8198,8 +8267,8 @@ public class Files {
     public enum SaveUrlError: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case path(Files.WriteError)
-        /// Failed downloading the given URL. The URL may be  password-protected and the password provided was
-        /// incorrect,  or the link may be disabled.
+        /// Failed downloading the given URL. The URL may be password-protected and the password provided was incorrect,
+        /// or the link may be disabled.
         case downloadFailed
         /// The given URL is invalid.
         case invalidUrl
@@ -8408,7 +8477,7 @@ public class Files {
         /// only available for Dropbox Business accounts.
         public let mode: Files.SearchMode
         public init(path: String, query: String, start: UInt64 = 0, maxResults: UInt64 = 100, mode: Files.SearchMode = .filename) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
             stringValidator(maxLength: 1_000)(query)
             self.query = query
@@ -8689,6 +8758,8 @@ public class Files {
         case filenameAndContent
         /// This item was matched on image content.
         case imageContent
+        /// This item was matched based on its metadata.
+        case metadata
         /// An unspecified error.
         case other
 
@@ -8725,6 +8796,10 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("image_content")
                 return .dictionary(d)
+            case .metadata:
+                var d = [String: JSON]()
+                d[".tag"] = .str("metadata")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -8745,6 +8820,8 @@ public class Files {
                     return SearchMatchTypeV2.filenameAndContent
                 case "image_content":
                     return SearchMatchTypeV2.imageContent
+                case "metadata":
+                    return SearchMatchTypeV2.metadata
                 case "other":
                     return SearchMatchTypeV2.other
                 default:
@@ -8896,7 +8973,7 @@ public class Files {
             fileCategories: [Files.FileCategory]? = nil,
             accountId: String? = nil
         ) {
-            nullableValidator(stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/.*)?)"))(path)
+            nullableValidator(stringValidator(pattern: "(/(.|[\\r\\n])*)?|id:.*|(ns:[0-9]+(/(.|[\\r\\n])*)?)"))(path)
             self.path = path
             comparableValidator(minValue: 1, maxValue: 1_000)(maxResults)
             self.maxResults = maxResults
@@ -9088,14 +9165,9 @@ public class Files {
         public let options: Files.SearchOptions?
         /// Options for search results match fields.
         public let matchFieldOptions: Files.SearchMatchFieldOptions?
-        /// Deprecated and moved this option to SearchMatchFieldOptions.
+        /// Field is deprecated. Deprecated and moved this option to SearchMatchFieldOptions.
         public let includeHighlights: Bool?
-        public init(
-            query: String,
-            options: Files.SearchOptions? = nil,
-            matchFieldOptions: Files.SearchMatchFieldOptions? = nil,
-            includeHighlights: Bool? = nil
-        ) {
+        public init(query: String, options: Files.SearchOptions? = nil, matchFieldOptions: Files.SearchMatchFieldOptions? = nil, includeHighlights: Bool? = nil) {
             stringValidator(maxLength: 1_000)(query)
             self.query = query
             self.options = options
@@ -9292,7 +9364,7 @@ public class Files {
         public let url: String
         /// The path corresponding to a file in a shared link to a folder. Required for shared links to folders.
         public let path: String?
-        /// Password for the shared link. Required for password-protected shared links to files  unless it can be read
+        /// Password for the shared link. Required for password-protected shared links to files unless it can be read
         /// from a cookie.
         public let password: String?
         public init(url: String, path: String? = nil, password: String? = nil) {
@@ -9697,19 +9769,33 @@ public class Files {
     public class ThumbnailArg: CustomStringConvertible, JSONRepresentable {
         /// The path to the image file you want to thumbnail.
         public let path: String
-        /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg should be
-        /// preferred, while png is  better for screenshots and digital arts.
+        /// The format for the thumbnail image, jpeg (default), png, or webp. For images that are photos, jpeg should be
+        /// preferred, while png is better for screenshots and digital arts, and web for compression.
         public let format: Files.ThumbnailFormat
         /// The size for the thumbnail image.
         public let size: Files.ThumbnailSize
         /// How to resize and crop the image to achieve the desired size.
         public let mode: Files.ThumbnailMode
-        public init(path: String, format: Files.ThumbnailFormat = .jpeg, size: Files.ThumbnailSize = .w64h64, mode: Files.ThumbnailMode = .strict) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/.*)?)")(path)
+        /// Field is only returned for "internal" callers. Quality of the thumbnail image.
+        public let quality: Files.ThumbnailQuality
+        /// Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is true, mediaInfo in
+        /// FileMetadata is not populated. This improves latency for use cases where `media_info` is not needed.
+        public let excludeMediaInfo: Bool?
+        public init(
+            path: String,
+            format: Files.ThumbnailFormat = .jpeg,
+            size: Files.ThumbnailSize = .w64h64,
+            mode: Files.ThumbnailMode = .strict,
+            quality: Files.ThumbnailQuality = .quality80,
+            excludeMediaInfo: Bool? = nil
+        ) {
+            stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
             self.path = path
             self.format = format
             self.size = size
             self.mode = mode
+            self.quality = quality
+            self.excludeMediaInfo = excludeMediaInfo
         }
 
         func json() throws -> JSON {
@@ -9733,6 +9819,8 @@ public class Files {
                 "format": try Files.ThumbnailFormatSerializer().serialize(value.format),
                 "size": try Files.ThumbnailSizeSerializer().serialize(value.size),
                 "mode": try Files.ThumbnailModeSerializer().serialize(value.mode),
+                "quality": try Files.ThumbnailQualitySerializer().serialize(value.quality),
+                "exclude_media_info": try NullableSerializer(Serialization._BoolSerializer).serialize(value.excludeMediaInfo),
             ]
             return .dictionary(output)
         }
@@ -9744,7 +9832,9 @@ public class Files {
                 let format = try Files.ThumbnailFormatSerializer().deserialize(dict["format"] ?? Files.ThumbnailFormatSerializer().serialize(.jpeg))
                 let size = try Files.ThumbnailSizeSerializer().deserialize(dict["size"] ?? Files.ThumbnailSizeSerializer().serialize(.w64h64))
                 let mode = try Files.ThumbnailModeSerializer().deserialize(dict["mode"] ?? Files.ThumbnailModeSerializer().serialize(.strict))
-                return ThumbnailArg(path: path, format: format, size: size, mode: mode)
+                let quality = try Files.ThumbnailQualitySerializer().deserialize(dict["quality"] ?? Files.ThumbnailQualitySerializer().serialize(.quality80))
+                let excludeMediaInfo = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["exclude_media_info"] ?? .null)
+                return ThumbnailArg(path: path, format: format, size: size, mode: mode, quality: quality, excludeMediaInfo: excludeMediaInfo)
             default:
                 throw JSONSerializerError.deserializeError(type: ThumbnailArg.self, json: json)
             }
@@ -9759,6 +9849,8 @@ public class Files {
         case unsupportedExtension
         /// The image cannot be converted to a thumbnail.
         case unsupportedImage
+        /// Encrypted content cannot be converted to a thumbnail.
+        case encryptedContent
         /// An error occurs during thumbnail conversion.
         case conversionError
 
@@ -9791,6 +9883,10 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("unsupported_image")
                 return .dictionary(d)
+            case .encryptedContent:
+                var d = [String: JSON]()
+                d[".tag"] = .str("encrypted_content")
+                return .dictionary(d)
             case .conversionError:
                 var d = [String: JSON]()
                 d[".tag"] = .str("conversion_error")
@@ -9810,6 +9906,8 @@ public class Files {
                     return ThumbnailError.unsupportedExtension
                 case "unsupported_image":
                     return ThumbnailError.unsupportedImage
+                case "encrypted_content":
+                    return ThumbnailError.encryptedContent
                 case "conversion_error":
                     return ThumbnailError.conversionError
                 default:
@@ -9827,6 +9925,8 @@ public class Files {
         case jpeg
         /// An unspecified error.
         case png
+        /// An unspecified error.
+        case webp
 
         func json() throws -> JSON {
             try ThumbnailFormatSerializer().serialize(self)
@@ -9853,6 +9953,10 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("png")
                 return .dictionary(d)
+            case .webp:
+                var d = [String: JSON]()
+                d[".tag"] = .str("webp")
+                return .dictionary(d)
             }
         }
 
@@ -9865,6 +9969,8 @@ public class Files {
                     return ThumbnailFormat.jpeg
                 case "png":
                     return ThumbnailFormat.png
+                case "webp":
+                    return ThumbnailFormat.webp
                 default:
                     throw JSONSerializerError.unknownTag(type: ThumbnailFormat.self, json: json, tag: tag)
                 }
@@ -9882,6 +9988,8 @@ public class Files {
         case bestfit
         /// Scale down the image to completely cover the given size or its transpose.
         case fitoneBestfit
+        /// Don't resize the image at all.
+        case original
 
         func json() throws -> JSON {
             try ThumbnailModeSerializer().serialize(self)
@@ -9912,6 +10020,10 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("fitone_bestfit")
                 return .dictionary(d)
+            case .original:
+                var d = [String: JSON]()
+                d[".tag"] = .str("original")
+                return .dictionary(d)
             }
         }
 
@@ -9926,11 +10038,66 @@ public class Files {
                     return ThumbnailMode.bestfit
                 case "fitone_bestfit":
                     return ThumbnailMode.fitoneBestfit
+                case "original":
+                    return ThumbnailMode.original
                 default:
                     throw JSONSerializerError.unknownTag(type: ThumbnailMode.self, json: json, tag: tag)
                 }
             default:
                 throw JSONSerializerError.deserializeError(type: ThumbnailMode.self, json: json)
+            }
+        }
+    }
+
+    /// The ThumbnailQuality union
+    public enum ThumbnailQuality: CustomStringConvertible, JSONRepresentable {
+        /// default thumbnail quality.
+        case quality80
+        /// high thumbnail quality.
+        case quality90
+
+        func json() throws -> JSON {
+            try ThumbnailQualitySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ThumbnailQualitySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ThumbnailQuality: \(error)"
+            }
+        }
+    }
+
+    public class ThumbnailQualitySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ThumbnailQuality) throws -> JSON {
+            switch value {
+            case .quality80:
+                var d = [String: JSON]()
+                d[".tag"] = .str("quality_80")
+                return .dictionary(d)
+            case .quality90:
+                var d = [String: JSON]()
+                d[".tag"] = .str("quality_90")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> ThumbnailQuality {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "quality_80":
+                    return ThumbnailQuality.quality80
+                case "quality_90":
+                    return ThumbnailQuality.quality90
+                default:
+                    throw JSONSerializerError.unknownTag(type: ThumbnailQuality.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: ThumbnailQuality.self, json: json)
             }
         }
     }
@@ -9955,6 +10122,8 @@ public class Files {
         case w1024h768
         /// 2048 by 1536 px.
         case w2048h1536
+        /// Field is only returned for "internal" callers. 3200 by 2400 px.
+        case w3200h2400
 
         func json() throws -> JSON {
             try ThumbnailSizeSerializer().serialize(self)
@@ -10009,6 +10178,10 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("w2048h1536")
                 return .dictionary(d)
+            case .w3200h2400:
+                var d = [String: JSON]()
+                d[".tag"] = .str("w3200h2400")
+                return .dictionary(d)
             }
         }
 
@@ -10035,6 +10208,8 @@ public class Files {
                     return ThumbnailSize.w1024h768
                 case "w2048h1536":
                     return ThumbnailSize.w2048h1536
+                case "w3200h2400":
+                    return ThumbnailSize.w3200h2400
                 default:
                     throw JSONSerializerError.unknownTag(type: ThumbnailSize.self, json: json, tag: tag)
                 }
@@ -10049,23 +10224,32 @@ public class Files {
         /// Information specifying which file to preview. This could be a path to a file, a shared link pointing to a
         /// file, or a shared link pointing to a folder, with a relative path.
         public let resource: Files.PathOrLink
-        /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg should be
-        /// preferred, while png is  better for screenshots and digital arts.
+        /// The format for the thumbnail image, jpeg (default), png, or webp. For images that are photos, jpeg should be
+        /// preferred, while png is better for screenshots and digital arts, and web for compression.
         public let format: Files.ThumbnailFormat
         /// The size for the thumbnail image.
         public let size: Files.ThumbnailSize
         /// How to resize and crop the image to achieve the desired size.
         public let mode: Files.ThumbnailMode
+        /// Field is only returned for "internal" callers. Quality of the thumbnail image.
+        public let quality: Files.ThumbnailQuality
+        /// Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is true, mediaInfo in
+        /// FileMetadata is not populated. This improves latency for use cases where `media_info` is not needed.
+        public let excludeMediaInfo: Bool?
         public init(
             resource: Files.PathOrLink,
             format: Files.ThumbnailFormat = .jpeg,
             size: Files.ThumbnailSize = .w64h64,
-            mode: Files.ThumbnailMode = .strict
+            mode: Files.ThumbnailMode = .strict,
+            quality: Files.ThumbnailQuality = .quality80,
+            excludeMediaInfo: Bool? = nil
         ) {
             self.resource = resource
             self.format = format
             self.size = size
             self.mode = mode
+            self.quality = quality
+            self.excludeMediaInfo = excludeMediaInfo
         }
 
         func json() throws -> JSON {
@@ -10089,6 +10273,8 @@ public class Files {
                 "format": try Files.ThumbnailFormatSerializer().serialize(value.format),
                 "size": try Files.ThumbnailSizeSerializer().serialize(value.size),
                 "mode": try Files.ThumbnailModeSerializer().serialize(value.mode),
+                "quality": try Files.ThumbnailQualitySerializer().serialize(value.quality),
+                "exclude_media_info": try NullableSerializer(Serialization._BoolSerializer).serialize(value.excludeMediaInfo),
             ]
             return .dictionary(output)
         }
@@ -10100,7 +10286,9 @@ public class Files {
                 let format = try Files.ThumbnailFormatSerializer().deserialize(dict["format"] ?? Files.ThumbnailFormatSerializer().serialize(.jpeg))
                 let size = try Files.ThumbnailSizeSerializer().deserialize(dict["size"] ?? Files.ThumbnailSizeSerializer().serialize(.w64h64))
                 let mode = try Files.ThumbnailModeSerializer().deserialize(dict["mode"] ?? Files.ThumbnailModeSerializer().serialize(.strict))
-                return ThumbnailV2Arg(resource: resource, format: format, size: size, mode: mode)
+                let quality = try Files.ThumbnailQualitySerializer().deserialize(dict["quality"] ?? Files.ThumbnailQualitySerializer().serialize(.quality80))
+                let excludeMediaInfo = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["exclude_media_info"] ?? .null)
+                return ThumbnailV2Arg(resource: resource, format: format, size: size, mode: mode, quality: quality, excludeMediaInfo: excludeMediaInfo)
             default:
                 throw JSONSerializerError.deserializeError(type: ThumbnailV2Arg.self, json: json)
             }
@@ -10115,6 +10303,8 @@ public class Files {
         case unsupportedExtension
         /// The image cannot be converted to a thumbnail.
         case unsupportedImage
+        /// Encrypted content cannot be converted to a thumbnail.
+        case encryptedContent
         /// An error occurred during thumbnail conversion.
         case conversionError
         /// Access to this shared link is forbidden.
@@ -10153,6 +10343,10 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("unsupported_image")
                 return .dictionary(d)
+            case .encryptedContent:
+                var d = [String: JSON]()
+                d[".tag"] = .str("encrypted_content")
+                return .dictionary(d)
             case .conversionError:
                 var d = [String: JSON]()
                 d[".tag"] = .str("conversion_error")
@@ -10184,6 +10378,8 @@ public class Files {
                     return ThumbnailV2Error.unsupportedExtension
                 case "unsupported_image":
                     return ThumbnailV2Error.unsupportedImage
+                case "encrypted_content":
+                    return ThumbnailV2Error.encryptedContent
                 case "conversion_error":
                     return ThumbnailV2Error.conversionError
                 case "access_denied":
@@ -10206,7 +10402,7 @@ public class Files {
         /// Path in the user's Dropbox to a file.
         public let path: String
         public init(path: String) {
-            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/.*)?)|(id:.*)")(path)
+            stringValidator(pattern: "(/(.|[\\r\\n])*)|(ns:[0-9]+(/(.|[\\r\\n])*)?)|(id:.*)")(path)
             self.path = path
         }
 
@@ -10347,8 +10543,9 @@ public class Files {
                 let autorename = try Serialization._BoolSerializer.deserialize(dict["autorename"] ?? .number(0))
                 let clientModified = try NullableSerializer(NSDateSerializer("%Y-%m-%dT%H:%M:%SZ")).deserialize(dict["client_modified"] ?? .null)
                 let mute = try Serialization._BoolSerializer.deserialize(dict["mute"] ?? .number(0))
-                let propertyGroups = try NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer()))
-                    .deserialize(dict["property_groups"] ?? .null)
+                let propertyGroups = try NullableSerializer(ArraySerializer(FileProperties.PropertyGroupSerializer())).deserialize(
+                    dict["property_groups"] ?? .null
+                )
                 let strictConflict = try Serialization._BoolSerializer.deserialize(dict["strict_conflict"] ?? .number(0))
                 let contentHash = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["content_hash"] ?? .null)
                 return UploadArg(
@@ -10373,10 +10570,12 @@ public class Files {
         case path(Files.UploadWriteFailed)
         /// The supplied property group is invalid. The file has uploaded without property groups.
         case propertiesError(FileProperties.InvalidPropertyGroupError)
-        /// The request payload must be at most 150 MB.
+        /// The request payload must be at most 150 MiB.
         case payloadTooLarge
         /// The content received by the Dropbox server in this call does not match the provided content hash.
         case contentHashMismatch
+        /// The file is required to be encrypted, which is not supported in our public API.
+        case encryptionNotSupported
         /// An unspecified error.
         case other
 
@@ -10413,6 +10612,10 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("content_hash_mismatch")
                 return .dictionary(d)
+            case .encryptionNotSupported:
+                var d = [String: JSON]()
+                d[".tag"] = .str("encryption_not_supported")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -10435,6 +10638,8 @@ public class Files {
                     return UploadError.payloadTooLarge
                 case "content_hash_mismatch":
                     return UploadError.contentHashMismatch
+                case "encryption_not_supported":
+                    return UploadError.encryptionNotSupported
                 case "other":
                     return UploadError.other
                 default:
@@ -10501,8 +10706,112 @@ public class Files {
         }
     }
 
-    /// The UploadSessionLookupError union
-    public enum UploadSessionLookupError: CustomStringConvertible, JSONRepresentable {
+    /// The UploadSessionAppendBatchArg struct
+    public class UploadSessionAppendBatchArg: CustomStringConvertible, JSONRepresentable {
+        /// Append information for each file in the batch.
+        public let entries: [Files.UploadSessionAppendBatchArgEntry]
+        /// A hash of the entire request body which is all the concatenated pieces of file content that were uploaded in
+        /// this call. If provided and the uploaded content does not match this hash, an error will be returned.
+        /// For more information see our Content hash https://www.dropbox.com/developers/reference/content-hash
+        /// page.
+        public let contentHash: String?
+        public init(entries: [Files.UploadSessionAppendBatchArgEntry], contentHash: String? = nil) {
+            self.entries = entries
+            nullableValidator(stringValidator(minLength: 64, maxLength: 64))(contentHash)
+            self.contentHash = contentHash
+        }
+
+        func json() throws -> JSON {
+            try UploadSessionAppendBatchArgSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionAppendBatchArgSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UploadSessionAppendBatchArg: \(error)"
+            }
+        }
+    }
+
+    public class UploadSessionAppendBatchArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UploadSessionAppendBatchArg) throws -> JSON {
+            let output = [
+                "entries": try ArraySerializer(Files.UploadSessionAppendBatchArgEntrySerializer()).serialize(value.entries),
+                "content_hash": try NullableSerializer(Serialization._StringSerializer).serialize(value.contentHash),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> UploadSessionAppendBatchArg {
+            switch json {
+            case .dictionary(let dict):
+                let entries = try ArraySerializer(Files.UploadSessionAppendBatchArgEntrySerializer()).deserialize(dict["entries"] ?? .null)
+                let contentHash = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["content_hash"] ?? .null)
+                return UploadSessionAppendBatchArg(entries: entries, contentHash: contentHash)
+            default:
+                throw JSONSerializerError.deserializeError(type: UploadSessionAppendBatchArg.self, json: json)
+            }
+        }
+    }
+
+    /// The UploadSessionAppendBatchArgEntry struct
+    public class UploadSessionAppendBatchArgEntry: CustomStringConvertible, JSONRepresentable {
+        /// Contains the upload session ID and the offset.
+        public let cursor: Files.UploadSessionCursor
+        /// Length in bytes of the data that should be appended for this session. Used to split the batched upload data
+        /// for multiple upload sessions.
+        public let length: UInt64
+        /// If true, the current session will be closed, at which point you won't be able to call
+        /// uploadSessionAppendBatch anymore with the current session.
+        public let close: Bool
+        public init(cursor: Files.UploadSessionCursor, length: UInt64, close: Bool = false) {
+            self.cursor = cursor
+            comparableValidator()(length)
+            self.length = length
+            self.close = close
+        }
+
+        func json() throws -> JSON {
+            try UploadSessionAppendBatchArgEntrySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionAppendBatchArgEntrySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UploadSessionAppendBatchArgEntry: \(error)"
+            }
+        }
+    }
+
+    public class UploadSessionAppendBatchArgEntrySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UploadSessionAppendBatchArgEntry) throws -> JSON {
+            let output = [
+                "cursor": try Files.UploadSessionCursorSerializer().serialize(value.cursor),
+                "length": try Serialization._UInt64Serializer.serialize(value.length),
+                "close": try Serialization._BoolSerializer.serialize(value.close),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> UploadSessionAppendBatchArgEntry {
+            switch json {
+            case .dictionary(let dict):
+                let cursor = try Files.UploadSessionCursorSerializer().deserialize(dict["cursor"] ?? .null)
+                let length = try Serialization._UInt64Serializer.deserialize(dict["length"] ?? .null)
+                let close = try Serialization._BoolSerializer.deserialize(dict["close"] ?? .number(0))
+                return UploadSessionAppendBatchArgEntry(cursor: cursor, length: length, close: close)
+            default:
+                throw JSONSerializerError.deserializeError(type: UploadSessionAppendBatchArgEntry.self, json: json)
+            }
+        }
+    }
+
+    /// The UploadSessionAppendBatchEntryError union
+    public enum UploadSessionAppendBatchEntryError: CustomStringConvertible, JSONRepresentable {
         /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
         case notFound
         /// The specified offset was incorrect. See the value for the correct offset. This error may occur when a
@@ -10511,36 +10820,32 @@ public class Files {
         case incorrectOffset(Files.UploadSessionOffsetError)
         /// You are attempting to append data to an upload session that has already been closed (i.e. committed).
         case closed
-        /// The session must be closed before calling upload_session/finish_batch.
-        case notClosed
-        /// You can not append to the upload session because the size of a file should not reach the max file size limit
-        /// (i.e. 350GB).
+        /// You can not append to the upload session because the size of a file should not exceed the max file size
+        /// limit (i.e. 2^41 - 2^22 or 2,199,019,061,248 bytes).
         case tooLarge
-        /// For concurrent upload sessions, offset needs to be multiple of 4194304 bytes.
+        /// For concurrent upload sessions, offset needs to be multiple of 2^22 (4,194,304) bytes.
         case concurrentSessionInvalidOffset
-        /// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded.
+        /// For concurrent upload sessions, only chunks with size multiple of 2^22 (4,194,304) bytes can be uploaded.
         case concurrentSessionInvalidDataSize
-        /// The request payload must be at most 150 MB.
-        case payloadTooLarge
         /// An unspecified error.
         case other
 
         func json() throws -> JSON {
-            try UploadSessionLookupErrorSerializer().serialize(self)
+            try UploadSessionAppendBatchEntryErrorSerializer().serialize(self)
         }
 
         public var description: String {
             do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionLookupErrorSerializer().serialize(self)))"
+                return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionAppendBatchEntryErrorSerializer().serialize(self)))"
             } catch {
-                return "Failed to generate description for UploadSessionLookupError: \(error)"
+                return "Failed to generate description for UploadSessionAppendBatchEntryError: \(error)"
             }
         }
     }
 
-    public class UploadSessionLookupErrorSerializer: JSONSerializer {
+    public class UploadSessionAppendBatchEntryErrorSerializer: JSONSerializer {
         public init() {}
-        public func serialize(_ value: UploadSessionLookupError) throws -> JSON {
+        public func serialize(_ value: UploadSessionAppendBatchEntryError) throws -> JSON {
             switch value {
             case .notFound:
                 var d = [String: JSON]()
@@ -10554,10 +10859,6 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("closed")
                 return .dictionary(d)
-            case .notClosed:
-                var d = [String: JSON]()
-                d[".tag"] = .str("not_closed")
-                return .dictionary(d)
             case .tooLarge:
                 var d = [String: JSON]()
                 d[".tag"] = .str("too_large")
@@ -10570,9 +10871,82 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("concurrent_session_invalid_data_size")
                 return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> UploadSessionAppendBatchEntryError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "not_found":
+                    return UploadSessionAppendBatchEntryError.notFound
+                case "incorrect_offset":
+                    let v = try Files.UploadSessionOffsetErrorSerializer().deserialize(json)
+                    return UploadSessionAppendBatchEntryError.incorrectOffset(v)
+                case "closed":
+                    return UploadSessionAppendBatchEntryError.closed
+                case "too_large":
+                    return UploadSessionAppendBatchEntryError.tooLarge
+                case "concurrent_session_invalid_offset":
+                    return UploadSessionAppendBatchEntryError.concurrentSessionInvalidOffset
+                case "concurrent_session_invalid_data_size":
+                    return UploadSessionAppendBatchEntryError.concurrentSessionInvalidDataSize
+                case "other":
+                    return UploadSessionAppendBatchEntryError.other
+                default:
+                    return UploadSessionAppendBatchEntryError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: UploadSessionAppendBatchEntryError.self, json: json)
+            }
+        }
+    }
+
+    /// The UploadSessionAppendBatchError union
+    public enum UploadSessionAppendBatchError: CustomStringConvertible, JSONRepresentable {
+        /// The request payload must be at most 150 MiB.
+        case payloadTooLarge
+        /// The content received by the Dropbox server in this call does not match the provided content hash.
+        case contentHashMismatch
+        /// The total length of the content received by the Dropbox server in this call does not match the total of the
+        /// provided lengths in the batch arguments.
+        case lengthMismatch
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try UploadSessionAppendBatchErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionAppendBatchErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UploadSessionAppendBatchError: \(error)"
+            }
+        }
+    }
+
+    public class UploadSessionAppendBatchErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UploadSessionAppendBatchError) throws -> JSON {
+            switch value {
             case .payloadTooLarge:
                 var d = [String: JSON]()
                 d[".tag"] = .str("payload_too_large")
+                return .dictionary(d)
+            case .contentHashMismatch:
+                var d = [String: JSON]()
+                d[".tag"] = .str("content_hash_mismatch")
+                return .dictionary(d)
+            case .lengthMismatch:
+                var d = [String: JSON]()
+                d[".tag"] = .str("length_mismatch")
                 return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
@@ -10581,35 +10955,120 @@ public class Files {
             }
         }
 
-        public func deserialize(_ json: JSON) throws -> UploadSessionLookupError {
+        public func deserialize(_ json: JSON) throws -> UploadSessionAppendBatchError {
             switch json {
             case .dictionary(let d):
                 let tag = try Serialization.getTag(d)
                 switch tag {
-                case "not_found":
-                    return UploadSessionLookupError.notFound
-                case "incorrect_offset":
-                    let v = try Files.UploadSessionOffsetErrorSerializer().deserialize(json)
-                    return UploadSessionLookupError.incorrectOffset(v)
-                case "closed":
-                    return UploadSessionLookupError.closed
-                case "not_closed":
-                    return UploadSessionLookupError.notClosed
-                case "too_large":
-                    return UploadSessionLookupError.tooLarge
-                case "concurrent_session_invalid_offset":
-                    return UploadSessionLookupError.concurrentSessionInvalidOffset
-                case "concurrent_session_invalid_data_size":
-                    return UploadSessionLookupError.concurrentSessionInvalidDataSize
                 case "payload_too_large":
-                    return UploadSessionLookupError.payloadTooLarge
+                    return UploadSessionAppendBatchError.payloadTooLarge
+                case "content_hash_mismatch":
+                    return UploadSessionAppendBatchError.contentHashMismatch
+                case "length_mismatch":
+                    return UploadSessionAppendBatchError.lengthMismatch
                 case "other":
-                    return UploadSessionLookupError.other
+                    return UploadSessionAppendBatchError.other
                 default:
-                    return UploadSessionLookupError.other
+                    return UploadSessionAppendBatchError.other
                 }
             default:
-                throw JSONSerializerError.deserializeError(type: UploadSessionLookupError.self, json: json)
+                throw JSONSerializerError.deserializeError(type: UploadSessionAppendBatchError.self, json: json)
+            }
+        }
+    }
+
+    /// The UploadSessionAppendBatchResult struct
+    public class UploadSessionAppendBatchResult: CustomStringConvertible, JSONRepresentable {
+        /// Each entry in entries in UploadSessionAppendBatchArg will appear at the same position inside entries in
+        /// UploadSessionAppendBatchResult.
+        public let entries: [Files.UploadSessionAppendBatchResultEntry]
+        public init(entries: [Files.UploadSessionAppendBatchResultEntry]) {
+            self.entries = entries
+        }
+
+        func json() throws -> JSON {
+            try UploadSessionAppendBatchResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionAppendBatchResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UploadSessionAppendBatchResult: \(error)"
+            }
+        }
+    }
+
+    public class UploadSessionAppendBatchResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UploadSessionAppendBatchResult) throws -> JSON {
+            let output = [
+                "entries": try ArraySerializer(Files.UploadSessionAppendBatchResultEntrySerializer()).serialize(value.entries),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> UploadSessionAppendBatchResult {
+            switch json {
+            case .dictionary(let dict):
+                let entries = try ArraySerializer(Files.UploadSessionAppendBatchResultEntrySerializer()).deserialize(dict["entries"] ?? .null)
+                return UploadSessionAppendBatchResult(entries: entries)
+            default:
+                throw JSONSerializerError.deserializeError(type: UploadSessionAppendBatchResult.self, json: json)
+            }
+        }
+    }
+
+    /// The UploadSessionAppendBatchResultEntry union
+    public enum UploadSessionAppendBatchResultEntry: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case success
+        /// An unspecified error.
+        case failure(Files.UploadSessionAppendBatchEntryError)
+
+        func json() throws -> JSON {
+            try UploadSessionAppendBatchResultEntrySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionAppendBatchResultEntrySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UploadSessionAppendBatchResultEntry: \(error)"
+            }
+        }
+    }
+
+    public class UploadSessionAppendBatchResultEntrySerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UploadSessionAppendBatchResultEntry) throws -> JSON {
+            switch value {
+            case .success:
+                var d = [String: JSON]()
+                d[".tag"] = .str("success")
+                return .dictionary(d)
+            case .failure(let arg):
+                var d = try ["failure": Files.UploadSessionAppendBatchEntryErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("failure")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> UploadSessionAppendBatchResultEntry {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "success":
+                    return UploadSessionAppendBatchResultEntry.success
+                case "failure":
+                    let v = try Files.UploadSessionAppendBatchEntryErrorSerializer().deserialize(d["failure"] ?? .null)
+                    return UploadSessionAppendBatchResultEntry.failure(v)
+                default:
+                    throw JSONSerializerError.unknownTag(type: UploadSessionAppendBatchResultEntry.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: UploadSessionAppendBatchResultEntry.self, json: json)
             }
         }
     }
@@ -10624,21 +11083,19 @@ public class Files {
         case incorrectOffset(Files.UploadSessionOffsetError)
         /// You are attempting to append data to an upload session that has already been closed (i.e. committed).
         case closed
-        /// The session must be closed before calling upload_session/finish_batch.
-        case notClosed
-        /// You can not append to the upload session because the size of a file should not reach the max file size limit
-        /// (i.e. 350GB).
+        /// You can not append to the upload session because the size of a file should not exceed the max file size
+        /// limit (i.e. 2^41 - 2^22 or 2,199,019,061,248 bytes).
         case tooLarge
-        /// For concurrent upload sessions, offset needs to be multiple of 4194304 bytes.
+        /// For concurrent upload sessions, offset needs to be multiple of 2^22 (4,194,304) bytes.
         case concurrentSessionInvalidOffset
-        /// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded.
+        /// For concurrent upload sessions, only chunks with size multiple of 2^22 (4,194,304) bytes can be uploaded.
         case concurrentSessionInvalidDataSize
-        /// The request payload must be at most 150 MB.
+        /// The request payload must be at most 150 MiB.
         case payloadTooLarge
-        /// An unspecified error.
-        case other
         /// The content received by the Dropbox server in this call does not match the provided content hash.
         case contentHashMismatch
+        /// An unspecified error.
+        case other
 
         func json() throws -> JSON {
             try UploadSessionAppendErrorSerializer().serialize(self)
@@ -10669,10 +11126,6 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("closed")
                 return .dictionary(d)
-            case .notClosed:
-                var d = [String: JSON]()
-                d[".tag"] = .str("not_closed")
-                return .dictionary(d)
             case .tooLarge:
                 var d = [String: JSON]()
                 d[".tag"] = .str("too_large")
@@ -10689,13 +11142,13 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("payload_too_large")
                 return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
             case .contentHashMismatch:
                 var d = [String: JSON]()
                 d[".tag"] = .str("content_hash_mismatch")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
                 return .dictionary(d)
             }
         }
@@ -10712,8 +11165,6 @@ public class Files {
                     return UploadSessionAppendError.incorrectOffset(v)
                 case "closed":
                     return UploadSessionAppendError.closed
-                case "not_closed":
-                    return UploadSessionAppendError.notClosed
                 case "too_large":
                     return UploadSessionAppendError.tooLarge
                 case "concurrent_session_invalid_offset":
@@ -10722,12 +11173,12 @@ public class Files {
                     return UploadSessionAppendError.concurrentSessionInvalidDataSize
                 case "payload_too_large":
                     return UploadSessionAppendError.payloadTooLarge
-                case "other":
-                    return UploadSessionAppendError.other
                 case "content_hash_mismatch":
                     return UploadSessionAppendError.contentHashMismatch
+                case "other":
+                    return UploadSessionAppendError.other
                 default:
-                    throw JSONSerializerError.unknownTag(type: UploadSessionAppendError.self, json: json, tag: tag)
+                    return UploadSessionAppendError.other
                 }
             default:
                 throw JSONSerializerError.deserializeError(type: UploadSessionAppendError.self, json: json)
@@ -11104,8 +11555,8 @@ public class Files {
         case path(Files.WriteError)
         /// The supplied property group is invalid. The file has uploaded without property groups.
         case propertiesError(FileProperties.InvalidPropertyGroupError)
-        /// The batch request commits files into too many different shared folders. Please limit your batch request to
-        /// files contained in a single shared folder.
+        /// Field is deprecated. The batch request commits files into too many different shared folders. Please limit
+        /// your batch request to files contained in a single shared folder.
         case tooManySharedFolderTargets
         /// There are too many write operations happening in the user's Dropbox. You should retry uploading this file.
         case tooManyWriteOperations
@@ -11115,10 +11566,12 @@ public class Files {
         case concurrentSessionNotClosed
         /// Not all pieces of data were uploaded before trying to finish the session.
         case concurrentSessionMissingData
-        /// The request payload must be at most 150 MB.
+        /// The request payload must be at most 150 MiB.
         case payloadTooLarge
         /// The content received by the Dropbox server in this call does not match the provided content hash.
         case contentHashMismatch
+        /// The file is required to be encrypted, which is not supported in our public API.
+        case encryptionNotSupported
         /// An unspecified error.
         case other
 
@@ -11179,6 +11632,10 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("content_hash_mismatch")
                 return .dictionary(d)
+            case .encryptionNotSupported:
+                var d = [String: JSON]()
+                d[".tag"] = .str("encryption_not_supported")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -11214,6 +11671,8 @@ public class Files {
                     return UploadSessionFinishError.payloadTooLarge
                 case "content_hash_mismatch":
                     return UploadSessionFinishError.contentHashMismatch
+                case "encryption_not_supported":
+                    return UploadSessionFinishError.encryptionNotSupported
                 case "other":
                     return UploadSessionFinishError.other
                 default:
@@ -11221,6 +11680,119 @@ public class Files {
                 }
             default:
                 throw JSONSerializerError.deserializeError(type: UploadSessionFinishError.self, json: json)
+            }
+        }
+    }
+
+    /// The UploadSessionLookupError union
+    public enum UploadSessionLookupError: CustomStringConvertible, JSONRepresentable {
+        /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
+        case notFound
+        /// The specified offset was incorrect. See the value for the correct offset. This error may occur when a
+        /// previous request was received and processed successfully but the client did not receive the
+        /// response, e.g. due to a network error.
+        case incorrectOffset(Files.UploadSessionOffsetError)
+        /// You are attempting to append data to an upload session that has already been closed (i.e. committed).
+        case closed
+        /// The session must be closed before calling upload_session/finish_batch.
+        case notClosed
+        /// You can not append to the upload session because the size of a file should not exceed the max file size
+        /// limit (i.e. 2^41 - 2^22 or 2,199,019,061,248 bytes).
+        case tooLarge
+        /// For concurrent upload sessions, offset needs to be multiple of 2^22 (4,194,304) bytes.
+        case concurrentSessionInvalidOffset
+        /// For concurrent upload sessions, only chunks with size multiple of 2^22 (4,194,304) bytes can be uploaded.
+        case concurrentSessionInvalidDataSize
+        /// The request payload must be at most 150 MiB.
+        case payloadTooLarge
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try UploadSessionLookupErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UploadSessionLookupErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UploadSessionLookupError: \(error)"
+            }
+        }
+    }
+
+    public class UploadSessionLookupErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UploadSessionLookupError) throws -> JSON {
+            switch value {
+            case .notFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_found")
+                return .dictionary(d)
+            case .incorrectOffset(let arg):
+                var d = try Serialization.getFields(Files.UploadSessionOffsetErrorSerializer().serialize(arg))
+                d[".tag"] = .str("incorrect_offset")
+                return .dictionary(d)
+            case .closed:
+                var d = [String: JSON]()
+                d[".tag"] = .str("closed")
+                return .dictionary(d)
+            case .notClosed:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_closed")
+                return .dictionary(d)
+            case .tooLarge:
+                var d = [String: JSON]()
+                d[".tag"] = .str("too_large")
+                return .dictionary(d)
+            case .concurrentSessionInvalidOffset:
+                var d = [String: JSON]()
+                d[".tag"] = .str("concurrent_session_invalid_offset")
+                return .dictionary(d)
+            case .concurrentSessionInvalidDataSize:
+                var d = [String: JSON]()
+                d[".tag"] = .str("concurrent_session_invalid_data_size")
+                return .dictionary(d)
+            case .payloadTooLarge:
+                var d = [String: JSON]()
+                d[".tag"] = .str("payload_too_large")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> UploadSessionLookupError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "not_found":
+                    return UploadSessionLookupError.notFound
+                case "incorrect_offset":
+                    let v = try Files.UploadSessionOffsetErrorSerializer().deserialize(json)
+                    return UploadSessionLookupError.incorrectOffset(v)
+                case "closed":
+                    return UploadSessionLookupError.closed
+                case "not_closed":
+                    return UploadSessionLookupError.notClosed
+                case "too_large":
+                    return UploadSessionLookupError.tooLarge
+                case "concurrent_session_invalid_offset":
+                    return UploadSessionLookupError.concurrentSessionInvalidOffset
+                case "concurrent_session_invalid_data_size":
+                    return UploadSessionLookupError.concurrentSessionInvalidDataSize
+                case "payload_too_large":
+                    return UploadSessionLookupError.payloadTooLarge
+                case "other":
+                    return UploadSessionLookupError.other
+                default:
+                    return UploadSessionLookupError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: UploadSessionLookupError.self, json: json)
             }
         }
     }
@@ -11418,7 +11990,7 @@ public class Files {
         case concurrentSessionDataNotAllowed
         /// Can not start a closed concurrent upload session.
         case concurrentSessionCloseNotAllowed
-        /// The request payload must be at most 150 MB.
+        /// The request payload must be at most 150 MiB.
         case payloadTooLarge
         /// The content received by the Dropbox server in this call does not match the provided content hash.
         case contentHashMismatch
@@ -11816,6 +12388,8 @@ public class Files {
         case operationSuppressed
         /// There are too many write operations in user's Dropbox. Please retry this request.
         case tooManyWriteOperations
+        /// The user doesn't have permission to perform the action due to restrictions set by a team administrator
+        case accessRestricted
         /// An unspecified error.
         case other
 
@@ -11868,6 +12442,10 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("too_many_write_operations")
                 return .dictionary(d)
+            case .accessRestricted:
+                var d = [String: JSON]()
+                d[".tag"] = .str("access_restricted")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -11898,6 +12476,8 @@ public class Files {
                     return WriteError.operationSuppressed
                 case "too_many_write_operations":
                     return WriteError.tooManyWriteOperations
+                case "access_restricted":
+                    return WriteError.accessRestricted
                 case "other":
                     return WriteError.other
                 default:
@@ -12628,48 +13208,6 @@ public class Files {
             style: .rpc
         )
     )
-    static let propertiesRemove = Route(
-        name: "properties/remove",
-        version: 1,
-        namespace: "files",
-        deprecated: true,
-        argSerializer: FileProperties.RemovePropertiesArgSerializer(),
-        responseSerializer: Serialization._VoidSerializer,
-        errorSerializer: FileProperties.RemovePropertiesErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
-    )
-    static let propertiesTemplateGet = Route(
-        name: "properties/template/get",
-        version: 1,
-        namespace: "files",
-        deprecated: true,
-        argSerializer: FileProperties.GetTemplateArgSerializer(),
-        responseSerializer: FileProperties.GetTemplateResultSerializer(),
-        errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
-    )
-    static let propertiesTemplateList = Route(
-        name: "properties/template/list",
-        version: 1,
-        namespace: "files",
-        deprecated: true,
-        argSerializer: Serialization._VoidSerializer,
-        responseSerializer: FileProperties.ListTemplateResultSerializer(),
-        errorSerializer: FileProperties.TemplateErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.user],
-            host: .api,
-            style: .rpc
-        )
-    )
     static let propertiesUpdate = Route(
         name: "properties/update",
         version: 1,
@@ -12860,6 +13398,20 @@ public class Files {
         argSerializer: Files.UploadSessionAppendArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Files.UploadSessionAppendErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .content,
+            style: .upload
+        )
+    )
+    static let uploadSessionAppendBatch = Route(
+        name: "upload_session/append_batch",
+        version: 1,
+        namespace: "files",
+        deprecated: false,
+        argSerializer: Files.UploadSessionAppendBatchArgSerializer(),
+        responseSerializer: Files.UploadSessionAppendBatchResultSerializer(),
+        errorSerializer: Files.UploadSessionAppendBatchErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.user],
             host: .content,

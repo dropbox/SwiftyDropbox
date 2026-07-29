@@ -22,6 +22,9 @@ public class DBXDropboxAppBase: NSObject {
     /// Routes within the files namespace. See DBFilesAppAuthRoutes for details.
     @objc
     public var files: DBXFilesAppAuthRoutes!
+    /// Routes within the riviera namespace. See DBRivieraAppAuthRoutes for details.
+    @objc
+    public var riviera: DBXRivieraAppAuthRoutes!
     /// Routes within the sharing namespace. See DBSharingAppAuthRoutes for details.
     @objc
     public var sharing: DBXSharingAppAuthRoutes!
@@ -37,6 +40,7 @@ public class DBXDropboxAppBase: NSObject {
         self.auth = DBXAuthAppAuthRoutes(swift: swift.auth)
         self.check = DBXCheckAppAuthRoutes(swift: swift.check)
         self.files = DBXFilesAppAuthRoutes(swift: swift.files)
+        self.riviera = DBXRivieraAppAuthRoutes(swift: swift.riviera)
         self.sharing = DBXSharingAppAuthRoutes(swift: swift.sharing)
     }
 }
