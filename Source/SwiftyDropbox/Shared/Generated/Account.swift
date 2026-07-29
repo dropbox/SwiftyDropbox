@@ -8,6 +8,285 @@ import Foundation
 
 /// Datatypes and serializers for the account namespace
 public class Account {
+    /// The AccountPhotoGetArg struct
+    public class AccountPhotoGetArg: CustomStringConvertible, JSONRepresentable {
+        /// Encoded ID of the user. Must start either with 'dbid:' or 'dbaphid:'.
+        public let dbxAccountId: String
+        /// A string representing the size of the photo.
+        public let size: String
+        /// True if the photo should be cropped and false otherwise.
+        public let circleCrop: Bool
+        /// True if we expect account photo to exist.
+        public let expectAccountPhoto: Bool
+        public init(dbxAccountId: String, size: String, circleCrop: Bool, expectAccountPhoto: Bool) {
+            stringValidator()(dbxAccountId)
+            self.dbxAccountId = dbxAccountId
+            stringValidator()(size)
+            self.size = size
+            self.circleCrop = circleCrop
+            self.expectAccountPhoto = expectAccountPhoto
+        }
+
+        func json() throws -> JSON {
+            try AccountPhotoGetArgSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try AccountPhotoGetArgSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for AccountPhotoGetArg: \(error)"
+            }
+        }
+    }
+
+    public class AccountPhotoGetArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: AccountPhotoGetArg) throws -> JSON {
+            let output = [
+                "dbx_account_id": try Serialization._StringSerializer.serialize(value.dbxAccountId),
+                "size": try Serialization._StringSerializer.serialize(value.size),
+                "circle_crop": try Serialization._BoolSerializer.serialize(value.circleCrop),
+                "expect_account_photo": try Serialization._BoolSerializer.serialize(value.expectAccountPhoto),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> AccountPhotoGetArg {
+            switch json {
+            case .dictionary(let dict):
+                let dbxAccountId = try Serialization._StringSerializer.deserialize(dict["dbx_account_id"] ?? .null)
+                let size = try Serialization._StringSerializer.deserialize(dict["size"] ?? .null)
+                let circleCrop = try Serialization._BoolSerializer.deserialize(dict["circle_crop"] ?? .null)
+                let expectAccountPhoto = try Serialization._BoolSerializer.deserialize(dict["expect_account_photo"] ?? .null)
+                return AccountPhotoGetArg(dbxAccountId: dbxAccountId, size: size, circleCrop: circleCrop, expectAccountPhoto: expectAccountPhoto)
+            default:
+                throw JSONSerializerError.deserializeError(type: AccountPhotoGetArg.self, json: json)
+            }
+        }
+    }
+
+    /// The AccountPhotoGetError union
+    public enum AccountPhotoGetError: CustomStringConvertible, JSONRepresentable {
+        /// Indicates infrastructural failure.
+        case thumbnailError(Account.ThumbnailError)
+        /// Account photo is missing (but we did not expect it to exist).
+        case accountPhotoMissing
+        /// Account photo was expected to exist, but it's missing.
+        case expectedAccountPhotoMissing
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try AccountPhotoGetErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try AccountPhotoGetErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for AccountPhotoGetError: \(error)"
+            }
+        }
+    }
+
+    public class AccountPhotoGetErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: AccountPhotoGetError) throws -> JSON {
+            switch value {
+            case .thumbnailError(let arg):
+                var d = try ["thumbnail_error": Account.ThumbnailErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("thumbnail_error")
+                return .dictionary(d)
+            case .accountPhotoMissing:
+                var d = [String: JSON]()
+                d[".tag"] = .str("account_photo_missing")
+                return .dictionary(d)
+            case .expectedAccountPhotoMissing:
+                var d = [String: JSON]()
+                d[".tag"] = .str("expected_account_photo_missing")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> AccountPhotoGetError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "thumbnail_error":
+                    let v = try Account.ThumbnailErrorSerializer().deserialize(d["thumbnail_error"] ?? .null)
+                    return AccountPhotoGetError.thumbnailError(v)
+                case "account_photo_missing":
+                    return AccountPhotoGetError.accountPhotoMissing
+                case "expected_account_photo_missing":
+                    return AccountPhotoGetError.expectedAccountPhotoMissing
+                case "other":
+                    return AccountPhotoGetError.other
+                default:
+                    return AccountPhotoGetError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: AccountPhotoGetError.self, json: json)
+            }
+        }
+    }
+
+    /// The AccountPhotoGetResult struct
+    public class AccountPhotoGetResult: CustomStringConvertible, JSONRepresentable {
+        /// The data returned by get_photo.
+        public let contentType: String
+        public init(contentType: String) {
+            stringValidator()(contentType)
+            self.contentType = contentType
+        }
+
+        func json() throws -> JSON {
+            try AccountPhotoGetResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try AccountPhotoGetResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for AccountPhotoGetResult: \(error)"
+            }
+        }
+    }
+
+    public class AccountPhotoGetResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: AccountPhotoGetResult) throws -> JSON {
+            let output = [
+                "content_type": try Serialization._StringSerializer.serialize(value.contentType),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> AccountPhotoGetResult {
+            switch json {
+            case .dictionary(let dict):
+                let contentType = try Serialization._StringSerializer.deserialize(dict["content_type"] ?? .null)
+                return AccountPhotoGetResult(contentType: contentType)
+            default:
+                throw JSONSerializerError.deserializeError(type: AccountPhotoGetResult.self, json: json)
+            }
+        }
+    }
+
+    /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
+    public class DeleteProfilePhotoArg: CustomStringConvertible, JSONRepresentable {
+        func json() throws -> JSON {
+            try DeleteProfilePhotoArgSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DeleteProfilePhotoArgSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for DeleteProfilePhotoArg: \(error)"
+            }
+        }
+    }
+
+    public class DeleteProfilePhotoArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DeleteProfilePhotoArg) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> DeleteProfilePhotoArg {
+            switch json {
+            case .dictionary:
+                return DeleteProfilePhotoArg()
+            default:
+                throw JSONSerializerError.deserializeError(type: DeleteProfilePhotoArg.self, json: json)
+            }
+        }
+    }
+
+    /// This union is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
+    public enum DeleteProfilePhotoError: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try DeleteProfilePhotoErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DeleteProfilePhotoErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for DeleteProfilePhotoError: \(error)"
+            }
+        }
+    }
+
+    public class DeleteProfilePhotoErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DeleteProfilePhotoError) throws -> JSON {
+            switch value {
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> DeleteProfilePhotoError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "other":
+                    return DeleteProfilePhotoError.other
+                default:
+                    return DeleteProfilePhotoError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: DeleteProfilePhotoError.self, json: json)
+            }
+        }
+    }
+
+    /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
+    public class DeleteProfilePhotoResult: CustomStringConvertible, JSONRepresentable {
+        func json() throws -> JSON {
+            try DeleteProfilePhotoResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try DeleteProfilePhotoResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for DeleteProfilePhotoResult: \(error)"
+            }
+        }
+    }
+
+    public class DeleteProfilePhotoResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: DeleteProfilePhotoResult) throws -> JSON {
+            let output = [String: JSON]()
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> DeleteProfilePhotoResult {
+            switch json {
+            case .dictionary:
+                return DeleteProfilePhotoResult()
+            default:
+                throw JSONSerializerError.deserializeError(type: DeleteProfilePhotoResult.self, json: json)
+            }
+        }
+    }
+
     /// The PhotoSourceArg union
     public enum PhotoSourceArg: CustomStringConvertible, JSONRepresentable {
         /// Image data in base64-encoded bytes.
@@ -230,8 +509,97 @@ public class Account {
         }
     }
 
+    /// The ThumbnailError union
+    public enum ThumbnailError: CustomStringConvertible, JSONRepresentable {
+        /// Indicates permanent infrastructural failure.
+        case permanentFailure
+        /// Indicates temporary infrastructural failure.
+        case temporaryFailure
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try ThumbnailErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ThumbnailErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ThumbnailError: \(error)"
+            }
+        }
+    }
+
+    public class ThumbnailErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ThumbnailError) throws -> JSON {
+            switch value {
+            case .permanentFailure:
+                var d = [String: JSON]()
+                d[".tag"] = .str("permanent_failure")
+                return .dictionary(d)
+            case .temporaryFailure:
+                var d = [String: JSON]()
+                d[".tag"] = .str("temporary_failure")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> ThumbnailError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "permanent_failure":
+                    return ThumbnailError.permanentFailure
+                case "temporary_failure":
+                    return ThumbnailError.temporaryFailure
+                case "other":
+                    return ThumbnailError.other
+                default:
+                    return ThumbnailError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: ThumbnailError.self, json: json)
+            }
+        }
+    }
+
     /// Stone Route Objects
 
+    static let deleteProfilePhoto = Route(
+        name: "delete_profile_photo",
+        version: 1,
+        namespace: "account",
+        deprecated: false,
+        argSerializer: Account.DeleteProfilePhotoArgSerializer(),
+        responseSerializer: Account.DeleteProfilePhotoResultSerializer(),
+        errorSerializer: Account.DeleteProfilePhotoErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let getPhoto = Route(
+        name: "get_photo",
+        version: 1,
+        namespace: "account",
+        deprecated: false,
+        argSerializer: Account.AccountPhotoGetArgSerializer(),
+        responseSerializer: Account.AccountPhotoGetResultSerializer(),
+        errorSerializer: Account.AccountPhotoGetErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.user],
+            host: .content,
+            style: .download
+        )
+    )
     static let setProfilePhoto = Route(
         name: "set_profile_photo",
         version: 1,

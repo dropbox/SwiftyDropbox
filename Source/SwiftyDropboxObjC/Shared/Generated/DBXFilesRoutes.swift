@@ -24,7 +24,7 @@ public class DBXFilesRoutes: NSObject {
     ///
     /// - scope: files.content.write
     ///
-    /// - parameter allowSharedFolder: This flag has no effect.
+    /// - parameter allowSharedFolder: Field is deprecated. This flag has no effect.
     /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the file to avoid the
     /// conflict.
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
@@ -33,13 +33,7 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Files.RelocationResult` object on success
     /// or a `Files.RelocationError` object on failure.
     @objc
-    @discardableResult public func copyV2(
-        fromPath: String,
-        toPath: String,
-        allowSharedFolder: NSNumber,
-        autorename: NSNumber,
-        allowOwnershipTransfer: NSNumber
-    ) -> DBXFilesCopyRpcRequestV2 {
+    @discardableResult public func copyV2(fromPath: String, toPath: String, allowSharedFolder: NSNumber, autorename: NSNumber, allowOwnershipTransfer: NSNumber) -> DBXFilesCopyRpcRequestV2 {
         let swift = swift.copyV2(
             fromPath: fromPath,
             toPath: toPath,
@@ -172,8 +166,8 @@ public class DBXFilesRoutes: NSObject {
 
     /// Create multiple folders at once. This route is asynchronous for large batches, which returns a job ID
     /// immediately and runs the create folder batch asynchronously. Otherwise, creates the folders and returns the
-    /// result synchronously for smaller inputs. You can force asynchronous behaviour by using the forceAsync in
-    /// CreateFolderBatchArg flag.  Use createFolderBatchCheck to check the job status.
+    /// result synchronously for smaller inputs. You can force asynchronous behaviour by using the
+    /// CreateFolderBatchArg.force_async flag.  Use createFolderBatchCheck to check the job status.
     ///
     /// - scope: files.content.write
     ///
@@ -193,8 +187,8 @@ public class DBXFilesRoutes: NSObject {
 
     /// Create multiple folders at once. This route is asynchronous for large batches, which returns a job ID
     /// immediately and runs the create folder batch asynchronously. Otherwise, creates the folders and returns the
-    /// result synchronously for smaller inputs. You can force asynchronous behaviour by using the forceAsync in
-    /// CreateFolderBatchArg flag.  Use createFolderBatchCheck to check the job status.
+    /// result synchronously for smaller inputs. You can force asynchronous behaviour by using the
+    /// CreateFolderBatchArg.force_async flag.  Use createFolderBatchCheck to check the job status.
     ///
     /// - scope: files.content.write
     ///
@@ -290,7 +284,7 @@ public class DBXFilesRoutes: NSObject {
     /// - scope: files.content.read
     ///
     /// - parameter path: The path of the file to download.
-    /// - parameter rev: Please specify revision in path instead.
+    /// - parameter rev: Field is deprecated. Please specify revision in path instead.
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
     /// an NSError will be thrown).
@@ -321,7 +315,7 @@ public class DBXFilesRoutes: NSObject {
     /// - scope: files.content.read
     ///
     /// - parameter path: The path of the file to download.
-    /// - parameter rev: Please specify revision in path instead.
+    /// - parameter rev: Field is deprecated. Please specify revision in path instead.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.DownloadError` object on failure.
@@ -382,7 +376,7 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Export a file from a user's Dropbox. This route only supports exporting files that cannot be downloaded directly
-    /// and whose fileMetadata in ExportResult has exportAs in ExportInfo populated.
+    /// and whose ExportResult.file_metadata has ExportInfo.export_as populated.
     ///
     /// - scope: files.content.read
     ///
@@ -404,7 +398,7 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Export a file from a user's Dropbox. This route only supports exporting files that cannot be downloaded directly
-    /// and whose fileMetadata in ExportResult has exportAs in ExportInfo populated.
+    /// and whose ExportResult.file_metadata has ExportInfo.export_as populated.
     ///
     /// - scope: files.content.read
     ///
@@ -417,7 +411,7 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Export a file from a user's Dropbox. This route only supports exporting files that cannot be downloaded directly
-    /// and whose fileMetadata in ExportResult has exportAs in ExportInfo populated.
+    /// and whose ExportResult.file_metadata has ExportInfo.export_as populated.
     ///
     /// - scope: files.content.read
     ///
@@ -435,7 +429,7 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Export a file from a user's Dropbox. This route only supports exporting files that cannot be downloaded directly
-    /// and whose fileMetadata in ExportResult has exportAs in ExportInfo populated.
+    /// and whose ExportResult.file_metadata has ExportInfo.export_as populated.
     ///
     /// - scope: files.content.read
     ///
@@ -471,7 +465,7 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter includeDeleted: If true, DeletedMetadata will be returned for deleted file or folder, otherwise
     /// notFound in LookupError will be returned.
     /// - parameter includeHasExplicitSharedMembers: If true, the results will include a flag for each file indicating
-    /// whether or not  that file has any explicit members.
+    /// whether or not that file has any explicit members.
     /// - parameter includePropertyGroups: If set to a valid list of template IDs, propertyGroups in FileMetadata is set
     /// if there exists property data associated with the file and each of the listed templates.
     ///
@@ -509,13 +503,13 @@ public class DBXFilesRoutes: NSObject {
 
     /// Get a preview for a file. Currently, PDF previews are generated for files with the following extensions: .ai,
     /// .doc, .docm, .docx, .eps, .gdoc, .gslides, .odp, .odt, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx, .rtf. HTML
-    /// previews are generated for files with the following extensions: .csv, .ods, .xls, .xlsm, .gsheet, .xlsx.
-    /// Other formats will return an unsupported extension error.
+    /// previews are generated for .csv, .ods, .xls, .xlsm, .gsheet, .xlsx. Other formats will return an unsupported
+    /// extension error.
     ///
     /// - scope: files.content.read
     ///
     /// - parameter path: The path of the file to preview.
-    /// - parameter rev: Please specify revision in path instead.
+    /// - parameter rev: Field is deprecated. Please specify revision in path instead.
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
     /// an NSError will be thrown).
@@ -531,8 +525,8 @@ public class DBXFilesRoutes: NSObject {
 
     /// Get a preview for a file. Currently, PDF previews are generated for files with the following extensions: .ai,
     /// .doc, .docm, .docx, .eps, .gdoc, .gslides, .odp, .odt, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx, .rtf. HTML
-    /// previews are generated for files with the following extensions: .csv, .ods, .xls, .xlsm, .gsheet, .xlsx.
-    /// Other formats will return an unsupported extension error.
+    /// previews are generated for .csv, .ods, .xls, .xlsm, .gsheet, .xlsx. Other formats will return an unsupported
+    /// extension error.
     ///
     /// - scope: files.content.read
     ///
@@ -546,13 +540,13 @@ public class DBXFilesRoutes: NSObject {
 
     /// Get a preview for a file. Currently, PDF previews are generated for files with the following extensions: .ai,
     /// .doc, .docm, .docx, .eps, .gdoc, .gslides, .odp, .odt, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx, .rtf. HTML
-    /// previews are generated for files with the following extensions: .csv, .ods, .xls, .xlsm, .gsheet, .xlsx.
-    /// Other formats will return an unsupported extension error.
+    /// previews are generated for .csv, .ods, .xls, .xlsm, .gsheet, .xlsx. Other formats will return an unsupported
+    /// extension error.
     ///
     /// - scope: files.content.read
     ///
     /// - parameter path: The path of the file to preview.
-    /// - parameter rev: Please specify revision in path instead.
+    /// - parameter rev: Field is deprecated. Please specify revision in path instead.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.PreviewError` object on failure.
@@ -564,8 +558,8 @@ public class DBXFilesRoutes: NSObject {
 
     /// Get a preview for a file. Currently, PDF previews are generated for files with the following extensions: .ai,
     /// .doc, .docm, .docx, .eps, .gdoc, .gslides, .odp, .odt, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx, .rtf. HTML
-    /// previews are generated for files with the following extensions: .csv, .ods, .xls, .xlsm, .gsheet, .xlsx.
-    /// Other formats will return an unsupported extension error.
+    /// previews are generated for .csv, .ods, .xls, .xlsm, .gsheet, .xlsx. Other formats will return an unsupported
+    /// extension error.
     ///
     /// - scope: files.content.read
     ///
@@ -594,30 +588,31 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Get a one-time use temporary upload link to upload a file to a Dropbox location.  This endpoint acts as a
-    /// delayed upload. The returned temporary upload link may be used to make a POST request with the data to be
-    /// uploaded. The upload will then be perfomed with the CommitInfo previously provided to getTemporaryUploadLink
-    /// but evaluated only upon consumption. Hence, errors stemming from invalid CommitInfo with respect to the
-    /// state of the user's Dropbox will only be communicated at consumption time. Additionally, these errors are
-    /// surfaced as generic HTTP 409 Conflict responses, potentially hiding issue details. The maximum temporary
-    /// upload link duration is 4 hours. Upon consumption or expiration, a new link will have to be generated.
-    /// Multiple links may exist for a specific upload path at any given time.  The POST request on the temporary
-    /// upload link must have its Content-Type set to "application/octet-stream".  Example temporary upload link
-    /// consumption request:  curl -X POST https://content.dropboxapi.com/apitul/1/bNi2uIYF51cVBND --header
-    /// "Content-Type: application/octet-stream" --data-binary @local_file.txt  A successful temporary upload link
-    /// consumption request returns the content hash of the uploaded data in JSON format.  Example successful
-    /// temporary upload link consumption response: {"content-hash": "599d71033d700ac892a0e48fa61b125d2f5994"}  An
-    /// unsuccessful temporary upload link consumption request returns any of the following status codes:  HTTP 400
-    /// Bad Request: Content-Type is not one of application/octet-stream and text/plain or request is invalid. HTTP
-    /// 409 Conflict: The temporary upload link does not exist or is currently unavailable, the upload failed, or
-    /// another error happened. HTTP 410 Gone: The temporary upload link is expired or consumed.  Example
-    /// unsuccessful temporary upload link consumption response: Temporary upload link has been recently consumed.
+    /// delayed upload(). The returned temporary upload link may be used to make a POST request with the data to be
+    /// uploaded. The upload will then be perfomed with the CommitInfo previously provided to
+    /// getTemporaryUploadLink() but evaluated only upon consumption. Hence, errors stemming from invalid CommitInfo
+    /// with respect to the state of the user's Dropbox will only be communicated at consumption time. Additionally,
+    /// these errors are surfaced as generic HTTP 409 Conflict responses, potentially hiding issue details. The
+    /// maximum temporary upload link duration is 4 hours. Upon consumption or expiration, a new link will have to
+    /// be generated. Multiple links may exist for a specific upload path at any given time.  The POST request on
+    /// the temporary upload link must have its Content-Type set to "application/octet-stream".  Example temporary
+    /// upload link consumption request:  curl -X POST https://content.dropboxapi.com/apitul/1/bNi2uIYF51cVBND
+    /// --header "Content-Type: application/octet-stream" --data-binary @local_file.txt  A successful temporary
+    /// upload link consumption request returns the content hash of the uploaded data in JSON format. Example
+    /// successful temporary upload link consumption response: {"content-hash":
+    /// "599d71033d700ac892a0e48fa61b125d2f5994"}  An unsuccessful temporary upload link consumption request returns
+    /// any of the following status codes:  HTTP 400 Bad Request: Content-Type is not one of
+    /// application/octet-stream and text/plain or request is invalid. HTTP 409 Conflict: The temporary upload link
+    /// does not exist or is currently unavailable, the upload failed, or another error happened. HTTP 410 Gone: The
+    /// temporary upload link is expired or consumed. Example unsuccessful temporary upload link consumption
+    /// response: Temporary upload link has been recently consumed.
     ///
     /// - scope: files.content.write
     ///
     /// - parameter commitInfo: Contains the path and other optional modifiers for the future upload commit. Equivalent
     /// to the parameters provided to upload.
-    /// - parameter duration: How long before this link expires, in seconds.  Attempting to start an upload with this
-    /// link longer than this period  of time after link creation will result in an error.
+    /// - parameter duration: How long before this link expires, in seconds. Attempting to start an upload with this
+    /// link longer than this period of time after link creation will result in an error.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.GetTemporaryUploadLinkResult` object
     /// on success or a `Void` object on failure.
@@ -628,23 +623,24 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Get a one-time use temporary upload link to upload a file to a Dropbox location.  This endpoint acts as a
-    /// delayed upload. The returned temporary upload link may be used to make a POST request with the data to be
-    /// uploaded. The upload will then be perfomed with the CommitInfo previously provided to getTemporaryUploadLink
-    /// but evaluated only upon consumption. Hence, errors stemming from invalid CommitInfo with respect to the
-    /// state of the user's Dropbox will only be communicated at consumption time. Additionally, these errors are
-    /// surfaced as generic HTTP 409 Conflict responses, potentially hiding issue details. The maximum temporary
-    /// upload link duration is 4 hours. Upon consumption or expiration, a new link will have to be generated.
-    /// Multiple links may exist for a specific upload path at any given time.  The POST request on the temporary
-    /// upload link must have its Content-Type set to "application/octet-stream".  Example temporary upload link
-    /// consumption request:  curl -X POST https://content.dropboxapi.com/apitul/1/bNi2uIYF51cVBND --header
-    /// "Content-Type: application/octet-stream" --data-binary @local_file.txt  A successful temporary upload link
-    /// consumption request returns the content hash of the uploaded data in JSON format.  Example successful
-    /// temporary upload link consumption response: {"content-hash": "599d71033d700ac892a0e48fa61b125d2f5994"}  An
-    /// unsuccessful temporary upload link consumption request returns any of the following status codes:  HTTP 400
-    /// Bad Request: Content-Type is not one of application/octet-stream and text/plain or request is invalid. HTTP
-    /// 409 Conflict: The temporary upload link does not exist or is currently unavailable, the upload failed, or
-    /// another error happened. HTTP 410 Gone: The temporary upload link is expired or consumed.  Example
-    /// unsuccessful temporary upload link consumption response: Temporary upload link has been recently consumed.
+    /// delayed upload(). The returned temporary upload link may be used to make a POST request with the data to be
+    /// uploaded. The upload will then be perfomed with the CommitInfo previously provided to
+    /// getTemporaryUploadLink() but evaluated only upon consumption. Hence, errors stemming from invalid CommitInfo
+    /// with respect to the state of the user's Dropbox will only be communicated at consumption time. Additionally,
+    /// these errors are surfaced as generic HTTP 409 Conflict responses, potentially hiding issue details. The
+    /// maximum temporary upload link duration is 4 hours. Upon consumption or expiration, a new link will have to
+    /// be generated. Multiple links may exist for a specific upload path at any given time.  The POST request on
+    /// the temporary upload link must have its Content-Type set to "application/octet-stream".  Example temporary
+    /// upload link consumption request:  curl -X POST https://content.dropboxapi.com/apitul/1/bNi2uIYF51cVBND
+    /// --header "Content-Type: application/octet-stream" --data-binary @local_file.txt  A successful temporary
+    /// upload link consumption request returns the content hash of the uploaded data in JSON format. Example
+    /// successful temporary upload link consumption response: {"content-hash":
+    /// "599d71033d700ac892a0e48fa61b125d2f5994"}  An unsuccessful temporary upload link consumption request returns
+    /// any of the following status codes:  HTTP 400 Bad Request: Content-Type is not one of
+    /// application/octet-stream and text/plain or request is invalid. HTTP 409 Conflict: The temporary upload link
+    /// does not exist or is currently unavailable, the upload failed, or another error happened. HTTP 410 Gone: The
+    /// temporary upload link is expired or consumed. Example unsuccessful temporary upload link consumption
+    /// response: Temporary upload link has been recently consumed.
     ///
     /// - scope: files.content.write
     ///
@@ -663,10 +659,15 @@ public class DBXFilesRoutes: NSObject {
     /// - scope: files.content.read
     ///
     /// - parameter path: The path to the image file you want to thumbnail.
-    /// - parameter format: The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
-    /// should be preferred, while png is  better for screenshots and digital arts.
+    /// - parameter format: The format for the thumbnail image, jpeg (default), png, or webp. For images that are
+    /// photos, jpeg should be preferred, while png is better for screenshots and digital arts, and web for
+    /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
+    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
+    /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
+    /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
+    /// not needed.
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
     /// an NSError will be thrown).
@@ -680,10 +681,21 @@ public class DBXFilesRoutes: NSObject {
         format: DBXFilesThumbnailFormat,
         size: DBXFilesThumbnailSize,
         mode: DBXFilesThumbnailMode,
+        quality: DBXFilesThumbnailQuality,
+        excludeMediaInfo: NSNumber?,
         overwrite: Bool,
         destination: URL
     ) -> DBXFilesGetThumbnailDownloadRequestFile {
-        let swift = swift.getThumbnail(path: path, format: format.swift, size: size.swift, mode: mode.swift, overwrite: overwrite, destination: destination)
+        let swift = swift.getThumbnail(
+            path: path,
+            format: format.swift,
+            size: size.swift,
+            mode: mode.swift,
+            quality: quality.swift,
+            excludeMediaInfo: excludeMediaInfo?.boolValue,
+            overwrite: overwrite,
+            destination: destination
+        )
         return DBXFilesGetThumbnailDownloadRequestFile(swift: swift)
     }
 
@@ -708,10 +720,15 @@ public class DBXFilesRoutes: NSObject {
     /// - scope: files.content.read
     ///
     /// - parameter path: The path to the image file you want to thumbnail.
-    /// - parameter format: The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
-    /// should be preferred, while png is  better for screenshots and digital arts.
+    /// - parameter format: The format for the thumbnail image, jpeg (default), png, or webp. For images that are
+    /// photos, jpeg should be preferred, while png is better for screenshots and digital arts, and web for
+    /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
+    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
+    /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
+    /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
+    /// not needed.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.ThumbnailError` object on failure.
@@ -720,9 +737,18 @@ public class DBXFilesRoutes: NSObject {
         path: String,
         format: DBXFilesThumbnailFormat,
         size: DBXFilesThumbnailSize,
-        mode: DBXFilesThumbnailMode
+        mode: DBXFilesThumbnailMode,
+        quality: DBXFilesThumbnailQuality,
+        excludeMediaInfo: NSNumber?
     ) -> DBXFilesGetThumbnailDownloadRequestMemory {
-        let swift = swift.getThumbnail(path: path, format: format.swift, size: size.swift, mode: mode.swift)
+        let swift = swift.getThumbnail(
+            path: path,
+            format: format.swift,
+            size: size.swift,
+            mode: mode.swift,
+            quality: quality.swift,
+            excludeMediaInfo: excludeMediaInfo?.boolValue
+        )
         return DBXFilesGetThumbnailDownloadRequestMemory(swift: swift)
     }
 
@@ -748,10 +774,15 @@ public class DBXFilesRoutes: NSObject {
     ///
     /// - parameter resource: Information specifying which file to preview. This could be a path to a file, a shared
     /// link pointing to a file, or a shared link pointing to a folder, with a relative path.
-    /// - parameter format: The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
-    /// should be preferred, while png is  better for screenshots and digital arts.
+    /// - parameter format: The format for the thumbnail image, jpeg (default), png, or webp. For images that are
+    /// photos, jpeg should be preferred, while png is better for screenshots and digital arts, and web for
+    /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
+    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
+    /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
+    /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
+    /// not needed.
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
     /// an NSError will be thrown).
@@ -765,6 +796,8 @@ public class DBXFilesRoutes: NSObject {
         format: DBXFilesThumbnailFormat,
         size: DBXFilesThumbnailSize,
         mode: DBXFilesThumbnailMode,
+        quality: DBXFilesThumbnailQuality,
+        excludeMediaInfo: NSNumber?,
         overwrite: Bool,
         destination: URL
     ) -> DBXFilesGetThumbnailDownloadRequestFileV2 {
@@ -773,6 +806,8 @@ public class DBXFilesRoutes: NSObject {
             format: format.swift,
             size: size.swift,
             mode: mode.swift,
+            quality: quality.swift,
+            excludeMediaInfo: excludeMediaInfo?.boolValue,
             overwrite: overwrite,
             destination: destination
         )
@@ -788,11 +823,7 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Files.PreviewResult` object on success or a
     /// `Files.ThumbnailV2Error` object on failure.
     @objc
-    @discardableResult public func getThumbnailV2URL(
-        resource: DBXFilesPathOrLink,
-        overwrite: Bool,
-        destination: URL
-    ) -> DBXFilesGetThumbnailDownloadRequestFileV2 {
+    @discardableResult public func getThumbnailV2URL(resource: DBXFilesPathOrLink, overwrite: Bool, destination: URL) -> DBXFilesGetThumbnailDownloadRequestFileV2 {
         let swift = swift.getThumbnailV2(resource: resource.swift, overwrite: overwrite, destination: destination)
         return DBXFilesGetThumbnailDownloadRequestFileV2(swift: swift)
     }
@@ -805,10 +836,15 @@ public class DBXFilesRoutes: NSObject {
     ///
     /// - parameter resource: Information specifying which file to preview. This could be a path to a file, a shared
     /// link pointing to a file, or a shared link pointing to a folder, with a relative path.
-    /// - parameter format: The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
-    /// should be preferred, while png is  better for screenshots and digital arts.
+    /// - parameter format: The format for the thumbnail image, jpeg (default), png, or webp. For images that are
+    /// photos, jpeg should be preferred, while png is better for screenshots and digital arts, and web for
+    /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
+    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
+    /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
+    /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
+    /// not needed.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.PreviewResult` object on success or a
     /// `Files.ThumbnailV2Error` object on failure.
@@ -817,9 +853,18 @@ public class DBXFilesRoutes: NSObject {
         resource: DBXFilesPathOrLink,
         format: DBXFilesThumbnailFormat,
         size: DBXFilesThumbnailSize,
-        mode: DBXFilesThumbnailMode
+        mode: DBXFilesThumbnailMode,
+        quality: DBXFilesThumbnailQuality,
+        excludeMediaInfo: NSNumber?
     ) -> DBXFilesGetThumbnailDownloadRequestMemoryV2 {
-        let swift = swift.getThumbnailV2(resource: resource.swift, format: format.swift, size: size.swift, mode: mode.swift)
+        let swift = swift.getThumbnailV2(
+            resource: resource.swift,
+            format: format.swift,
+            size: size.swift,
+            mode: mode.swift,
+            quality: quality.swift,
+            excludeMediaInfo: excludeMediaInfo?.boolValue
+        )
         return DBXFilesGetThumbnailDownloadRequestMemoryV2(swift: swift)
     }
 
@@ -854,16 +899,16 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Starts returning the contents of a folder. If the result's hasMore in ListFolderResult field is true, call
-    /// listFolderContinue with the returned cursor in ListFolderResult to retrieve more entries. If you're using
-    /// recursive in ListFolderArg set to true to keep a local cache of the contents of a Dropbox account, iterate
+    /// listFolderContinue with the returned ListFolderResult.cursor to retrieve more entries. If you're using
+    /// ListFolderArg.recursive set to true to keep a local cache of the contents of a Dropbox account, iterate
     /// through each entry in order and process them as follows to keep your local state in sync: For each
     /// FileMetadata, store the new entry at the given path in your local state. If the required parent folders
     /// don't exist yet, create them. If there's already something else at the given path, replace it and remove all
     /// its children. For each FolderMetadata, store the new entry at the given path in your local state. If the
     /// required parent folders don't exist yet, create them. If there's already something else at the given path,
-    /// replace it but leave the children as they are. Check the new entry's readOnly in FolderSharingInfo and set
-    /// all its children's read-only statuses to match. For each DeletedMetadata, if your local state has something
-    /// at the given path, remove it and all its children. If there's nothing at the given path, ignore this entry.
+    /// replace it but leave the children as they are. Check the new entry's FolderSharingInfo.read_only and set all
+    /// its children's read-only statuses to match. For each DeletedMetadata, if your local state has something at
+    /// the given path, remove it and all its children. If there's nothing at the given path, ignore this entry.
     /// Note: auth.RateLimitError may be returned if multiple listFolder or listFolderContinue calls with same
     /// parameters are made simultaneously by same API app for same user. If your app implements retry logic, please
     /// hold off the retry until the previous request finishes.
@@ -872,13 +917,16 @@ public class DBXFilesRoutes: NSObject {
     ///
     /// - parameter path: A unique identifier for the file.
     /// - parameter recursive: If true, the list folder operation will be applied recursively to all subfolders and the
-    /// response will contain contents of all subfolders.
-    /// - parameter includeMediaInfo: If true, mediaInfo in FileMetadata is set for photo and video. This parameter will
-    /// no longer have an effect starting December 2, 2019.
+    /// response will contain contents of all subfolders. In some cases, setting recursive in ListFolderArg to true
+    /// may lead to performance issues or errors, especially when traversing folder structures with a large number
+    /// of items. A workaround for such cases is to set recursive in ListFolderArg to false and traverse subfolders
+    /// one at a time.
+    /// - parameter includeMediaInfo: Field is deprecated. If true, mediaInfo in FileMetadata is set for photo and
+    /// video. This parameter will no longer have an effect starting December 2, 2019.
     /// - parameter includeDeleted: If true, the results will include entries for files and folders that used to exist
     /// but were deleted.
     /// - parameter includeHasExplicitSharedMembers: If true, the results will include a flag for each file indicating
-    /// whether or not  that file has any explicit members.
+    /// whether or not that file has any explicit members.
     /// - parameter includeMountedFolders: If true, the results will include entries under mounted folders which
     /// includes app folder, shared folder and team folder.
     /// - parameter limit: The maximum number of results to return per request. Note: This is an approximate number and
@@ -889,6 +937,8 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter includePropertyGroups: If set to a valid list of template IDs, propertyGroups in FileMetadata is set
     /// if there exists property data associated with the file and each of the listed templates.
     /// - parameter includeNonDownloadableFiles: If true, include files that are not downloadable, i.e. Google Docs.
+    /// - parameter includeRestorableInfo: If true, each returned deleted entry will include whether that entry can be
+    /// restored.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.ListFolderResult` object on success
     /// or a `Files.ListFolderError` object on failure.
@@ -903,7 +953,8 @@ public class DBXFilesRoutes: NSObject {
         limit: NSNumber?,
         sharedLink: DBXFilesSharedLink?,
         includePropertyGroups: DBXFilePropertiesTemplateFilterBase?,
-        includeNonDownloadableFiles: NSNumber
+        includeNonDownloadableFiles: NSNumber,
+        includeRestorableInfo: NSNumber
     ) -> DBXFilesListFolderRpcRequest {
         let swift = swift.listFolder(
             path: path,
@@ -915,22 +966,23 @@ public class DBXFilesRoutes: NSObject {
             limit: limit?.uint32Value,
             sharedLink: sharedLink?.swift,
             includePropertyGroups: includePropertyGroups?.swift,
-            includeNonDownloadableFiles: includeNonDownloadableFiles.boolValue
+            includeNonDownloadableFiles: includeNonDownloadableFiles.boolValue,
+            includeRestorableInfo: includeRestorableInfo.boolValue
         )
         return DBXFilesListFolderRpcRequest(swift: swift)
     }
 
     /// Starts returning the contents of a folder. If the result's hasMore in ListFolderResult field is true, call
-    /// listFolderContinue with the returned cursor in ListFolderResult to retrieve more entries. If you're using
-    /// recursive in ListFolderArg set to true to keep a local cache of the contents of a Dropbox account, iterate
+    /// listFolderContinue with the returned ListFolderResult.cursor to retrieve more entries. If you're using
+    /// ListFolderArg.recursive set to true to keep a local cache of the contents of a Dropbox account, iterate
     /// through each entry in order and process them as follows to keep your local state in sync: For each
     /// FileMetadata, store the new entry at the given path in your local state. If the required parent folders
     /// don't exist yet, create them. If there's already something else at the given path, replace it and remove all
     /// its children. For each FolderMetadata, store the new entry at the given path in your local state. If the
     /// required parent folders don't exist yet, create them. If there's already something else at the given path,
-    /// replace it but leave the children as they are. Check the new entry's readOnly in FolderSharingInfo and set
-    /// all its children's read-only statuses to match. For each DeletedMetadata, if your local state has something
-    /// at the given path, remove it and all its children. If there's nothing at the given path, ignore this entry.
+    /// replace it but leave the children as they are. Check the new entry's FolderSharingInfo.read_only and set all
+    /// its children's read-only statuses to match. For each DeletedMetadata, if your local state has something at
+    /// the given path, remove it and all its children. If there's nothing at the given path, ignore this entry.
     /// Note: auth.RateLimitError may be returned if multiple listFolder or listFolderContinue calls with same
     /// parameters are made simultaneously by same API app for same user. If your app implements retry logic, please
     /// hold off the retry until the previous request finishes.
@@ -968,13 +1020,16 @@ public class DBXFilesRoutes: NSObject {
     ///
     /// - parameter path: A unique identifier for the file.
     /// - parameter recursive: If true, the list folder operation will be applied recursively to all subfolders and the
-    /// response will contain contents of all subfolders.
-    /// - parameter includeMediaInfo: If true, mediaInfo in FileMetadata is set for photo and video. This parameter will
-    /// no longer have an effect starting December 2, 2019.
+    /// response will contain contents of all subfolders. In some cases, setting recursive in ListFolderArg to true
+    /// may lead to performance issues or errors, especially when traversing folder structures with a large number
+    /// of items. A workaround for such cases is to set recursive in ListFolderArg to false and traverse subfolders
+    /// one at a time.
+    /// - parameter includeMediaInfo: Field is deprecated. If true, mediaInfo in FileMetadata is set for photo and
+    /// video. This parameter will no longer have an effect starting December 2, 2019.
     /// - parameter includeDeleted: If true, the results will include entries for files and folders that used to exist
     /// but were deleted.
     /// - parameter includeHasExplicitSharedMembers: If true, the results will include a flag for each file indicating
-    /// whether or not  that file has any explicit members.
+    /// whether or not that file has any explicit members.
     /// - parameter includeMountedFolders: If true, the results will include entries under mounted folders which
     /// includes app folder, shared folder and team folder.
     /// - parameter limit: The maximum number of results to return per request. Note: This is an approximate number and
@@ -985,6 +1040,8 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter includePropertyGroups: If set to a valid list of template IDs, propertyGroups in FileMetadata is set
     /// if there exists property data associated with the file and each of the listed templates.
     /// - parameter includeNonDownloadableFiles: If true, include files that are not downloadable, i.e. Google Docs.
+    /// - parameter includeRestorableInfo: If true, each returned deleted entry will include whether that entry can be
+    /// restored.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.ListFolderGetLatestCursorResult`
     /// object on success or a `Files.ListFolderError` object on failure.
@@ -999,7 +1056,8 @@ public class DBXFilesRoutes: NSObject {
         limit: NSNumber?,
         sharedLink: DBXFilesSharedLink?,
         includePropertyGroups: DBXFilePropertiesTemplateFilterBase?,
-        includeNonDownloadableFiles: NSNumber
+        includeNonDownloadableFiles: NSNumber,
+        includeRestorableInfo: NSNumber
     ) -> DBXFilesListFolderGetLatestCursorRpcRequest {
         let swift = swift.listFolderGetLatestCursor(
             path: path,
@@ -1011,7 +1069,8 @@ public class DBXFilesRoutes: NSObject {
             limit: limit?.uint32Value,
             sharedLink: sharedLink?.swift,
             includePropertyGroups: includePropertyGroups?.swift,
-            includeNonDownloadableFiles: includeNonDownloadableFiles.boolValue
+            includeNonDownloadableFiles: includeNonDownloadableFiles.boolValue,
+            includeRestorableInfo: includeRestorableInfo.boolValue
         )
         return DBXFilesListFolderGetLatestCursorRpcRequest(swift: swift)
     }
@@ -1032,9 +1091,7 @@ public class DBXFilesRoutes: NSObject {
 
     /// A longpoll endpoint to wait for changes on an account. In conjunction with listFolderContinue, this call gives
     /// you a low-latency way to monitor an account for file changes. The connection will block until there are
-    /// changes available or a timeout occurs. This endpoint is useful mostly for client-side apps. If you're
-    /// looking for server-side notifications, check out our webhooks documentation
-    /// https://www.dropbox.com/developers/reference/webhooks.
+    /// changes available or a timeout occurs. This endpoint is useful mostly for client-side apps.
     ///
     /// - scope: files.metadata.read
     ///
@@ -1054,9 +1111,7 @@ public class DBXFilesRoutes: NSObject {
 
     /// A longpoll endpoint to wait for changes on an account. In conjunction with listFolderContinue, this call gives
     /// you a low-latency way to monitor an account for file changes. The connection will block until there are
-    /// changes available or a timeout occurs. This endpoint is useful mostly for client-side apps. If you're
-    /// looking for server-side notifications, check out our webhooks documentation
-    /// https://www.dropbox.com/developers/reference/webhooks.
+    /// changes available or a timeout occurs. This endpoint is useful mostly for client-side apps.
     ///
     /// - scope: files.metadata.read
     ///
@@ -1070,9 +1125,9 @@ public class DBXFilesRoutes: NSObject {
 
     /// Returns revisions for files based on a file path or a file id. The file path or file id is identified from the
     /// latest file entry at the given file path or id. This end point allows your app to query either by file path
-    /// or file id by setting the mode parameter appropriately. In the path in ListRevisionsMode (default) mode, all
+    /// or file id by setting the mode parameter appropriately. In the ListRevisionsMode.path (default) mode, all
     /// revisions at the same file path as the latest file entry are returned. If revisions with the same file id
-    /// are desired, then mode must be set to id in ListRevisionsMode. The id in ListRevisionsMode mode is useful to
+    /// are desired, then mode must be set to ListRevisionsMode.id. The ListRevisionsMode.id mode is useful to
     /// retrieve revisions for a given file across moves or renames.
     ///
     /// - scope: files.metadata.read
@@ -1080,20 +1135,37 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter path: The path to the file you want to see the revisions of.
     /// - parameter mode: Determines the behavior of the API in listing the revisions for a given file path or id.
     /// - parameter limit: The maximum number of revision entries returned.
+    /// - parameter beforeRev: If set, ListRevisions will only return revisions prior to before_rev. Can be set using
+    /// the last revision from a previous call to list_revisions to fetch the next page of revisions. Only supported
+    /// in path mode.
+    /// - parameter includeRestorableInfo: If true, each returned revision will include whether that revision can be
+    /// restored.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.ListRevisionsResult` object on
     /// success or a `Files.ListRevisionsError` object on failure.
     @objc
-    @discardableResult public func listRevisions(path: String, mode: DBXFilesListRevisionsMode, limit: NSNumber) -> DBXFilesListRevisionsRpcRequest {
-        let swift = swift.listRevisions(path: path, mode: mode.swift, limit: limit.uint64Value)
+    @discardableResult public func listRevisions(
+        path: String,
+        mode: DBXFilesListRevisionsMode,
+        limit: NSNumber,
+        beforeRev: String?,
+        includeRestorableInfo: NSNumber
+    ) -> DBXFilesListRevisionsRpcRequest {
+        let swift = swift.listRevisions(
+            path: path,
+            mode: mode.swift,
+            limit: limit.uint64Value,
+            beforeRev: beforeRev,
+            includeRestorableInfo: includeRestorableInfo.boolValue
+        )
         return DBXFilesListRevisionsRpcRequest(swift: swift)
     }
 
     /// Returns revisions for files based on a file path or a file id. The file path or file id is identified from the
     /// latest file entry at the given file path or id. This end point allows your app to query either by file path
-    /// or file id by setting the mode parameter appropriately. In the path in ListRevisionsMode (default) mode, all
+    /// or file id by setting the mode parameter appropriately. In the ListRevisionsMode.path (default) mode, all
     /// revisions at the same file path as the latest file entry are returned. If revisions with the same file id
-    /// are desired, then mode must be set to id in ListRevisionsMode. The id in ListRevisionsMode mode is useful to
+    /// are desired, then mode must be set to ListRevisionsMode.id. The ListRevisionsMode.id mode is useful to
     /// retrieve revisions for a given file across moves or renames.
     ///
     /// - scope: files.metadata.read
@@ -1128,7 +1200,7 @@ public class DBXFilesRoutes: NSObject {
     ///
     /// - scope: files.content.write
     ///
-    /// - parameter allowSharedFolder: This flag has no effect.
+    /// - parameter allowSharedFolder: Field is deprecated. This flag has no effect.
     /// - parameter autorename: If there's a conflict, have the Dropbox server try to autorename the file to avoid the
     /// conflict.
     /// - parameter allowOwnershipTransfer: Allow moves by owner even if it would result in an ownership transfer for
@@ -1137,13 +1209,7 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Files.RelocationResult` object on success
     /// or a `Files.RelocationError` object on failure.
     @objc
-    @discardableResult public func moveV2(
-        fromPath: String,
-        toPath: String,
-        allowSharedFolder: NSNumber,
-        autorename: NSNumber,
-        allowOwnershipTransfer: NSNumber
-    ) -> DBXFilesMoveRpcRequestV2 {
+    @discardableResult public func moveV2(fromPath: String, toPath: String, allowSharedFolder: NSNumber, autorename: NSNumber, allowOwnershipTransfer: NSNumber) -> DBXFilesMoveRpcRequestV2 {
         let swift = swift.moveV2(
             fromPath: fromPath,
             toPath: toPath,
@@ -1181,11 +1247,7 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Files.RelocationBatchV2Launch` object on
     /// success or a `Void` object on failure.
     @objc
-    @discardableResult public func moveBatchV2(
-        entries: [DBXFilesRelocationPath],
-        autorename: NSNumber,
-        allowOwnershipTransfer: NSNumber
-    ) -> DBXFilesMoveBatchRpcRequestV2 {
+    @discardableResult public func moveBatchV2(entries: [DBXFilesRelocationPath], autorename: NSNumber, allowOwnershipTransfer: NSNumber) -> DBXFilesMoveBatchRpcRequestV2 {
         let swift = swift.moveBatchV2(entries: entries.map(\.swift), autorename: autorename.boolValue, allowOwnershipTransfer: allowOwnershipTransfer.boolValue)
         return DBXFilesMoveBatchRpcRequestV2(swift: swift)
     }
@@ -1267,11 +1329,7 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Files.PaperCreateResult` object on success
     /// or a `Files.PaperCreateError` object on failure.
     @objc
-    @discardableResult public func paperCreateInputStream(
-        path: String,
-        importFormat: DBXFilesImportFormat,
-        input: InputStream
-    ) -> DBXFilesPaperCreateUploadRequest {
+    @discardableResult public func paperCreateInputStream(path: String, importFormat: DBXFilesImportFormat, input: InputStream) -> DBXFilesPaperCreateUploadRequest {
         let swift = swift.paperCreate(path: path, importFormat: importFormat.swift, input: input)
         return DBXFilesPaperCreateUploadRequest(swift: swift)
     }
@@ -1315,12 +1373,7 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Files.PaperUpdateResult` object on success
     /// or a `Files.PaperUpdateError` object on failure.
     @objc
-    @discardableResult public func paperUpdateData(
-        path: String,
-        importFormat: DBXFilesImportFormat,
-        docUpdatePolicy: DBXFilesPaperDocUpdatePolicy,
-        input: Data
-    ) -> DBXFilesPaperUpdateUploadRequest {
+    @discardableResult public func paperUpdateData(path: String, importFormat: DBXFilesImportFormat, docUpdatePolicy: DBXFilesPaperDocUpdatePolicy, input: Data) -> DBXFilesPaperUpdateUploadRequest {
         let swift = swift.paperUpdate(path: path, importFormat: importFormat.swift, docUpdatePolicy: docUpdatePolicy.swift, input: input)
         return DBXFilesPaperUpdateUploadRequest(swift: swift)
     }
@@ -1364,12 +1417,7 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Files.PaperUpdateResult` object on success
     /// or a `Files.PaperUpdateError` object on failure.
     @objc
-    @discardableResult public func paperUpdateURL(
-        path: String,
-        importFormat: DBXFilesImportFormat,
-        docUpdatePolicy: DBXFilesPaperDocUpdatePolicy,
-        input: URL
-    ) -> DBXFilesPaperUpdateUploadRequest {
+    @discardableResult public func paperUpdateURL(path: String, importFormat: DBXFilesImportFormat, docUpdatePolicy: DBXFilesPaperDocUpdatePolicy, input: URL) -> DBXFilesPaperUpdateUploadRequest {
         let swift = swift.paperUpdate(path: path, importFormat: importFormat.swift, docUpdatePolicy: docUpdatePolicy.swift, input: input)
         return DBXFilesPaperUpdateUploadRequest(swift: swift)
     }
@@ -1473,8 +1521,7 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Save the data from a specified URL into a file in user's Dropbox. Note that the transfer from the URL must
-    /// complete within 15 minutes, or the operation will time out and the job will fail. If the given path already
-    /// exists, the file will be renamed to avoid the conflict (e.g. myfile (1).txt).
+    /// complete within 15 minutes, or the operation will time out and the job will fail.
     ///
     /// - scope: files.content.write
     ///
@@ -1513,7 +1560,7 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter query: The string to search for. May match across multiple fields based on the request arguments.
     /// - parameter options: Options for more targeted search results.
     /// - parameter matchFieldOptions: Options for search results match fields.
-    /// - parameter includeHighlights: Deprecated and moved this option to SearchMatchFieldOptions.
+    /// - parameter includeHighlights: Field is deprecated. Deprecated and moved this option to SearchMatchFieldOptions.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.SearchV2Result` object on success or
     /// a `Files.SearchError` object on failure.
@@ -1627,7 +1674,7 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
-    /// MB. Instead, create an upload session with uploadSessionStart. Calls to this endpoint will count as data
+    /// MiB. Instead, create an upload session with uploadSessionStart. Calls to this endpoint will count as data
     /// transport calls for any Dropbox Business teams with a limit on the number of data transport calls allowed
     /// per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit.
@@ -1668,7 +1715,7 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
-    /// MB. Instead, create an upload session with uploadSessionStart. Calls to this endpoint will count as data
+    /// MiB. Instead, create an upload session with uploadSessionStart. Calls to this endpoint will count as data
     /// transport calls for any Dropbox Business teams with a limit on the number of data transport calls allowed
     /// per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit.
@@ -1684,7 +1731,7 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
-    /// MB. Instead, create an upload session with uploadSessionStart. Calls to this endpoint will count as data
+    /// MiB. Instead, create an upload session with uploadSessionStart. Calls to this endpoint will count as data
     /// transport calls for any Dropbox Business teams with a limit on the number of data transport calls allowed
     /// per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit.
@@ -1725,7 +1772,7 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
-    /// MB. Instead, create an upload session with uploadSessionStart. Calls to this endpoint will count as data
+    /// MiB. Instead, create an upload session with uploadSessionStart. Calls to this endpoint will count as data
     /// transport calls for any Dropbox Business teams with a limit on the number of data transport calls allowed
     /// per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit.
@@ -1741,7 +1788,7 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
-    /// MB. Instead, create an upload session with uploadSessionStart. Calls to this endpoint will count as data
+    /// MiB. Instead, create an upload session with uploadSessionStart. Calls to this endpoint will count as data
     /// transport calls for any Dropbox Business teams with a limit on the number of data transport calls allowed
     /// per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit.
@@ -1782,7 +1829,7 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Create a new file with the contents provided in the request. Do not use this to upload a file larger than 150
-    /// MB. Instead, create an upload session with uploadSessionStart. Calls to this endpoint will count as data
+    /// MiB. Instead, create an upload session with uploadSessionStart. Calls to this endpoint will count as data
     /// transport calls for any Dropbox Business teams with a limit on the number of data transport calls allowed
     /// per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit.
@@ -1798,10 +1845,11 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
-    /// with a limit on the number of data transport calls allowed per month. For more information, see the Data
-    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// single request should not upload more than 150 MiB. The maximum size of a file one can upload to an upload
+    /// session is 2^41 - 2^22 (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls
+    /// for any Dropbox Business teams with a limit on the number of data transport calls allowed per month. For
+    /// more information, see the Data transport limit page
+    /// https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
@@ -1816,21 +1864,17 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionAppendError` object on failure.
     @objc
-    @discardableResult public func uploadSessionAppendV2Data(
-        cursor: DBXFilesUploadSessionCursor,
-        close: NSNumber,
-        contentHash: String?,
-        input: Data
-    ) -> DBXFilesUploadSessionAppendUploadRequestV2 {
+    @discardableResult public func uploadSessionAppendV2Data(cursor: DBXFilesUploadSessionCursor, close: NSNumber, contentHash: String?, input: Data) -> DBXFilesUploadSessionAppendUploadRequestV2 {
         let swift = swift.uploadSessionAppendV2(cursor: cursor.swift, close: close.boolValue, contentHash: contentHash, input: input)
         return DBXFilesUploadSessionAppendUploadRequestV2(swift: swift)
     }
 
     /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
-    /// with a limit on the number of data transport calls allowed per month. For more information, see the Data
-    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// single request should not upload more than 150 MiB. The maximum size of a file one can upload to an upload
+    /// session is 2^41 - 2^22 (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls
+    /// for any Dropbox Business teams with a limit on the number of data transport calls allowed per month. For
+    /// more information, see the Data transport limit page
+    /// https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
@@ -1843,10 +1887,11 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
-    /// with a limit on the number of data transport calls allowed per month. For more information, see the Data
-    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// single request should not upload more than 150 MiB. The maximum size of a file one can upload to an upload
+    /// session is 2^41 - 2^22 (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls
+    /// for any Dropbox Business teams with a limit on the number of data transport calls allowed per month. For
+    /// more information, see the Data transport limit page
+    /// https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
@@ -1861,21 +1906,17 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionAppendError` object on failure.
     @objc
-    @discardableResult public func uploadSessionAppendV2URL(
-        cursor: DBXFilesUploadSessionCursor,
-        close: NSNumber,
-        contentHash: String?,
-        input: URL
-    ) -> DBXFilesUploadSessionAppendUploadRequestV2 {
+    @discardableResult public func uploadSessionAppendV2URL(cursor: DBXFilesUploadSessionCursor, close: NSNumber, contentHash: String?, input: URL) -> DBXFilesUploadSessionAppendUploadRequestV2 {
         let swift = swift.uploadSessionAppendV2(cursor: cursor.swift, close: close.boolValue, contentHash: contentHash, input: input)
         return DBXFilesUploadSessionAppendUploadRequestV2(swift: swift)
     }
 
     /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
-    /// with a limit on the number of data transport calls allowed per month. For more information, see the Data
-    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// single request should not upload more than 150 MiB. The maximum size of a file one can upload to an upload
+    /// session is 2^41 - 2^22 (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls
+    /// for any Dropbox Business teams with a limit on the number of data transport calls allowed per month. For
+    /// more information, see the Data transport limit page
+    /// https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
@@ -1888,10 +1929,11 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
-    /// with a limit on the number of data transport calls allowed per month. For more information, see the Data
-    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// single request should not upload more than 150 MiB. The maximum size of a file one can upload to an upload
+    /// session is 2^41 - 2^22 (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls
+    /// for any Dropbox Business teams with a limit on the number of data transport calls allowed per month. For
+    /// more information, see the Data transport limit page
+    /// https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
@@ -1917,29 +1959,160 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Append more data to an upload session. When the parameter close is set, this call will close the session. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox Business teams
-    /// with a limit on the number of data transport calls allowed per month. For more information, see the Data
-    /// transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// single request should not upload more than 150 MiB. The maximum size of a file one can upload to an upload
+    /// session is 2^41 - 2^22 (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls
+    /// for any Dropbox Business teams with a limit on the number of data transport calls allowed per month. For
+    /// more information, see the Data transport limit page
+    /// https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Files.UploadSessionAppendError` object on failure.
     @objc
-    @discardableResult public func uploadSessionAppendV2InputStream(
-        cursor: DBXFilesUploadSessionCursor,
-        input: InputStream
-    ) -> DBXFilesUploadSessionAppendUploadRequestV2 {
+    @discardableResult public func uploadSessionAppendV2InputStream(cursor: DBXFilesUploadSessionCursor, input: InputStream) -> DBXFilesUploadSessionAppendUploadRequestV2 {
         let swift = swift.uploadSessionAppendV2(cursor: cursor.swift, input: input)
         return DBXFilesUploadSessionAppendUploadRequestV2(swift: swift)
     }
 
+    /// Append more data to multiple upload sessions. Each piece of file content to append to each upload session should
+    /// be concatenated in the request body, in the order delineated by entries in UploadSessionAppendBatchArg and
+    /// their individual lengths indicated by length in UploadSessionAppendBatchArgEntry. A single request should
+    /// not upload more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls for any Dropbox
+    /// Business teams with a limit on the number of data transport calls allowed per month. For more information,
+    /// see the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    ///
+    /// - scope: files.content.write
+    ///
+    /// - parameter entries: Append information for each file in the batch.
+    /// - parameter contentHash: A hash of the entire request body which is all the concatenated pieces of file content
+    /// that were uploaded in this call. If provided and the uploaded content does not match this hash, an error
+    /// will be returned. For more information see our Content hash
+    /// https://www.dropbox.com/developers/reference/content-hash page.
+    /// - parameter input: The file to upload, as an Data object.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Files.UploadSessionAppendBatchResult`
+    /// object on success or a `Files.UploadSessionAppendBatchError` object on failure.
+    @objc
+    @discardableResult public func uploadSessionAppendBatchData(entries: [DBXFilesUploadSessionAppendBatchArgEntry], contentHash: String?, input: Data) -> DBXFilesUploadSessionAppendBatchUploadRequest {
+        let swift = swift.uploadSessionAppendBatch(entries: entries.map(\.swift), contentHash: contentHash, input: input)
+        return DBXFilesUploadSessionAppendBatchUploadRequest(swift: swift)
+    }
+
+    /// Append more data to multiple upload sessions. Each piece of file content to append to each upload session should
+    /// be concatenated in the request body, in the order delineated by entries in UploadSessionAppendBatchArg and
+    /// their individual lengths indicated by length in UploadSessionAppendBatchArgEntry. A single request should
+    /// not upload more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls for any Dropbox
+    /// Business teams with a limit on the number of data transport calls allowed per month. For more information,
+    /// see the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    ///
+    /// - scope: files.content.write
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Files.UploadSessionAppendBatchResult`
+    /// object on success or a `Files.UploadSessionAppendBatchError` object on failure.
+    @objc
+    @discardableResult public func uploadSessionAppendBatchData(entries: [DBXFilesUploadSessionAppendBatchArgEntry], input: Data) -> DBXFilesUploadSessionAppendBatchUploadRequest {
+        let swift = swift.uploadSessionAppendBatch(entries: entries.map(\.swift), input: input)
+        return DBXFilesUploadSessionAppendBatchUploadRequest(swift: swift)
+    }
+
+    /// Append more data to multiple upload sessions. Each piece of file content to append to each upload session should
+    /// be concatenated in the request body, in the order delineated by entries in UploadSessionAppendBatchArg and
+    /// their individual lengths indicated by length in UploadSessionAppendBatchArgEntry. A single request should
+    /// not upload more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls for any Dropbox
+    /// Business teams with a limit on the number of data transport calls allowed per month. For more information,
+    /// see the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    ///
+    /// - scope: files.content.write
+    ///
+    /// - parameter entries: Append information for each file in the batch.
+    /// - parameter contentHash: A hash of the entire request body which is all the concatenated pieces of file content
+    /// that were uploaded in this call. If provided and the uploaded content does not match this hash, an error
+    /// will be returned. For more information see our Content hash
+    /// https://www.dropbox.com/developers/reference/content-hash page.
+    /// - parameter input: The file to upload, as an URL object.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Files.UploadSessionAppendBatchResult`
+    /// object on success or a `Files.UploadSessionAppendBatchError` object on failure.
+    @objc
+    @discardableResult public func uploadSessionAppendBatchURL(entries: [DBXFilesUploadSessionAppendBatchArgEntry], contentHash: String?, input: URL) -> DBXFilesUploadSessionAppendBatchUploadRequest {
+        let swift = swift.uploadSessionAppendBatch(entries: entries.map(\.swift), contentHash: contentHash, input: input)
+        return DBXFilesUploadSessionAppendBatchUploadRequest(swift: swift)
+    }
+
+    /// Append more data to multiple upload sessions. Each piece of file content to append to each upload session should
+    /// be concatenated in the request body, in the order delineated by entries in UploadSessionAppendBatchArg and
+    /// their individual lengths indicated by length in UploadSessionAppendBatchArgEntry. A single request should
+    /// not upload more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls for any Dropbox
+    /// Business teams with a limit on the number of data transport calls allowed per month. For more information,
+    /// see the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    ///
+    /// - scope: files.content.write
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Files.UploadSessionAppendBatchResult`
+    /// object on success or a `Files.UploadSessionAppendBatchError` object on failure.
+    @objc
+    @discardableResult public func uploadSessionAppendBatchURL(entries: [DBXFilesUploadSessionAppendBatchArgEntry], input: URL) -> DBXFilesUploadSessionAppendBatchUploadRequest {
+        let swift = swift.uploadSessionAppendBatch(entries: entries.map(\.swift), input: input)
+        return DBXFilesUploadSessionAppendBatchUploadRequest(swift: swift)
+    }
+
+    /// Append more data to multiple upload sessions. Each piece of file content to append to each upload session should
+    /// be concatenated in the request body, in the order delineated by entries in UploadSessionAppendBatchArg and
+    /// their individual lengths indicated by length in UploadSessionAppendBatchArgEntry. A single request should
+    /// not upload more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls for any Dropbox
+    /// Business teams with a limit on the number of data transport calls allowed per month. For more information,
+    /// see the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    ///
+    /// - scope: files.content.write
+    ///
+    /// - parameter entries: Append information for each file in the batch.
+    /// - parameter contentHash: A hash of the entire request body which is all the concatenated pieces of file content
+    /// that were uploaded in this call. If provided and the uploaded content does not match this hash, an error
+    /// will be returned. For more information see our Content hash
+    /// https://www.dropbox.com/developers/reference/content-hash page.
+    /// - parameter input: The file to upload, as an InputStream object.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Files.UploadSessionAppendBatchResult`
+    /// object on success or a `Files.UploadSessionAppendBatchError` object on failure.
+    @objc
+    @discardableResult public func uploadSessionAppendBatchInputStream(
+        entries: [DBXFilesUploadSessionAppendBatchArgEntry],
+        contentHash: String?,
+        input: InputStream
+    ) -> DBXFilesUploadSessionAppendBatchUploadRequest {
+        let swift = swift.uploadSessionAppendBatch(entries: entries.map(\.swift), contentHash: contentHash, input: input)
+        return DBXFilesUploadSessionAppendBatchUploadRequest(swift: swift)
+    }
+
+    /// Append more data to multiple upload sessions. Each piece of file content to append to each upload session should
+    /// be concatenated in the request body, in the order delineated by entries in UploadSessionAppendBatchArg and
+    /// their individual lengths indicated by length in UploadSessionAppendBatchArgEntry. A single request should
+    /// not upload more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls for any Dropbox
+    /// Business teams with a limit on the number of data transport calls allowed per month. For more information,
+    /// see the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
+    ///
+    /// - scope: files.content.write
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Files.UploadSessionAppendBatchResult`
+    /// object on success or a `Files.UploadSessionAppendBatchError` object on failure.
+    @objc
+    @discardableResult public func uploadSessionAppendBatchInputStream(entries: [DBXFilesUploadSessionAppendBatchArgEntry], input: InputStream) -> DBXFilesUploadSessionAppendBatchUploadRequest {
+        let swift = swift.uploadSessionAppendBatch(entries: entries.map(\.swift), input: input)
+        return DBXFilesUploadSessionAppendBatchUploadRequest(swift: swift)
+    }
+
     /// Finish an upload session and save the uploaded data to the given file path. A single request should not upload
-    /// more than 150 MB. The maximum size of a file one can upload to an upload session is 350 GB. Calls to this
-    /// endpoint will count as data transport calls for any Dropbox Business teams with a limit on the number of
-    /// data transport calls allowed per month. For more information, see the Data transport limit page
-    /// https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls for any Dropbox
+    /// Business teams with a limit on the number of data transport calls allowed per month. For more information,
+    /// see the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
@@ -1953,41 +2126,32 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadSessionFinishError` object on failure.
     @objc
-    @discardableResult public func uploadSessionFinishData(
-        cursor: DBXFilesUploadSessionCursor,
-        commit: DBXFilesCommitInfo,
-        contentHash: String?,
-        input: Data
-    ) -> DBXFilesUploadSessionFinishUploadRequest {
+    @discardableResult public func uploadSessionFinishData(cursor: DBXFilesUploadSessionCursor, commit: DBXFilesCommitInfo, contentHash: String?, input: Data) -> DBXFilesUploadSessionFinishUploadRequest {
         let swift = swift.uploadSessionFinish(cursor: cursor.swift, commit: commit.swift, contentHash: contentHash, input: input)
         return DBXFilesUploadSessionFinishUploadRequest(swift: swift)
     }
 
     /// Finish an upload session and save the uploaded data to the given file path. A single request should not upload
-    /// more than 150 MB. The maximum size of a file one can upload to an upload session is 350 GB. Calls to this
-    /// endpoint will count as data transport calls for any Dropbox Business teams with a limit on the number of
-    /// data transport calls allowed per month. For more information, see the Data transport limit page
-    /// https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls for any Dropbox
+    /// Business teams with a limit on the number of data transport calls allowed per month. For more information,
+    /// see the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadSessionFinishError` object on failure.
     @objc
-    @discardableResult public func uploadSessionFinishData(
-        cursor: DBXFilesUploadSessionCursor,
-        commit: DBXFilesCommitInfo,
-        input: Data
-    ) -> DBXFilesUploadSessionFinishUploadRequest {
+    @discardableResult public func uploadSessionFinishData(cursor: DBXFilesUploadSessionCursor, commit: DBXFilesCommitInfo, input: Data) -> DBXFilesUploadSessionFinishUploadRequest {
         let swift = swift.uploadSessionFinish(cursor: cursor.swift, commit: commit.swift, input: input)
         return DBXFilesUploadSessionFinishUploadRequest(swift: swift)
     }
 
     /// Finish an upload session and save the uploaded data to the given file path. A single request should not upload
-    /// more than 150 MB. The maximum size of a file one can upload to an upload session is 350 GB. Calls to this
-    /// endpoint will count as data transport calls for any Dropbox Business teams with a limit on the number of
-    /// data transport calls allowed per month. For more information, see the Data transport limit page
-    /// https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls for any Dropbox
+    /// Business teams with a limit on the number of data transport calls allowed per month. For more information,
+    /// see the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
@@ -2001,41 +2165,32 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadSessionFinishError` object on failure.
     @objc
-    @discardableResult public func uploadSessionFinishURL(
-        cursor: DBXFilesUploadSessionCursor,
-        commit: DBXFilesCommitInfo,
-        contentHash: String?,
-        input: URL
-    ) -> DBXFilesUploadSessionFinishUploadRequest {
+    @discardableResult public func uploadSessionFinishURL(cursor: DBXFilesUploadSessionCursor, commit: DBXFilesCommitInfo, contentHash: String?, input: URL) -> DBXFilesUploadSessionFinishUploadRequest {
         let swift = swift.uploadSessionFinish(cursor: cursor.swift, commit: commit.swift, contentHash: contentHash, input: input)
         return DBXFilesUploadSessionFinishUploadRequest(swift: swift)
     }
 
     /// Finish an upload session and save the uploaded data to the given file path. A single request should not upload
-    /// more than 150 MB. The maximum size of a file one can upload to an upload session is 350 GB. Calls to this
-    /// endpoint will count as data transport calls for any Dropbox Business teams with a limit on the number of
-    /// data transport calls allowed per month. For more information, see the Data transport limit page
-    /// https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls for any Dropbox
+    /// Business teams with a limit on the number of data transport calls allowed per month. For more information,
+    /// see the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadSessionFinishError` object on failure.
     @objc
-    @discardableResult public func uploadSessionFinishURL(
-        cursor: DBXFilesUploadSessionCursor,
-        commit: DBXFilesCommitInfo,
-        input: URL
-    ) -> DBXFilesUploadSessionFinishUploadRequest {
+    @discardableResult public func uploadSessionFinishURL(cursor: DBXFilesUploadSessionCursor, commit: DBXFilesCommitInfo, input: URL) -> DBXFilesUploadSessionFinishUploadRequest {
         let swift = swift.uploadSessionFinish(cursor: cursor.swift, commit: commit.swift, input: input)
         return DBXFilesUploadSessionFinishUploadRequest(swift: swift)
     }
 
     /// Finish an upload session and save the uploaded data to the given file path. A single request should not upload
-    /// more than 150 MB. The maximum size of a file one can upload to an upload session is 350 GB. Calls to this
-    /// endpoint will count as data transport calls for any Dropbox Business teams with a limit on the number of
-    /// data transport calls allowed per month. For more information, see the Data transport limit page
-    /// https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls for any Dropbox
+    /// Business teams with a limit on the number of data transport calls allowed per month. For more information,
+    /// see the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
@@ -2060,21 +2215,17 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Finish an upload session and save the uploaded data to the given file path. A single request should not upload
-    /// more than 150 MB. The maximum size of a file one can upload to an upload session is 350 GB. Calls to this
-    /// endpoint will count as data transport calls for any Dropbox Business teams with a limit on the number of
-    /// data transport calls allowed per month. For more information, see the Data transport limit page
-    /// https://www.dropbox.com/developers/reference/data-transport-limit.
+    /// more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. Calls to this endpoint will count as data transport calls for any Dropbox
+    /// Business teams with a limit on the number of data transport calls allowed per month. For more information,
+    /// see the Data transport limit page https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.FileMetadata` object on success or a
     /// `Files.UploadSessionFinishError` object on failure.
     @objc
-    @discardableResult public func uploadSessionFinishInputStream(
-        cursor: DBXFilesUploadSessionCursor,
-        commit: DBXFilesCommitInfo,
-        input: InputStream
-    ) -> DBXFilesUploadSessionFinishUploadRequest {
+    @discardableResult public func uploadSessionFinishInputStream(cursor: DBXFilesUploadSessionCursor, commit: DBXFilesCommitInfo, input: InputStream) -> DBXFilesUploadSessionFinishUploadRequest {
         let swift = swift.uploadSessionFinish(cursor: cursor.swift, commit: commit.swift, input: input)
         return DBXFilesUploadSessionFinishUploadRequest(swift: swift)
     }
@@ -2084,10 +2235,10 @@ public class DBXFilesRoutes: NSObject {
     /// throughput. Once the file contents have been uploaded, rather than calling uploadSessionFinish, use this
     /// route to finish all your upload sessions in a single request. close in UploadSessionStartArg or close in
     /// UploadSessionAppendArg needs to be true for the last uploadSessionStart or uploadSessionAppendV2 call of
-    /// each upload session. The maximum size of a file one can upload to an upload session is 350 GB. We allow up
-    /// to 1000 entries in a single request. Calls to this endpoint will count as data transport calls for any
-    /// Dropbox Business teams with a limit on the number of data transport calls allowed per month. For more
-    /// information, see the Data transport limit page
+    /// each upload session. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. We allow up to 1000 entries in a single request. Calls to this endpoint will
+    /// count as data transport calls for any Dropbox Business teams with a limit on the number of data transport
+    /// calls allowed per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
@@ -2119,24 +2270,26 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
-    /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
-    /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. An upload session can be used for a maximum of 7 days. Attempting to use an sessionId in
-    /// UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish more than 7 days after its
-    /// creation will return a notFound in UploadSessionLookupError. Calls to this endpoint will count as data
-    /// transport calls for any Dropbox Business teams with a limit on the number of data transport calls allowed
-    /// per month. For more information, see the Data transport limit page
+    /// file is greater than 150 MiB. This call starts a new upload session with the given data. You can then use
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch to add more data, then uploadSessionFinish or
+    /// uploadSessionFinishBatchV2 to save all the data to a file in Dropbox. A single request should not upload
+    /// more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. An upload session can be used for a maximum of 7 days. Attempting to use a
+    /// sessionId in UploadSessionStartResult with uploadSessionAppendV2 or other upload session routes more than 7
+    /// days after its creation will return notFound in UploadSessionLookupError. Calls to this endpoint will count
+    /// as data transport calls for any Dropbox Business teams with a limit on the number of data transport calls
+    /// allowed per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit. By default, upload sessions require you
     /// to send content of the file in sequential order via consecutive uploadSessionStart, uploadSessionAppendV2,
-    /// uploadSessionFinish calls. For better performance, you can instead optionally use a concurrent in
-    /// UploadSessionType upload session. To start a new concurrent session, set sessionType in
-    /// UploadSessionStartArg to concurrent in UploadSessionType. After that, you can send file data in concurrent
-    /// uploadSessionAppendV2 requests. Finally finish the session with uploadSessionFinish. There are couple of
-    /// constraints with concurrent sessions to make them work. You can not send data with uploadSessionStart or
-    /// uploadSessionFinish call, only with uploadSessionAppendV2 call. Also data uploaded in uploadSessionAppendV2
-    /// call must be multiple of 4194304 bytes (except for last uploadSessionAppendV2 with close in
-    /// UploadSessionStartArg to true, that may contain any remaining data).
+    /// and uploadSessionFinish calls (or their batch variants). For better performance, you can optionally set
+    /// sessionType in UploadSessionStartArg to concurrent in UploadSessionType to start a concurrent upload
+    /// session. Concurrent upload sessions may upload file data in concurrent uploadSessionAppendV2 requests, with
+    /// a few caveats. After all of the requests are complete, finish the session with uploadSessionFinish as
+    /// normal. You can not send data in a uploadSessionStart or uploadSessionFinish call, only with
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch. Also, the length of the uploaded data in a call to
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch must be a multiple of 2^22 (4,194,304) bytes, except for
+    /// the final append request with close in UploadSessionAppendArg or close in UploadSessionAppendBatchArgEntry
+    /// set to true that may contain any remaining data.
     ///
     /// - scope: files.content.write
     ///
@@ -2152,35 +2305,32 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Files.UploadSessionStartResult` object on
     /// success or a `Files.UploadSessionStartError` object on failure.
     @objc
-    @discardableResult public func uploadSessionStartData(
-        close: NSNumber,
-        sessionType: DBXFilesUploadSessionType?,
-        contentHash: String?,
-        input: Data
-    ) -> DBXFilesUploadSessionStartUploadRequest {
+    @discardableResult public func uploadSessionStartData(close: NSNumber, sessionType: DBXFilesUploadSessionType?, contentHash: String?, input: Data) -> DBXFilesUploadSessionStartUploadRequest {
         let swift = swift.uploadSessionStart(close: close.boolValue, sessionType: sessionType?.swift, contentHash: contentHash, input: input)
         return DBXFilesUploadSessionStartUploadRequest(swift: swift)
     }
 
     /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
-    /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
-    /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. An upload session can be used for a maximum of 7 days. Attempting to use an sessionId in
-    /// UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish more than 7 days after its
-    /// creation will return a notFound in UploadSessionLookupError. Calls to this endpoint will count as data
-    /// transport calls for any Dropbox Business teams with a limit on the number of data transport calls allowed
-    /// per month. For more information, see the Data transport limit page
+    /// file is greater than 150 MiB. This call starts a new upload session with the given data. You can then use
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch to add more data, then uploadSessionFinish or
+    /// uploadSessionFinishBatchV2 to save all the data to a file in Dropbox. A single request should not upload
+    /// more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. An upload session can be used for a maximum of 7 days. Attempting to use a
+    /// sessionId in UploadSessionStartResult with uploadSessionAppendV2 or other upload session routes more than 7
+    /// days after its creation will return notFound in UploadSessionLookupError. Calls to this endpoint will count
+    /// as data transport calls for any Dropbox Business teams with a limit on the number of data transport calls
+    /// allowed per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit. By default, upload sessions require you
     /// to send content of the file in sequential order via consecutive uploadSessionStart, uploadSessionAppendV2,
-    /// uploadSessionFinish calls. For better performance, you can instead optionally use a concurrent in
-    /// UploadSessionType upload session. To start a new concurrent session, set sessionType in
-    /// UploadSessionStartArg to concurrent in UploadSessionType. After that, you can send file data in concurrent
-    /// uploadSessionAppendV2 requests. Finally finish the session with uploadSessionFinish. There are couple of
-    /// constraints with concurrent sessions to make them work. You can not send data with uploadSessionStart or
-    /// uploadSessionFinish call, only with uploadSessionAppendV2 call. Also data uploaded in uploadSessionAppendV2
-    /// call must be multiple of 4194304 bytes (except for last uploadSessionAppendV2 with close in
-    /// UploadSessionStartArg to true, that may contain any remaining data).
+    /// and uploadSessionFinish calls (or their batch variants). For better performance, you can optionally set
+    /// sessionType in UploadSessionStartArg to concurrent in UploadSessionType to start a concurrent upload
+    /// session. Concurrent upload sessions may upload file data in concurrent uploadSessionAppendV2 requests, with
+    /// a few caveats. After all of the requests are complete, finish the session with uploadSessionFinish as
+    /// normal. You can not send data in a uploadSessionStart or uploadSessionFinish call, only with
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch. Also, the length of the uploaded data in a call to
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch must be a multiple of 2^22 (4,194,304) bytes, except for
+    /// the final append request with close in UploadSessionAppendArg or close in UploadSessionAppendBatchArgEntry
+    /// set to true that may contain any remaining data.
     ///
     /// - scope: files.content.write
     ///
@@ -2193,24 +2343,26 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
-    /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
-    /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. An upload session can be used for a maximum of 7 days. Attempting to use an sessionId in
-    /// UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish more than 7 days after its
-    /// creation will return a notFound in UploadSessionLookupError. Calls to this endpoint will count as data
-    /// transport calls for any Dropbox Business teams with a limit on the number of data transport calls allowed
-    /// per month. For more information, see the Data transport limit page
+    /// file is greater than 150 MiB. This call starts a new upload session with the given data. You can then use
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch to add more data, then uploadSessionFinish or
+    /// uploadSessionFinishBatchV2 to save all the data to a file in Dropbox. A single request should not upload
+    /// more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. An upload session can be used for a maximum of 7 days. Attempting to use a
+    /// sessionId in UploadSessionStartResult with uploadSessionAppendV2 or other upload session routes more than 7
+    /// days after its creation will return notFound in UploadSessionLookupError. Calls to this endpoint will count
+    /// as data transport calls for any Dropbox Business teams with a limit on the number of data transport calls
+    /// allowed per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit. By default, upload sessions require you
     /// to send content of the file in sequential order via consecutive uploadSessionStart, uploadSessionAppendV2,
-    /// uploadSessionFinish calls. For better performance, you can instead optionally use a concurrent in
-    /// UploadSessionType upload session. To start a new concurrent session, set sessionType in
-    /// UploadSessionStartArg to concurrent in UploadSessionType. After that, you can send file data in concurrent
-    /// uploadSessionAppendV2 requests. Finally finish the session with uploadSessionFinish. There are couple of
-    /// constraints with concurrent sessions to make them work. You can not send data with uploadSessionStart or
-    /// uploadSessionFinish call, only with uploadSessionAppendV2 call. Also data uploaded in uploadSessionAppendV2
-    /// call must be multiple of 4194304 bytes (except for last uploadSessionAppendV2 with close in
-    /// UploadSessionStartArg to true, that may contain any remaining data).
+    /// and uploadSessionFinish calls (or their batch variants). For better performance, you can optionally set
+    /// sessionType in UploadSessionStartArg to concurrent in UploadSessionType to start a concurrent upload
+    /// session. Concurrent upload sessions may upload file data in concurrent uploadSessionAppendV2 requests, with
+    /// a few caveats. After all of the requests are complete, finish the session with uploadSessionFinish as
+    /// normal. You can not send data in a uploadSessionStart or uploadSessionFinish call, only with
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch. Also, the length of the uploaded data in a call to
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch must be a multiple of 2^22 (4,194,304) bytes, except for
+    /// the final append request with close in UploadSessionAppendArg or close in UploadSessionAppendBatchArgEntry
+    /// set to true that may contain any remaining data.
     ///
     /// - scope: files.content.write
     ///
@@ -2226,35 +2378,32 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Files.UploadSessionStartResult` object on
     /// success or a `Files.UploadSessionStartError` object on failure.
     @objc
-    @discardableResult public func uploadSessionStartURL(
-        close: NSNumber,
-        sessionType: DBXFilesUploadSessionType?,
-        contentHash: String?,
-        input: URL
-    ) -> DBXFilesUploadSessionStartUploadRequest {
+    @discardableResult public func uploadSessionStartURL(close: NSNumber, sessionType: DBXFilesUploadSessionType?, contentHash: String?, input: URL) -> DBXFilesUploadSessionStartUploadRequest {
         let swift = swift.uploadSessionStart(close: close.boolValue, sessionType: sessionType?.swift, contentHash: contentHash, input: input)
         return DBXFilesUploadSessionStartUploadRequest(swift: swift)
     }
 
     /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
-    /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
-    /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. An upload session can be used for a maximum of 7 days. Attempting to use an sessionId in
-    /// UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish more than 7 days after its
-    /// creation will return a notFound in UploadSessionLookupError. Calls to this endpoint will count as data
-    /// transport calls for any Dropbox Business teams with a limit on the number of data transport calls allowed
-    /// per month. For more information, see the Data transport limit page
+    /// file is greater than 150 MiB. This call starts a new upload session with the given data. You can then use
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch to add more data, then uploadSessionFinish or
+    /// uploadSessionFinishBatchV2 to save all the data to a file in Dropbox. A single request should not upload
+    /// more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. An upload session can be used for a maximum of 7 days. Attempting to use a
+    /// sessionId in UploadSessionStartResult with uploadSessionAppendV2 or other upload session routes more than 7
+    /// days after its creation will return notFound in UploadSessionLookupError. Calls to this endpoint will count
+    /// as data transport calls for any Dropbox Business teams with a limit on the number of data transport calls
+    /// allowed per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit. By default, upload sessions require you
     /// to send content of the file in sequential order via consecutive uploadSessionStart, uploadSessionAppendV2,
-    /// uploadSessionFinish calls. For better performance, you can instead optionally use a concurrent in
-    /// UploadSessionType upload session. To start a new concurrent session, set sessionType in
-    /// UploadSessionStartArg to concurrent in UploadSessionType. After that, you can send file data in concurrent
-    /// uploadSessionAppendV2 requests. Finally finish the session with uploadSessionFinish. There are couple of
-    /// constraints with concurrent sessions to make them work. You can not send data with uploadSessionStart or
-    /// uploadSessionFinish call, only with uploadSessionAppendV2 call. Also data uploaded in uploadSessionAppendV2
-    /// call must be multiple of 4194304 bytes (except for last uploadSessionAppendV2 with close in
-    /// UploadSessionStartArg to true, that may contain any remaining data).
+    /// and uploadSessionFinish calls (or their batch variants). For better performance, you can optionally set
+    /// sessionType in UploadSessionStartArg to concurrent in UploadSessionType to start a concurrent upload
+    /// session. Concurrent upload sessions may upload file data in concurrent uploadSessionAppendV2 requests, with
+    /// a few caveats. After all of the requests are complete, finish the session with uploadSessionFinish as
+    /// normal. You can not send data in a uploadSessionStart or uploadSessionFinish call, only with
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch. Also, the length of the uploaded data in a call to
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch must be a multiple of 2^22 (4,194,304) bytes, except for
+    /// the final append request with close in UploadSessionAppendArg or close in UploadSessionAppendBatchArgEntry
+    /// set to true that may contain any remaining data.
     ///
     /// - scope: files.content.write
     ///
@@ -2267,24 +2416,26 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
-    /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
-    /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. An upload session can be used for a maximum of 7 days. Attempting to use an sessionId in
-    /// UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish more than 7 days after its
-    /// creation will return a notFound in UploadSessionLookupError. Calls to this endpoint will count as data
-    /// transport calls for any Dropbox Business teams with a limit on the number of data transport calls allowed
-    /// per month. For more information, see the Data transport limit page
+    /// file is greater than 150 MiB. This call starts a new upload session with the given data. You can then use
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch to add more data, then uploadSessionFinish or
+    /// uploadSessionFinishBatchV2 to save all the data to a file in Dropbox. A single request should not upload
+    /// more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. An upload session can be used for a maximum of 7 days. Attempting to use a
+    /// sessionId in UploadSessionStartResult with uploadSessionAppendV2 or other upload session routes more than 7
+    /// days after its creation will return notFound in UploadSessionLookupError. Calls to this endpoint will count
+    /// as data transport calls for any Dropbox Business teams with a limit on the number of data transport calls
+    /// allowed per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit. By default, upload sessions require you
     /// to send content of the file in sequential order via consecutive uploadSessionStart, uploadSessionAppendV2,
-    /// uploadSessionFinish calls. For better performance, you can instead optionally use a concurrent in
-    /// UploadSessionType upload session. To start a new concurrent session, set sessionType in
-    /// UploadSessionStartArg to concurrent in UploadSessionType. After that, you can send file data in concurrent
-    /// uploadSessionAppendV2 requests. Finally finish the session with uploadSessionFinish. There are couple of
-    /// constraints with concurrent sessions to make them work. You can not send data with uploadSessionStart or
-    /// uploadSessionFinish call, only with uploadSessionAppendV2 call. Also data uploaded in uploadSessionAppendV2
-    /// call must be multiple of 4194304 bytes (except for last uploadSessionAppendV2 with close in
-    /// UploadSessionStartArg to true, that may contain any remaining data).
+    /// and uploadSessionFinish calls (or their batch variants). For better performance, you can optionally set
+    /// sessionType in UploadSessionStartArg to concurrent in UploadSessionType to start a concurrent upload
+    /// session. Concurrent upload sessions may upload file data in concurrent uploadSessionAppendV2 requests, with
+    /// a few caveats. After all of the requests are complete, finish the session with uploadSessionFinish as
+    /// normal. You can not send data in a uploadSessionStart or uploadSessionFinish call, only with
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch. Also, the length of the uploaded data in a call to
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch must be a multiple of 2^22 (4,194,304) bytes, except for
+    /// the final append request with close in UploadSessionAppendArg or close in UploadSessionAppendBatchArgEntry
+    /// set to true that may contain any remaining data.
     ///
     /// - scope: files.content.write
     ///
@@ -2311,24 +2462,26 @@ public class DBXFilesRoutes: NSObject {
     }
 
     /// Upload sessions allow you to upload a single file in one or more requests, for example where the size of the
-    /// file is greater than 150 MB.  This call starts a new upload session with the given data. You can then use
-    /// uploadSessionAppendV2 to add more data and uploadSessionFinish to save all the data to a file in Dropbox. A
-    /// single request should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-    /// session is 350 GB. An upload session can be used for a maximum of 7 days. Attempting to use an sessionId in
-    /// UploadSessionStartResult with uploadSessionAppendV2 or uploadSessionFinish more than 7 days after its
-    /// creation will return a notFound in UploadSessionLookupError. Calls to this endpoint will count as data
-    /// transport calls for any Dropbox Business teams with a limit on the number of data transport calls allowed
-    /// per month. For more information, see the Data transport limit page
+    /// file is greater than 150 MiB. This call starts a new upload session with the given data. You can then use
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch to add more data, then uploadSessionFinish or
+    /// uploadSessionFinishBatchV2 to save all the data to a file in Dropbox. A single request should not upload
+    /// more than 150 MiB. The maximum size of a file one can upload to an upload session is 2^41 - 2^22
+    /// (2,199,019,061,248) bytes. An upload session can be used for a maximum of 7 days. Attempting to use a
+    /// sessionId in UploadSessionStartResult with uploadSessionAppendV2 or other upload session routes more than 7
+    /// days after its creation will return notFound in UploadSessionLookupError. Calls to this endpoint will count
+    /// as data transport calls for any Dropbox Business teams with a limit on the number of data transport calls
+    /// allowed per month. For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit. By default, upload sessions require you
     /// to send content of the file in sequential order via consecutive uploadSessionStart, uploadSessionAppendV2,
-    /// uploadSessionFinish calls. For better performance, you can instead optionally use a concurrent in
-    /// UploadSessionType upload session. To start a new concurrent session, set sessionType in
-    /// UploadSessionStartArg to concurrent in UploadSessionType. After that, you can send file data in concurrent
-    /// uploadSessionAppendV2 requests. Finally finish the session with uploadSessionFinish. There are couple of
-    /// constraints with concurrent sessions to make them work. You can not send data with uploadSessionStart or
-    /// uploadSessionFinish call, only with uploadSessionAppendV2 call. Also data uploaded in uploadSessionAppendV2
-    /// call must be multiple of 4194304 bytes (except for last uploadSessionAppendV2 with close in
-    /// UploadSessionStartArg to true, that may contain any remaining data).
+    /// and uploadSessionFinish calls (or their batch variants). For better performance, you can optionally set
+    /// sessionType in UploadSessionStartArg to concurrent in UploadSessionType to start a concurrent upload
+    /// session. Concurrent upload sessions may upload file data in concurrent uploadSessionAppendV2 requests, with
+    /// a few caveats. After all of the requests are complete, finish the session with uploadSessionFinish as
+    /// normal. You can not send data in a uploadSessionStart or uploadSessionFinish call, only with
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch. Also, the length of the uploaded data in a call to
+    /// uploadSessionAppendV2 or uploadSessionAppendBatch must be a multiple of 2^22 (4,194,304) bytes, except for
+    /// the final append request with close in UploadSessionAppendArg or close in UploadSessionAppendBatchArgEntry
+    /// set to true that may contain any remaining data.
     ///
     /// - scope: files.content.write
     ///
@@ -2340,9 +2493,9 @@ public class DBXFilesRoutes: NSObject {
         return DBXFilesUploadSessionStartUploadRequest(swift: swift)
     }
 
-    /// This route starts batch of upload_sessions. Please refer to `upload_session/start` usage. Calls to this endpoint
-    /// will count as data transport calls for any Dropbox Business teams with a limit on the number of data
-    /// transport calls allowed per month. For more information, see the Data transport limit page
+    /// Start a batch of upload sessions. See uploadSessionStart. Calls to this endpoint will count as data transport
+    /// calls for any Dropbox Business teams with a limit on the number of data transport calls allowed per month.
+    /// For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
@@ -2354,17 +2507,14 @@ public class DBXFilesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Files.UploadSessionStartBatchResult` object
     /// on success or a `Void` object on failure.
     @objc
-    @discardableResult public func uploadSessionStartBatch(
-        numSessions: NSNumber,
-        sessionType: DBXFilesUploadSessionType?
-    ) -> DBXFilesUploadSessionStartBatchRpcRequest {
+    @discardableResult public func uploadSessionStartBatch(numSessions: NSNumber, sessionType: DBXFilesUploadSessionType?) -> DBXFilesUploadSessionStartBatchRpcRequest {
         let swift = swift.uploadSessionStartBatch(numSessions: numSessions.uint64Value, sessionType: sessionType?.swift)
         return DBXFilesUploadSessionStartBatchRpcRequest(swift: swift)
     }
 
-    /// This route starts batch of upload_sessions. Please refer to `upload_session/start` usage. Calls to this endpoint
-    /// will count as data transport calls for any Dropbox Business teams with a limit on the number of data
-    /// transport calls allowed per month. For more information, see the Data transport limit page
+    /// Start a batch of upload sessions. See uploadSessionStart. Calls to this endpoint will count as data transport
+    /// calls for any Dropbox Business teams with a limit on the number of data transport calls allowed per month.
+    /// For more information, see the Data transport limit page
     /// https://www.dropbox.com/developers/reference/data-transport-limit.
     ///
     /// - scope: files.content.write
@@ -2410,7 +2560,7 @@ public class DBXFilesAlphaGetMetadataRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesMetadata?
+            var objc: DBXFilesMetadata? = nil
             if let swift = result {
                 objc = DBXFilesMetadata.wrapPreservingSubtypes(swift: swift)
             }
@@ -2477,7 +2627,7 @@ public class DBXFilesAlphaUploadUploadRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesFileMetadata?
+            var objc: DBXFilesFileMetadata? = nil
             if let swift = result {
                 objc = DBXFilesFileMetadata(swift: swift)
             }
@@ -2550,7 +2700,7 @@ public class DBXFilesCopyRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesMetadata?
+            var objc: DBXFilesMetadata? = nil
             if let swift = result {
                 objc = DBXFilesMetadata.wrapPreservingSubtypes(swift: swift)
             }
@@ -2617,7 +2767,7 @@ public class DBXFilesCopyRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesRelocationResult?
+            var objc: DBXFilesRelocationResult? = nil
             if let swift = result {
                 objc = DBXFilesRelocationResult(swift: swift)
             }
@@ -2673,7 +2823,7 @@ public class DBXFilesCopyBatchRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXFilesRelocationBatchLaunch?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXFilesRelocationBatchLaunch?
+            var objc: DBXFilesRelocationBatchLaunch? = nil
             if let swift = result {
                 objc = DBXFilesRelocationBatchLaunch.factory(swift: swift)
             }
@@ -2729,7 +2879,7 @@ public class DBXFilesCopyBatchRpcRequestV2: NSObject, DBXRequest {
         completionHandler: @escaping (DBXFilesRelocationBatchV2Launch?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXFilesRelocationBatchV2Launch?
+            var objc: DBXFilesRelocationBatchV2Launch? = nil
             if let swift = result {
                 objc = DBXFilesRelocationBatchV2Launch.factory(swift: swift)
             }
@@ -2796,7 +2946,7 @@ public class DBXFilesCopyBatchCheckRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesRelocationBatchJobStatus?
+            var objc: DBXFilesRelocationBatchJobStatus? = nil
             if let swift = result {
                 objc = DBXFilesRelocationBatchJobStatus.factory(swift: swift)
             }
@@ -2863,7 +3013,7 @@ public class DBXFilesCopyBatchCheckRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesRelocationBatchV2JobStatus?
+            var objc: DBXFilesRelocationBatchV2JobStatus? = nil
             if let swift = result {
                 objc = DBXFilesRelocationBatchV2JobStatus.factory(swift: swift)
             }
@@ -2930,7 +3080,7 @@ public class DBXFilesCopyReferenceGetRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesGetCopyReferenceResult?
+            var objc: DBXFilesGetCopyReferenceResult? = nil
             if let swift = result {
                 objc = DBXFilesGetCopyReferenceResult(swift: swift)
             }
@@ -2997,7 +3147,7 @@ public class DBXFilesCopyReferenceSaveRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesSaveCopyReferenceResult?
+            var objc: DBXFilesSaveCopyReferenceResult? = nil
             if let swift = result {
                 objc = DBXFilesSaveCopyReferenceResult(swift: swift)
             }
@@ -3064,7 +3214,7 @@ public class DBXFilesCreateFolderRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesFolderMetadata?
+            var objc: DBXFilesFolderMetadata? = nil
             if let swift = result {
                 objc = DBXFilesFolderMetadata(swift: swift)
             }
@@ -3131,7 +3281,7 @@ public class DBXFilesCreateFolderRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesCreateFolderResult?
+            var objc: DBXFilesCreateFolderResult? = nil
             if let swift = result {
                 objc = DBXFilesCreateFolderResult(swift: swift)
             }
@@ -3187,7 +3337,7 @@ public class DBXFilesCreateFolderBatchRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXFilesCreateFolderBatchLaunch?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXFilesCreateFolderBatchLaunch?
+            var objc: DBXFilesCreateFolderBatchLaunch? = nil
             if let swift = result {
                 objc = DBXFilesCreateFolderBatchLaunch.factory(swift: swift)
             }
@@ -3254,7 +3404,7 @@ public class DBXFilesCreateFolderBatchCheckRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesCreateFolderBatchJobStatus?
+            var objc: DBXFilesCreateFolderBatchJobStatus? = nil
             if let swift = result {
                 objc = DBXFilesCreateFolderBatchJobStatus.factory(swift: swift)
             }
@@ -3321,7 +3471,7 @@ public class DBXFilesDeleteRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesMetadata?
+            var objc: DBXFilesMetadata? = nil
             if let swift = result {
                 objc = DBXFilesMetadata.wrapPreservingSubtypes(swift: swift)
             }
@@ -3388,7 +3538,7 @@ public class DBXFilesDeleteRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesDeleteResult?
+            var objc: DBXFilesDeleteResult? = nil
             if let swift = result {
                 objc = DBXFilesDeleteResult(swift: swift)
             }
@@ -3444,7 +3594,7 @@ public class DBXFilesDeleteBatchRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXFilesDeleteBatchLaunch?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXFilesDeleteBatchLaunch?
+            var objc: DBXFilesDeleteBatchLaunch? = nil
             if let swift = result {
                 objc = DBXFilesDeleteBatchLaunch.factory(swift: swift)
             }
@@ -3511,7 +3661,7 @@ public class DBXFilesDeleteBatchCheckRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesDeleteBatchJobStatus?
+            var objc: DBXFilesDeleteBatchJobStatus? = nil
             if let swift = result {
                 objc = DBXFilesDeleteBatchJobStatus.factory(swift: swift)
             }
@@ -3578,8 +3728,8 @@ public class DBXFilesDownloadDownloadRequestFile: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesFileMetadata?
-            var destination: URL?
+            var objc: DBXFilesFileMetadata? = nil
+            var destination: URL? = nil
             if let swift = result {
                 objc = DBXFilesFileMetadata(swift: swift.0)
                 destination = swift.1
@@ -3653,8 +3803,8 @@ public class DBXFilesDownloadDownloadRequestMemory: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesFileMetadata?
-            var destination: Data?
+            var objc: DBXFilesFileMetadata? = nil
+            var destination: Data? = nil
             if let swift = result {
                 objc = DBXFilesFileMetadata(swift: swift.0)
                 destination = swift.1
@@ -3728,8 +3878,8 @@ public class DBXFilesDownloadZipDownloadRequestFile: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesDownloadZipResult?
-            var destination: URL?
+            var objc: DBXFilesDownloadZipResult? = nil
+            var destination: URL? = nil
             if let swift = result {
                 objc = DBXFilesDownloadZipResult(swift: swift.0)
                 destination = swift.1
@@ -3803,8 +3953,8 @@ public class DBXFilesDownloadZipDownloadRequestMemory: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesDownloadZipResult?
-            var destination: Data?
+            var objc: DBXFilesDownloadZipResult? = nil
+            var destination: Data? = nil
             if let swift = result {
                 objc = DBXFilesDownloadZipResult(swift: swift.0)
                 destination = swift.1
@@ -3878,8 +4028,8 @@ public class DBXFilesExportDownloadRequestFile: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesExportResult?
-            var destination: URL?
+            var objc: DBXFilesExportResult? = nil
+            var destination: URL? = nil
             if let swift = result {
                 objc = DBXFilesExportResult(swift: swift.0)
                 destination = swift.1
@@ -3953,8 +4103,8 @@ public class DBXFilesExportDownloadRequestMemory: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesExportResult?
-            var destination: Data?
+            var objc: DBXFilesExportResult? = nil
+            var destination: Data? = nil
             if let swift = result {
                 objc = DBXFilesExportResult(swift: swift.0)
                 destination = swift.1
@@ -4028,7 +4178,7 @@ public class DBXFilesGetFileLockBatchRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesLockFileBatchResult?
+            var objc: DBXFilesLockFileBatchResult? = nil
             if let swift = result {
                 objc = DBXFilesLockFileBatchResult(swift: swift)
             }
@@ -4095,7 +4245,7 @@ public class DBXFilesGetMetadataRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesMetadata?
+            var objc: DBXFilesMetadata? = nil
             if let swift = result {
                 objc = DBXFilesMetadata.wrapPreservingSubtypes(swift: swift)
             }
@@ -4162,8 +4312,8 @@ public class DBXFilesGetPreviewDownloadRequestFile: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesFileMetadata?
-            var destination: URL?
+            var objc: DBXFilesFileMetadata? = nil
+            var destination: URL? = nil
             if let swift = result {
                 objc = DBXFilesFileMetadata(swift: swift.0)
                 destination = swift.1
@@ -4237,8 +4387,8 @@ public class DBXFilesGetPreviewDownloadRequestMemory: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesFileMetadata?
-            var destination: Data?
+            var objc: DBXFilesFileMetadata? = nil
+            var destination: Data? = nil
             if let swift = result {
                 objc = DBXFilesFileMetadata(swift: swift.0)
                 destination = swift.1
@@ -4312,7 +4462,7 @@ public class DBXFilesGetTemporaryLinkRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesGetTemporaryLinkResult?
+            var objc: DBXFilesGetTemporaryLinkResult? = nil
             if let swift = result {
                 objc = DBXFilesGetTemporaryLinkResult(swift: swift)
             }
@@ -4368,7 +4518,7 @@ public class DBXFilesGetTemporaryUploadLinkRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXFilesGetTemporaryUploadLinkResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXFilesGetTemporaryUploadLinkResult?
+            var objc: DBXFilesGetTemporaryUploadLinkResult? = nil
             if let swift = result {
                 objc = DBXFilesGetTemporaryUploadLinkResult(swift: swift)
             }
@@ -4435,8 +4585,8 @@ public class DBXFilesGetThumbnailDownloadRequestFile: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesFileMetadata?
-            var destination: URL?
+            var objc: DBXFilesFileMetadata? = nil
+            var destination: URL? = nil
             if let swift = result {
                 objc = DBXFilesFileMetadata(swift: swift.0)
                 destination = swift.1
@@ -4510,8 +4660,8 @@ public class DBXFilesGetThumbnailDownloadRequestMemory: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesFileMetadata?
-            var destination: Data?
+            var objc: DBXFilesFileMetadata? = nil
+            var destination: Data? = nil
             if let swift = result {
                 objc = DBXFilesFileMetadata(swift: swift.0)
                 destination = swift.1
@@ -4585,8 +4735,8 @@ public class DBXFilesGetThumbnailDownloadRequestFileV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesPreviewResult?
-            var destination: URL?
+            var objc: DBXFilesPreviewResult? = nil
+            var destination: URL? = nil
             if let swift = result {
                 objc = DBXFilesPreviewResult(swift: swift.0)
                 destination = swift.1
@@ -4660,8 +4810,8 @@ public class DBXFilesGetThumbnailDownloadRequestMemoryV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesPreviewResult?
-            var destination: Data?
+            var objc: DBXFilesPreviewResult? = nil
+            var destination: Data? = nil
             if let swift = result {
                 objc = DBXFilesPreviewResult(swift: swift.0)
                 destination = swift.1
@@ -4735,7 +4885,7 @@ public class DBXFilesGetThumbnailBatchRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesGetThumbnailBatchResult?
+            var objc: DBXFilesGetThumbnailBatchResult? = nil
             if let swift = result {
                 objc = DBXFilesGetThumbnailBatchResult(swift: swift)
             }
@@ -4802,7 +4952,7 @@ public class DBXFilesListFolderRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesListFolderResult?
+            var objc: DBXFilesListFolderResult? = nil
             if let swift = result {
                 objc = DBXFilesListFolderResult(swift: swift)
             }
@@ -4869,7 +5019,7 @@ public class DBXFilesListFolderContinueRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesListFolderResult?
+            var objc: DBXFilesListFolderResult? = nil
             if let swift = result {
                 objc = DBXFilesListFolderResult(swift: swift)
             }
@@ -4936,7 +5086,7 @@ public class DBXFilesListFolderGetLatestCursorRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesListFolderGetLatestCursorResult?
+            var objc: DBXFilesListFolderGetLatestCursorResult? = nil
             if let swift = result {
                 objc = DBXFilesListFolderGetLatestCursorResult(swift: swift)
             }
@@ -5003,7 +5153,7 @@ public class DBXFilesListFolderLongpollRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesListFolderLongpollResult?
+            var objc: DBXFilesListFolderLongpollResult? = nil
             if let swift = result {
                 objc = DBXFilesListFolderLongpollResult(swift: swift)
             }
@@ -5070,7 +5220,7 @@ public class DBXFilesListRevisionsRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesListRevisionsResult?
+            var objc: DBXFilesListRevisionsResult? = nil
             if let swift = result {
                 objc = DBXFilesListRevisionsResult(swift: swift)
             }
@@ -5137,7 +5287,7 @@ public class DBXFilesLockFileBatchRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesLockFileBatchResult?
+            var objc: DBXFilesLockFileBatchResult? = nil
             if let swift = result {
                 objc = DBXFilesLockFileBatchResult(swift: swift)
             }
@@ -5204,7 +5354,7 @@ public class DBXFilesMoveRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesMetadata?
+            var objc: DBXFilesMetadata? = nil
             if let swift = result {
                 objc = DBXFilesMetadata.wrapPreservingSubtypes(swift: swift)
             }
@@ -5271,7 +5421,7 @@ public class DBXFilesMoveRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesRelocationResult?
+            var objc: DBXFilesRelocationResult? = nil
             if let swift = result {
                 objc = DBXFilesRelocationResult(swift: swift)
             }
@@ -5327,7 +5477,7 @@ public class DBXFilesMoveBatchRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXFilesRelocationBatchLaunch?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXFilesRelocationBatchLaunch?
+            var objc: DBXFilesRelocationBatchLaunch? = nil
             if let swift = result {
                 objc = DBXFilesRelocationBatchLaunch.factory(swift: swift)
             }
@@ -5383,7 +5533,7 @@ public class DBXFilesMoveBatchRpcRequestV2: NSObject, DBXRequest {
         completionHandler: @escaping (DBXFilesRelocationBatchV2Launch?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXFilesRelocationBatchV2Launch?
+            var objc: DBXFilesRelocationBatchV2Launch? = nil
             if let swift = result {
                 objc = DBXFilesRelocationBatchV2Launch.factory(swift: swift)
             }
@@ -5450,7 +5600,7 @@ public class DBXFilesMoveBatchCheckRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesRelocationBatchJobStatus?
+            var objc: DBXFilesRelocationBatchJobStatus? = nil
             if let swift = result {
                 objc = DBXFilesRelocationBatchJobStatus.factory(swift: swift)
             }
@@ -5517,7 +5667,7 @@ public class DBXFilesMoveBatchCheckRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesRelocationBatchV2JobStatus?
+            var objc: DBXFilesRelocationBatchV2JobStatus? = nil
             if let swift = result {
                 objc = DBXFilesRelocationBatchV2JobStatus.factory(swift: swift)
             }
@@ -5584,7 +5734,7 @@ public class DBXFilesPaperCreateUploadRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesPaperCreateResult?
+            var objc: DBXFilesPaperCreateResult? = nil
             if let swift = result {
                 objc = DBXFilesPaperCreateResult(swift: swift)
             }
@@ -5657,7 +5807,7 @@ public class DBXFilesPaperUpdateUploadRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesPaperUpdateResult?
+            var objc: DBXFilesPaperUpdateResult? = nil
             if let swift = result {
                 objc = DBXFilesPaperUpdateResult(swift: swift)
             }
@@ -5888,203 +6038,6 @@ public class DBXFilesPropertiesOverwriteRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXFilesPropertiesRemoveRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<VoidSerializer, FileProperties.RemovePropertiesErrorSerializer>
-
-    init(swift: RpcRequest<VoidSerializer, FileProperties.RemovePropertiesErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXFilePropertiesRemovePropertiesError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilePropertiesRemovePropertiesError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { _, error in
-            var routeError: DBXFilePropertiesRemovePropertiesError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesRemovePropertiesError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            completionHandler(routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
-public class DBXFilesPropertiesTemplateGetRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<FileProperties.GetTemplateResultSerializer, FileProperties.TemplateErrorSerializer>
-
-    init(swift: RpcRequest<FileProperties.GetTemplateResultSerializer, FileProperties.TemplateErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXFilePropertiesGetTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilePropertiesGetTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXFilePropertiesTemplateError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXFilePropertiesGetTemplateResult?
-            if let swift = result {
-                objc = DBXFilePropertiesGetTemplateResult(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
-public class DBXFilesPropertiesTemplateListRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<FileProperties.ListTemplateResultSerializer, FileProperties.TemplateErrorSerializer>
-
-    init(swift: RpcRequest<FileProperties.ListTemplateResultSerializer, FileProperties.TemplateErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXFilePropertiesListTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXFilePropertiesListTemplateResult?, DBXFilePropertiesTemplateError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXFilePropertiesTemplateError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXFilePropertiesTemplateError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXFilePropertiesListTemplateResult?
-            if let swift = result {
-                objc = DBXFilePropertiesListTemplateResult(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
 public class DBXFilesPropertiesUpdateRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, FileProperties.UpdatePropertiesErrorSerializer>
 
@@ -6179,7 +6132,7 @@ public class DBXFilesRestoreRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesFileMetadata?
+            var objc: DBXFilesFileMetadata? = nil
             if let swift = result {
                 objc = DBXFilesFileMetadata(swift: swift)
             }
@@ -6246,7 +6199,7 @@ public class DBXFilesSaveUrlRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesSaveUrlResult?
+            var objc: DBXFilesSaveUrlResult? = nil
             if let swift = result {
                 objc = DBXFilesSaveUrlResult.factory(swift: swift)
             }
@@ -6313,7 +6266,7 @@ public class DBXFilesSaveUrlCheckJobStatusRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesSaveUrlJobStatus?
+            var objc: DBXFilesSaveUrlJobStatus? = nil
             if let swift = result {
                 objc = DBXFilesSaveUrlJobStatus.factory(swift: swift)
             }
@@ -6380,7 +6333,7 @@ public class DBXFilesSearchRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesSearchResult?
+            var objc: DBXFilesSearchResult? = nil
             if let swift = result {
                 objc = DBXFilesSearchResult(swift: swift)
             }
@@ -6447,7 +6400,7 @@ public class DBXFilesSearchRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesSearchV2Result?
+            var objc: DBXFilesSearchV2Result? = nil
             if let swift = result {
                 objc = DBXFilesSearchV2Result(swift: swift)
             }
@@ -6514,7 +6467,7 @@ public class DBXFilesSearchContinueRpcRequestV2: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesSearchV2Result?
+            var objc: DBXFilesSearchV2Result? = nil
             if let swift = result {
                 objc = DBXFilesSearchV2Result(swift: swift)
             }
@@ -6644,7 +6597,7 @@ public class DBXFilesTagsGetRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesGetTagsResult?
+            var objc: DBXFilesGetTagsResult? = nil
             if let swift = result {
                 objc = DBXFilesGetTagsResult(swift: swift)
             }
@@ -6774,7 +6727,7 @@ public class DBXFilesUnlockFileBatchRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesLockFileBatchResult?
+            var objc: DBXFilesLockFileBatchResult? = nil
             if let swift = result {
                 objc = DBXFilesLockFileBatchResult(swift: swift)
             }
@@ -6841,7 +6794,7 @@ public class DBXFilesUploadUploadRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesFileMetadata?
+            var objc: DBXFilesFileMetadata? = nil
             if let swift = result {
                 objc = DBXFilesFileMetadata(swift: swift)
             }
@@ -7021,6 +6974,79 @@ public class DBXFilesUploadSessionAppendUploadRequestV2: NSObject, DBXRequest {
 }
 
 @objc
+public class DBXFilesUploadSessionAppendBatchUploadRequest: NSObject, DBXRequest {
+    var swift: UploadRequest<Files.UploadSessionAppendBatchResultSerializer, Files.UploadSessionAppendBatchErrorSerializer>
+
+    init(swift: UploadRequest<Files.UploadSessionAppendBatchResultSerializer, Files.UploadSessionAppendBatchErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXFilesUploadSessionAppendBatchResult?, DBXFilesUploadSessionAppendBatchError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXFilesUploadSessionAppendBatchResult?, DBXFilesUploadSessionAppendBatchError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXFilesUploadSessionAppendBatchError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXFilesUploadSessionAppendBatchError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXFilesUploadSessionAppendBatchResult? = nil
+            if let swift = result {
+                objc = DBXFilesUploadSessionAppendBatchResult(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
+        swift.progress(progressHandler)
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
 public class DBXFilesUploadSessionFinishUploadRequest: NSObject, DBXRequest {
     var swift: UploadRequest<Files.FileMetadataSerializer, Files.UploadSessionFinishErrorSerializer>
 
@@ -7052,7 +7078,7 @@ public class DBXFilesUploadSessionFinishUploadRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesFileMetadata?
+            var objc: DBXFilesFileMetadata? = nil
             if let swift = result {
                 objc = DBXFilesFileMetadata(swift: swift)
             }
@@ -7114,7 +7140,7 @@ public class DBXFilesUploadSessionFinishBatchRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXFilesUploadSessionFinishBatchLaunch?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXFilesUploadSessionFinishBatchLaunch?
+            var objc: DBXFilesUploadSessionFinishBatchLaunch? = nil
             if let swift = result {
                 objc = DBXFilesUploadSessionFinishBatchLaunch.factory(swift: swift)
             }
@@ -7170,7 +7196,7 @@ public class DBXFilesUploadSessionFinishBatchRpcRequestV2: NSObject, DBXRequest 
         completionHandler: @escaping (DBXFilesUploadSessionFinishBatchResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXFilesUploadSessionFinishBatchResult?
+            var objc: DBXFilesUploadSessionFinishBatchResult? = nil
             if let swift = result {
                 objc = DBXFilesUploadSessionFinishBatchResult(swift: swift)
             }
@@ -7237,7 +7263,7 @@ public class DBXFilesUploadSessionFinishBatchCheckRpcRequest: NSObject, DBXReque
                 callError = error?.objc
             }
 
-            var objc: DBXFilesUploadSessionFinishBatchJobStatus?
+            var objc: DBXFilesUploadSessionFinishBatchJobStatus? = nil
             if let swift = result {
                 objc = DBXFilesUploadSessionFinishBatchJobStatus.factory(swift: swift)
             }
@@ -7304,7 +7330,7 @@ public class DBXFilesUploadSessionStartUploadRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilesUploadSessionStartResult?
+            var objc: DBXFilesUploadSessionStartResult? = nil
             if let swift = result {
                 objc = DBXFilesUploadSessionStartResult(swift: swift)
             }
@@ -7366,7 +7392,7 @@ public class DBXFilesUploadSessionStartBatchRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXFilesUploadSessionStartBatchResult?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXFilesUploadSessionStartBatchResult?
+            var objc: DBXFilesUploadSessionStartBatchResult? = nil
             if let swift = result {
                 objc = DBXFilesUploadSessionStartBatchResult(swift: swift)
             }

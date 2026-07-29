@@ -21,6 +21,15 @@ enum AppAuthReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
+        case "sharing/get_shared_link_file":
+            return .sharing_getSharedLinkFile(
+                rebuildRequest(
+                    apiRequest: apiRequest,
+                    info: info,
+                    route: Sharing.getSharedLinkFile,
+                    client: client
+                )
+            )
         default:
             throw ReconnectionErrorKind.missingReconnectionCase
         }

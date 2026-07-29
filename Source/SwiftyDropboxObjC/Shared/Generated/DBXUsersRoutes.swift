@@ -48,7 +48,7 @@ public class DBXUsersRoutes: NSObject {
         return DBXUsersGetAccountRpcRequest(swift: swift)
     }
 
-    /// Get information about multiple user accounts.  At most 300 accounts may be queried per request.
+    /// Get information about multiple user accounts. At most 300 accounts may be queried per request.
     ///
     /// - scope: sharing.read
     ///
@@ -121,7 +121,7 @@ public class DBXUsersFeaturesGetValuesRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXUsersUserFeaturesGetValuesBatchResult?
+            var objc: DBXUsersUserFeaturesGetValuesBatchResult? = nil
             if let swift = result {
                 objc = DBXUsersUserFeaturesGetValuesBatchResult(swift: swift)
             }
@@ -188,7 +188,7 @@ public class DBXUsersGetAccountRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXUsersBasicAccount?
+            var objc: DBXUsersBasicAccount? = nil
             if let swift = result {
                 objc = DBXUsersBasicAccount(swift: swift)
             }
@@ -255,7 +255,7 @@ public class DBXUsersGetAccountBatchRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: [DBXUsersBasicAccount]?
+            var objc: [DBXUsersBasicAccount]? = nil
             if let swift = result {
                 objc = swift.map { DBXUsersBasicAccount(swift: $0) }
             }
@@ -311,7 +311,7 @@ public class DBXUsersGetCurrentAccountRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXUsersFullAccount?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXUsersFullAccount?
+            var objc: DBXUsersFullAccount? = nil
             if let swift = result {
                 objc = DBXUsersFullAccount(swift: swift)
             }
@@ -367,7 +367,7 @@ public class DBXUsersGetSpaceUsageRpcRequest: NSObject, DBXRequest {
         completionHandler: @escaping (DBXUsersSpaceUsage?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var objc: DBXUsersSpaceUsage?
+            var objc: DBXUsersSpaceUsage? = nil
             if let swift = result {
                 objc = DBXUsersSpaceUsage(swift: swift)
             }
