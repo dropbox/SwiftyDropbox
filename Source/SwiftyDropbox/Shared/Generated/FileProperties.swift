@@ -12,7 +12,7 @@ public class FileProperties {
     public class AddPropertiesArg: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for the file or folder.
         public let path: String
-        /// The property groups which are to be added to a Dropbox file. No two groups in the input should  refer to the
+        /// The property groups which are to be added to a Dropbox file. No two groups in the input should refer to the
         /// same template.
         public let propertyGroups: [FileProperties.PropertyGroup]
         public init(path: String, propertyGroups: [FileProperties.PropertyGroup]) {
@@ -952,7 +952,7 @@ public class FileProperties {
     public class OverwritePropertyGroupArg: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for the file or folder.
         public let path: String
-        /// The property groups "snapshot" updates to force apply. No two groups in the input should  refer to the same
+        /// The property groups "snapshot" updates to force apply. No two groups in the input should refer to the same
         /// template.
         public let propertyGroups: [FileProperties.PropertyGroup]
         public init(path: String, propertyGroups: [FileProperties.PropertyGroup]) {
@@ -1034,8 +1034,9 @@ public class FileProperties {
             switch json {
             case .dictionary(let dict):
                 let queries = try ArraySerializer(FileProperties.PropertiesSearchQuerySerializer()).deserialize(dict["queries"] ?? .null)
-                let templateFilter = try FileProperties.TemplateFilterSerializer()
-                    .deserialize(dict["template_filter"] ?? FileProperties.TemplateFilterSerializer().serialize(.filterNone))
+                let templateFilter = try FileProperties.TemplateFilterSerializer().deserialize(
+                    dict["template_filter"] ?? FileProperties.TemplateFilterSerializer().serialize(.filterNone)
+                )
                 return PropertiesSearchArg(queries: queries, templateFilter: templateFilter)
             default:
                 throw JSONSerializerError.deserializeError(type: PropertiesSearchArg.self, json: json)
@@ -1348,8 +1349,9 @@ public class FileProperties {
             case .dictionary(let dict):
                 let query = try Serialization._StringSerializer.deserialize(dict["query"] ?? .null)
                 let mode = try FileProperties.PropertiesSearchModeSerializer().deserialize(dict["mode"] ?? .null)
-                let logicalOperator = try FileProperties.LogicalOperatorSerializer()
-                    .deserialize(dict["logical_operator"] ?? FileProperties.LogicalOperatorSerializer().serialize(.orOperator))
+                let logicalOperator = try FileProperties.LogicalOperatorSerializer().deserialize(
+                    dict["logical_operator"] ?? FileProperties.LogicalOperatorSerializer().serialize(.orOperator)
+                )
                 return PropertiesSearchQuery(query: query, mode: mode, logicalOperator: logicalOperator)
             default:
                 throw JSONSerializerError.deserializeError(type: PropertiesSearchQuery.self, json: json)
@@ -1460,8 +1462,7 @@ public class FileProperties {
         public let name: String
         /// Description of the property field. Property field descriptions can be up to 1024 bytes.
         public let description_: String
-        /// Data type of the value of this property field. This type will be enforced upon property creation and
-        /// modifications.
+        /// (no description)
         public let type: FileProperties.PropertyType
         public init(name: String, description_: String, type: FileProperties.PropertyType) {
             stringValidator()(name)
@@ -1557,12 +1558,12 @@ public class FileProperties {
         }
     }
 
-    /// The PropertyGroupUpdate struct
+    /// Property routes
     public class PropertyGroupUpdate: CustomStringConvertible, JSONRepresentable {
         /// A unique identifier for a property template.
         public let templateId: String
         /// Property fields to update. If the property field already exists, it is updated. If the property field
-        /// doesn't exist, the property group is added.
+        /// doesn't exist, it will be created as long as the property group already exists.
         public let addOrUpdateFields: [FileProperties.PropertyField]?
         /// Property fields to remove (by name), provided they exist.
         public let removeFields: [String]?
@@ -1602,8 +1603,9 @@ public class FileProperties {
             switch json {
             case .dictionary(let dict):
                 let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
-                let addOrUpdateFields = try NullableSerializer(ArraySerializer(FileProperties.PropertyFieldSerializer()))
-                    .deserialize(dict["add_or_update_fields"] ?? .null)
+                let addOrUpdateFields = try NullableSerializer(ArraySerializer(FileProperties.PropertyFieldSerializer())).deserialize(
+                    dict["add_or_update_fields"] ?? .null
+                )
                 let removeFields = try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["remove_fields"] ?? .null)
                 return PropertyGroupUpdate(templateId: templateId, addOrUpdateFields: addOrUpdateFields, removeFields: removeFields)
             default:
@@ -2059,8 +2061,9 @@ public class FileProperties {
             switch json {
             case .dictionary(let dict):
                 let path = try Serialization._StringSerializer.deserialize(dict["path"] ?? .null)
-                let updatePropertyGroups = try ArraySerializer(FileProperties.PropertyGroupUpdateSerializer())
-                    .deserialize(dict["update_property_groups"] ?? .null)
+                let updatePropertyGroups = try ArraySerializer(FileProperties.PropertyGroupUpdateSerializer()).deserialize(
+                    dict["update_property_groups"] ?? .null
+                )
                 return UpdatePropertiesArg(path: path, updatePropertyGroups: updatePropertyGroups)
             default:
                 throw JSONSerializerError.deserializeError(type: UpdatePropertiesArg.self, json: json)
@@ -2232,8 +2235,9 @@ public class FileProperties {
                 let templateId = try Serialization._StringSerializer.deserialize(dict["template_id"] ?? .null)
                 let name = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["name"] ?? .null)
                 let description_ = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["description"] ?? .null)
-                let addFields = try NullableSerializer(ArraySerializer(FileProperties.PropertyFieldTemplateSerializer()))
-                    .deserialize(dict["add_fields"] ?? .null)
+                let addFields = try NullableSerializer(ArraySerializer(FileProperties.PropertyFieldTemplateSerializer())).deserialize(
+                    dict["add_fields"] ?? .null
+                )
                 return UpdateTemplateArg(templateId: templateId, name: name, description_: description_, addFields: addFields)
             default:
                 throw JSONSerializerError.deserializeError(type: UpdateTemplateArg.self, json: json)

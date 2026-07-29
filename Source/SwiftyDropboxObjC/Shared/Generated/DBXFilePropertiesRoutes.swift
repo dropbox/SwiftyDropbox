@@ -25,7 +25,7 @@ public class DBXFilePropertiesRoutes: NSObject {
     ///
     /// - parameter path: A unique identifier for the file or folder.
     /// - parameter propertyGroups: The property groups which are to be added to a Dropbox file. No two groups in the
-    /// input should  refer to the same template.
+    /// input should refer to the same template.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.AddPropertiesError` object on failure.
@@ -44,15 +44,12 @@ public class DBXFilePropertiesRoutes: NSObject {
     ///
     /// - parameter path: A unique identifier for the file or folder.
     /// - parameter propertyGroups: The property groups "snapshot" updates to force apply. No two groups in the input
-    /// should  refer to the same template.
+    /// should refer to the same template.
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.InvalidPropertyGroupError` object on failure.
     @objc
-    @discardableResult public func propertiesOverwrite(
-        path: String,
-        propertyGroups: [DBXFilePropertiesPropertyGroup]
-    ) -> DBXFilePropertiesPropertiesOverwriteRpcRequest {
+    @discardableResult public func propertiesOverwrite(path: String, propertyGroups: [DBXFilePropertiesPropertyGroup]) -> DBXFilePropertiesPropertiesOverwriteRpcRequest {
         let swift = swift.propertiesOverwrite(path: path, propertyGroups: propertyGroups.map(\.swift))
         return DBXFilePropertiesPropertiesOverwriteRpcRequest(swift: swift)
     }
@@ -85,10 +82,7 @@ public class DBXFilePropertiesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `FileProperties.PropertiesSearchResult`
     /// object on success or a `FileProperties.PropertiesSearchError` object on failure.
     @objc
-    @discardableResult public func propertiesSearch(
-        queries: [DBXFilePropertiesPropertiesSearchQuery],
-        templateFilter: DBXFilePropertiesTemplateFilter
-    ) -> DBXFilePropertiesPropertiesSearchRpcRequest {
+    @discardableResult public func propertiesSearch(queries: [DBXFilePropertiesPropertiesSearchQuery], templateFilter: DBXFilePropertiesTemplateFilter) -> DBXFilePropertiesPropertiesSearchRpcRequest {
         let swift = swift.propertiesSearch(queries: queries.map(\.swift), templateFilter: templateFilter.swift)
         return DBXFilePropertiesPropertiesSearchRpcRequest(swift: swift)
     }
@@ -132,10 +126,7 @@ public class DBXFilePropertiesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `FileProperties.UpdatePropertiesError` object on failure.
     @objc
-    @discardableResult public func propertiesUpdate(
-        path: String,
-        updatePropertyGroups: [DBXFilePropertiesPropertyGroupUpdate]
-    ) -> DBXFilePropertiesPropertiesUpdateRpcRequest {
+    @discardableResult public func propertiesUpdate(path: String, updatePropertyGroups: [DBXFilePropertiesPropertyGroupUpdate]) -> DBXFilePropertiesPropertiesUpdateRpcRequest {
         let swift = swift.propertiesUpdate(path: path, updatePropertyGroups: updatePropertyGroups.map(\.swift))
         return DBXFilePropertiesPropertiesUpdateRpcRequest(swift: swift)
     }
@@ -149,11 +140,7 @@ public class DBXFilePropertiesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object on
     /// success or a `FileProperties.ModifyTemplateError` object on failure.
     @objc
-    @discardableResult public func templatesAddForTeam(
-        name: String,
-        description_: String,
-        fields: [DBXFilePropertiesPropertyFieldTemplate]
-    ) -> DBXFilePropertiesTemplatesAddForTeamRpcRequest {
+    @discardableResult public func templatesAddForTeam(name: String, description_: String, fields: [DBXFilePropertiesPropertyFieldTemplate]) -> DBXFilePropertiesTemplatesAddForTeamRpcRequest {
         let swift = swift.templatesAddForTeam(name: name, description_: description_, fields: fields.map(\.swift))
         return DBXFilePropertiesTemplatesAddForTeamRpcRequest(swift: swift)
     }
@@ -167,11 +154,7 @@ public class DBXFilePropertiesRoutes: NSObject {
     /// - returns: Through the response callback, the caller will receive a `FileProperties.AddTemplateResult` object on
     /// success or a `FileProperties.ModifyTemplateError` object on failure.
     @objc
-    @discardableResult public func templatesAddForUser(
-        name: String,
-        description_: String,
-        fields: [DBXFilePropertiesPropertyFieldTemplate]
-    ) -> DBXFilePropertiesTemplatesAddForUserRpcRequest {
+    @discardableResult public func templatesAddForUser(name: String, description_: String, fields: [DBXFilePropertiesPropertyFieldTemplate]) -> DBXFilePropertiesTemplatesAddForUserRpcRequest {
         let swift = swift.templatesAddForUser(name: name, description_: description_, fields: fields.map(\.swift))
         return DBXFilePropertiesTemplatesAddForUserRpcRequest(swift: swift)
     }
@@ -559,7 +542,7 @@ public class DBXFilePropertiesPropertiesSearchRpcRequest: NSObject, DBXRequest {
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesPropertiesSearchResult?
+            var objc: DBXFilePropertiesPropertiesSearchResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesPropertiesSearchResult(swift: swift)
             }
@@ -626,7 +609,7 @@ public class DBXFilePropertiesPropertiesSearchContinueRpcRequest: NSObject, DBXR
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesPropertiesSearchResult?
+            var objc: DBXFilePropertiesPropertiesSearchResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesPropertiesSearchResult(swift: swift)
             }
@@ -756,7 +739,7 @@ public class DBXFilePropertiesTemplatesAddForTeamRpcRequest: NSObject, DBXReques
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesAddTemplateResult?
+            var objc: DBXFilePropertiesAddTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesAddTemplateResult(swift: swift)
             }
@@ -823,7 +806,7 @@ public class DBXFilePropertiesTemplatesAddForUserRpcRequest: NSObject, DBXReques
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesAddTemplateResult?
+            var objc: DBXFilePropertiesAddTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesAddTemplateResult(swift: swift)
             }
@@ -890,7 +873,7 @@ public class DBXFilePropertiesTemplatesGetForTeamRpcRequest: NSObject, DBXReques
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesGetTemplateResult?
+            var objc: DBXFilePropertiesGetTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesGetTemplateResult(swift: swift)
             }
@@ -957,7 +940,7 @@ public class DBXFilePropertiesTemplatesGetForUserRpcRequest: NSObject, DBXReques
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesGetTemplateResult?
+            var objc: DBXFilePropertiesGetTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesGetTemplateResult(swift: swift)
             }
@@ -1024,7 +1007,7 @@ public class DBXFilePropertiesTemplatesListForTeamRpcRequest: NSObject, DBXReque
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesListTemplateResult?
+            var objc: DBXFilePropertiesListTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesListTemplateResult(swift: swift)
             }
@@ -1091,7 +1074,7 @@ public class DBXFilePropertiesTemplatesListForUserRpcRequest: NSObject, DBXReque
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesListTemplateResult?
+            var objc: DBXFilePropertiesListTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesListTemplateResult(swift: swift)
             }
@@ -1284,7 +1267,7 @@ public class DBXFilePropertiesTemplatesUpdateForTeamRpcRequest: NSObject, DBXReq
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesUpdateTemplateResult?
+            var objc: DBXFilePropertiesUpdateTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesUpdateTemplateResult(swift: swift)
             }
@@ -1351,7 +1334,7 @@ public class DBXFilePropertiesTemplatesUpdateForUserRpcRequest: NSObject, DBXReq
                 callError = error?.objc
             }
 
-            var objc: DBXFilePropertiesUpdateTemplateResult?
+            var objc: DBXFilePropertiesUpdateTemplateResult? = nil
             if let swift = result {
                 objc = DBXFilePropertiesUpdateTemplateResult(swift: swift)
             }

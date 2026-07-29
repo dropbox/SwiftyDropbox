@@ -23,8 +23,10 @@ public class UsersRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Users.UserFeaturesGetValuesBatchResult`
     /// object on success or a `Users.UserFeaturesGetValuesBatchError` object on failure.
-    @discardableResult public func featuresGetValues(features: [Users.UserFeature])
-        -> RpcRequest<Users.UserFeaturesGetValuesBatchResultSerializer, Users.UserFeaturesGetValuesBatchErrorSerializer> {
+    @discardableResult public func featuresGetValues(features: [Users.UserFeature]) -> RpcRequest<
+        Users.UserFeaturesGetValuesBatchResultSerializer,
+        Users.UserFeaturesGetValuesBatchErrorSerializer
+    > {
         let route = Users.featuresGetValues
         let serverArgs = Users.UserFeaturesGetValuesBatchArg(features: features)
         return client.request(route, serverArgs: serverArgs)
@@ -44,7 +46,7 @@ public class UsersRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Get information about multiple user accounts.  At most 300 accounts may be queried per request.
+    /// Get information about multiple user accounts. At most 300 accounts may be queried per request.
     ///
     /// - scope: sharing.read
     ///
@@ -52,8 +54,10 @@ public class UsersRoutes: DropboxTransportClientOwning {
     ///
     /// - returns: Through the response callback, the caller will receive a `Array<Users.BasicAccount>` object on
     /// success or a `Users.GetAccountBatchError` object on failure.
-    @discardableResult public func getAccountBatch(accountIds: [String])
-        -> RpcRequest<ArraySerializer<Users.BasicAccountSerializer>, Users.GetAccountBatchErrorSerializer> {
+    @discardableResult public func getAccountBatch(accountIds: [String]) -> RpcRequest<
+        ArraySerializer<Users.BasicAccountSerializer>,
+        Users.GetAccountBatchErrorSerializer
+    > {
         let route = Users.getAccountBatch
         let serverArgs = Users.GetAccountBatchArg(accountIds: accountIds)
         return client.request(route, serverArgs: serverArgs)
