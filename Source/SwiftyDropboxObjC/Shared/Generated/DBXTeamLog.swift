@@ -12591,6 +12591,15 @@ public class DBXTeamLogEventDetails: NSObject {
         case .protectInternalDomainsChangedDetails(let swiftArg):
             let arg = DBXTeamLogProtectInternalDomainsChangedDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsProtectInternalDomainsChangedDetails(arg)
+        case .protectPolicyActivatedDetails(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyActivatedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectPolicyActivatedDetails(arg)
+        case .protectPolicyDeactivatedDetails(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyDeactivatedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectPolicyDeactivatedDetails(arg)
+        case .protectPolicyUpdatedDetails(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyUpdatedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectPolicyUpdatedDetails(arg)
         case .classificationCreateReportDetails(let swiftArg):
             let arg = DBXTeamLogClassificationCreateReportDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsClassificationCreateReportDetails(arg)
@@ -15048,6 +15057,21 @@ public class DBXTeamLogEventDetails: NSObject {
     @objc
     public var asProtectInternalDomainsChangedDetails: DBXTeamLogEventDetailsProtectInternalDomainsChangedDetails? {
         return self as? DBXTeamLogEventDetailsProtectInternalDomainsChangedDetails
+    }
+
+    @objc
+    public var asProtectPolicyActivatedDetails: DBXTeamLogEventDetailsProtectPolicyActivatedDetails? {
+        return self as? DBXTeamLogEventDetailsProtectPolicyActivatedDetails
+    }
+
+    @objc
+    public var asProtectPolicyDeactivatedDetails: DBXTeamLogEventDetailsProtectPolicyDeactivatedDetails? {
+        return self as? DBXTeamLogEventDetailsProtectPolicyDeactivatedDetails
+    }
+
+    @objc
+    public var asProtectPolicyUpdatedDetails: DBXTeamLogEventDetailsProtectPolicyUpdatedDetails? {
+        return self as? DBXTeamLogEventDetailsProtectPolicyUpdatedDetails
     }
 
     @objc
@@ -20758,6 +20782,48 @@ public class DBXTeamLogEventDetailsProtectInternalDomainsChangedDetails: DBXTeam
 
 /// An unspecified error.
 @objc
+public class DBXTeamLogEventDetailsProtectPolicyActivatedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectPolicyActivatedDetails: DBXTeamLogProtectPolicyActivatedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyActivatedDetails) {
+        protectPolicyActivatedDetails = arg
+        let swift = TeamLog.EventDetails.protectPolicyActivatedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsProtectPolicyDeactivatedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectPolicyDeactivatedDetails: DBXTeamLogProtectPolicyDeactivatedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyDeactivatedDetails) {
+        protectPolicyDeactivatedDetails = arg
+        let swift = TeamLog.EventDetails.protectPolicyDeactivatedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsProtectPolicyUpdatedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectPolicyUpdatedDetails: DBXTeamLogProtectPolicyUpdatedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyUpdatedDetails) {
+        protectPolicyUpdatedDetails = arg
+        let swift = TeamLog.EventDetails.protectPolicyUpdatedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
 public class DBXTeamLogEventDetailsClassificationCreateReportDetails: DBXTeamLogEventDetails {
     @objc
     public var classificationCreateReportDetails: DBXTeamLogClassificationCreateReportDetails
@@ -26420,6 +26486,15 @@ public class DBXTeamLogEventType: NSObject {
         case .protectInternalDomainsChanged(let swiftArg):
             let arg = DBXTeamLogProtectInternalDomainsChangedType(swift: swiftArg)
             return DBXTeamLogEventTypeProtectInternalDomainsChanged(arg)
+        case .protectPolicyActivated(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyActivatedType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectPolicyActivated(arg)
+        case .protectPolicyDeactivated(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyDeactivatedType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectPolicyDeactivated(arg)
+        case .protectPolicyUpdated(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyUpdatedType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectPolicyUpdated(arg)
         case .classificationCreateReport(let swiftArg):
             let arg = DBXTeamLogClassificationCreateReportType(swift: swiftArg)
             return DBXTeamLogEventTypeClassificationCreateReport(arg)
@@ -28874,6 +28949,21 @@ public class DBXTeamLogEventType: NSObject {
     @objc
     public var asProtectInternalDomainsChanged: DBXTeamLogEventTypeProtectInternalDomainsChanged? {
         return self as? DBXTeamLogEventTypeProtectInternalDomainsChanged
+    }
+
+    @objc
+    public var asProtectPolicyActivated: DBXTeamLogEventTypeProtectPolicyActivated? {
+        return self as? DBXTeamLogEventTypeProtectPolicyActivated
+    }
+
+    @objc
+    public var asProtectPolicyDeactivated: DBXTeamLogEventTypeProtectPolicyDeactivated? {
+        return self as? DBXTeamLogEventTypeProtectPolicyDeactivated
+    }
+
+    @objc
+    public var asProtectPolicyUpdated: DBXTeamLogEventTypeProtectPolicyUpdated? {
+        return self as? DBXTeamLogEventTypeProtectPolicyUpdated
     }
 
     @objc
@@ -34577,6 +34667,48 @@ public class DBXTeamLogEventTypeProtectInternalDomainsChanged: DBXTeamLogEventTy
     }
 }
 
+/// (protect) Activated a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeProtectPolicyActivated: DBXTeamLogEventType {
+    @objc
+    public var protectPolicyActivated: DBXTeamLogProtectPolicyActivatedType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyActivatedType) {
+        protectPolicyActivated = arg
+        let swift = TeamLog.EventType.protectPolicyActivated(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Deactivated a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeProtectPolicyDeactivated: DBXTeamLogEventType {
+    @objc
+    public var protectPolicyDeactivated: DBXTeamLogProtectPolicyDeactivatedType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyDeactivatedType) {
+        protectPolicyDeactivated = arg
+        let swift = TeamLog.EventType.protectPolicyDeactivated(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Updated a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeProtectPolicyUpdated: DBXTeamLogEventType {
+    @objc
+    public var protectPolicyUpdated: DBXTeamLogProtectPolicyUpdatedType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyUpdatedType) {
+        protectPolicyUpdated = arg
+        let swift = TeamLog.EventType.protectPolicyUpdated(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
 /// (reports) Created Classification report
 @objc
 public class DBXTeamLogEventTypeClassificationCreateReport: DBXTeamLogEventType {
@@ -39951,6 +40083,12 @@ public class DBXTeamLogEventTypeArg: NSObject {
             return DBXTeamLogEventTypeArgProtectActionStopSharing()
         case .protectInternalDomainsChanged:
             return DBXTeamLogEventTypeArgProtectInternalDomainsChanged()
+        case .protectPolicyActivated:
+            return DBXTeamLogEventTypeArgProtectPolicyActivated()
+        case .protectPolicyDeactivated:
+            return DBXTeamLogEventTypeArgProtectPolicyDeactivated()
+        case .protectPolicyUpdated:
+            return DBXTeamLogEventTypeArgProtectPolicyUpdated()
         case .classificationCreateReport:
             return DBXTeamLogEventTypeArgClassificationCreateReport()
         case .classificationCreateReportFail:
@@ -42064,6 +42202,21 @@ public class DBXTeamLogEventTypeArg: NSObject {
     @objc
     public var asProtectInternalDomainsChanged: DBXTeamLogEventTypeArgProtectInternalDomainsChanged? {
         return self as? DBXTeamLogEventTypeArgProtectInternalDomainsChanged
+    }
+
+    @objc
+    public var asProtectPolicyActivated: DBXTeamLogEventTypeArgProtectPolicyActivated? {
+        return self as? DBXTeamLogEventTypeArgProtectPolicyActivated
+    }
+
+    @objc
+    public var asProtectPolicyDeactivated: DBXTeamLogEventTypeArgProtectPolicyDeactivated? {
+        return self as? DBXTeamLogEventTypeArgProtectPolicyDeactivated
+    }
+
+    @objc
+    public var asProtectPolicyUpdated: DBXTeamLogEventTypeArgProtectPolicyUpdated? {
+        return self as? DBXTeamLogEventTypeArgProtectPolicyUpdated
     }
 
     @objc
@@ -46623,6 +46776,36 @@ public class DBXTeamLogEventTypeArgProtectInternalDomainsChanged: DBXTeamLogEven
     @objc
     public init() {
         let swift = TeamLog.EventTypeArg.protectInternalDomainsChanged
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Activated a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeArgProtectPolicyActivated: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectPolicyActivated
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Deactivated a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeArgProtectPolicyDeactivated: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectPolicyDeactivated
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Updated a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeArgProtectPolicyUpdated: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectPolicyUpdated
         super.init(swift: swift)
     }
 }
@@ -66976,6 +67159,144 @@ public class DBXTeamLogProtectInternalDomainsChangedType: NSObject {
     let swift: TeamLog.ProtectInternalDomainsChangedType
 
     public init(swift: TeamLog.ProtectInternalDomainsChangedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Activated a Dropbox Protect policy.
+@objc
+public class DBXTeamLogProtectPolicyActivatedDetails: NSObject {
+    /// Policy ID.
+    @objc
+    public var policyId: String { swift.policyId }
+
+    @objc
+    public init(policyId: String) {
+        self.swift = TeamLog.ProtectPolicyActivatedDetails(policyId: policyId)
+    }
+
+    let swift: TeamLog.ProtectPolicyActivatedDetails
+
+    public init(swift: TeamLog.ProtectPolicyActivatedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectPolicyActivatedType struct
+@objc
+public class DBXTeamLogProtectPolicyActivatedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectPolicyActivatedType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectPolicyActivatedType
+
+    public init(swift: TeamLog.ProtectPolicyActivatedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Deactivated a Dropbox Protect policy.
+@objc
+public class DBXTeamLogProtectPolicyDeactivatedDetails: NSObject {
+    /// Policy ID.
+    @objc
+    public var policyId: String { swift.policyId }
+
+    @objc
+    public init(policyId: String) {
+        self.swift = TeamLog.ProtectPolicyDeactivatedDetails(policyId: policyId)
+    }
+
+    let swift: TeamLog.ProtectPolicyDeactivatedDetails
+
+    public init(swift: TeamLog.ProtectPolicyDeactivatedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectPolicyDeactivatedType struct
+@objc
+public class DBXTeamLogProtectPolicyDeactivatedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectPolicyDeactivatedType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectPolicyDeactivatedType
+
+    public init(swift: TeamLog.ProtectPolicyDeactivatedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Updated a Dropbox Protect policy.
+@objc
+public class DBXTeamLogProtectPolicyUpdatedDetails: NSObject {
+    /// Policy ID.
+    @objc
+    public var policyId: String { swift.policyId }
+
+    @objc
+    public init(policyId: String) {
+        self.swift = TeamLog.ProtectPolicyUpdatedDetails(policyId: policyId)
+    }
+
+    let swift: TeamLog.ProtectPolicyUpdatedDetails
+
+    public init(swift: TeamLog.ProtectPolicyUpdatedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectPolicyUpdatedType struct
+@objc
+public class DBXTeamLogProtectPolicyUpdatedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectPolicyUpdatedType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectPolicyUpdatedType
+
+    public init(swift: TeamLog.ProtectPolicyUpdatedType) {
         self.swift = swift
     }
 

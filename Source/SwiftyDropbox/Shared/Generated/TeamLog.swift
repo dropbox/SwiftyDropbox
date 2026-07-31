@@ -16213,6 +16213,12 @@ public class TeamLog {
         /// An unspecified error.
         case protectInternalDomainsChangedDetails(TeamLog.ProtectInternalDomainsChangedDetails)
         /// An unspecified error.
+        case protectPolicyActivatedDetails(TeamLog.ProtectPolicyActivatedDetails)
+        /// An unspecified error.
+        case protectPolicyDeactivatedDetails(TeamLog.ProtectPolicyDeactivatedDetails)
+        /// An unspecified error.
+        case protectPolicyUpdatedDetails(TeamLog.ProtectPolicyUpdatedDetails)
+        /// An unspecified error.
         case classificationCreateReportDetails(TeamLog.ClassificationCreateReportDetails)
         /// An unspecified error.
         case classificationCreateReportFailDetails(TeamLog.ClassificationCreateReportFailDetails)
@@ -18054,6 +18060,18 @@ public class TeamLog {
                 case .protectInternalDomainsChangedDetails(let arg):
                     var d = try Serialization.getFields(TeamLog.ProtectInternalDomainsChangedDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("protect_internal_domains_changed_details")
+                    return .dictionary(d)
+                case .protectPolicyActivatedDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyActivatedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_activated_details")
+                    return .dictionary(d)
+                case .protectPolicyDeactivatedDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyDeactivatedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_deactivated_details")
+                    return .dictionary(d)
+                case .protectPolicyUpdatedDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyUpdatedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_updated_details")
                     return .dictionary(d)
                 case .classificationCreateReportDetails(let arg):
                     var d = try Serialization.getFields(TeamLog.ClassificationCreateReportDetailsSerializer().serialize(arg))
@@ -20289,6 +20307,15 @@ public class TeamLog {
                         case "protect_internal_domains_changed_details":
                             let v = try TeamLog.ProtectInternalDomainsChangedDetailsSerializer().deserialize(json)
                             return EventDetails.protectInternalDomainsChangedDetails(v)
+                        case "protect_policy_activated_details":
+                            let v = try TeamLog.ProtectPolicyActivatedDetailsSerializer().deserialize(json)
+                            return EventDetails.protectPolicyActivatedDetails(v)
+                        case "protect_policy_deactivated_details":
+                            let v = try TeamLog.ProtectPolicyDeactivatedDetailsSerializer().deserialize(json)
+                            return EventDetails.protectPolicyDeactivatedDetails(v)
+                        case "protect_policy_updated_details":
+                            let v = try TeamLog.ProtectPolicyUpdatedDetailsSerializer().deserialize(json)
+                            return EventDetails.protectPolicyUpdatedDetails(v)
                         case "classification_create_report_details":
                             let v = try TeamLog.ClassificationCreateReportDetailsSerializer().deserialize(json)
                             return EventDetails.classificationCreateReportDetails(v)
@@ -21898,6 +21925,12 @@ public class TeamLog {
         case protectActionStopSharing(TeamLog.ProtectActionStopSharingType)
         /// (protect) Modified Protect internal domains list
         case protectInternalDomainsChanged(TeamLog.ProtectInternalDomainsChangedType)
+        /// (protect) Activated a Dropbox Protect policy
+        case protectPolicyActivated(TeamLog.ProtectPolicyActivatedType)
+        /// (protect) Deactivated a Dropbox Protect policy
+        case protectPolicyDeactivated(TeamLog.ProtectPolicyDeactivatedType)
+        /// (protect) Updated a Dropbox Protect policy
+        case protectPolicyUpdated(TeamLog.ProtectPolicyUpdatedType)
         /// (reports) Created Classification report
         case classificationCreateReport(TeamLog.ClassificationCreateReportType)
         /// (reports) Couldn't create Classification report
@@ -23747,6 +23780,18 @@ public class TeamLog {
                 case .protectInternalDomainsChanged(let arg):
                     var d = try Serialization.getFields(TeamLog.ProtectInternalDomainsChangedTypeSerializer().serialize(arg))
                     d[".tag"] = .str("protect_internal_domains_changed")
+                    return .dictionary(d)
+                case .protectPolicyActivated(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyActivatedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_activated")
+                    return .dictionary(d)
+                case .protectPolicyDeactivated(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyDeactivatedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_deactivated")
+                    return .dictionary(d)
+                case .protectPolicyUpdated(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyUpdatedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_updated")
                     return .dictionary(d)
                 case .classificationCreateReport(let arg):
                     var d = try Serialization.getFields(TeamLog.ClassificationCreateReportTypeSerializer().serialize(arg))
@@ -25978,6 +26023,15 @@ public class TeamLog {
                         case "protect_internal_domains_changed":
                             let v = try TeamLog.ProtectInternalDomainsChangedTypeSerializer().deserialize(json)
                             return EventType.protectInternalDomainsChanged(v)
+                        case "protect_policy_activated":
+                            let v = try TeamLog.ProtectPolicyActivatedTypeSerializer().deserialize(json)
+                            return EventType.protectPolicyActivated(v)
+                        case "protect_policy_deactivated":
+                            let v = try TeamLog.ProtectPolicyDeactivatedTypeSerializer().deserialize(json)
+                            return EventType.protectPolicyDeactivated(v)
+                        case "protect_policy_updated":
+                            let v = try TeamLog.ProtectPolicyUpdatedTypeSerializer().deserialize(json)
+                            return EventType.protectPolicyUpdated(v)
                         case "classification_create_report":
                             let v = try TeamLog.ClassificationCreateReportTypeSerializer().deserialize(json)
                             return EventType.classificationCreateReport(v)
@@ -27584,6 +27638,12 @@ public class TeamLog {
         case protectActionStopSharing
         /// (protect) Modified Protect internal domains list
         case protectInternalDomainsChanged
+        /// (protect) Activated a Dropbox Protect policy
+        case protectPolicyActivated
+        /// (protect) Deactivated a Dropbox Protect policy
+        case protectPolicyDeactivated
+        /// (protect) Updated a Dropbox Protect policy
+        case protectPolicyUpdated
         /// (reports) Created Classification report
         case classificationCreateReport
         /// (reports) Couldn't create Classification report
@@ -29433,6 +29493,18 @@ public class TeamLog {
                 case .protectInternalDomainsChanged:
                     var d = [String: JSON]()
                     d[".tag"] = .str("protect_internal_domains_changed")
+                    return .dictionary(d)
+                case .protectPolicyActivated:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_policy_activated")
+                    return .dictionary(d)
+                case .protectPolicyDeactivated:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_policy_deactivated")
+                    return .dictionary(d)
+                case .protectPolicyUpdated:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_policy_updated")
                     return .dictionary(d)
                 case .classificationCreateReport:
                     var d = [String: JSON]()
@@ -31379,6 +31451,12 @@ public class TeamLog {
                             return EventTypeArg.protectActionStopSharing
                         case "protect_internal_domains_changed":
                             return EventTypeArg.protectInternalDomainsChanged
+                        case "protect_policy_activated":
+                            return EventTypeArg.protectPolicyActivated
+                        case "protect_policy_deactivated":
+                            return EventTypeArg.protectPolicyDeactivated
+                        case "protect_policy_updated":
+                            return EventTypeArg.protectPolicyUpdated
                         case "classification_create_report":
                             return EventTypeArg.classificationCreateReport
                         case "classification_create_report_fail":
@@ -57055,6 +57133,246 @@ public class TeamLog {
                     return ProtectInternalDomainsChangedType(description_: description_)
                 default:
                     throw JSONSerializerError.deserializeError(type: ProtectInternalDomainsChangedType.self, json: json)
+            }
+        }
+    }
+
+    /// Activated a Dropbox Protect policy.
+    public class ProtectPolicyActivatedDetails: CustomStringConvertible, JSONRepresentable {
+        /// Policy ID.
+        public let policyId: String
+        public init(policyId: String) {
+            stringValidator()(policyId)
+            self.policyId = policyId
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyActivatedDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyActivatedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyActivatedDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyActivatedDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyActivatedDetails) throws -> JSON {
+            let output = [
+            "policy_id": try Serialization._StringSerializer.serialize(value.policyId),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyActivatedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let policyId = try Serialization._StringSerializer.deserialize(dict["policy_id"] ?? .null)
+                    return ProtectPolicyActivatedDetails(policyId: policyId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyActivatedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectPolicyActivatedType struct
+    public class ProtectPolicyActivatedType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyActivatedTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyActivatedTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyActivatedType: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyActivatedTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyActivatedType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyActivatedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectPolicyActivatedType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyActivatedType.self, json: json)
+            }
+        }
+    }
+
+    /// Deactivated a Dropbox Protect policy.
+    public class ProtectPolicyDeactivatedDetails: CustomStringConvertible, JSONRepresentable {
+        /// Policy ID.
+        public let policyId: String
+        public init(policyId: String) {
+            stringValidator()(policyId)
+            self.policyId = policyId
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyDeactivatedDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyDeactivatedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyDeactivatedDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyDeactivatedDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyDeactivatedDetails) throws -> JSON {
+            let output = [
+            "policy_id": try Serialization._StringSerializer.serialize(value.policyId),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyDeactivatedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let policyId = try Serialization._StringSerializer.deserialize(dict["policy_id"] ?? .null)
+                    return ProtectPolicyDeactivatedDetails(policyId: policyId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyDeactivatedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectPolicyDeactivatedType struct
+    public class ProtectPolicyDeactivatedType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyDeactivatedTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyDeactivatedTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyDeactivatedType: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyDeactivatedTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyDeactivatedType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyDeactivatedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectPolicyDeactivatedType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyDeactivatedType.self, json: json)
+            }
+        }
+    }
+
+    /// Updated a Dropbox Protect policy.
+    public class ProtectPolicyUpdatedDetails: CustomStringConvertible, JSONRepresentable {
+        /// Policy ID.
+        public let policyId: String
+        public init(policyId: String) {
+            stringValidator()(policyId)
+            self.policyId = policyId
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyUpdatedDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyUpdatedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyUpdatedDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyUpdatedDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyUpdatedDetails) throws -> JSON {
+            let output = [
+            "policy_id": try Serialization._StringSerializer.serialize(value.policyId),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyUpdatedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let policyId = try Serialization._StringSerializer.deserialize(dict["policy_id"] ?? .null)
+                    return ProtectPolicyUpdatedDetails(policyId: policyId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyUpdatedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectPolicyUpdatedType struct
+    public class ProtectPolicyUpdatedType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyUpdatedTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyUpdatedTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyUpdatedType: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyUpdatedTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyUpdatedType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyUpdatedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectPolicyUpdatedType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyUpdatedType.self, json: json)
             }
         }
     }
