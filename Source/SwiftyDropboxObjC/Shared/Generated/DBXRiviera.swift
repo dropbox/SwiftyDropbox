@@ -1067,6 +1067,156 @@ public class DBXRivieraGetMetadataResult: NSObject {
     public override var description: String { swift.description }
 }
 
+/// Arguments for the asynchronous `get_text_async` route. Exactly one of `file_id`, `path`, or `url` must be
+/// supplied via `file_id_or_url` to identify the document whose plain-text content should be extracted.
+@objc
+public class DBXRivieraGetTextArgs: NSObject {
+    /// Identifier of the document to extract text from. Callers must set exactly one of the `FileIdOrUrl` variants.
+    /// Text extraction is supported for common document formats (Word, PowerPoint, Excel, PDF, RTF, and Dropbox
+    /// document types); see the route description for the supported formats. Requests against unsupported
+    /// formats return `unsupported_format_error`. NOTE: for the `url` variant, only Dropbox shared links
+    /// (www.dropbox.com) are supported. External (non-Dropbox) URLs are not supported and return
+    /// `unsupported_format_error`; import the file into Dropbox and reference it by `file_id` or `path`
+    /// instead.
+    @objc
+    public var fileIdOrUrl: DBXRivieraFileIdOrUrl? { guard let swift = swift.fileIdOrUrl else { return nil }
+        return DBXRivieraFileIdOrUrl(swift: swift)
+    }
+
+    @objc
+    public init(fileIdOrUrl: DBXRivieraFileIdOrUrl?) {
+        self.swift = Riviera.GetTextArgs(fileIdOrUrl: fileIdOrUrl?.swift)
+    }
+
+    let swift: Riviera.GetTextArgs
+
+    public init(swift: Riviera.GetTextArgs) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Result type for EventBus async check - must end in "CheckResult"
+@objc
+public class DBXRivieraGetTextAsyncCheckResult: NSObject {
+    let swift: Riviera.GetTextAsyncCheckResult
+
+    public init(swift: Riviera.GetTextAsyncCheckResult) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Riviera.GetTextAsyncCheckResult) -> DBXRivieraGetTextAsyncCheckResult {
+        switch swift {
+        case .inProgress:
+            return DBXRivieraGetTextAsyncCheckResultInProgress()
+        case .complete(let swiftArg):
+            let arg = DBXRivieraGetTextResult(swift: swiftArg)
+            return DBXRivieraGetTextAsyncCheckResultComplete(arg)
+        case .failed(let swiftArg):
+            let arg = DBXRivieraTextExtractionApiV2Error(swift: swiftArg)
+            return DBXRivieraGetTextAsyncCheckResultFailed(arg)
+        case .other:
+            return DBXRivieraGetTextAsyncCheckResultOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asInProgress: DBXRivieraGetTextAsyncCheckResultInProgress? {
+        self as? DBXRivieraGetTextAsyncCheckResultInProgress
+    }
+
+    @objc
+    public var asComplete: DBXRivieraGetTextAsyncCheckResultComplete? {
+        self as? DBXRivieraGetTextAsyncCheckResultComplete
+    }
+
+    @objc
+    public var asFailed: DBXRivieraGetTextAsyncCheckResultFailed? {
+        self as? DBXRivieraGetTextAsyncCheckResultFailed
+    }
+
+    @objc
+    public var asOther: DBXRivieraGetTextAsyncCheckResultOther? {
+        self as? DBXRivieraGetTextAsyncCheckResultOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXRivieraGetTextAsyncCheckResultInProgress: DBXRivieraGetTextAsyncCheckResult {
+    @objc
+    public init() {
+        let swift = Riviera.GetTextAsyncCheckResult.inProgress
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXRivieraGetTextAsyncCheckResultComplete: DBXRivieraGetTextAsyncCheckResult {
+    @objc
+    public var complete: DBXRivieraGetTextResult
+
+    @objc
+    public init(_ arg: DBXRivieraGetTextResult) {
+        self.complete = arg
+        let swift = Riviera.GetTextAsyncCheckResult.complete(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXRivieraGetTextAsyncCheckResultFailed: DBXRivieraGetTextAsyncCheckResult {
+    @objc
+    public var failed: DBXRivieraTextExtractionApiV2Error
+
+    @objc
+    public init(_ arg: DBXRivieraTextExtractionApiV2Error) {
+        self.failed = arg
+        let swift = Riviera.GetTextAsyncCheckResult.failed(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXRivieraGetTextAsyncCheckResultOther: DBXRivieraGetTextAsyncCheckResult {
+    @objc
+    public init() {
+        let swift = Riviera.GetTextAsyncCheckResult.other
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible GetTextResult struct
+@objc
+public class DBXRivieraGetTextResult: NSObject {
+    /// The plain-text content extracted from the document. For multi-page documents the text is concatenated in
+    /// document order. May be empty when no text is detected in the source.
+    @objc
+    public var text: String { swift.text }
+
+    @objc
+    public init(text: String) {
+        self.swift = Riviera.GetTextResult(text: text)
+    }
+
+    let swift: Riviera.GetTextResult
+
+    public init(swift: Riviera.GetTextResult) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
 /// Arguments for the asynchronous `get_transcript_async` route. Exactly one of `file_id`, `path`, or `url` must be
 /// supplied via `file_id_or_url` to identify the audio or video asset to transcribe.
 @objc
@@ -1881,6 +2031,208 @@ public class DBXRivieraOfficeFileTypeOther: DBXRivieraOfficeFileType {
     @objc
     public init() {
         let swift = Riviera.OfficeFileType.other
+        super.init(swift: swift)
+    }
+}
+
+/// Reason a text extraction job failed. Returned in the `failed` variant of `GetTextAsyncCheckResult`. This is a
+/// semantic error union: the HTTP status of the poll request itself is unaffected (a poll that surfaces a failed
+/// job is still a normal successful poll response). Callers should branch on the variant.
+@objc
+public class DBXRivieraTextExtractionApiV2Error: NSObject {
+    let swift: Riviera.TextExtractionApiV2Error
+
+    public init(swift: Riviera.TextExtractionApiV2Error) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Riviera.TextExtractionApiV2Error) -> DBXRivieraTextExtractionApiV2Error {
+        switch swift {
+        case .serverError(let swiftArg):
+            let arg = swiftArg
+            return DBXRivieraTextExtractionApiV2ErrorServerError(arg)
+        case .userError(let swiftArg):
+            let arg = swiftArg
+            return DBXRivieraTextExtractionApiV2ErrorUserError(arg)
+        case .unsupportedFormatError:
+            return DBXRivieraTextExtractionApiV2ErrorUnsupportedFormatError()
+        case .linkDownloadDisabledError:
+            return DBXRivieraTextExtractionApiV2ErrorLinkDownloadDisabledError()
+        case .sharedLinkPasswordProtected:
+            return DBXRivieraTextExtractionApiV2ErrorSharedLinkPasswordProtected()
+        case .limitExceededError:
+            return DBXRivieraTextExtractionApiV2ErrorLimitExceededError()
+        case .conversionFailureError:
+            return DBXRivieraTextExtractionApiV2ErrorConversionFailureError()
+        case .notFoundError:
+            return DBXRivieraTextExtractionApiV2ErrorNotFoundError()
+        case .isAFolderError:
+            return DBXRivieraTextExtractionApiV2ErrorIsAFolderError()
+        case .other:
+            return DBXRivieraTextExtractionApiV2ErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asServerError: DBXRivieraTextExtractionApiV2ErrorServerError? {
+        self as? DBXRivieraTextExtractionApiV2ErrorServerError
+    }
+
+    @objc
+    public var asUserError: DBXRivieraTextExtractionApiV2ErrorUserError? {
+        self as? DBXRivieraTextExtractionApiV2ErrorUserError
+    }
+
+    @objc
+    public var asUnsupportedFormatError: DBXRivieraTextExtractionApiV2ErrorUnsupportedFormatError? {
+        self as? DBXRivieraTextExtractionApiV2ErrorUnsupportedFormatError
+    }
+
+    @objc
+    public var asLinkDownloadDisabledError: DBXRivieraTextExtractionApiV2ErrorLinkDownloadDisabledError? {
+        self as? DBXRivieraTextExtractionApiV2ErrorLinkDownloadDisabledError
+    }
+
+    @objc
+    public var asSharedLinkPasswordProtected: DBXRivieraTextExtractionApiV2ErrorSharedLinkPasswordProtected? {
+        self as? DBXRivieraTextExtractionApiV2ErrorSharedLinkPasswordProtected
+    }
+
+    @objc
+    public var asLimitExceededError: DBXRivieraTextExtractionApiV2ErrorLimitExceededError? {
+        self as? DBXRivieraTextExtractionApiV2ErrorLimitExceededError
+    }
+
+    @objc
+    public var asConversionFailureError: DBXRivieraTextExtractionApiV2ErrorConversionFailureError? {
+        self as? DBXRivieraTextExtractionApiV2ErrorConversionFailureError
+    }
+
+    @objc
+    public var asNotFoundError: DBXRivieraTextExtractionApiV2ErrorNotFoundError? {
+        self as? DBXRivieraTextExtractionApiV2ErrorNotFoundError
+    }
+
+    @objc
+    public var asIsAFolderError: DBXRivieraTextExtractionApiV2ErrorIsAFolderError? {
+        self as? DBXRivieraTextExtractionApiV2ErrorIsAFolderError
+    }
+
+    @objc
+    public var asOther: DBXRivieraTextExtractionApiV2ErrorOther? {
+        self as? DBXRivieraTextExtractionApiV2ErrorOther
+    }
+}
+
+/// An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying
+/// with backoff may succeed.
+@objc
+public class DBXRivieraTextExtractionApiV2ErrorServerError: DBXRivieraTextExtractionApiV2Error {
+    @objc
+    public var serverError: String
+
+    @objc
+    public init(_ arg: String) {
+        self.serverError = arg
+        let swift = Riviera.TextExtractionApiV2Error.serverError(arg)
+        super.init(swift: swift)
+    }
+}
+
+/// The request could not be processed as supplied (a problem with the caller's input). The string is a
+/// human-readable message; retrying the same request will not help.
+@objc
+public class DBXRivieraTextExtractionApiV2ErrorUserError: DBXRivieraTextExtractionApiV2Error {
+    @objc
+    public var userError: String
+
+    @objc
+    public init(_ arg: String) {
+        self.userError = arg
+        let swift = Riviera.TextExtractionApiV2Error.userError(arg)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXRivieraTextExtractionApiV2ErrorUnsupportedFormatError: DBXRivieraTextExtractionApiV2Error {
+    @objc
+    public init() {
+        let swift = Riviera.TextExtractionApiV2Error.unsupportedFormatError
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXRivieraTextExtractionApiV2ErrorLinkDownloadDisabledError: DBXRivieraTextExtractionApiV2Error {
+    @objc
+    public init() {
+        let swift = Riviera.TextExtractionApiV2Error.linkDownloadDisabledError
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXRivieraTextExtractionApiV2ErrorSharedLinkPasswordProtected: DBXRivieraTextExtractionApiV2Error {
+    @objc
+    public init() {
+        let swift = Riviera.TextExtractionApiV2Error.sharedLinkPasswordProtected
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXRivieraTextExtractionApiV2ErrorLimitExceededError: DBXRivieraTextExtractionApiV2Error {
+    @objc
+    public init() {
+        let swift = Riviera.TextExtractionApiV2Error.limitExceededError
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXRivieraTextExtractionApiV2ErrorConversionFailureError: DBXRivieraTextExtractionApiV2Error {
+    @objc
+    public init() {
+        let swift = Riviera.TextExtractionApiV2Error.conversionFailureError
+        super.init(swift: swift)
+    }
+}
+
+/// The referenced file does not exist or is not accessible.
+@objc
+public class DBXRivieraTextExtractionApiV2ErrorNotFoundError: DBXRivieraTextExtractionApiV2Error {
+    @objc
+    public init() {
+        let swift = Riviera.TextExtractionApiV2Error.notFoundError
+        super.init(swift: swift)
+    }
+}
+
+/// The target is a folder, not a file.
+@objc
+public class DBXRivieraTextExtractionApiV2ErrorIsAFolderError: DBXRivieraTextExtractionApiV2Error {
+    @objc
+    public init() {
+        let swift = Riviera.TextExtractionApiV2Error.isAFolderError
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXRivieraTextExtractionApiV2ErrorOther: DBXRivieraTextExtractionApiV2Error {
+    @objc
+    public init() {
+        let swift = Riviera.TextExtractionApiV2Error.other
         super.init(swift: swift)
     }
 }
