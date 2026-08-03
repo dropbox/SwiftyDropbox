@@ -1279,6 +1279,168 @@ public class Riviera {
         }
     }
 
+    /// Arguments for the asynchronous `get_text_async` route. Exactly one of `file_id`, `path`, or `url` must be
+    /// supplied via `file_id_or_url` to identify the document whose plain-text content should be extracted.
+    public class GetTextArgs: CustomStringConvertible, JSONRepresentable {
+        /// Identifier of the document to extract text from. Callers must set exactly one of the `FileIdOrUrl` variants.
+        /// Text extraction is supported for common document formats (Word, PowerPoint, Excel, PDF, RTF, and
+        /// Dropbox document types); see the route description for the supported formats. Requests against
+        /// unsupported formats return `unsupported_format_error`. NOTE: for the `url` variant, only Dropbox
+        /// shared links (www.dropbox.com) are supported. External (non-Dropbox) URLs are not supported and
+        /// return `unsupported_format_error`; import the file into Dropbox and reference it by `file_id` or
+        /// `path` instead.
+        public let fileIdOrUrl: Riviera.FileIdOrUrl?
+        public init(fileIdOrUrl: Riviera.FileIdOrUrl? = nil) {
+            self.fileIdOrUrl = fileIdOrUrl
+        }
+
+        func json() throws -> JSON {
+            try GetTextArgsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetTextArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetTextArgs: \(error)"
+            }
+        }
+    }
+
+    public class GetTextArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetTextArgs) throws -> JSON {
+            let output = [
+                "file_id_or_url": try NullableSerializer(Riviera.FileIdOrUrlSerializer()).serialize(value.fileIdOrUrl),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetTextArgs {
+            switch json {
+            case .dictionary(let dict):
+                let fileIdOrUrl = try NullableSerializer(Riviera.FileIdOrUrlSerializer()).deserialize(dict["file_id_or_url"] ?? .null)
+                return GetTextArgs(fileIdOrUrl: fileIdOrUrl)
+            default:
+                throw JSONSerializerError.deserializeError(type: GetTextArgs.self, json: json)
+            }
+        }
+    }
+
+    /// Result type for EventBus async check - must end in "CheckResult"
+    public enum GetTextAsyncCheckResult: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case inProgress
+        /// An unspecified error.
+        case complete(Riviera.GetTextResult)
+        /// An unspecified error.
+        case failed(Riviera.TextExtractionApiV2Error)
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try GetTextAsyncCheckResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetTextAsyncCheckResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetTextAsyncCheckResult: \(error)"
+            }
+        }
+    }
+
+    public class GetTextAsyncCheckResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetTextAsyncCheckResult) throws -> JSON {
+            switch value {
+            case .inProgress:
+                var d = [String: JSON]()
+                d[".tag"] = .str("in_progress")
+                return .dictionary(d)
+            case .complete(let arg):
+                var d = try Serialization.getFields(Riviera.GetTextResultSerializer().serialize(arg))
+                d[".tag"] = .str("complete")
+                return .dictionary(d)
+            case .failed(let arg):
+                var d = try ["failed": Riviera.TextExtractionApiV2ErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("failed")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetTextAsyncCheckResult {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "in_progress":
+                    return GetTextAsyncCheckResult.inProgress
+                case "complete":
+                    let v = try Riviera.GetTextResultSerializer().deserialize(json)
+                    return GetTextAsyncCheckResult.complete(v)
+                case "failed":
+                    let v = try Riviera.TextExtractionApiV2ErrorSerializer().deserialize(d["failed"] ?? .null)
+                    return GetTextAsyncCheckResult.failed(v)
+                case "other":
+                    return GetTextAsyncCheckResult.other
+                default:
+                    return GetTextAsyncCheckResult.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: GetTextAsyncCheckResult.self, json: json)
+            }
+        }
+    }
+
+    /// The GetTextResult struct
+    public class GetTextResult: CustomStringConvertible, JSONRepresentable {
+        /// The plain-text content extracted from the document. For multi-page documents the text is concatenated in
+        /// document order. May be empty when no text is detected in the source.
+        public let text: String
+        public init(text: String = "") {
+            stringValidator()(text)
+            self.text = text
+        }
+
+        func json() throws -> JSON {
+            try GetTextResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetTextResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetTextResult: \(error)"
+            }
+        }
+    }
+
+    public class GetTextResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetTextResult) throws -> JSON {
+            let output = [
+                "text": try Serialization._StringSerializer.serialize(value.text),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetTextResult {
+            switch json {
+            case .dictionary(let dict):
+                let text = try Serialization._StringSerializer.deserialize(dict["text"] ?? .str(""))
+                return GetTextResult(text: text)
+            default:
+                throw JSONSerializerError.deserializeError(type: GetTextResult.self, json: json)
+            }
+        }
+    }
+
     /// Arguments for the asynchronous `get_transcript_async` route. Exactly one of `file_id`, `path`, or `url` must be
     /// supplied via `file_id_or_url` to identify the audio or video asset to transcribe.
     public class GetTranscriptArgs: CustomStringConvertible, JSONRepresentable {
@@ -1923,6 +2085,129 @@ public class Riviera {
         }
     }
 
+    /// Reason a text extraction job failed. Returned in the `failed` variant of `GetTextAsyncCheckResult`. This is a
+    /// semantic error union: the HTTP status of the poll request itself is unaffected (a poll that surfaces a
+    /// failed job is still a normal successful poll response). Callers should branch on the variant.
+    public enum TextExtractionApiV2Error: CustomStringConvertible, JSONRepresentable {
+        /// An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying
+        /// with backoff may succeed.
+        case serverError(String)
+        /// The request could not be processed as supplied (a problem with the caller's input). The string is a
+        /// human-readable message; retrying the same request will not help.
+        case userError(String)
+        /// An unspecified error.
+        case unsupportedFormatError
+        /// An unspecified error.
+        case linkDownloadDisabledError
+        /// An unspecified error.
+        case sharedLinkPasswordProtected
+        /// An unspecified error.
+        case limitExceededError
+        /// An unspecified error.
+        case conversionFailureError
+        /// The referenced file does not exist or is not accessible.
+        case notFoundError
+        /// The target is a folder, not a file.
+        case isAFolderError
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try TextExtractionApiV2ErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TextExtractionApiV2ErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for TextExtractionApiV2Error: \(error)"
+            }
+        }
+    }
+
+    public class TextExtractionApiV2ErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TextExtractionApiV2Error) throws -> JSON {
+            switch value {
+            case .serverError(let arg):
+                var d = try ["server_error": Serialization._StringSerializer.serialize(arg)]
+                d[".tag"] = .str("server_error")
+                return .dictionary(d)
+            case .userError(let arg):
+                var d = try ["user_error": Serialization._StringSerializer.serialize(arg)]
+                d[".tag"] = .str("user_error")
+                return .dictionary(d)
+            case .unsupportedFormatError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("unsupported_format_error")
+                return .dictionary(d)
+            case .linkDownloadDisabledError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("link_download_disabled_error")
+                return .dictionary(d)
+            case .sharedLinkPasswordProtected:
+                var d = [String: JSON]()
+                d[".tag"] = .str("shared_link_password_protected")
+                return .dictionary(d)
+            case .limitExceededError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("limit_exceeded_error")
+                return .dictionary(d)
+            case .conversionFailureError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("conversion_failure_error")
+                return .dictionary(d)
+            case .notFoundError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_found_error")
+                return .dictionary(d)
+            case .isAFolderError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("is_a_folder_error")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> TextExtractionApiV2Error {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "server_error":
+                    let v = try Serialization._StringSerializer.deserialize(d["server_error"] ?? .null)
+                    return TextExtractionApiV2Error.serverError(v)
+                case "user_error":
+                    let v = try Serialization._StringSerializer.deserialize(d["user_error"] ?? .null)
+                    return TextExtractionApiV2Error.userError(v)
+                case "unsupported_format_error":
+                    return TextExtractionApiV2Error.unsupportedFormatError
+                case "link_download_disabled_error":
+                    return TextExtractionApiV2Error.linkDownloadDisabledError
+                case "shared_link_password_protected":
+                    return TextExtractionApiV2Error.sharedLinkPasswordProtected
+                case "limit_exceeded_error":
+                    return TextExtractionApiV2Error.limitExceededError
+                case "conversion_failure_error":
+                    return TextExtractionApiV2Error.conversionFailureError
+                case "not_found_error":
+                    return TextExtractionApiV2Error.notFoundError
+                case "is_a_folder_error":
+                    return TextExtractionApiV2Error.isAFolderError
+                case "other":
+                    return TextExtractionApiV2Error.other
+                default:
+                    return TextExtractionApiV2Error.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: TextExtractionApiV2Error.self, json: json)
+            }
+        }
+    }
+
     /// The TimestampLevel union
     public enum TimestampLevel: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
@@ -2116,6 +2401,34 @@ public class Riviera {
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Riviera.GetMetadataAsyncCheckResultSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.app, .user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let getTextAsync = Route(
+        name: "get_text_async",
+        version: 1,
+        namespace: "riviera",
+        deprecated: false,
+        argSerializer: Riviera.GetTextArgsSerializer(),
+        responseSerializer: Async.LaunchResultBaseSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attributes: RouteAttributes(
+            auth: [.app, .user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let getTextAsyncCheck = Route(
+        name: "get_text_async/check",
+        version: 1,
+        namespace: "riviera",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Riviera.GetTextAsyncCheckResultSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.app, .user],
