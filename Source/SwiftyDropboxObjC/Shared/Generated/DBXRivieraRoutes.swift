@@ -128,6 +128,118 @@ public class DBXRivieraRoutes: NSObject {
         return DBXRivieraGetMetadataAsyncCheckRpcRequest(swift: swift)
     }
 
+    /// Asynchronous OCR (optical character recognition) text extraction for images and PDFs, including scanned /
+    /// non-text PDFs. Supported formats: - Image formats: .bmp, .gif, .heic, .jpeg, .jpg, .png, .tif, .tiff, .webp.
+    /// - PDF format: .pdf. Unsupported formats return an `unsupported_format_error`. For the `url` variant only
+    /// Dropbox shared links are supported; external URLs return `unsupported_format_error`. Text-based PDFs already
+    /// carry a text layer, so OCR is not run against them and the result is empty; use `get_text_async` to read the
+    /// embedded text layer of such a PDF. The result carries the extracted words as plain text, plus the same
+    /// content as hOCR with per-word coordinates.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the file to run OCR on. Callers must set exactly one of the `FileIdOrUrl`
+    /// variants. OCR is supported for image files and PDFs, including scanned / non-text PDFs; see the route
+    /// description for the supported formats. Requests against unsupported formats return
+    /// `unsupported_format_error`. NOTE: for the `url` variant, only Dropbox shared links (www.dropbox.com) are
+    /// supported. External (non-Dropbox) URLs are not supported and return `unsupported_format_error`; import the
+    /// file into Dropbox and reference it by `file_id` or `path` instead.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getOcrAsync(fileIdOrUrl: DBXRivieraFileIdOrUrl?) -> DBXRivieraGetOcrAsyncRpcRequest {
+        let swift = swift.getOcrAsync(fileIdOrUrl: fileIdOrUrl?.swift)
+        return DBXRivieraGetOcrAsyncRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous OCR (optical character recognition) text extraction for images and PDFs, including scanned /
+    /// non-text PDFs. Supported formats: - Image formats: .bmp, .gif, .heic, .jpeg, .jpg, .png, .tif, .tiff, .webp.
+    /// - PDF format: .pdf. Unsupported formats return an `unsupported_format_error`. For the `url` variant only
+    /// Dropbox shared links are supported; external URLs return `unsupported_format_error`. Text-based PDFs already
+    /// carry a text layer, so OCR is not run against them and the result is empty; use `get_text_async` to read the
+    /// embedded text layer of such a PDF. The result carries the extracted words as plain text, plus the same
+    /// content as hOCR with per-word coordinates.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getOcrAsync() -> DBXRivieraGetOcrAsyncRpcRequest {
+        let swift = swift.getOcrAsync()
+        return DBXRivieraGetOcrAsyncRpcRequest(swift: swift)
+    }
+
+    /// Returns the status or result of specified get_ocr_async task.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetOcrAsyncCheckResult` object on
+    /// success or a `Async.PollError` object on failure.
+    @objc
+    @discardableResult public func getOcrAsyncCheck(asyncJobId: String) -> DBXRivieraGetOcrAsyncCheckRpcRequest {
+        let swift = swift.getOcrAsyncCheck(asyncJobId: asyncJobId)
+        return DBXRivieraGetOcrAsyncCheckRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous plain-text extraction from documents. Supported formats include: - Word processing: .doc, .docx,
+    /// .docm, .rtf. - Presentations: .ppt, .pptx, .pptm. - Spreadsheets: .xls, .xlsx, .xlsm. - PDF: .pdf. - Dropbox
+    /// document types: .paper, .papert, .binder, .gdoc, .gsheet, .gslides. - Plain text / subtitles: .txt, .vtt.
+    /// Unsupported formats return an `unsupported_format_error`. For the `url` variant only Dropbox shared links
+    /// are supported; external URLs return `unsupported_format_error`.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the document to extract text from. Callers must set exactly one of the
+    /// `FileIdOrUrl` variants. Text extraction is supported for common document formats (Word, PowerPoint, Excel,
+    /// PDF, RTF, and Dropbox document types); see the route description for the supported formats. Requests against
+    /// unsupported formats return `unsupported_format_error`. NOTE: for the `url` variant, only Dropbox shared
+    /// links (www.dropbox.com) are supported. External (non-Dropbox) URLs are not supported and return
+    /// `unsupported_format_error`; import the file into Dropbox and reference it by `file_id` or `path` instead.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getTextAsync(fileIdOrUrl: DBXRivieraFileIdOrUrl?) -> DBXRivieraGetTextAsyncRpcRequest {
+        let swift = swift.getTextAsync(fileIdOrUrl: fileIdOrUrl?.swift)
+        return DBXRivieraGetTextAsyncRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous plain-text extraction from documents. Supported formats include: - Word processing: .doc, .docx,
+    /// .docm, .rtf. - Presentations: .ppt, .pptx, .pptm. - Spreadsheets: .xls, .xlsx, .xlsm. - PDF: .pdf. - Dropbox
+    /// document types: .paper, .papert, .binder, .gdoc, .gsheet, .gslides. - Plain text / subtitles: .txt, .vtt.
+    /// Unsupported formats return an `unsupported_format_error`. For the `url` variant only Dropbox shared links
+    /// are supported; external URLs return `unsupported_format_error`.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getTextAsync() -> DBXRivieraGetTextAsyncRpcRequest {
+        let swift = swift.getTextAsync()
+        return DBXRivieraGetTextAsyncRpcRequest(swift: swift)
+    }
+
+    /// Returns the status or result of specified get_text_async task.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetTextAsyncCheckResult` object on
+    /// success or a `Async.PollError` object on failure.
+    @objc
+    @discardableResult public func getTextAsyncCheck(asyncJobId: String) -> DBXRivieraGetTextAsyncCheckRpcRequest {
+        let swift = swift.getTextAsyncCheck(asyncJobId: asyncJobId)
+        return DBXRivieraGetTextAsyncCheckRpcRequest(swift: swift)
+    }
+
     /// Asynchronous transcript generation for audio and video files. Supported audio formats: .aac, .aif, .aiff, .flac,
     /// .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma. Supported video formats: .3gp, .3gpp, .3gpp2, .asf, .avi, .dv,
     /// .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm,
@@ -414,6 +526,252 @@ public class DBXRivieraGetMetadataAsyncCheckRpcRequest: NSObject, DBXRequest {
             var objc: DBXRivieraGetMetadataAsyncCheckResult? = nil
             if let swift = result {
                 objc = DBXRivieraGetMetadataAsyncCheckResult.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXRivieraGetOcrAsyncRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>
+
+    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var objc: DBXAsyncLaunchResultBase? = nil
+            if let swift = result {
+                objc = DBXAsyncLaunchResultBase.factory(swift: swift)
+            }
+            completionHandler(objc, error?.objc)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXRivieraGetOcrAsyncCheckRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Riviera.GetOcrAsyncCheckResultSerializer, Async.PollErrorSerializer>
+
+    init(swift: RpcRequest<Riviera.GetOcrAsyncCheckResultSerializer, Async.PollErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXRivieraGetOcrAsyncCheckResult?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXRivieraGetOcrAsyncCheckResult?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAsyncPollError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAsyncPollError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXRivieraGetOcrAsyncCheckResult? = nil
+            if let swift = result {
+                objc = DBXRivieraGetOcrAsyncCheckResult.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXRivieraGetTextAsyncRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>
+
+    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var objc: DBXAsyncLaunchResultBase? = nil
+            if let swift = result {
+                objc = DBXAsyncLaunchResultBase.factory(swift: swift)
+            }
+            completionHandler(objc, error?.objc)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXRivieraGetTextAsyncCheckRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Riviera.GetTextAsyncCheckResultSerializer, Async.PollErrorSerializer>
+
+    init(swift: RpcRequest<Riviera.GetTextAsyncCheckResultSerializer, Async.PollErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXRivieraGetTextAsyncCheckResult?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXRivieraGetTextAsyncCheckResult?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAsyncPollError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAsyncPollError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXRivieraGetTextAsyncCheckResult? = nil
+            if let swift = result {
+                objc = DBXRivieraGetTextAsyncCheckResult.factory(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
