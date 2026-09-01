@@ -6969,6 +6969,10 @@ public class Files {
         case cantMoveIntoVault(Files.MoveIntoVaultError)
         /// Some content cannot be moved into the Family Room folder under certain circumstances, see detailed error.
         case cantMoveIntoFamily(Files.MoveIntoFamilyError)
+        /// The destination team folder has reached its storage limit.
+        case teamFolderInsufficientQuota
+        /// The user's member folder has reached its storage limit.
+        case memberFolderInsufficientQuota
         /// An unspecified error.
         case other
 
@@ -7045,6 +7049,14 @@ public class Files {
                 var d = try ["cant_move_into_family": Files.MoveIntoFamilyErrorSerializer().serialize(arg)]
                 d[".tag"] = .str("cant_move_into_family")
                 return .dictionary(d)
+            case .teamFolderInsufficientQuota:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_folder_insufficient_quota")
+                return .dictionary(d)
+            case .memberFolderInsufficientQuota:
+                var d = [String: JSON]()
+                d[".tag"] = .str("member_folder_insufficient_quota")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -7090,6 +7102,10 @@ public class Files {
                 case "cant_move_into_family":
                     let v = try Files.MoveIntoFamilyErrorSerializer().deserialize(d["cant_move_into_family"] ?? .null)
                     return RelocationError.cantMoveIntoFamily(v)
+                case "team_folder_insufficient_quota":
+                    return RelocationError.teamFolderInsufficientQuota
+                case "member_folder_insufficient_quota":
+                    return RelocationError.memberFolderInsufficientQuota
                 case "other":
                     return RelocationError.other
                 default:
@@ -7133,6 +7149,10 @@ public class Files {
         case cantMoveIntoVault(Files.MoveIntoVaultError)
         /// Some content cannot be moved into the Family Room folder under certain circumstances, see detailed error.
         case cantMoveIntoFamily(Files.MoveIntoFamilyError)
+        /// The destination team folder has reached its storage limit.
+        case teamFolderInsufficientQuota
+        /// The user's member folder has reached its storage limit.
+        case memberFolderInsufficientQuota
         /// An unspecified error.
         case other
         /// There are too many write operations in user's Dropbox. Please retry this request.
@@ -7211,6 +7231,14 @@ public class Files {
                 var d = try ["cant_move_into_family": Files.MoveIntoFamilyErrorSerializer().serialize(arg)]
                 d[".tag"] = .str("cant_move_into_family")
                 return .dictionary(d)
+            case .teamFolderInsufficientQuota:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_folder_insufficient_quota")
+                return .dictionary(d)
+            case .memberFolderInsufficientQuota:
+                var d = [String: JSON]()
+                d[".tag"] = .str("member_folder_insufficient_quota")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -7260,6 +7288,10 @@ public class Files {
                 case "cant_move_into_family":
                     let v = try Files.MoveIntoFamilyErrorSerializer().deserialize(d["cant_move_into_family"] ?? .null)
                     return RelocationBatchError.cantMoveIntoFamily(v)
+                case "team_folder_insufficient_quota":
+                    return RelocationBatchError.teamFolderInsufficientQuota
+                case "member_folder_insufficient_quota":
+                    return RelocationBatchError.memberFolderInsufficientQuota
                 case "other":
                     return RelocationBatchError.other
                 case "too_many_write_operations":
@@ -12390,6 +12422,10 @@ public class Files {
         case tooManyWriteOperations
         /// The user doesn't have permission to perform the action due to restrictions set by a team administrator
         case accessRestricted
+        /// The destination team folder has reached its storage limit.
+        case teamFolderInsufficientSpace
+        /// The user's member folder has reached its storage limit.
+        case memberFolderInsufficientSpace
         /// An unspecified error.
         case other
 
@@ -12446,6 +12482,14 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("access_restricted")
                 return .dictionary(d)
+            case .teamFolderInsufficientSpace:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_folder_insufficient_space")
+                return .dictionary(d)
+            case .memberFolderInsufficientSpace:
+                var d = [String: JSON]()
+                d[".tag"] = .str("member_folder_insufficient_space")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -12478,6 +12522,10 @@ public class Files {
                     return WriteError.tooManyWriteOperations
                 case "access_restricted":
                     return WriteError.accessRestricted
+                case "team_folder_insufficient_space":
+                    return WriteError.teamFolderInsufficientSpace
+                case "member_folder_insufficient_space":
+                    return WriteError.memberFolderInsufficientSpace
                 case "other":
                     return WriteError.other
                 default:
