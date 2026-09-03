@@ -19,6 +19,80 @@ public class DBXRivieraAppAuthRoutes: NSObject {
 
     public let client: DBXDropboxTransportClient
 
+    /// Asynchronous scene-change keyframe extraction for video files. Detects scene changes in the source video and
+    /// returns one representative keyframe per detected scene, each tagged with its timestamp (seconds from the
+    /// start of the video) and scene-change score. Set `include_images = true` to also receive each frame as a
+    /// base64-encoded JPEG; when the field is omitted the response carries keyframe metadata only. Supported video
+    /// formats: .3gp, .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts,
+    /// .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm, .wmv. Unsupported formats return an
+    /// `unsupported_format_error`. Limits: the source file must be at most 10 GB. To keep responses within service
+    /// limits the number of keyframes and the total image payload are bounded; requests that would exceed these
+    /// limits return a `limit_exceeded_error` -- raise `scene_change_threshold` or set `include_images = false` to
+    /// stay within bounds.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the video file to extract keyframes from. Callers must set exactly one of
+    /// the `FileIdOrUrl` variants. Keyframe extraction is supported for video files only; see the route description
+    /// for the supported formats. Requests against unsupported formats return `unsupported_format_error`.
+    /// - parameter sceneChangeThreshold: Sensitivity of scene-change detection. A keyframe is emitted whenever the
+    /// frame-to-frame scene score crosses this threshold, so a LOWER value yields MORE keyframes. Valid range is
+    /// (0.0, 1.0]. When omitted (0.0) the service uses a default of 0.3, which is a good starting point for most
+    /// videos.
+    /// - parameter includeImages: When true, each returned keyframe includes the JPEG image bytes, base64-encoded, in
+    /// `ApiKeyframe.image_base64`. When false, the response contains only per-keyframe metadata (timestamp and
+    /// scene score) and `image_base64` is left empty -- useful when you only need the scene boundaries and want a
+    /// small response. NOTE: because the field defaults to false in proto3, callers who want images must set this
+    /// explicitly to true.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getKeyframesAsync(fileIdOrUrl: DBXRivieraFileIdOrUrl?, sceneChangeThreshold: NSNumber, includeImages: NSNumber) -> DBXRivieraGetKeyframesAsyncRpcRequest {
+        let swift = swift.getKeyframesAsync(
+            fileIdOrUrl: fileIdOrUrl?.swift,
+            sceneChangeThreshold: sceneChangeThreshold.doubleValue,
+            includeImages: includeImages.boolValue
+        )
+        return DBXRivieraGetKeyframesAsyncRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous scene-change keyframe extraction for video files. Detects scene changes in the source video and
+    /// returns one representative keyframe per detected scene, each tagged with its timestamp (seconds from the
+    /// start of the video) and scene-change score. Set `include_images = true` to also receive each frame as a
+    /// base64-encoded JPEG; when the field is omitted the response carries keyframe metadata only. Supported video
+    /// formats: .3gp, .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts,
+    /// .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm, .wmv. Unsupported formats return an
+    /// `unsupported_format_error`. Limits: the source file must be at most 10 GB. To keep responses within service
+    /// limits the number of keyframes and the total image payload are bounded; requests that would exceed these
+    /// limits return a `limit_exceeded_error` -- raise `scene_change_threshold` or set `include_images = false` to
+    /// stay within bounds.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getKeyframesAsync() -> DBXRivieraGetKeyframesAsyncRpcRequest {
+        let swift = swift.getKeyframesAsync()
+        return DBXRivieraGetKeyframesAsyncRpcRequest(swift: swift)
+    }
+
+    /// Returns the status or result of specified get_keyframes_async task.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetKeyframesAsyncCheckResult`
+    /// object on success or a `Async.PollError` object on failure.
+    @objc
+    @discardableResult public func getKeyframesAsyncCheck(asyncJobId: String) -> DBXRivieraGetKeyframesAsyncCheckRpcRequest {
+        let swift = swift.getKeyframesAsyncCheck(asyncJobId: asyncJobId)
+        return DBXRivieraGetKeyframesAsyncCheckRpcRequest(swift: swift)
+    }
+
     /// Asynchronous document-to-markdown conversion for supported file formats. Supported formats: .binder, .docx,
     /// .html, .paper, .papert, .pptx, .xlsx, .gsheet, .ods, .pdf. Unsupported formats return an
     /// `unsupported_format_error`. Size limit: the source file must be at most 50 MB. Larger files are rejected.
@@ -126,6 +200,118 @@ public class DBXRivieraAppAuthRoutes: NSObject {
     @discardableResult public func getMetadataAsyncCheck(asyncJobId: String) -> DBXRivieraGetMetadataAsyncCheckRpcRequest {
         let swift = swift.getMetadataAsyncCheck(asyncJobId: asyncJobId)
         return DBXRivieraGetMetadataAsyncCheckRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous OCR (optical character recognition) text extraction for images and PDFs, including scanned /
+    /// non-text PDFs. Supported formats: - Image formats: .bmp, .gif, .heic, .jpeg, .jpg, .png, .tif, .tiff, .webp.
+    /// - PDF format: .pdf. Unsupported formats return an `unsupported_format_error`. For the `url` variant only
+    /// Dropbox shared links are supported; external URLs return `unsupported_format_error`. Text-based PDFs already
+    /// carry a text layer, so OCR is not run against them and the result is empty; use `get_text_async` to read the
+    /// embedded text layer of such a PDF. The result carries the extracted words as plain text, plus the same
+    /// content as hOCR with per-word coordinates.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the file to run OCR on. Callers must set exactly one of the `FileIdOrUrl`
+    /// variants. OCR is supported for image files and PDFs, including scanned / non-text PDFs; see the route
+    /// description for the supported formats. Requests against unsupported formats return
+    /// `unsupported_format_error`. NOTE: for the `url` variant, only Dropbox shared links (www.dropbox.com) are
+    /// supported. External (non-Dropbox) URLs are not supported and return `unsupported_format_error`; import the
+    /// file into Dropbox and reference it by `file_id` or `path` instead.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getOcrAsync(fileIdOrUrl: DBXRivieraFileIdOrUrl?) -> DBXRivieraGetOcrAsyncRpcRequest {
+        let swift = swift.getOcrAsync(fileIdOrUrl: fileIdOrUrl?.swift)
+        return DBXRivieraGetOcrAsyncRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous OCR (optical character recognition) text extraction for images and PDFs, including scanned /
+    /// non-text PDFs. Supported formats: - Image formats: .bmp, .gif, .heic, .jpeg, .jpg, .png, .tif, .tiff, .webp.
+    /// - PDF format: .pdf. Unsupported formats return an `unsupported_format_error`. For the `url` variant only
+    /// Dropbox shared links are supported; external URLs return `unsupported_format_error`. Text-based PDFs already
+    /// carry a text layer, so OCR is not run against them and the result is empty; use `get_text_async` to read the
+    /// embedded text layer of such a PDF. The result carries the extracted words as plain text, plus the same
+    /// content as hOCR with per-word coordinates.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getOcrAsync() -> DBXRivieraGetOcrAsyncRpcRequest {
+        let swift = swift.getOcrAsync()
+        return DBXRivieraGetOcrAsyncRpcRequest(swift: swift)
+    }
+
+    /// Returns the status or result of specified get_ocr_async task.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetOcrAsyncCheckResult` object on
+    /// success or a `Async.PollError` object on failure.
+    @objc
+    @discardableResult public func getOcrAsyncCheck(asyncJobId: String) -> DBXRivieraGetOcrAsyncCheckRpcRequest {
+        let swift = swift.getOcrAsyncCheck(asyncJobId: asyncJobId)
+        return DBXRivieraGetOcrAsyncCheckRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous plain-text extraction from documents. Supported formats include: - Word processing: .doc, .docx,
+    /// .docm, .rtf. - Presentations: .ppt, .pptx, .pptm. - Spreadsheets: .xls, .xlsx, .xlsm. - PDF: .pdf. - Dropbox
+    /// document types: .paper, .papert, .binder, .gdoc, .gsheet, .gslides. - Plain text / subtitles: .txt, .vtt.
+    /// Unsupported formats return an `unsupported_format_error`. For the `url` variant only Dropbox shared links
+    /// are supported; external URLs return `unsupported_format_error`.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the document to extract text from. Callers must set exactly one of the
+    /// `FileIdOrUrl` variants. Text extraction is supported for common document formats (Word, PowerPoint, Excel,
+    /// PDF, RTF, and Dropbox document types); see the route description for the supported formats. Requests against
+    /// unsupported formats return `unsupported_format_error`. NOTE: for the `url` variant, only Dropbox shared
+    /// links (www.dropbox.com) are supported. External (non-Dropbox) URLs are not supported and return
+    /// `unsupported_format_error`; import the file into Dropbox and reference it by `file_id` or `path` instead.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getTextAsync(fileIdOrUrl: DBXRivieraFileIdOrUrl?) -> DBXRivieraGetTextAsyncRpcRequest {
+        let swift = swift.getTextAsync(fileIdOrUrl: fileIdOrUrl?.swift)
+        return DBXRivieraGetTextAsyncRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous plain-text extraction from documents. Supported formats include: - Word processing: .doc, .docx,
+    /// .docm, .rtf. - Presentations: .ppt, .pptx, .pptm. - Spreadsheets: .xls, .xlsx, .xlsm. - PDF: .pdf. - Dropbox
+    /// document types: .paper, .papert, .binder, .gdoc, .gsheet, .gslides. - Plain text / subtitles: .txt, .vtt.
+    /// Unsupported formats return an `unsupported_format_error`. For the `url` variant only Dropbox shared links
+    /// are supported; external URLs return `unsupported_format_error`.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getTextAsync() -> DBXRivieraGetTextAsyncRpcRequest {
+        let swift = swift.getTextAsync()
+        return DBXRivieraGetTextAsyncRpcRequest(swift: swift)
+    }
+
+    /// Returns the status or result of specified get_text_async task.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetTextAsyncCheckResult` object on
+    /// success or a `Async.PollError` object on failure.
+    @objc
+    @discardableResult public func getTextAsyncCheck(asyncJobId: String) -> DBXRivieraGetTextAsyncCheckRpcRequest {
+        let swift = swift.getTextAsyncCheck(asyncJobId: asyncJobId)
+        return DBXRivieraGetTextAsyncCheckRpcRequest(swift: swift)
     }
 
     /// Asynchronous transcript generation for audio and video files. Supported audio formats: .aac, .aif, .aiff, .flac,

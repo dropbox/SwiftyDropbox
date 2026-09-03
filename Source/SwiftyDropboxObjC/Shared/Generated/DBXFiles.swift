@@ -6110,6 +6110,10 @@ public class DBXFilesRelocationError: NSObject {
         case .cantMoveIntoFamily(let swiftArg):
             let arg = DBXFilesMoveIntoFamilyError(swift: swiftArg)
             return DBXFilesRelocationErrorCantMoveIntoFamily(arg)
+        case .teamFolderInsufficientQuota:
+            return DBXFilesRelocationErrorTeamFolderInsufficientQuota()
+        case .memberFolderInsufficientQuota:
+            return DBXFilesRelocationErrorMemberFolderInsufficientQuota()
         case .other:
             return DBXFilesRelocationErrorOther()
         }
@@ -6186,6 +6190,16 @@ public class DBXFilesRelocationError: NSObject {
     @objc
     public var asCantMoveIntoFamily: DBXFilesRelocationErrorCantMoveIntoFamily? {
         self as? DBXFilesRelocationErrorCantMoveIntoFamily
+    }
+
+    @objc
+    public var asTeamFolderInsufficientQuota: DBXFilesRelocationErrorTeamFolderInsufficientQuota? {
+        self as? DBXFilesRelocationErrorTeamFolderInsufficientQuota
+    }
+
+    @objc
+    public var asMemberFolderInsufficientQuota: DBXFilesRelocationErrorMemberFolderInsufficientQuota? {
+        self as? DBXFilesRelocationErrorMemberFolderInsufficientQuota
     }
 
     @objc
@@ -6356,6 +6370,26 @@ public class DBXFilesRelocationErrorCantMoveIntoFamily: DBXFilesRelocationError 
     }
 }
 
+/// The destination team folder has reached its storage limit.
+@objc
+public class DBXFilesRelocationErrorTeamFolderInsufficientQuota: DBXFilesRelocationError {
+    @objc
+    public init() {
+        let swift = Files.RelocationError.teamFolderInsufficientQuota
+        super.init(swift: swift)
+    }
+}
+
+/// The user's member folder has reached its storage limit.
+@objc
+public class DBXFilesRelocationErrorMemberFolderInsufficientQuota: DBXFilesRelocationError {
+    @objc
+    public init() {
+        let swift = Files.RelocationError.memberFolderInsufficientQuota
+        super.init(swift: swift)
+    }
+}
+
 /// An unspecified error.
 @objc
 public class DBXFilesRelocationErrorOther: DBXFilesRelocationError {
@@ -6410,6 +6444,10 @@ public class DBXFilesRelocationBatchError: NSObject {
         case .cantMoveIntoFamily(let swiftArg):
             let arg = DBXFilesMoveIntoFamilyError(swift: swiftArg)
             return DBXFilesRelocationBatchErrorCantMoveIntoFamily(arg)
+        case .teamFolderInsufficientQuota:
+            return DBXFilesRelocationBatchErrorTeamFolderInsufficientQuota()
+        case .memberFolderInsufficientQuota:
+            return DBXFilesRelocationBatchErrorMemberFolderInsufficientQuota()
         case .other:
             return DBXFilesRelocationBatchErrorOther()
         case .tooManyWriteOperations:
@@ -6488,6 +6526,16 @@ public class DBXFilesRelocationBatchError: NSObject {
     @objc
     public var asCantMoveIntoFamily: DBXFilesRelocationBatchErrorCantMoveIntoFamily? {
         self as? DBXFilesRelocationBatchErrorCantMoveIntoFamily
+    }
+
+    @objc
+    public var asTeamFolderInsufficientQuota: DBXFilesRelocationBatchErrorTeamFolderInsufficientQuota? {
+        self as? DBXFilesRelocationBatchErrorTeamFolderInsufficientQuota
+    }
+
+    @objc
+    public var asMemberFolderInsufficientQuota: DBXFilesRelocationBatchErrorMemberFolderInsufficientQuota? {
+        self as? DBXFilesRelocationBatchErrorMemberFolderInsufficientQuota
     }
 
     @objc
@@ -6659,6 +6707,26 @@ public class DBXFilesRelocationBatchErrorCantMoveIntoFamily: DBXFilesRelocationB
     public init(_ arg: DBXFilesMoveIntoFamilyError) {
         self.cantMoveIntoFamily = arg
         let swift = Files.RelocationBatchError.cantMoveIntoFamily(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// The destination team folder has reached its storage limit.
+@objc
+public class DBXFilesRelocationBatchErrorTeamFolderInsufficientQuota: DBXFilesRelocationBatchError {
+    @objc
+    public init() {
+        let swift = Files.RelocationBatchError.teamFolderInsufficientQuota
+        super.init(swift: swift)
+    }
+}
+
+/// The user's member folder has reached its storage limit.
+@objc
+public class DBXFilesRelocationBatchErrorMemberFolderInsufficientQuota: DBXFilesRelocationBatchError {
+    @objc
+    public init() {
+        let swift = Files.RelocationBatchError.memberFolderInsufficientQuota
         super.init(swift: swift)
     }
 }
@@ -11840,6 +11908,10 @@ public class DBXFilesWriteError: NSObject {
             return DBXFilesWriteErrorTooManyWriteOperations()
         case .accessRestricted:
             return DBXFilesWriteErrorAccessRestricted()
+        case .teamFolderInsufficientSpace:
+            return DBXFilesWriteErrorTeamFolderInsufficientSpace()
+        case .memberFolderInsufficientSpace:
+            return DBXFilesWriteErrorMemberFolderInsufficientSpace()
         case .other:
             return DBXFilesWriteErrorOther()
         }
@@ -11891,6 +11963,16 @@ public class DBXFilesWriteError: NSObject {
     @objc
     public var asAccessRestricted: DBXFilesWriteErrorAccessRestricted? {
         self as? DBXFilesWriteErrorAccessRestricted
+    }
+
+    @objc
+    public var asTeamFolderInsufficientSpace: DBXFilesWriteErrorTeamFolderInsufficientSpace? {
+        self as? DBXFilesWriteErrorTeamFolderInsufficientSpace
+    }
+
+    @objc
+    public var asMemberFolderInsufficientSpace: DBXFilesWriteErrorMemberFolderInsufficientSpace? {
+        self as? DBXFilesWriteErrorMemberFolderInsufficientSpace
     }
 
     @objc
@@ -11995,6 +12077,26 @@ public class DBXFilesWriteErrorAccessRestricted: DBXFilesWriteError {
     @objc
     public init() {
         let swift = Files.WriteError.accessRestricted
+        super.init(swift: swift)
+    }
+}
+
+/// The destination team folder has reached its storage limit.
+@objc
+public class DBXFilesWriteErrorTeamFolderInsufficientSpace: DBXFilesWriteError {
+    @objc
+    public init() {
+        let swift = Files.WriteError.teamFolderInsufficientSpace
+        super.init(swift: swift)
+    }
+}
+
+/// The user's member folder has reached its storage limit.
+@objc
+public class DBXFilesWriteErrorMemberFolderInsufficientSpace: DBXFilesWriteError {
+    @objc
+    public init() {
+        let swift = Files.WriteError.memberFolderInsufficientSpace
         super.init(swift: swift)
     }
 }
