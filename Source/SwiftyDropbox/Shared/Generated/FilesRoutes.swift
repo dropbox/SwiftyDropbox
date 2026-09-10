@@ -52,7 +52,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - scope: files.content.write
     ///
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an Data object.
     ///
@@ -91,7 +92,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - scope: files.content.write
     ///
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an URL object.
     ///
@@ -130,7 +132,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - scope: files.content.write
     ///
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
@@ -738,16 +741,15 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// maximum temporary upload link duration is 4 hours. Upon consumption or expiration, a new link will have to
     /// be generated. Multiple links may exist for a specific upload path at any given time.  The POST request on
     /// the temporary upload link must have its Content-Type set to "application/octet-stream".  Example temporary
-    /// upload link consumption request:  curl -X POST https://content.dropboxapi.com/apitul/1/bNi2uIYF51cVBND
-    /// --header "Content-Type: application/octet-stream" --data-binary @local_file.txt  A successful temporary
-    /// upload link consumption request returns the content hash of the uploaded data in JSON format. Example
-    /// successful temporary upload link consumption response: {"content-hash":
-    /// "599d71033d700ac892a0e48fa61b125d2f5994"}  An unsuccessful temporary upload link consumption request returns
-    /// any of the following status codes:  HTTP 400 Bad Request: Content-Type is not one of
-    /// application/octet-stream and text/plain or request is invalid. HTTP 409 Conflict: The temporary upload link
-    /// does not exist or is currently unavailable, the upload failed, or another error happened. HTTP 410 Gone: The
-    /// temporary upload link is expired or consumed. Example unsuccessful temporary upload link consumption
-    /// response: Temporary upload link has been recently consumed.
+    /// upload link consumption request:  curl -X POST <temporary_upload_link_url> --header "Content-Type:
+    /// application/octet-stream" --data-binary @local_file.txt  A successful temporary upload link consumption
+    /// request returns the content hash of the uploaded data in JSON format. Example successful temporary upload
+    /// link consumption response: {"content-hash": "599d71033d700ac892a0e48fa61b125d2f5994"}  An unsuccessful
+    /// temporary upload link consumption request returns any of the following status codes:  HTTP 400 Bad Request:
+    /// Content-Type is not one of application/octet-stream and text/plain or request is invalid. HTTP 409 Conflict:
+    /// The temporary upload link does not exist or is currently unavailable, the upload failed, or another error
+    /// happened. HTTP 410 Gone: The temporary upload link is expired or consumed. Example unsuccessful temporary
+    /// upload link consumption response: Temporary upload link has been recently consumed.
     ///
     /// - scope: files.content.write
     ///
@@ -1703,7 +1705,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - scope: files.content.write
     ///
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an Data object.
     ///
@@ -1743,7 +1746,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - scope: files.content.write
     ///
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an URL object.
     ///
@@ -1783,7 +1787,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - scope: files.content.write
     ///
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
@@ -1902,7 +1907,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an Data object.
     ///
@@ -1930,7 +1936,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an URL object.
     ///
@@ -1958,7 +1965,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
@@ -1984,9 +1992,9 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - scope: files.content.write
     ///
     /// - parameter entries: Append information for each file in the batch.
-    /// - parameter contentHash: A hash of the entire request body which is all the concatenated pieces of file content
-    /// that were uploaded in this call. If provided and the uploaded content does not match this hash, an error
-    /// will be returned. For more information see our Content hash
+    /// - parameter contentHash: A single hash of all the concatenated file contents uploaded in this call. If provided
+    /// and the uploaded content does not match this hash, an error will be returned. Optional, but recommended to
+    /// avoid committing data corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an Data object.
     ///
@@ -2012,9 +2020,9 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - scope: files.content.write
     ///
     /// - parameter entries: Append information for each file in the batch.
-    /// - parameter contentHash: A hash of the entire request body which is all the concatenated pieces of file content
-    /// that were uploaded in this call. If provided and the uploaded content does not match this hash, an error
-    /// will be returned. For more information see our Content hash
+    /// - parameter contentHash: A single hash of all the concatenated file contents uploaded in this call. If provided
+    /// and the uploaded content does not match this hash, an error will be returned. Optional, but recommended to
+    /// avoid committing data corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an URL object.
     ///
@@ -2040,9 +2048,9 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - scope: files.content.write
     ///
     /// - parameter entries: Append information for each file in the batch.
-    /// - parameter contentHash: A hash of the entire request body which is all the concatenated pieces of file content
-    /// that were uploaded in this call. If provided and the uploaded content does not match this hash, an error
-    /// will be returned. For more information see our Content hash
+    /// - parameter contentHash: A single hash of all the concatenated file contents uploaded in this call. If provided
+    /// and the uploaded content does not match this hash, an error will be returned. Optional, but recommended to
+    /// avoid committing data corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
@@ -2068,7 +2076,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter commit: Contains the path and other optional modifiers for the commit.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an Data object.
     ///
@@ -2094,7 +2103,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter commit: Contains the path and other optional modifiers for the commit.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an URL object.
     ///
@@ -2120,7 +2130,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter commit: Contains the path and other optional modifiers for the commit.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
@@ -2240,7 +2251,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter sessionType: Type of upload session you want to start. If not specified, default is sequential in
     /// UploadSessionType.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an Data object.
     ///
@@ -2284,7 +2296,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter sessionType: Type of upload session you want to start. If not specified, default is sequential in
     /// UploadSessionType.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an URL object.
     ///
@@ -2328,7 +2341,8 @@ public class FilesRoutes: DropboxTransportClientOwning {
     /// - parameter sessionType: Type of upload session you want to start. If not specified, default is sequential in
     /// UploadSessionType.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
