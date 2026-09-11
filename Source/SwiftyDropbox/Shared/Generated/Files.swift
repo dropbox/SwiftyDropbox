@@ -6969,6 +6969,10 @@ public class Files {
         case cantMoveIntoVault(Files.MoveIntoVaultError)
         /// Some content cannot be moved into the Family Room folder under certain circumstances, see detailed error.
         case cantMoveIntoFamily(Files.MoveIntoFamilyError)
+        /// The destination team folder has reached its storage limit.
+        case teamFolderInsufficientQuota
+        /// The user's member folder has reached its storage limit.
+        case memberFolderInsufficientQuota
         /// An unspecified error.
         case other
 
@@ -7045,6 +7049,14 @@ public class Files {
                 var d = try ["cant_move_into_family": Files.MoveIntoFamilyErrorSerializer().serialize(arg)]
                 d[".tag"] = .str("cant_move_into_family")
                 return .dictionary(d)
+            case .teamFolderInsufficientQuota:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_folder_insufficient_quota")
+                return .dictionary(d)
+            case .memberFolderInsufficientQuota:
+                var d = [String: JSON]()
+                d[".tag"] = .str("member_folder_insufficient_quota")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -7090,6 +7102,10 @@ public class Files {
                 case "cant_move_into_family":
                     let v = try Files.MoveIntoFamilyErrorSerializer().deserialize(d["cant_move_into_family"] ?? .null)
                     return RelocationError.cantMoveIntoFamily(v)
+                case "team_folder_insufficient_quota":
+                    return RelocationError.teamFolderInsufficientQuota
+                case "member_folder_insufficient_quota":
+                    return RelocationError.memberFolderInsufficientQuota
                 case "other":
                     return RelocationError.other
                 default:
@@ -7133,6 +7149,10 @@ public class Files {
         case cantMoveIntoVault(Files.MoveIntoVaultError)
         /// Some content cannot be moved into the Family Room folder under certain circumstances, see detailed error.
         case cantMoveIntoFamily(Files.MoveIntoFamilyError)
+        /// The destination team folder has reached its storage limit.
+        case teamFolderInsufficientQuota
+        /// The user's member folder has reached its storage limit.
+        case memberFolderInsufficientQuota
         /// An unspecified error.
         case other
         /// There are too many write operations in user's Dropbox. Please retry this request.
@@ -7211,6 +7231,14 @@ public class Files {
                 var d = try ["cant_move_into_family": Files.MoveIntoFamilyErrorSerializer().serialize(arg)]
                 d[".tag"] = .str("cant_move_into_family")
                 return .dictionary(d)
+            case .teamFolderInsufficientQuota:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_folder_insufficient_quota")
+                return .dictionary(d)
+            case .memberFolderInsufficientQuota:
+                var d = [String: JSON]()
+                d[".tag"] = .str("member_folder_insufficient_quota")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -7260,6 +7288,10 @@ public class Files {
                 case "cant_move_into_family":
                     let v = try Files.MoveIntoFamilyErrorSerializer().deserialize(d["cant_move_into_family"] ?? .null)
                     return RelocationBatchError.cantMoveIntoFamily(v)
+                case "team_folder_insufficient_quota":
+                    return RelocationBatchError.teamFolderInsufficientQuota
+                case "member_folder_insufficient_quota":
+                    return RelocationBatchError.memberFolderInsufficientQuota
                 case "other":
                     return RelocationBatchError.other
                 case "too_many_write_operations":
@@ -10484,7 +10516,8 @@ public class Files {
     /// The UploadArg struct
     public class UploadArg: Files.CommitInfo {
         /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
-        /// hash, an error will be returned. For more information see our Content hash
+        /// hash, an error will be returned. Optional, but recommended to avoid committing data corrupted in
+        /// transit. For more information see our Content hash
         /// https://www.dropbox.com/developers/reference/content-hash page.
         public let contentHash: String?
         public init(
@@ -10659,7 +10692,8 @@ public class Files {
         /// anymore with the current session.
         public let close: Bool
         /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
-        /// hash, an error will be returned. For more information see our Content hash
+        /// hash, an error will be returned. Optional, but recommended to avoid committing data corrupted in
+        /// transit. For more information see our Content hash
         /// https://www.dropbox.com/developers/reference/content-hash page.
         public let contentHash: String?
         public init(cursor: Files.UploadSessionCursor, close: Bool = false, contentHash: String? = nil) {
@@ -10710,10 +10744,10 @@ public class Files {
     public class UploadSessionAppendBatchArg: CustomStringConvertible, JSONRepresentable {
         /// Append information for each file in the batch.
         public let entries: [Files.UploadSessionAppendBatchArgEntry]
-        /// A hash of the entire request body which is all the concatenated pieces of file content that were uploaded in
-        /// this call. If provided and the uploaded content does not match this hash, an error will be returned.
-        /// For more information see our Content hash https://www.dropbox.com/developers/reference/content-hash
-        /// page.
+        /// A single hash of all the concatenated file contents uploaded in this call. If provided and the uploaded
+        /// content does not match this hash, an error will be returned. Optional, but recommended to avoid
+        /// committing data corrupted in transit. For more information see our Content hash
+        /// https://www.dropbox.com/developers/reference/content-hash page.
         public let contentHash: String?
         public init(entries: [Files.UploadSessionAppendBatchArgEntry], contentHash: String? = nil) {
             self.entries = entries
@@ -11242,7 +11276,8 @@ public class Files {
         /// Contains the path and other optional modifiers for the commit.
         public let commit: Files.CommitInfo
         /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
-        /// hash, an error will be returned. For more information see our Content hash
+        /// hash, an error will be returned. Optional, but recommended to avoid committing data corrupted in
+        /// transit. For more information see our Content hash
         /// https://www.dropbox.com/developers/reference/content-hash page.
         public let contentHash: String?
         public init(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, contentHash: String? = nil) {
@@ -11847,7 +11882,8 @@ public class Files {
         /// Type of upload session you want to start. If not specified, default is sequential in UploadSessionType.
         public let sessionType: Files.UploadSessionType?
         /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
-        /// hash, an error will be returned. For more information see our Content hash
+        /// hash, an error will be returned. Optional, but recommended to avoid committing data corrupted in
+        /// transit. For more information see our Content hash
         /// https://www.dropbox.com/developers/reference/content-hash page.
         public let contentHash: String?
         public init(close: Bool = false, sessionType: Files.UploadSessionType? = nil, contentHash: String? = nil) {
@@ -12390,6 +12426,10 @@ public class Files {
         case tooManyWriteOperations
         /// The user doesn't have permission to perform the action due to restrictions set by a team administrator
         case accessRestricted
+        /// The destination team folder has reached its storage limit.
+        case teamFolderInsufficientSpace
+        /// The user's member folder has reached its storage limit.
+        case memberFolderInsufficientSpace
         /// An unspecified error.
         case other
 
@@ -12446,6 +12486,14 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("access_restricted")
                 return .dictionary(d)
+            case .teamFolderInsufficientSpace:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_folder_insufficient_space")
+                return .dictionary(d)
+            case .memberFolderInsufficientSpace:
+                var d = [String: JSON]()
+                d[".tag"] = .str("member_folder_insufficient_space")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -12478,6 +12526,10 @@ public class Files {
                     return WriteError.tooManyWriteOperations
                 case "access_restricted":
                     return WriteError.accessRestricted
+                case "team_folder_insufficient_space":
+                    return WriteError.teamFolderInsufficientSpace
+                case "member_folder_insufficient_space":
+                    return WriteError.memberFolderInsufficientSpace
                 case "other":
                     return WriteError.other
                 default:
