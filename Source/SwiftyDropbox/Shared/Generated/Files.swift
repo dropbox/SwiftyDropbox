@@ -6969,6 +6969,10 @@ public class Files {
         case cantMoveIntoVault(Files.MoveIntoVaultError)
         /// Some content cannot be moved into the Family Room folder under certain circumstances, see detailed error.
         case cantMoveIntoFamily(Files.MoveIntoFamilyError)
+        /// The destination team folder has reached its storage limit.
+        case teamFolderInsufficientQuota
+        /// The user's member folder has reached its storage limit.
+        case memberFolderInsufficientQuota
         /// An unspecified error.
         case other
 
@@ -7045,6 +7049,14 @@ public class Files {
                 var d = try ["cant_move_into_family": Files.MoveIntoFamilyErrorSerializer().serialize(arg)]
                 d[".tag"] = .str("cant_move_into_family")
                 return .dictionary(d)
+            case .teamFolderInsufficientQuota:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_folder_insufficient_quota")
+                return .dictionary(d)
+            case .memberFolderInsufficientQuota:
+                var d = [String: JSON]()
+                d[".tag"] = .str("member_folder_insufficient_quota")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -7090,6 +7102,10 @@ public class Files {
                 case "cant_move_into_family":
                     let v = try Files.MoveIntoFamilyErrorSerializer().deserialize(d["cant_move_into_family"] ?? .null)
                     return RelocationError.cantMoveIntoFamily(v)
+                case "team_folder_insufficient_quota":
+                    return RelocationError.teamFolderInsufficientQuota
+                case "member_folder_insufficient_quota":
+                    return RelocationError.memberFolderInsufficientQuota
                 case "other":
                     return RelocationError.other
                 default:
@@ -7133,6 +7149,10 @@ public class Files {
         case cantMoveIntoVault(Files.MoveIntoVaultError)
         /// Some content cannot be moved into the Family Room folder under certain circumstances, see detailed error.
         case cantMoveIntoFamily(Files.MoveIntoFamilyError)
+        /// The destination team folder has reached its storage limit.
+        case teamFolderInsufficientQuota
+        /// The user's member folder has reached its storage limit.
+        case memberFolderInsufficientQuota
         /// An unspecified error.
         case other
         /// There are too many write operations in user's Dropbox. Please retry this request.
@@ -7211,6 +7231,14 @@ public class Files {
                 var d = try ["cant_move_into_family": Files.MoveIntoFamilyErrorSerializer().serialize(arg)]
                 d[".tag"] = .str("cant_move_into_family")
                 return .dictionary(d)
+            case .teamFolderInsufficientQuota:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_folder_insufficient_quota")
+                return .dictionary(d)
+            case .memberFolderInsufficientQuota:
+                var d = [String: JSON]()
+                d[".tag"] = .str("member_folder_insufficient_quota")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -7260,6 +7288,10 @@ public class Files {
                 case "cant_move_into_family":
                     let v = try Files.MoveIntoFamilyErrorSerializer().deserialize(d["cant_move_into_family"] ?? .null)
                     return RelocationBatchError.cantMoveIntoFamily(v)
+                case "team_folder_insufficient_quota":
+                    return RelocationBatchError.teamFolderInsufficientQuota
+                case "member_folder_insufficient_quota":
+                    return RelocationBatchError.memberFolderInsufficientQuota
                 case "other":
                     return RelocationBatchError.other
                 case "too_many_write_operations":
@@ -9776,8 +9808,6 @@ public class Files {
         public let size: Files.ThumbnailSize
         /// How to resize and crop the image to achieve the desired size.
         public let mode: Files.ThumbnailMode
-        /// Field is only returned for "internal" callers. Quality of the thumbnail image.
-        public let quality: Files.ThumbnailQuality
         /// Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is true, mediaInfo in
         /// FileMetadata is not populated. This improves latency for use cases where `media_info` is not needed.
         public let excludeMediaInfo: Bool?
@@ -9786,7 +9816,6 @@ public class Files {
             format: Files.ThumbnailFormat = .jpeg,
             size: Files.ThumbnailSize = .w64h64,
             mode: Files.ThumbnailMode = .strict,
-            quality: Files.ThumbnailQuality = .quality80,
             excludeMediaInfo: Bool? = nil
         ) {
             stringValidator(pattern: "(/(.|[\\r\\n])*|id:.*)|(rev:[0-9a-f]{9,})|(ns:[0-9]+(/(.|[\\r\\n])*)?)")(path)
@@ -9794,7 +9823,6 @@ public class Files {
             self.format = format
             self.size = size
             self.mode = mode
-            self.quality = quality
             self.excludeMediaInfo = excludeMediaInfo
         }
 
@@ -9819,7 +9847,6 @@ public class Files {
                 "format": try Files.ThumbnailFormatSerializer().serialize(value.format),
                 "size": try Files.ThumbnailSizeSerializer().serialize(value.size),
                 "mode": try Files.ThumbnailModeSerializer().serialize(value.mode),
-                "quality": try Files.ThumbnailQualitySerializer().serialize(value.quality),
                 "exclude_media_info": try NullableSerializer(Serialization._BoolSerializer).serialize(value.excludeMediaInfo),
             ]
             return .dictionary(output)
@@ -9832,9 +9859,8 @@ public class Files {
                 let format = try Files.ThumbnailFormatSerializer().deserialize(dict["format"] ?? Files.ThumbnailFormatSerializer().serialize(.jpeg))
                 let size = try Files.ThumbnailSizeSerializer().deserialize(dict["size"] ?? Files.ThumbnailSizeSerializer().serialize(.w64h64))
                 let mode = try Files.ThumbnailModeSerializer().deserialize(dict["mode"] ?? Files.ThumbnailModeSerializer().serialize(.strict))
-                let quality = try Files.ThumbnailQualitySerializer().deserialize(dict["quality"] ?? Files.ThumbnailQualitySerializer().serialize(.quality80))
                 let excludeMediaInfo = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["exclude_media_info"] ?? .null)
-                return ThumbnailArg(path: path, format: format, size: size, mode: mode, quality: quality, excludeMediaInfo: excludeMediaInfo)
+                return ThumbnailArg(path: path, format: format, size: size, mode: mode, excludeMediaInfo: excludeMediaInfo)
             default:
                 throw JSONSerializerError.deserializeError(type: ThumbnailArg.self, json: json)
             }
@@ -10122,8 +10148,6 @@ public class Files {
         case w1024h768
         /// 2048 by 1536 px.
         case w2048h1536
-        /// Field is only returned for "internal" callers. 3200 by 2400 px.
-        case w3200h2400
 
         func json() throws -> JSON {
             try ThumbnailSizeSerializer().serialize(self)
@@ -10178,10 +10202,6 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("w2048h1536")
                 return .dictionary(d)
-            case .w3200h2400:
-                var d = [String: JSON]()
-                d[".tag"] = .str("w3200h2400")
-                return .dictionary(d)
             }
         }
 
@@ -10208,8 +10228,6 @@ public class Files {
                     return ThumbnailSize.w1024h768
                 case "w2048h1536":
                     return ThumbnailSize.w2048h1536
-                case "w3200h2400":
-                    return ThumbnailSize.w3200h2400
                 default:
                     throw JSONSerializerError.unknownTag(type: ThumbnailSize.self, json: json, tag: tag)
                 }
@@ -10231,25 +10249,26 @@ public class Files {
         public let size: Files.ThumbnailSize
         /// How to resize and crop the image to achieve the desired size.
         public let mode: Files.ThumbnailMode
-        /// Field is only returned for "internal" callers. Quality of the thumbnail image.
-        public let quality: Files.ThumbnailQuality
         /// Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is true, mediaInfo in
         /// FileMetadata is not populated. This improves latency for use cases where `media_info` is not needed.
         public let excludeMediaInfo: Bool?
+        /// Whether to preserve the original image's transparency in the thumbnail. This is supported only when the
+        /// output format is PNG or WebP. Requests that set this flag with JPEG output return an error.
+        public let preserveTransparency: Bool
         public init(
             resource: Files.PathOrLink,
             format: Files.ThumbnailFormat = .jpeg,
             size: Files.ThumbnailSize = .w64h64,
             mode: Files.ThumbnailMode = .strict,
-            quality: Files.ThumbnailQuality = .quality80,
-            excludeMediaInfo: Bool? = nil
+            excludeMediaInfo: Bool? = nil,
+            preserveTransparency: Bool = false
         ) {
             self.resource = resource
             self.format = format
             self.size = size
             self.mode = mode
-            self.quality = quality
             self.excludeMediaInfo = excludeMediaInfo
+            self.preserveTransparency = preserveTransparency
         }
 
         func json() throws -> JSON {
@@ -10273,8 +10292,8 @@ public class Files {
                 "format": try Files.ThumbnailFormatSerializer().serialize(value.format),
                 "size": try Files.ThumbnailSizeSerializer().serialize(value.size),
                 "mode": try Files.ThumbnailModeSerializer().serialize(value.mode),
-                "quality": try Files.ThumbnailQualitySerializer().serialize(value.quality),
                 "exclude_media_info": try NullableSerializer(Serialization._BoolSerializer).serialize(value.excludeMediaInfo),
+                "preserve_transparency": try Serialization._BoolSerializer.serialize(value.preserveTransparency),
             ]
             return .dictionary(output)
         }
@@ -10286,9 +10305,16 @@ public class Files {
                 let format = try Files.ThumbnailFormatSerializer().deserialize(dict["format"] ?? Files.ThumbnailFormatSerializer().serialize(.jpeg))
                 let size = try Files.ThumbnailSizeSerializer().deserialize(dict["size"] ?? Files.ThumbnailSizeSerializer().serialize(.w64h64))
                 let mode = try Files.ThumbnailModeSerializer().deserialize(dict["mode"] ?? Files.ThumbnailModeSerializer().serialize(.strict))
-                let quality = try Files.ThumbnailQualitySerializer().deserialize(dict["quality"] ?? Files.ThumbnailQualitySerializer().serialize(.quality80))
                 let excludeMediaInfo = try NullableSerializer(Serialization._BoolSerializer).deserialize(dict["exclude_media_info"] ?? .null)
-                return ThumbnailV2Arg(resource: resource, format: format, size: size, mode: mode, quality: quality, excludeMediaInfo: excludeMediaInfo)
+                let preserveTransparency = try Serialization._BoolSerializer.deserialize(dict["preserve_transparency"] ?? .number(0))
+                return ThumbnailV2Arg(
+                    resource: resource,
+                    format: format,
+                    size: size,
+                    mode: mode,
+                    excludeMediaInfo: excludeMediaInfo,
+                    preserveTransparency: preserveTransparency
+                )
             default:
                 throw JSONSerializerError.deserializeError(type: ThumbnailV2Arg.self, json: json)
             }
@@ -10311,6 +10337,8 @@ public class Files {
         case accessDenied
         /// The shared link does not exist.
         case notFound
+        /// Transparency preservation is supported only for PNG and WebP output.
+        case unsupportedOutputFormat
         /// An unspecified error.
         case other
 
@@ -10359,6 +10387,10 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("not_found")
                 return .dictionary(d)
+            case .unsupportedOutputFormat:
+                var d = [String: JSON]()
+                d[".tag"] = .str("unsupported_output_format")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -10386,6 +10418,8 @@ public class Files {
                     return ThumbnailV2Error.accessDenied
                 case "not_found":
                     return ThumbnailV2Error.notFound
+                case "unsupported_output_format":
+                    return ThumbnailV2Error.unsupportedOutputFormat
                 case "other":
                     return ThumbnailV2Error.other
                 default:
@@ -10484,7 +10518,8 @@ public class Files {
     /// The UploadArg struct
     public class UploadArg: Files.CommitInfo {
         /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
-        /// hash, an error will be returned. For more information see our Content hash
+        /// hash, an error will be returned. Optional, but recommended to avoid committing data corrupted in
+        /// transit. For more information see our Content hash
         /// https://www.dropbox.com/developers/reference/content-hash page.
         public let contentHash: String?
         public init(
@@ -10659,7 +10694,8 @@ public class Files {
         /// anymore with the current session.
         public let close: Bool
         /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
-        /// hash, an error will be returned. For more information see our Content hash
+        /// hash, an error will be returned. Optional, but recommended to avoid committing data corrupted in
+        /// transit. For more information see our Content hash
         /// https://www.dropbox.com/developers/reference/content-hash page.
         public let contentHash: String?
         public init(cursor: Files.UploadSessionCursor, close: Bool = false, contentHash: String? = nil) {
@@ -10710,10 +10746,10 @@ public class Files {
     public class UploadSessionAppendBatchArg: CustomStringConvertible, JSONRepresentable {
         /// Append information for each file in the batch.
         public let entries: [Files.UploadSessionAppendBatchArgEntry]
-        /// A hash of the entire request body which is all the concatenated pieces of file content that were uploaded in
-        /// this call. If provided and the uploaded content does not match this hash, an error will be returned.
-        /// For more information see our Content hash https://www.dropbox.com/developers/reference/content-hash
-        /// page.
+        /// A single hash of all the concatenated file contents uploaded in this call. If provided and the uploaded
+        /// content does not match this hash, an error will be returned. Optional, but recommended to avoid
+        /// committing data corrupted in transit. For more information see our Content hash
+        /// https://www.dropbox.com/developers/reference/content-hash page.
         public let contentHash: String?
         public init(entries: [Files.UploadSessionAppendBatchArgEntry], contentHash: String? = nil) {
             self.entries = entries
@@ -11242,7 +11278,8 @@ public class Files {
         /// Contains the path and other optional modifiers for the commit.
         public let commit: Files.CommitInfo
         /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
-        /// hash, an error will be returned. For more information see our Content hash
+        /// hash, an error will be returned. Optional, but recommended to avoid committing data corrupted in
+        /// transit. For more information see our Content hash
         /// https://www.dropbox.com/developers/reference/content-hash page.
         public let contentHash: String?
         public init(cursor: Files.UploadSessionCursor, commit: Files.CommitInfo, contentHash: String? = nil) {
@@ -11847,7 +11884,8 @@ public class Files {
         /// Type of upload session you want to start. If not specified, default is sequential in UploadSessionType.
         public let sessionType: Files.UploadSessionType?
         /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
-        /// hash, an error will be returned. For more information see our Content hash
+        /// hash, an error will be returned. Optional, but recommended to avoid committing data corrupted in
+        /// transit. For more information see our Content hash
         /// https://www.dropbox.com/developers/reference/content-hash page.
         public let contentHash: String?
         public init(close: Bool = false, sessionType: Files.UploadSessionType? = nil, contentHash: String? = nil) {
@@ -12390,6 +12428,10 @@ public class Files {
         case tooManyWriteOperations
         /// The user doesn't have permission to perform the action due to restrictions set by a team administrator
         case accessRestricted
+        /// The destination team folder has reached its storage limit.
+        case teamFolderInsufficientSpace
+        /// The user's member folder has reached its storage limit.
+        case memberFolderInsufficientSpace
         /// An unspecified error.
         case other
 
@@ -12446,6 +12488,14 @@ public class Files {
                 var d = [String: JSON]()
                 d[".tag"] = .str("access_restricted")
                 return .dictionary(d)
+            case .teamFolderInsufficientSpace:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_folder_insufficient_space")
+                return .dictionary(d)
+            case .memberFolderInsufficientSpace:
+                var d = [String: JSON]()
+                d[".tag"] = .str("member_folder_insufficient_space")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -12478,6 +12528,10 @@ public class Files {
                     return WriteError.tooManyWriteOperations
                 case "access_restricted":
                     return WriteError.accessRestricted
+                case "team_folder_insufficient_space":
+                    return WriteError.teamFolderInsufficientSpace
+                case "member_folder_insufficient_space":
+                    return WriteError.memberFolderInsufficientSpace
                 case "other":
                     return WriteError.other
                 default:
