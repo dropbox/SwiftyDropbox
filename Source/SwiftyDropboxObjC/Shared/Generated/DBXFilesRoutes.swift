@@ -596,16 +596,15 @@ public class DBXFilesRoutes: NSObject {
     /// maximum temporary upload link duration is 4 hours. Upon consumption or expiration, a new link will have to
     /// be generated. Multiple links may exist for a specific upload path at any given time.  The POST request on
     /// the temporary upload link must have its Content-Type set to "application/octet-stream".  Example temporary
-    /// upload link consumption request:  curl -X POST https://content.dropboxapi.com/apitul/1/bNi2uIYF51cVBND
-    /// --header "Content-Type: application/octet-stream" --data-binary @local_file.txt  A successful temporary
-    /// upload link consumption request returns the content hash of the uploaded data in JSON format. Example
-    /// successful temporary upload link consumption response: {"content-hash":
-    /// "599d71033d700ac892a0e48fa61b125d2f5994"}  An unsuccessful temporary upload link consumption request returns
-    /// any of the following status codes:  HTTP 400 Bad Request: Content-Type is not one of
-    /// application/octet-stream and text/plain or request is invalid. HTTP 409 Conflict: The temporary upload link
-    /// does not exist or is currently unavailable, the upload failed, or another error happened. HTTP 410 Gone: The
-    /// temporary upload link is expired or consumed. Example unsuccessful temporary upload link consumption
-    /// response: Temporary upload link has been recently consumed.
+    /// upload link consumption request:  curl -X POST <temporary_upload_link_url> --header "Content-Type:
+    /// application/octet-stream" --data-binary @local_file.txt  A successful temporary upload link consumption
+    /// request returns the content hash of the uploaded data in JSON format. Example successful temporary upload
+    /// link consumption response: {"content-hash": "599d71033d700ac892a0e48fa61b125d2f5994"}  An unsuccessful
+    /// temporary upload link consumption request returns any of the following status codes:  HTTP 400 Bad Request:
+    /// Content-Type is not one of application/octet-stream and text/plain or request is invalid. HTTP 409 Conflict:
+    /// The temporary upload link does not exist or is currently unavailable, the upload failed, or another error
+    /// happened. HTTP 410 Gone: The temporary upload link is expired or consumed. Example unsuccessful temporary
+    /// upload link consumption response: Temporary upload link has been recently consumed.
     ///
     /// - scope: files.content.write
     ///
@@ -631,16 +630,15 @@ public class DBXFilesRoutes: NSObject {
     /// maximum temporary upload link duration is 4 hours. Upon consumption or expiration, a new link will have to
     /// be generated. Multiple links may exist for a specific upload path at any given time.  The POST request on
     /// the temporary upload link must have its Content-Type set to "application/octet-stream".  Example temporary
-    /// upload link consumption request:  curl -X POST https://content.dropboxapi.com/apitul/1/bNi2uIYF51cVBND
-    /// --header "Content-Type: application/octet-stream" --data-binary @local_file.txt  A successful temporary
-    /// upload link consumption request returns the content hash of the uploaded data in JSON format. Example
-    /// successful temporary upload link consumption response: {"content-hash":
-    /// "599d71033d700ac892a0e48fa61b125d2f5994"}  An unsuccessful temporary upload link consumption request returns
-    /// any of the following status codes:  HTTP 400 Bad Request: Content-Type is not one of
-    /// application/octet-stream and text/plain or request is invalid. HTTP 409 Conflict: The temporary upload link
-    /// does not exist or is currently unavailable, the upload failed, or another error happened. HTTP 410 Gone: The
-    /// temporary upload link is expired or consumed. Example unsuccessful temporary upload link consumption
-    /// response: Temporary upload link has been recently consumed.
+    /// upload link consumption request:  curl -X POST <temporary_upload_link_url> --header "Content-Type:
+    /// application/octet-stream" --data-binary @local_file.txt  A successful temporary upload link consumption
+    /// request returns the content hash of the uploaded data in JSON format. Example successful temporary upload
+    /// link consumption response: {"content-hash": "599d71033d700ac892a0e48fa61b125d2f5994"}  An unsuccessful
+    /// temporary upload link consumption request returns any of the following status codes:  HTTP 400 Bad Request:
+    /// Content-Type is not one of application/octet-stream and text/plain or request is invalid. HTTP 409 Conflict:
+    /// The temporary upload link does not exist or is currently unavailable, the upload failed, or another error
+    /// happened. HTTP 410 Gone: The temporary upload link is expired or consumed. Example unsuccessful temporary
+    /// upload link consumption response: Temporary upload link has been recently consumed.
     ///
     /// - scope: files.content.write
     ///
@@ -664,7 +662,6 @@ public class DBXFilesRoutes: NSObject {
     /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
-    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
     /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
     /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
     /// not needed.
@@ -681,7 +678,6 @@ public class DBXFilesRoutes: NSObject {
         format: DBXFilesThumbnailFormat,
         size: DBXFilesThumbnailSize,
         mode: DBXFilesThumbnailMode,
-        quality: DBXFilesThumbnailQuality,
         excludeMediaInfo: NSNumber?,
         overwrite: Bool,
         destination: URL
@@ -691,7 +687,6 @@ public class DBXFilesRoutes: NSObject {
             format: format.swift,
             size: size.swift,
             mode: mode.swift,
-            quality: quality.swift,
             excludeMediaInfo: excludeMediaInfo?.boolValue,
             overwrite: overwrite,
             destination: destination
@@ -725,7 +720,6 @@ public class DBXFilesRoutes: NSObject {
     /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
-    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
     /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
     /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
     /// not needed.
@@ -738,17 +732,9 @@ public class DBXFilesRoutes: NSObject {
         format: DBXFilesThumbnailFormat,
         size: DBXFilesThumbnailSize,
         mode: DBXFilesThumbnailMode,
-        quality: DBXFilesThumbnailQuality,
         excludeMediaInfo: NSNumber?
     ) -> DBXFilesGetThumbnailDownloadRequestMemory {
-        let swift = swift.getThumbnail(
-            path: path,
-            format: format.swift,
-            size: size.swift,
-            mode: mode.swift,
-            quality: quality.swift,
-            excludeMediaInfo: excludeMediaInfo?.boolValue
-        )
+        let swift = swift.getThumbnail(path: path, format: format.swift, size: size.swift, mode: mode.swift, excludeMediaInfo: excludeMediaInfo?.boolValue)
         return DBXFilesGetThumbnailDownloadRequestMemory(swift: swift)
     }
 
@@ -779,10 +765,12 @@ public class DBXFilesRoutes: NSObject {
     /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
-    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
     /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
     /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
     /// not needed.
+    /// - parameter preserveTransparency: Whether to preserve the original image's transparency in the thumbnail. This
+    /// is supported only when the output format is PNG or WebP. Requests that set this flag with JPEG output return
+    /// an error.
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
     /// an NSError will be thrown).
@@ -796,8 +784,8 @@ public class DBXFilesRoutes: NSObject {
         format: DBXFilesThumbnailFormat,
         size: DBXFilesThumbnailSize,
         mode: DBXFilesThumbnailMode,
-        quality: DBXFilesThumbnailQuality,
         excludeMediaInfo: NSNumber?,
+        preserveTransparency: NSNumber,
         overwrite: Bool,
         destination: URL
     ) -> DBXFilesGetThumbnailDownloadRequestFileV2 {
@@ -806,8 +794,8 @@ public class DBXFilesRoutes: NSObject {
             format: format.swift,
             size: size.swift,
             mode: mode.swift,
-            quality: quality.swift,
             excludeMediaInfo: excludeMediaInfo?.boolValue,
+            preserveTransparency: preserveTransparency.boolValue,
             overwrite: overwrite,
             destination: destination
         )
@@ -841,10 +829,12 @@ public class DBXFilesRoutes: NSObject {
     /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
-    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
     /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
     /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
     /// not needed.
+    /// - parameter preserveTransparency: Whether to preserve the original image's transparency in the thumbnail. This
+    /// is supported only when the output format is PNG or WebP. Requests that set this flag with JPEG output return
+    /// an error.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.PreviewResult` object on success or a
     /// `Files.ThumbnailV2Error` object on failure.
@@ -854,16 +844,16 @@ public class DBXFilesRoutes: NSObject {
         format: DBXFilesThumbnailFormat,
         size: DBXFilesThumbnailSize,
         mode: DBXFilesThumbnailMode,
-        quality: DBXFilesThumbnailQuality,
-        excludeMediaInfo: NSNumber?
+        excludeMediaInfo: NSNumber?,
+        preserveTransparency: NSNumber
     ) -> DBXFilesGetThumbnailDownloadRequestMemoryV2 {
         let swift = swift.getThumbnailV2(
             resource: resource.swift,
             format: format.swift,
             size: size.swift,
             mode: mode.swift,
-            quality: quality.swift,
-            excludeMediaInfo: excludeMediaInfo?.boolValue
+            excludeMediaInfo: excludeMediaInfo?.boolValue,
+            preserveTransparency: preserveTransparency.boolValue
         )
         return DBXFilesGetThumbnailDownloadRequestMemoryV2(swift: swift)
     }
@@ -1682,7 +1672,8 @@ public class DBXFilesRoutes: NSObject {
     /// - scope: files.content.write
     ///
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an Data object.
     ///
@@ -1739,7 +1730,8 @@ public class DBXFilesRoutes: NSObject {
     /// - scope: files.content.write
     ///
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an URL object.
     ///
@@ -1796,7 +1788,8 @@ public class DBXFilesRoutes: NSObject {
     /// - scope: files.content.write
     ///
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
@@ -1857,7 +1850,8 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an Data object.
     ///
@@ -1899,7 +1893,8 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an URL object.
     ///
@@ -1941,7 +1936,8 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter close: If true, the current session will be closed, at which point you won't be able to call
     /// uploadSessionAppendV2 anymore with the current session.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
@@ -1986,9 +1982,9 @@ public class DBXFilesRoutes: NSObject {
     /// - scope: files.content.write
     ///
     /// - parameter entries: Append information for each file in the batch.
-    /// - parameter contentHash: A hash of the entire request body which is all the concatenated pieces of file content
-    /// that were uploaded in this call. If provided and the uploaded content does not match this hash, an error
-    /// will be returned. For more information see our Content hash
+    /// - parameter contentHash: A single hash of all the concatenated file contents uploaded in this call. If provided
+    /// and the uploaded content does not match this hash, an error will be returned. Optional, but recommended to
+    /// avoid committing data corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an Data object.
     ///
@@ -2029,9 +2025,9 @@ public class DBXFilesRoutes: NSObject {
     /// - scope: files.content.write
     ///
     /// - parameter entries: Append information for each file in the batch.
-    /// - parameter contentHash: A hash of the entire request body which is all the concatenated pieces of file content
-    /// that were uploaded in this call. If provided and the uploaded content does not match this hash, an error
-    /// will be returned. For more information see our Content hash
+    /// - parameter contentHash: A single hash of all the concatenated file contents uploaded in this call. If provided
+    /// and the uploaded content does not match this hash, an error will be returned. Optional, but recommended to
+    /// avoid committing data corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an URL object.
     ///
@@ -2072,9 +2068,9 @@ public class DBXFilesRoutes: NSObject {
     /// - scope: files.content.write
     ///
     /// - parameter entries: Append information for each file in the batch.
-    /// - parameter contentHash: A hash of the entire request body which is all the concatenated pieces of file content
-    /// that were uploaded in this call. If provided and the uploaded content does not match this hash, an error
-    /// will be returned. For more information see our Content hash
+    /// - parameter contentHash: A single hash of all the concatenated file contents uploaded in this call. If provided
+    /// and the uploaded content does not match this hash, an error will be returned. Optional, but recommended to
+    /// avoid committing data corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
@@ -2119,7 +2115,8 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter commit: Contains the path and other optional modifiers for the commit.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an Data object.
     ///
@@ -2158,7 +2155,8 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter commit: Contains the path and other optional modifiers for the commit.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an URL object.
     ///
@@ -2197,7 +2195,8 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter cursor: Contains the upload session ID and the offset.
     /// - parameter commit: Contains the path and other optional modifiers for the commit.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an InputStream object.
     ///
@@ -2298,7 +2297,8 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter sessionType: Type of upload session you want to start. If not specified, default is sequential in
     /// UploadSessionType.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an Data object.
     ///
@@ -2371,7 +2371,8 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter sessionType: Type of upload session you want to start. If not specified, default is sequential in
     /// UploadSessionType.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an URL object.
     ///
@@ -2444,7 +2445,8 @@ public class DBXFilesRoutes: NSObject {
     /// - parameter sessionType: Type of upload session you want to start. If not specified, default is sequential in
     /// UploadSessionType.
     /// - parameter contentHash: A hash of the file content uploaded in this call. If provided and the uploaded content
-    /// does not match this hash, an error will be returned. For more information see our Content hash
+    /// does not match this hash, an error will be returned. Optional, but recommended to avoid committing data
+    /// corrupted in transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     /// - parameter input: The file to upload, as an InputStream object.
     ///

@@ -11,16 +11,16 @@ public class Riviera {
     /// GPS coordinates and related tags extracted from image EXIF data. Fields are populated on a best-effort basis and
     /// may be empty when absent from the source file.
     public class ApiExifGpsMetadata: CustomStringConvertible, JSONRepresentable {
-        /// Latitude / longitude in decimal degrees (positive = N/E, negative = S/W).
+        /// Latitude in decimal degrees (positive = north, negative = south).
         public let latitude: Float
-        /// (no description)
+        /// Longitude in decimal degrees (positive = east, negative = west).
         public let longitude: Float
         /// Altitude in meters, as reported by the source (string to preserve the original representation, which may
         /// include a reference direction).
         public let altitude: String
-        /// Timestamp / datestamp of the GPS fix, in the EXIF-provided format.
+        /// Time of the GPS fix, in the EXIF-provided format.
         public let timestamp_: String
-        /// (no description)
+        /// Date of the GPS fix, in the EXIF-provided format.
         public let datestamp: String
         public init(latitude: Float = 0.0, longitude: Float = 0.0, altitude: String = "", timestamp_: String = "", datestamp: String = "") {
             comparableValidator()(latitude)
@@ -76,40 +76,40 @@ public class Riviera {
         }
     }
 
-    /// Image EXIF metadata. Mirrors the useful subset of the internal `riviera.ExifMetadata` message. Fields are
-    /// best-effort and may be empty.
+    /// Image EXIF metadata. Fields are populated on a best-effort basis and may be empty when absent from the source
+    /// file.
     public class ApiExifMetadata: CustomStringConvertible, JSONRepresentable {
-        /// (no description)
+        /// Width of the image, in pixels.
         public let imageWidth: UInt32
-        /// (no description)
+        /// Height of the image, in pixels.
         public let imageHeight: UInt32
-        /// (no description)
+        /// Manufacturer of the device that captured the image, e.g. "Apple".
         public let cameraMake: String
-        /// (no description)
+        /// Model of the device that captured the image, e.g. "iPhone 15 Pro".
         public let cameraModel: String
-        /// (no description)
+        /// Model of the lens the image was captured with, when the source records it.
         public let lensModel: String
         /// Capture time in the EXIF-provided format (local time of the camera).
         public let dateTimeOriginal: String
-        /// Timezone offset for `date_time_original`, e.g. "+09:00".
+        /// Timezone offset for dateTimeOriginal in ApiExifMetadata, e.g. "+09:00".
         public let offsetTimeOriginal: String
         /// EXIF orientation value (1-8). See the EXIF spec; 1 is the normal upright orientation.
         public let orientation: UInt32
-        /// fraction in string form, e.g. "1/250"
+        /// Exposure time the image was captured with, as a fractional-second string, e.g. "1/250".
         public let exposureTime: String
-        /// (no description)
+        /// Aperture the image was captured at, as reported by the EXIF aperture tag.
         public let apertureValue: Double
-        /// (no description)
+        /// ISO sensitivity the image was captured at.
         public let isoSpeed: UInt32
-        /// e.g. "26.0 mm"
+        /// Focal length the image was captured at, including the unit, e.g. "26.0 mm".
         public let focalLength: String
-        /// (no description)
+        /// Total pixel count of the image, in megapixels.
         public let megapixels: Double
-        /// (no description)
+        /// Creator credited in the EXIF artist tag.
         public let artist: String
-        /// (no description)
+        /// Copyright notice from the EXIF copyright tag.
         public let copyright: String
-        /// (no description)
+        /// Location tags from the image, when the source recorded a location.
         public let gpsMetadata: Riviera.ApiExifGpsMetadata?
         public init(
             imageWidth: UInt32 = 0,
@@ -242,16 +242,73 @@ public class Riviera {
         }
     }
 
-    /// Audio/video container and per-stream metadata. Mirrors the useful subset of the internal `riviera.MediaMetadata`
-    /// message.
+    /// A single extracted scene-change keyframe.
+    public class ApiKeyframe: CustomStringConvertible, JSONRepresentable {
+        /// Presentation timestamp of the keyframe, in seconds from the start of the video.
+        public let timestamp_: Double
+        /// Scene-change score that triggered this keyframe, in the range [0.0, 1.0]. Higher values indicate a more
+        /// pronounced scene change relative to the preceding frame. The first keyframe of a video is always
+        /// reported as 1.0: the start of a video is a scene boundary by definition, so that score is not a
+        /// measured frame-to-frame comparison.
+        public let sceneScore: Double
+        /// The extracted frame as a base64-encoded JPEG image. Empty when the request set `include_images = false`.
+        public let imageBase64: String
+        public init(timestamp_: Double = 0.0, sceneScore: Double = 0.0, imageBase64: String = "") {
+            comparableValidator()(timestamp_)
+            self.timestamp_ = timestamp_
+            comparableValidator()(sceneScore)
+            self.sceneScore = sceneScore
+            stringValidator()(imageBase64)
+            self.imageBase64 = imageBase64
+        }
+
+        func json() throws -> JSON {
+            try ApiKeyframeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ApiKeyframeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ApiKeyframe: \(error)"
+            }
+        }
+    }
+
+    public class ApiKeyframeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: ApiKeyframe) throws -> JSON {
+            let output = [
+                "timestamp": try Serialization._DoubleSerializer.serialize(value.timestamp_),
+                "scene_score": try Serialization._DoubleSerializer.serialize(value.sceneScore),
+                "image_base64": try Serialization._StringSerializer.serialize(value.imageBase64),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> ApiKeyframe {
+            switch json {
+            case .dictionary(let dict):
+                let timestamp_ = try Serialization._DoubleSerializer.deserialize(dict["timestamp"] ?? .number(0.0))
+                let sceneScore = try Serialization._DoubleSerializer.deserialize(dict["scene_score"] ?? .number(0.0))
+                let imageBase64 = try Serialization._StringSerializer.deserialize(dict["image_base64"] ?? .str(""))
+                return ApiKeyframe(timestamp_: timestamp_, sceneScore: sceneScore, imageBase64: imageBase64)
+            default:
+                throw JSONSerializerError.deserializeError(type: ApiKeyframe.self, json: json)
+            }
+        }
+    }
+
+    /// Audio/video container and per-stream metadata. Fields are populated on a best-effort basis and may be empty when
+    /// absent from the source file.
     public class ApiMediaMetadata: CustomStringConvertible, JSONRepresentable {
-        /// (no description)
+        /// Overall bitrate of the container, in bits per second.
         public let bitrateBps: UInt64
-        /// (no description)
+        /// Duration of the media, in seconds.
         public let durationS: Double
         /// Container-level creation time, when present.
         public let creationTime: String
-        /// (no description)
+        /// The audio and video streams the container holds, in container order.
         public let streams: [Riviera.ApiMediaStream]?
         public init(bitrateBps: UInt64 = 0, durationS: Double = 0.0, creationTime: String = "", streams: [Riviera.ApiMediaStream]? = nil) {
             comparableValidator()(bitrateBps)
@@ -304,31 +361,33 @@ public class Riviera {
 
     /// A single audio or video stream within a media file.
     public class ApiMediaStream: CustomStringConvertible, JSONRepresentable {
-        /// (no description)
+        /// Zero-based index of the stream within the container.
         public let index: UInt32
-        /// "audio", "video", etc.
+        /// Kind of media the stream carries, e.g. "audio" or "video".
         public let codecType: String
-        /// (no description)
+        /// Name of the codec the stream is encoded with, e.g. "h264" or "aac".
         public let codecName: String
-        /// (no description)
+        /// Bitrate of this stream, in bits per second.
         public let bitrateBps: UInt64
-        /// (no description)
+        /// Duration of this stream, in seconds.
         public let durationS: Double
-        /// Video-specific fields (zero / empty for audio streams).
+        /// Width of the video frame, in pixels. Zero for audio streams.
         public let width: UInt32
-        /// (no description)
+        /// Height of the video frame, in pixels. Zero for audio streams.
         public let height: UInt32
-        /// (no description)
+        /// Frame rate of the stream, in frames per second. Zero for audio streams.
         public let framesPerSecond: Double
-        /// (no description)
+        /// Rotation to apply on playback, in degrees, as recorded in the stream metadata. Zero for audio streams and
+        /// for video that needs no rotation.
         public let rotation: Int32
-        /// e.g. "16:9"
+        /// Aspect ratio the video should be displayed at, as a "width:height" string, e.g. "16:9". Empty for audio
+        /// streams.
         public let displayAspectRatio: String
-        /// Audio-specific fields (zero / empty for video streams).
+        /// Number of audio channels in the stream. Zero for video streams.
         public let channels: UInt32
-        /// (no description)
+        /// Layout of the audio channels, e.g. "stereo". Empty for video streams.
         public let channelLayout: String
-        /// (no description)
+        /// Sample rate of the audio stream, in samples per second. Zero for video streams.
         public let sampleRateS: UInt64
         /// ISO 639 language code for the stream, when present.
         public let languageIso639: String
@@ -452,32 +511,33 @@ public class Riviera {
         }
     }
 
-    /// MS Office document metadata. Mirrors the internal `riviera.OfficeMetadata` message. Some fields apply only to
-    /// specific document types (e.g. `slides` for PowerPoint, `words`/`pages` for Word).
+    /// MS Office document metadata. Some fields apply only to specific document types (e.g. slides in ApiOfficeMetadata
+    /// for PowerPoint, words in ApiOfficeMetadata and pages in ApiOfficeMetadata for Word).
     public class ApiOfficeMetadata: CustomStringConvertible, JSONRepresentable {
-        /// (no description)
+        /// Which kind of Office document this metadata was extracted from.
         public let fileType: Riviera.OfficeFileType
-        /// (no description)
+        /// Author recorded in the document properties.
         public let creator: String
-        /// (no description)
+        /// Company recorded in the document properties.
         public let company: String
-        /// (no description)
+        /// Title recorded in the document properties.
         public let title: String
-        /// (no description)
+        /// Subject recorded in the document properties.
         public let subject: String
-        /// (no description)
+        /// Keywords recorded in the document properties, in the document's own formatting (typically a single comma- or
+        /// space-separated string).
         public let keywords: String
-        /// (no description)
+        /// Description recorded in the document properties.
         public let description_: String
-        /// (no description)
+        /// Total editing time recorded in the document properties, in minutes.
         public let totalEditTimeMinutes: UInt32
-        /// Word only.
+        /// Page count recorded in the document properties. Word documents only; zero for PowerPoint and Excel.
         public let pages: UInt32
-        /// (no description)
+        /// Word count recorded in the document properties. Word documents only; zero for PowerPoint and Excel.
         public let words: UInt32
-        /// PowerPoint only.
+        /// Slide count recorded in the document properties. PowerPoint documents only; zero for Word and Excel.
         public let slides: UInt32
-        /// (no description)
+        /// Revision number recorded in the document properties.
         public let revisionNumber: String
         public init(
             fileType: Riviera.OfficeFileType = .officeFiletypeUnknown,
@@ -590,11 +650,11 @@ public class Riviera {
 
     /// PDF document metadata.
     public class ApiPdfMetadata: CustomStringConvertible, JSONRepresentable {
-        /// (no description)
+        /// Number of pages in the document.
         public let pages: UInt32
-        /// Width / height of the first page, in PDF points.
+        /// Width of the first page, in PDF points.
         public let width: UInt32
-        /// (no description)
+        /// Height of the first page, in PDF points.
         public let height: UInt32
         public init(pages: UInt32 = 0, width: UInt32 = 0, height: UInt32 = 0) {
             comparableValidator()(pages)
@@ -642,11 +702,12 @@ public class Riviera {
         }
     }
 
-    /// Structured transcript for APIv2
+    /// A transcript, split into segments.
     public class ApiStructuredTranscript: CustomStringConvertible, JSONRepresentable {
-        /// (no description)
+        /// The segments of the transcript, in playback order.
         public let segments: [Riviera.ApiTranscriptSegment]?
-        /// (no description)
+        /// The language of the transcript, as an ISO 639-1 code (e.g. "en"). This is the language detected in the
+        /// audio, or the one supplied in audioLanguage in GetTranscriptArgs.
         public let transcriptLocale: String
         public init(segments: [Riviera.ApiTranscriptSegment]? = nil, transcriptLocale: String = "") {
             self.segments = segments
@@ -689,13 +750,13 @@ public class Riviera {
         }
     }
 
-    /// Transcript segment for APIv2
+    /// A contiguous span of transcribed speech. The span covered by a segment depends on the requested TimestampLevel.
     public class ApiTranscriptSegment: CustomStringConvertible, JSONRepresentable {
-        /// (no description)
+        /// The transcribed text of this segment.
         public let text: String
-        /// (no description)
+        /// Offset of the start of this segment, in seconds from the beginning of the media.
         public let startTime: Double
-        /// (no description)
+        /// Offset of the end of this segment, in seconds from the beginning of the media.
         public let endTime: Double
         public init(text: String = "", startTime: Double = 0.0, endTime: Double = 0.0) {
             stringValidator()(text)
@@ -743,7 +804,7 @@ public class Riviera {
         }
     }
 
-    /// Reason a transcript job failed. Returned in the `failed` variant of `GetTranscriptAsyncCheckResult`. This is a
+    /// Reason a transcript job failed. Returned in the failed in GetTranscriptAsyncCheckResult variant. This is a
     /// semantic error union: the HTTP status of the poll request itself is unaffected (a poll that surfaces a
     /// failed job is still a normal successful poll response). Callers should branch on the variant.
     public enum ContentApiV2Error: CustomStringConvertible, JSONRepresentable {
@@ -753,15 +814,16 @@ public class Riviera {
         /// The request could not be processed as supplied (a problem with the caller's input). The string is a
         /// human-readable message; retrying the same request will not help.
         case userError(String)
-        /// An unspecified error.
+        /// The audio to transcribe is longer than the supported maximum.
         case mediaDurationError(Riviera.MediaDurationError)
-        /// An unspecified error.
+        /// The file has no audio track, or no audio content could be detected in it.
         case noAudioError
-        /// An unspecified error.
+        /// url in FileIdOrUrl referenced a Dropbox shared link whose owner has disabled downloads.
         case linkDownloadDisabledError
-        /// An unspecified error.
+        /// url in FileIdOrUrl referenced a password-protected Dropbox shared link. Riviera cannot supply the password,
+        /// so such links cannot be transcribed.
         case sharedLinkPasswordProtected
-        /// An unspecified error.
+        /// A resource limit was exceeded while producing the result.
         case limitExceededError
         /// The referenced file does not exist or is not accessible.
         case notFoundError
@@ -869,15 +931,15 @@ public class Riviera {
 
     /// The FileIdOrUrl union
     public enum FileIdOrUrl: CustomStringConvertible, JSONRepresentable {
-        /// A Dropbox-issued file id (format: "id:<id>") for a file the authenticated user has access to.
+        /// A Dropbox-issued file ID for a file the authenticated user has access to, e.g. "id:a4ayc_80_OEAAAAAAAAAYa".
         case fileId(String)
-        /// Either a Dropbox shared link (www.dropbox.com) or an external HTTP or HTTPS URL pointing to a supported
-        /// file. - Dropbox shared links are resolved internally using the caller's authenticated identity and
-        /// the link's visibility / download settings. They therefore require an authenticated user context
-        /// (anonymous `url` requests against Dropbox links are rejected with an `access_error`). Links
-        /// protected by a password are rejected with `shared_link_password_protected`; links with downloads
-        /// disabled are rejected with `link_download_disabled_error`. - External URLs are fetched through the
-        /// backend's egress proxy and must point at a supported file extension.
+        /// Either a Dropbox shared link (www.dropbox.com) or an internet-accessible URL pointing to a supported file. -
+        /// Dropbox shared links are resolved internally using the caller's authenticated identity and the
+        /// link's visibility / download settings. They therefore require an authenticated user context;
+        /// requests made with app auth alone are rejected. Password-protected links and links with downloads
+        /// disabled are rejected as well. - Other URLs are fetched by Dropbox's servers, so they must be
+        /// reachable from the public internet -- not only from the calling application's network -- and must
+        /// point at a supported file extension.
         case url(String)
         /// An absolute Dropbox path, e.g. "/folder/example.pdf".
         case path(String)
@@ -945,12 +1007,187 @@ public class Riviera {
         }
     }
 
-    /// Arguments for the asynchronous `get_markdown_async` route. Exactly one of `file_id`, `path`, or `url` must be
-    /// supplied via `file_id_or_url` to identify the document to convert to markdown.
+    /// Arguments for the asynchronous `get_keyframes_async` route. Exactly one of `file_id`, `path`, or `url` must be
+    /// supplied via `file_id_or_url` to identify the video whose scene-change keyframes should be extracted.
+    public class GetKeyframesArgs: CustomStringConvertible, JSONRepresentable {
+        /// Identifier of the video file to extract keyframes from. Callers must set exactly one of the `FileIdOrUrl`
+        /// variants. Keyframe extraction is supported for video files only; see the route description for the
+        /// supported formats. Requests against unsupported formats return `unsupported_format_error`.
+        public let fileIdOrUrl: Riviera.FileIdOrUrl?
+        /// Sensitivity of scene-change detection. A keyframe is emitted whenever the frame-to-frame scene score crosses
+        /// this threshold, so a LOWER value yields MORE keyframes. Valid range is (0.0, 1.0]. When omitted
+        /// (0.0) the service uses a default of 0.3, which is a good starting point for most videos.
+        public let sceneChangeThreshold: Double
+        /// When true, each returned keyframe includes the JPEG image bytes, base64-encoded, in
+        /// `ApiKeyframe.image_base64`. When false, the response contains only per-keyframe metadata (timestamp
+        /// and scene score) and `image_base64` is left empty -- useful when you only need the scene boundaries
+        /// and want a small response. NOTE: because the field defaults to false in proto3, callers who want
+        /// images must set this explicitly to true.
+        public let includeImages: Bool
+        public init(fileIdOrUrl: Riviera.FileIdOrUrl? = nil, sceneChangeThreshold: Double = 0.0, includeImages: Bool = false) {
+            self.fileIdOrUrl = fileIdOrUrl
+            comparableValidator()(sceneChangeThreshold)
+            self.sceneChangeThreshold = sceneChangeThreshold
+            self.includeImages = includeImages
+        }
+
+        func json() throws -> JSON {
+            try GetKeyframesArgsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetKeyframesArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetKeyframesArgs: \(error)"
+            }
+        }
+    }
+
+    public class GetKeyframesArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetKeyframesArgs) throws -> JSON {
+            let output = [
+                "file_id_or_url": try NullableSerializer(Riviera.FileIdOrUrlSerializer()).serialize(value.fileIdOrUrl),
+                "scene_change_threshold": try Serialization._DoubleSerializer.serialize(value.sceneChangeThreshold),
+                "include_images": try Serialization._BoolSerializer.serialize(value.includeImages),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetKeyframesArgs {
+            switch json {
+            case .dictionary(let dict):
+                let fileIdOrUrl = try NullableSerializer(Riviera.FileIdOrUrlSerializer()).deserialize(dict["file_id_or_url"] ?? .null)
+                let sceneChangeThreshold = try Serialization._DoubleSerializer.deserialize(dict["scene_change_threshold"] ?? .number(0.0))
+                let includeImages = try Serialization._BoolSerializer.deserialize(dict["include_images"] ?? .number(0))
+                return GetKeyframesArgs(fileIdOrUrl: fileIdOrUrl, sceneChangeThreshold: sceneChangeThreshold, includeImages: includeImages)
+            default:
+                throw JSONSerializerError.deserializeError(type: GetKeyframesArgs.self, json: json)
+            }
+        }
+    }
+
+    /// Result type for EventBus async check - must end in "CheckResult"
+    public enum GetKeyframesAsyncCheckResult: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case inProgress
+        /// An unspecified error.
+        case complete(Riviera.GetKeyframesResult)
+        /// An unspecified error.
+        case failed(Riviera.KeyframesExtractionApiV2Error)
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try GetKeyframesAsyncCheckResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetKeyframesAsyncCheckResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetKeyframesAsyncCheckResult: \(error)"
+            }
+        }
+    }
+
+    public class GetKeyframesAsyncCheckResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetKeyframesAsyncCheckResult) throws -> JSON {
+            switch value {
+            case .inProgress:
+                var d = [String: JSON]()
+                d[".tag"] = .str("in_progress")
+                return .dictionary(d)
+            case .complete(let arg):
+                var d = try Serialization.getFields(Riviera.GetKeyframesResultSerializer().serialize(arg))
+                d[".tag"] = .str("complete")
+                return .dictionary(d)
+            case .failed(let arg):
+                var d = try ["failed": Riviera.KeyframesExtractionApiV2ErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("failed")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetKeyframesAsyncCheckResult {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "in_progress":
+                    return GetKeyframesAsyncCheckResult.inProgress
+                case "complete":
+                    let v = try Riviera.GetKeyframesResultSerializer().deserialize(json)
+                    return GetKeyframesAsyncCheckResult.complete(v)
+                case "failed":
+                    let v = try Riviera.KeyframesExtractionApiV2ErrorSerializer().deserialize(d["failed"] ?? .null)
+                    return GetKeyframesAsyncCheckResult.failed(v)
+                case "other":
+                    return GetKeyframesAsyncCheckResult.other
+                default:
+                    return GetKeyframesAsyncCheckResult.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: GetKeyframesAsyncCheckResult.self, json: json)
+            }
+        }
+    }
+
+    /// The GetKeyframesResult struct
+    public class GetKeyframesResult: CustomStringConvertible, JSONRepresentable {
+        /// The extracted keyframes, ordered by `timestamp`. May be empty when no scene changes are detected in the
+        /// source.
+        public let frames: [Riviera.ApiKeyframe]?
+        public init(frames: [Riviera.ApiKeyframe]? = nil) {
+            self.frames = frames
+        }
+
+        func json() throws -> JSON {
+            try GetKeyframesResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetKeyframesResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetKeyframesResult: \(error)"
+            }
+        }
+    }
+
+    public class GetKeyframesResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetKeyframesResult) throws -> JSON {
+            let output = [
+                "frames": try NullableSerializer(ArraySerializer(Riviera.ApiKeyframeSerializer())).serialize(value.frames),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetKeyframesResult {
+            switch json {
+            case .dictionary(let dict):
+                let frames = try NullableSerializer(ArraySerializer(Riviera.ApiKeyframeSerializer())).deserialize(dict["frames"] ?? .null)
+                return GetKeyframesResult(frames: frames)
+            default:
+                throw JSONSerializerError.deserializeError(type: GetKeyframesResult.self, json: json)
+            }
+        }
+    }
+
+    /// Arguments for the asynchronous getMarkdownAsync route. Exactly one of fileId in FileIdOrUrl, path in
+    /// FileIdOrUrl, or url in FileIdOrUrl must be supplied via fileIdOrUrl in GetMarkdownArgs to identify the
+    /// document to convert to markdown.
     public class GetMarkdownArgs: CustomStringConvertible, JSONRepresentable {
-        /// Identifier of the document to convert. Callers must set exactly one of the `FileIdOrUrl` variants. The
+        /// Identifier of the document to convert. Callers must set exactly one of the FileIdOrUrl variants. The
         /// referenced file must be a document in a supported format (see the route description for the list);
-        /// requests against unsupported formats return `unsupported_format_error`.
+        /// requests against unsupported formats fail with userError in MarkdownConversionApiV2Error.
         public let fileIdOrUrl: Riviera.FileIdOrUrl?
         /// Enable OCR for PDF documents. Processing is slower when enabled.
         public let enableOcr: Bool
@@ -1000,13 +1237,13 @@ public class Riviera {
         }
     }
 
-    /// Result type for EventBus async check
+    /// Status of a markdown conversion job started by getMarkdownAsync, as returned by getMarkdownAsyncCheck.
     public enum GetMarkdownAsyncCheckResult: CustomStringConvertible, JSONRepresentable {
-        /// An unspecified error.
+        /// The job has not finished yet. Poll again.
         case inProgress
-        /// An unspecified error.
+        /// The job finished successfully.
         case complete(Riviera.GetMarkdownResult)
-        /// An unspecified error.
+        /// The job finished unsuccessfully.
         case failed(Riviera.MarkdownConversionApiV2Error)
         /// An unspecified error.
         case other
@@ -1073,7 +1310,7 @@ public class Riviera {
 
     /// The GetMarkdownResult struct
     public class GetMarkdownResult: CustomStringConvertible, JSONRepresentable {
-        /// The converted markdown content
+        /// The markdown the source document was converted to.
         public let markdown: String
         public init(markdown: String = "") {
             stringValidator()(markdown)
@@ -1113,14 +1350,15 @@ public class Riviera {
         }
     }
 
-    /// Arguments for the asynchronous `get_metadata_async` route. Exactly one of `file_id`, `path`, or `url` must be
-    /// supplied via `file_id_or_url` to identify the file whose metadata should be extracted.
+    /// Arguments for the asynchronous getMetadataAsync route. Exactly one of fileId in FileIdOrUrl, path in
+    /// FileIdOrUrl, or url in FileIdOrUrl must be supplied via fileIdOrUrl in GetMetadataArgs to identify the file
+    /// whose metadata should be extracted.
     public class GetMetadataArgs: CustomStringConvertible, JSONRepresentable {
-        /// Identifier of the file to extract metadata from. Callers must set exactly one of the `FileIdOrUrl` variants.
+        /// Identifier of the file to extract metadata from. Callers must set exactly one of the FileIdOrUrl variants.
         /// The kind of metadata returned is determined by the file type: image files return EXIF metadata,
         /// audio/video files return media metadata, PDFs return PDF metadata, and MS Office documents (docx,
         /// pptx, xlsx) return Office metadata. See the route description for the supported formats. Requests
-        /// against unsupported formats return `unsupported_format_error`.
+        /// against unsupported formats fail with userError in MetadataExtractionApiV2Error.
         public let fileIdOrUrl: Riviera.FileIdOrUrl?
         public init(fileIdOrUrl: Riviera.FileIdOrUrl? = nil) {
             self.fileIdOrUrl = fileIdOrUrl
@@ -1159,13 +1397,13 @@ public class Riviera {
         }
     }
 
-    /// Result type for EventBus async check - must end in "CheckResult"
+    /// Status of a metadata extraction job started by getMetadataAsync, as returned by getMetadataAsyncCheck.
     public enum GetMetadataAsyncCheckResult: CustomStringConvertible, JSONRepresentable {
-        /// An unspecified error.
+        /// The job has not finished yet. Poll again.
         case inProgress
-        /// An unspecified error.
+        /// The job finished successfully.
         case complete(Riviera.GetMetadataResult)
-        /// An unspecified error.
+        /// The job finished unsuccessfully.
         case failed(Riviera.MetadataExtractionApiV2Error)
         /// An unspecified error.
         case other
@@ -1232,8 +1470,8 @@ public class Riviera {
 
     /// The GetMetadataResult struct
     public class GetMetadataResult: CustomStringConvertible, JSONRepresentable {
-        /// The kind of metadata that was extracted for the requested file. Callers should read the matching field of
-        /// the `metadata` oneof.
+        /// The kind of metadata that was extracted for the requested file. Callers should read the matching variant of
+        /// metadata in GetMetadataResult.
         public let metadataType: Riviera.MetadataType
         /// (no description)
         public let metadata: Riviera.MetadataUnion?
@@ -1279,24 +1517,359 @@ public class Riviera {
         }
     }
 
-    /// Arguments for the asynchronous `get_transcript_async` route. Exactly one of `file_id`, `path`, or `url` must be
-    /// supplied via `file_id_or_url` to identify the audio or video asset to transcribe.
-    public class GetTranscriptArgs: CustomStringConvertible, JSONRepresentable {
-        /// Identifier of the media asset to transcribe. Callers must set exactly one of the `FileIdOrUrl` variants. The
-        /// referenced asset must be an audio or video file in a supported format (see the route description for
-        /// the list); requests against files with no audio track return a `no_audio_error`.
+    /// Arguments for the asynchronous `get_ocr_async` route. Exactly one of `file_id`, `path`, or `url` must be
+    /// supplied via `file_id_or_url` to identify the image or PDF whose text should be extracted via OCR (optical
+    /// character recognition).
+    public class GetOcrArgs: CustomStringConvertible, JSONRepresentable {
+        /// Identifier of the file to run OCR on. Callers must set exactly one of the `FileIdOrUrl` variants. OCR is
+        /// supported for image files and PDFs, including scanned / non-text PDFs; see the route description for
+        /// the supported formats. Requests against unsupported formats return `unsupported_format_error`. NOTE:
+        /// for the `url` variant, only Dropbox shared links (www.dropbox.com) are supported. External
+        /// (non-Dropbox) URLs are not supported and return `unsupported_format_error`; import the file into
+        /// Dropbox and reference it by `file_id` or `path` instead.
         public let fileIdOrUrl: Riviera.FileIdOrUrl?
-        /// Granularity of the time offsets returned for each transcript segment. Defaults to `SENTENCE` when the field
-        /// is omitted. - SENTENCE: one segment per spoken sentence (recommended). - WORD: one segment per word,
-        /// useful for fine-grained alignment such as captioning or highlight-as-you-listen experiences.
+        public init(fileIdOrUrl: Riviera.FileIdOrUrl? = nil) {
+            self.fileIdOrUrl = fileIdOrUrl
+        }
+
+        func json() throws -> JSON {
+            try GetOcrArgsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetOcrArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetOcrArgs: \(error)"
+            }
+        }
+    }
+
+    public class GetOcrArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetOcrArgs) throws -> JSON {
+            let output = [
+                "file_id_or_url": try NullableSerializer(Riviera.FileIdOrUrlSerializer()).serialize(value.fileIdOrUrl),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetOcrArgs {
+            switch json {
+            case .dictionary(let dict):
+                let fileIdOrUrl = try NullableSerializer(Riviera.FileIdOrUrlSerializer()).deserialize(dict["file_id_or_url"] ?? .null)
+                return GetOcrArgs(fileIdOrUrl: fileIdOrUrl)
+            default:
+                throw JSONSerializerError.deserializeError(type: GetOcrArgs.self, json: json)
+            }
+        }
+    }
+
+    /// Result type for EventBus async check - must end in "CheckResult"
+    public enum GetOcrAsyncCheckResult: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case inProgress
+        /// An unspecified error.
+        case complete(Riviera.GetOcrResult)
+        /// An unspecified error.
+        case failed(Riviera.OcrExtractionApiV2Error)
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try GetOcrAsyncCheckResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetOcrAsyncCheckResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetOcrAsyncCheckResult: \(error)"
+            }
+        }
+    }
+
+    public class GetOcrAsyncCheckResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetOcrAsyncCheckResult) throws -> JSON {
+            switch value {
+            case .inProgress:
+                var d = [String: JSON]()
+                d[".tag"] = .str("in_progress")
+                return .dictionary(d)
+            case .complete(let arg):
+                var d = try Serialization.getFields(Riviera.GetOcrResultSerializer().serialize(arg))
+                d[".tag"] = .str("complete")
+                return .dictionary(d)
+            case .failed(let arg):
+                var d = try ["failed": Riviera.OcrExtractionApiV2ErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("failed")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetOcrAsyncCheckResult {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "in_progress":
+                    return GetOcrAsyncCheckResult.inProgress
+                case "complete":
+                    let v = try Riviera.GetOcrResultSerializer().deserialize(json)
+                    return GetOcrAsyncCheckResult.complete(v)
+                case "failed":
+                    let v = try Riviera.OcrExtractionApiV2ErrorSerializer().deserialize(d["failed"] ?? .null)
+                    return GetOcrAsyncCheckResult.failed(v)
+                case "other":
+                    return GetOcrAsyncCheckResult.other
+                default:
+                    return GetOcrAsyncCheckResult.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: GetOcrAsyncCheckResult.self, json: json)
+            }
+        }
+    }
+
+    /// The GetOcrResult struct
+    public class GetOcrResult: CustomStringConvertible, JSONRepresentable {
+        /// The plain-text content extracted from the file via OCR. Words within a line are separated by a single space,
+        /// lines are newline-separated in reading order, and for multi-page PDFs pages are separated by a blank
+        /// line in page order. May be empty when no text is detected in the source.
+        public let text: String
+        /// The same content as hOCR: HTML that carries the position of every recognized word. Each page is a
+        /// `<section>` holding `<p class="line">` elements with one `<span>` per word, and each element carries
+        /// `data-x`, `data-y`, `data-width`, and `data-height` attributes in pixels relative to the upright
+        /// page (whose dimensions are on the `<section>`). Use this when you need word coordinates -- to
+        /// highlight matches over a page image, for example; use `text` when you just need the words.
+        public let hocr: String
+        public init(text: String = "", hocr: String = "") {
+            stringValidator()(text)
+            self.text = text
+            stringValidator()(hocr)
+            self.hocr = hocr
+        }
+
+        func json() throws -> JSON {
+            try GetOcrResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetOcrResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetOcrResult: \(error)"
+            }
+        }
+    }
+
+    public class GetOcrResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetOcrResult) throws -> JSON {
+            let output = [
+                "text": try Serialization._StringSerializer.serialize(value.text),
+                "hocr": try Serialization._StringSerializer.serialize(value.hocr),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetOcrResult {
+            switch json {
+            case .dictionary(let dict):
+                let text = try Serialization._StringSerializer.deserialize(dict["text"] ?? .str(""))
+                let hocr = try Serialization._StringSerializer.deserialize(dict["hocr"] ?? .str(""))
+                return GetOcrResult(text: text, hocr: hocr)
+            default:
+                throw JSONSerializerError.deserializeError(type: GetOcrResult.self, json: json)
+            }
+        }
+    }
+
+    /// Arguments for the asynchronous `get_text_async` route. Exactly one of `file_id`, `path`, or `url` must be
+    /// supplied via `file_id_or_url` to identify the document whose plain-text content should be extracted.
+    public class GetTextArgs: CustomStringConvertible, JSONRepresentable {
+        /// Identifier of the document to extract text from. Callers must set exactly one of the `FileIdOrUrl` variants.
+        /// Text extraction is supported for common document formats (Word, PowerPoint, Excel, PDF, RTF, and
+        /// Dropbox document types); see the route description for the supported formats. Requests against
+        /// unsupported formats return `unsupported_format_error`. NOTE: for the `url` variant, only Dropbox
+        /// shared links (www.dropbox.com) are supported. External (non-Dropbox) URLs are not supported and
+        /// return `unsupported_format_error`; import the file into Dropbox and reference it by `file_id` or
+        /// `path` instead.
+        public let fileIdOrUrl: Riviera.FileIdOrUrl?
+        public init(fileIdOrUrl: Riviera.FileIdOrUrl? = nil) {
+            self.fileIdOrUrl = fileIdOrUrl
+        }
+
+        func json() throws -> JSON {
+            try GetTextArgsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetTextArgsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetTextArgs: \(error)"
+            }
+        }
+    }
+
+    public class GetTextArgsSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetTextArgs) throws -> JSON {
+            let output = [
+                "file_id_or_url": try NullableSerializer(Riviera.FileIdOrUrlSerializer()).serialize(value.fileIdOrUrl),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetTextArgs {
+            switch json {
+            case .dictionary(let dict):
+                let fileIdOrUrl = try NullableSerializer(Riviera.FileIdOrUrlSerializer()).deserialize(dict["file_id_or_url"] ?? .null)
+                return GetTextArgs(fileIdOrUrl: fileIdOrUrl)
+            default:
+                throw JSONSerializerError.deserializeError(type: GetTextArgs.self, json: json)
+            }
+        }
+    }
+
+    /// Result type for EventBus async check - must end in "CheckResult"
+    public enum GetTextAsyncCheckResult: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case inProgress
+        /// An unspecified error.
+        case complete(Riviera.GetTextResult)
+        /// An unspecified error.
+        case failed(Riviera.TextExtractionApiV2Error)
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try GetTextAsyncCheckResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetTextAsyncCheckResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetTextAsyncCheckResult: \(error)"
+            }
+        }
+    }
+
+    public class GetTextAsyncCheckResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetTextAsyncCheckResult) throws -> JSON {
+            switch value {
+            case .inProgress:
+                var d = [String: JSON]()
+                d[".tag"] = .str("in_progress")
+                return .dictionary(d)
+            case .complete(let arg):
+                var d = try Serialization.getFields(Riviera.GetTextResultSerializer().serialize(arg))
+                d[".tag"] = .str("complete")
+                return .dictionary(d)
+            case .failed(let arg):
+                var d = try ["failed": Riviera.TextExtractionApiV2ErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("failed")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetTextAsyncCheckResult {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "in_progress":
+                    return GetTextAsyncCheckResult.inProgress
+                case "complete":
+                    let v = try Riviera.GetTextResultSerializer().deserialize(json)
+                    return GetTextAsyncCheckResult.complete(v)
+                case "failed":
+                    let v = try Riviera.TextExtractionApiV2ErrorSerializer().deserialize(d["failed"] ?? .null)
+                    return GetTextAsyncCheckResult.failed(v)
+                case "other":
+                    return GetTextAsyncCheckResult.other
+                default:
+                    return GetTextAsyncCheckResult.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: GetTextAsyncCheckResult.self, json: json)
+            }
+        }
+    }
+
+    /// The GetTextResult struct
+    public class GetTextResult: CustomStringConvertible, JSONRepresentable {
+        /// The plain-text content extracted from the document. For multi-page documents the text is concatenated in
+        /// document order. May be empty when no text is detected in the source.
+        public let text: String
+        public init(text: String = "") {
+            stringValidator()(text)
+            self.text = text
+        }
+
+        func json() throws -> JSON {
+            try GetTextResultSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try GetTextResultSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for GetTextResult: \(error)"
+            }
+        }
+    }
+
+    public class GetTextResultSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: GetTextResult) throws -> JSON {
+            let output = [
+                "text": try Serialization._StringSerializer.serialize(value.text),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> GetTextResult {
+            switch json {
+            case .dictionary(let dict):
+                let text = try Serialization._StringSerializer.deserialize(dict["text"] ?? .str(""))
+                return GetTextResult(text: text)
+            default:
+                throw JSONSerializerError.deserializeError(type: GetTextResult.self, json: json)
+            }
+        }
+    }
+
+    /// Arguments for the asynchronous getTranscriptAsync route. Exactly one of fileId in FileIdOrUrl, path in
+    /// FileIdOrUrl, or url in FileIdOrUrl must be supplied via fileIdOrUrl in GetTranscriptArgs to identify the
+    /// audio or video asset to transcribe.
+    public class GetTranscriptArgs: CustomStringConvertible, JSONRepresentable {
+        /// Identifier of the media asset to transcribe. Callers must set exactly one of the FileIdOrUrl variants. The
+        /// referenced asset must be an audio or video file in a supported format (see the route description for
+        /// the list); requests against files with no audio track fail with noAudioError in ContentApiV2Error.
+        public let fileIdOrUrl: Riviera.FileIdOrUrl?
+        /// Granularity of the time offsets returned for each transcript segment. Defaults to sentence in TimestampLevel
+        /// when the field is omitted.
         public let timestampLevel: Riviera.TimestampLevel
         /// Comma-delimited list of non-lexical filler words to preserve in the transcript output, e.g. `"uh, ah, uhm"`.
         /// By default these fillers are stripped. Unrecognized tokens are ignored. Leave empty to use the
         /// default filtering behavior.
         public let includedSpecialWords: String
-        /// Optional ISO 639-1 two-letter language code hinting the spoken language of the source audio (e.g. "en",
-        /// "ja"). When empty, the service auto-detects the language; supplying a hint improves accuracy and
-        /// latency for short or ambiguous clips. Unsupported languages fall back to auto-detection.
+        /// Hint for the spoken language of the source audio, as an ISO 639-1 code (e.g. "en", "ja"). When empty, the
+        /// service auto-detects the language; supplying a hint improves accuracy and latency for short or
+        /// ambiguous clips. Languages the service does not support fall back to auto-detection.
         public let audioLanguage: String
         public init(
             fileIdOrUrl: Riviera.FileIdOrUrl? = nil,
@@ -1358,13 +1931,13 @@ public class Riviera {
         }
     }
 
-    /// Result type for EventBus async check - must end in "CheckResult"
+    /// Status of a transcript job started by getTranscriptAsync, as returned by getTranscriptAsyncCheck.
     public enum GetTranscriptAsyncCheckResult: CustomStringConvertible, JSONRepresentable {
-        /// An unspecified error.
+        /// The job has not finished yet. Poll again.
         case inProgress
-        /// An unspecified error.
+        /// The job finished successfully.
         case complete(Riviera.GetTranscriptResult)
-        /// An unspecified error.
+        /// The job finished unsuccessfully.
         case failed(Riviera.ContentApiV2Error)
         /// An unspecified error.
         case other
@@ -1431,8 +2004,7 @@ public class Riviera {
 
     /// The GetTranscriptResult struct
     public class GetTranscriptResult: CustomStringConvertible, JSONRepresentable {
-        /// The structured transcript produced for the requested media asset, with per-segment text, start/end offsets
-        /// (in seconds from the beginning of the media), and the detected or caller-supplied locale.
+        /// The transcript produced for the requested media asset.
         public let structuredTranscript: Riviera.ApiStructuredTranscript?
         public init(structuredTranscript: Riviera.ApiStructuredTranscript? = nil) {
             self.structuredTranscript = structuredTranscript
@@ -1473,25 +2045,153 @@ public class Riviera {
         }
     }
 
-    /// Reason a markdown conversion job failed. Returned in the `failed` variant of `GetMarkdownAsyncCheckResult`. This
-    /// is a semantic error union: the HTTP status of the poll request itself is unaffected (a poll that surfaces a
-    /// failed job is still a normal successful poll response). Callers should branch on the variant.
-    public enum MarkdownConversionApiV2Error: CustomStringConvertible, JSONRepresentable {
+    /// Reason a keyframe extraction job failed. Returned in the `failed` variant of `GetKeyframesAsyncCheckResult`.
+    /// This is a semantic error union: the HTTP status of the poll request itself is unaffected (a poll that
+    /// surfaces a failed job is still a normal successful poll response). Callers should branch on the variant.
+    public enum KeyframesExtractionApiV2Error: CustomStringConvertible, JSONRepresentable {
         /// An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying
         /// with backoff may succeed.
         case serverError(String)
         /// The request could not be processed as supplied (a problem with the caller's input). The string is a
         /// human-readable message; retrying the same request will not help.
         case userError(String)
-        /// An unspecified error.
+        /// The source file is not in a format this route supports.
         case unsupportedFormatError
-        /// An unspecified error.
+        /// url in FileIdOrUrl referenced a Dropbox shared link whose owner has disabled downloads.
         case linkDownloadDisabledError
-        /// An unspecified error.
+        /// url in FileIdOrUrl referenced a password-protected Dropbox shared link. Riviera cannot supply the password,
+        /// so such links cannot be processed.
         case sharedLinkPasswordProtected
-        /// An unspecified error.
+        /// The request exceeded a service limit -- for example the source video is too large, or the extraction
+        /// produced more keyframes / more total image data than the response can carry. Lower the resolution,
+        /// raise `scene_change_threshold`, or set `include_images = false`.
         case limitExceededError
+        /// The source file was readable but could not be processed, for example because it is corrupt.
+        case conversionFailureError
+        /// The referenced file does not exist or is not accessible.
+        case notFoundError
+        /// The target is a folder, not a file.
+        case isAFolderError
         /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try KeyframesExtractionApiV2ErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try KeyframesExtractionApiV2ErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for KeyframesExtractionApiV2Error: \(error)"
+            }
+        }
+    }
+
+    public class KeyframesExtractionApiV2ErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: KeyframesExtractionApiV2Error) throws -> JSON {
+            switch value {
+            case .serverError(let arg):
+                var d = try ["server_error": Serialization._StringSerializer.serialize(arg)]
+                d[".tag"] = .str("server_error")
+                return .dictionary(d)
+            case .userError(let arg):
+                var d = try ["user_error": Serialization._StringSerializer.serialize(arg)]
+                d[".tag"] = .str("user_error")
+                return .dictionary(d)
+            case .unsupportedFormatError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("unsupported_format_error")
+                return .dictionary(d)
+            case .linkDownloadDisabledError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("link_download_disabled_error")
+                return .dictionary(d)
+            case .sharedLinkPasswordProtected:
+                var d = [String: JSON]()
+                d[".tag"] = .str("shared_link_password_protected")
+                return .dictionary(d)
+            case .limitExceededError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("limit_exceeded_error")
+                return .dictionary(d)
+            case .conversionFailureError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("conversion_failure_error")
+                return .dictionary(d)
+            case .notFoundError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_found_error")
+                return .dictionary(d)
+            case .isAFolderError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("is_a_folder_error")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> KeyframesExtractionApiV2Error {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "server_error":
+                    let v = try Serialization._StringSerializer.deserialize(d["server_error"] ?? .null)
+                    return KeyframesExtractionApiV2Error.serverError(v)
+                case "user_error":
+                    let v = try Serialization._StringSerializer.deserialize(d["user_error"] ?? .null)
+                    return KeyframesExtractionApiV2Error.userError(v)
+                case "unsupported_format_error":
+                    return KeyframesExtractionApiV2Error.unsupportedFormatError
+                case "link_download_disabled_error":
+                    return KeyframesExtractionApiV2Error.linkDownloadDisabledError
+                case "shared_link_password_protected":
+                    return KeyframesExtractionApiV2Error.sharedLinkPasswordProtected
+                case "limit_exceeded_error":
+                    return KeyframesExtractionApiV2Error.limitExceededError
+                case "conversion_failure_error":
+                    return KeyframesExtractionApiV2Error.conversionFailureError
+                case "not_found_error":
+                    return KeyframesExtractionApiV2Error.notFoundError
+                case "is_a_folder_error":
+                    return KeyframesExtractionApiV2Error.isAFolderError
+                case "other":
+                    return KeyframesExtractionApiV2Error.other
+                default:
+                    return KeyframesExtractionApiV2Error.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: KeyframesExtractionApiV2Error.self, json: json)
+            }
+        }
+    }
+
+    /// Reason a markdown conversion job failed. Returned in the failed in GetMarkdownAsyncCheckResult variant. This is
+    /// a semantic error union: the HTTP status of the poll request itself is unaffected (a poll that surfaces a
+    /// failed job is still a normal successful poll response). Callers should branch on the variant.
+    public enum MarkdownConversionApiV2Error: CustomStringConvertible, JSONRepresentable {
+        /// An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying
+        /// with backoff may succeed.
+        case serverError(String)
+        /// The request could not be processed as supplied (a problem with the caller's input) -- for example an
+        /// unsupported file format or a file over the size limit. The string is a human-readable message;
+        /// retrying the same request will not help.
+        case userError(String)
+        /// The source file is not in a format this route can convert.
+        case unsupportedFormatError
+        /// url in FileIdOrUrl referenced a Dropbox shared link whose owner has disabled downloads.
+        case linkDownloadDisabledError
+        /// url in FileIdOrUrl referenced a password-protected Dropbox shared link. Riviera cannot supply the password,
+        /// so such links cannot be converted.
+        case sharedLinkPasswordProtected
+        /// A resource limit was exceeded while producing the result.
+        case limitExceededError
+        /// The source file was readable but could not be converted, for example because it is corrupt.
         case conversionFailureError
         /// The referenced file does not exist or is not accessible.
         case notFoundError
@@ -1598,7 +2298,7 @@ public class Riviera {
 
     /// The MediaDurationError struct
     public class MediaDurationError: CustomStringConvertible, JSONRepresentable {
-        /// (no description)
+        /// The maximum supported duration, in seconds, of the audio to transcribe.
         public let limit: Int32
         public init(limit: Int32 = 0) {
             comparableValidator()(limit)
@@ -1638,25 +2338,28 @@ public class Riviera {
         }
     }
 
-    /// Reason a metadata extraction job failed. Returned in the `failed` variant of `GetMetadataAsyncCheckResult`. This
-    /// is a semantic error union: the HTTP status of the poll request itself is unaffected (a poll that surfaces a
+    /// Reason a metadata extraction job failed. Returned in the failed in GetMetadataAsyncCheckResult variant. This is
+    /// a semantic error union: the HTTP status of the poll request itself is unaffected (a poll that surfaces a
     /// failed job is still a normal successful poll response). Callers should branch on the variant.
     public enum MetadataExtractionApiV2Error: CustomStringConvertible, JSONRepresentable {
         /// An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying
         /// with backoff may succeed.
         case serverError(String)
-        /// The request could not be processed as supplied (a problem with the caller's input). The string is a
+        /// The request could not be processed as supplied (a problem with the caller's input) -- for example an
+        /// unsupported file format or a file over the size limit for its metadata kind. The string is a
         /// human-readable message; retrying the same request will not help.
         case userError(String)
-        /// An unspecified error.
+        /// The source file is not in a format this route can extract metadata from.
         case unsupportedFormatError
-        /// An unspecified error.
+        /// url in FileIdOrUrl referenced a Dropbox shared link whose owner has disabled downloads.
         case linkDownloadDisabledError
-        /// An unspecified error.
+        /// url in FileIdOrUrl referenced a password-protected Dropbox shared link. Riviera cannot supply the password,
+        /// so metadata cannot be extracted from such links.
         case sharedLinkPasswordProtected
-        /// An unspecified error.
+        /// A resource limit was exceeded while producing the result.
         case limitExceededError
-        /// An unspecified error.
+        /// The source file was readable but its metadata could not be extracted, for example because the file is
+        /// corrupt.
         case conversionFailureError
         /// The referenced file does not exist or is not accessible.
         case notFoundError
@@ -1761,17 +2464,21 @@ public class Riviera {
         }
     }
 
-    /// Which metadata variant is populated in a `GetMetadataResult`, derived from the file type.
+    /// Which metadata variant is populated in a GetMetadataResult, derived from the file type.
     public enum MetadataType: CustomStringConvertible, JSONRepresentable {
-        /// An unspecified error.
+        /// No metadata kind applies to the file, so no variant of metadata in GetMetadataResult is populated. Riviera
+        /// only produces metadata for the formats listed on getMetadataAsync; a request for any other file
+        /// normally fails with userError in MetadataExtractionApiV2Error rather than completing with this
+        /// value. An app that does receive it should treat the file as having no extractable metadata; retrying
+        /// will not change the outcome.
         case metadataTypeUnknown
-        /// An unspecified error.
+        /// exif in MetadataUnion is populated.
         case metadataTypeExif
-        /// An unspecified error.
+        /// media in MetadataUnion is populated.
         case metadataTypeMedia
-        /// An unspecified error.
+        /// pdf in MetadataUnion is populated.
         case metadataTypePdf
-        /// An unspecified error.
+        /// office in MetadataUnion is populated.
         case metadataTypeOffice
         /// An unspecified error.
         case other
@@ -1846,7 +2553,131 @@ public class Riviera {
         }
     }
 
-    /// The kind of MS Office document that produced an `ApiOfficeMetadata` result.
+    /// Reason an OCR extraction job failed. Returned in the `failed` variant of `GetOcrAsyncCheckResult`. This is a
+    /// semantic error union: the HTTP status of the poll request itself is unaffected (a poll that surfaces a
+    /// failed job is still a normal successful poll response). Callers should branch on the variant.
+    public enum OcrExtractionApiV2Error: CustomStringConvertible, JSONRepresentable {
+        /// An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying
+        /// with backoff may succeed.
+        case serverError(String)
+        /// The request could not be processed as supplied (a problem with the caller's input). The string is a
+        /// human-readable message; retrying the same request will not help.
+        case userError(String)
+        /// The source file is not in a format this route supports.
+        case unsupportedFormatError
+        /// url in FileIdOrUrl referenced a Dropbox shared link whose owner has disabled downloads.
+        case linkDownloadDisabledError
+        /// url in FileIdOrUrl referenced a password-protected Dropbox shared link. Riviera cannot supply the password,
+        /// so such links cannot be processed.
+        case sharedLinkPasswordProtected
+        /// A resource limit was exceeded while producing the result.
+        case limitExceededError
+        /// The source file was readable but could not be processed, for example because it is corrupt.
+        case conversionFailureError
+        /// The referenced file does not exist or is not accessible.
+        case notFoundError
+        /// The target is a folder, not a file.
+        case isAFolderError
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try OcrExtractionApiV2ErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try OcrExtractionApiV2ErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for OcrExtractionApiV2Error: \(error)"
+            }
+        }
+    }
+
+    public class OcrExtractionApiV2ErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: OcrExtractionApiV2Error) throws -> JSON {
+            switch value {
+            case .serverError(let arg):
+                var d = try ["server_error": Serialization._StringSerializer.serialize(arg)]
+                d[".tag"] = .str("server_error")
+                return .dictionary(d)
+            case .userError(let arg):
+                var d = try ["user_error": Serialization._StringSerializer.serialize(arg)]
+                d[".tag"] = .str("user_error")
+                return .dictionary(d)
+            case .unsupportedFormatError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("unsupported_format_error")
+                return .dictionary(d)
+            case .linkDownloadDisabledError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("link_download_disabled_error")
+                return .dictionary(d)
+            case .sharedLinkPasswordProtected:
+                var d = [String: JSON]()
+                d[".tag"] = .str("shared_link_password_protected")
+                return .dictionary(d)
+            case .limitExceededError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("limit_exceeded_error")
+                return .dictionary(d)
+            case .conversionFailureError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("conversion_failure_error")
+                return .dictionary(d)
+            case .notFoundError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_found_error")
+                return .dictionary(d)
+            case .isAFolderError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("is_a_folder_error")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> OcrExtractionApiV2Error {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "server_error":
+                    let v = try Serialization._StringSerializer.deserialize(d["server_error"] ?? .null)
+                    return OcrExtractionApiV2Error.serverError(v)
+                case "user_error":
+                    let v = try Serialization._StringSerializer.deserialize(d["user_error"] ?? .null)
+                    return OcrExtractionApiV2Error.userError(v)
+                case "unsupported_format_error":
+                    return OcrExtractionApiV2Error.unsupportedFormatError
+                case "link_download_disabled_error":
+                    return OcrExtractionApiV2Error.linkDownloadDisabledError
+                case "shared_link_password_protected":
+                    return OcrExtractionApiV2Error.sharedLinkPasswordProtected
+                case "limit_exceeded_error":
+                    return OcrExtractionApiV2Error.limitExceededError
+                case "conversion_failure_error":
+                    return OcrExtractionApiV2Error.conversionFailureError
+                case "not_found_error":
+                    return OcrExtractionApiV2Error.notFoundError
+                case "is_a_folder_error":
+                    return OcrExtractionApiV2Error.isAFolderError
+                case "other":
+                    return OcrExtractionApiV2Error.other
+                default:
+                    return OcrExtractionApiV2Error.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: OcrExtractionApiV2Error.self, json: json)
+            }
+        }
+    }
+
+    /// The kind of MS Office document that produced an ApiOfficeMetadata result.
     public enum OfficeFileType: CustomStringConvertible, JSONRepresentable {
         /// An unspecified error.
         case officeFiletypeUnknown
@@ -1923,11 +2754,137 @@ public class Riviera {
         }
     }
 
-    /// The TimestampLevel union
+    /// Reason a text extraction job failed. Returned in the `failed` variant of `GetTextAsyncCheckResult`. This is a
+    /// semantic error union: the HTTP status of the poll request itself is unaffected (a poll that surfaces a
+    /// failed job is still a normal successful poll response). Callers should branch on the variant.
+    public enum TextExtractionApiV2Error: CustomStringConvertible, JSONRepresentable {
+        /// An unexpected, typically transient, server-side failure. The string is a human-readable message; retrying
+        /// with backoff may succeed.
+        case serverError(String)
+        /// The request could not be processed as supplied (a problem with the caller's input). The string is a
+        /// human-readable message; retrying the same request will not help.
+        case userError(String)
+        /// The source file is not in a format this route supports.
+        case unsupportedFormatError
+        /// url in FileIdOrUrl referenced a Dropbox shared link whose owner has disabled downloads.
+        case linkDownloadDisabledError
+        /// url in FileIdOrUrl referenced a password-protected Dropbox shared link. Riviera cannot supply the password,
+        /// so such links cannot be processed.
+        case sharedLinkPasswordProtected
+        /// A resource limit was exceeded while producing the result.
+        case limitExceededError
+        /// The source file was readable but could not be processed, for example because it is corrupt.
+        case conversionFailureError
+        /// The referenced file does not exist or is not accessible.
+        case notFoundError
+        /// The target is a folder, not a file.
+        case isAFolderError
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try TextExtractionApiV2ErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TextExtractionApiV2ErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for TextExtractionApiV2Error: \(error)"
+            }
+        }
+    }
+
+    public class TextExtractionApiV2ErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TextExtractionApiV2Error) throws -> JSON {
+            switch value {
+            case .serverError(let arg):
+                var d = try ["server_error": Serialization._StringSerializer.serialize(arg)]
+                d[".tag"] = .str("server_error")
+                return .dictionary(d)
+            case .userError(let arg):
+                var d = try ["user_error": Serialization._StringSerializer.serialize(arg)]
+                d[".tag"] = .str("user_error")
+                return .dictionary(d)
+            case .unsupportedFormatError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("unsupported_format_error")
+                return .dictionary(d)
+            case .linkDownloadDisabledError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("link_download_disabled_error")
+                return .dictionary(d)
+            case .sharedLinkPasswordProtected:
+                var d = [String: JSON]()
+                d[".tag"] = .str("shared_link_password_protected")
+                return .dictionary(d)
+            case .limitExceededError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("limit_exceeded_error")
+                return .dictionary(d)
+            case .conversionFailureError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("conversion_failure_error")
+                return .dictionary(d)
+            case .notFoundError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("not_found_error")
+                return .dictionary(d)
+            case .isAFolderError:
+                var d = [String: JSON]()
+                d[".tag"] = .str("is_a_folder_error")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> TextExtractionApiV2Error {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "server_error":
+                    let v = try Serialization._StringSerializer.deserialize(d["server_error"] ?? .null)
+                    return TextExtractionApiV2Error.serverError(v)
+                case "user_error":
+                    let v = try Serialization._StringSerializer.deserialize(d["user_error"] ?? .null)
+                    return TextExtractionApiV2Error.userError(v)
+                case "unsupported_format_error":
+                    return TextExtractionApiV2Error.unsupportedFormatError
+                case "link_download_disabled_error":
+                    return TextExtractionApiV2Error.linkDownloadDisabledError
+                case "shared_link_password_protected":
+                    return TextExtractionApiV2Error.sharedLinkPasswordProtected
+                case "limit_exceeded_error":
+                    return TextExtractionApiV2Error.limitExceededError
+                case "conversion_failure_error":
+                    return TextExtractionApiV2Error.conversionFailureError
+                case "not_found_error":
+                    return TextExtractionApiV2Error.notFoundError
+                case "is_a_folder_error":
+                    return TextExtractionApiV2Error.isAFolderError
+                case "other":
+                    return TextExtractionApiV2Error.other
+                default:
+                    return TextExtractionApiV2Error.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: TextExtractionApiV2Error.self, json: json)
+            }
+        }
+    }
+
+    /// Granularity of the time offsets returned for each transcript segment.
     public enum TimestampLevel: CustomStringConvertible, JSONRepresentable {
-        /// An unspecified error.
+        /// One segment per spoken sentence (recommended). This is the default when timestampLevel in GetTranscriptArgs
+        /// is omitted.
         case sentence
-        /// An unspecified error.
+        /// One segment per word, useful for fine-grained alignment such as captioning or highlight-as-you-listen
+        /// experiences.
         case word
         /// An unspecified error.
         case other
@@ -1984,15 +2941,15 @@ public class Riviera {
         }
     }
 
-    /// Exactly one variant is populated, corresponding to `metadata_type`.
+    /// The extracted metadata. Exactly one variant is populated, corresponding to metadataType in GetMetadataResult.
     public enum MetadataUnion: CustomStringConvertible, JSONRepresentable {
-        /// An unspecified error.
+        /// EXIF metadata, for image files.
         case exif(Riviera.ApiExifMetadata)
-        /// An unspecified error.
+        /// Container and per-stream metadata, for audio and video files.
         case media(Riviera.ApiMediaMetadata)
-        /// An unspecified error.
+        /// Document metadata, for PDFs.
         case pdf(Riviera.ApiPdfMetadata)
-        /// An unspecified error.
+        /// Document metadata, for MS Office files.
         case office(Riviera.ApiOfficeMetadata)
         /// An unspecified error.
         case other
@@ -2067,6 +3024,34 @@ public class Riviera {
 
     /// Stone Route Objects
 
+    static let getKeyframesAsync = Route(
+        name: "get_keyframes_async",
+        version: 1,
+        namespace: "riviera",
+        deprecated: false,
+        argSerializer: Riviera.GetKeyframesArgsSerializer(),
+        responseSerializer: Async.LaunchResultBaseSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attributes: RouteAttributes(
+            auth: [.app, .user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let getKeyframesAsyncCheck = Route(
+        name: "get_keyframes_async/check",
+        version: 1,
+        namespace: "riviera",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Riviera.GetKeyframesAsyncCheckResultSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.app, .user],
+            host: .api,
+            style: .rpc
+        )
+    )
     static let getMarkdownAsync = Route(
         name: "get_markdown_async",
         version: 1,
@@ -2116,6 +3101,62 @@ public class Riviera {
         deprecated: false,
         argSerializer: Async.PollArgSerializer(),
         responseSerializer: Riviera.GetMetadataAsyncCheckResultSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.app, .user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let getOcrAsync = Route(
+        name: "get_ocr_async",
+        version: 1,
+        namespace: "riviera",
+        deprecated: false,
+        argSerializer: Riviera.GetOcrArgsSerializer(),
+        responseSerializer: Async.LaunchResultBaseSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attributes: RouteAttributes(
+            auth: [.app, .user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let getOcrAsyncCheck = Route(
+        name: "get_ocr_async/check",
+        version: 1,
+        namespace: "riviera",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Riviera.GetOcrAsyncCheckResultSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.app, .user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let getTextAsync = Route(
+        name: "get_text_async",
+        version: 1,
+        namespace: "riviera",
+        deprecated: false,
+        argSerializer: Riviera.GetTextArgsSerializer(),
+        responseSerializer: Async.LaunchResultBaseSerializer(),
+        errorSerializer: Serialization._VoidSerializer,
+        attributes: RouteAttributes(
+            auth: [.app, .user],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let getTextAsyncCheck = Route(
+        name: "get_text_async/check",
+        version: 1,
+        namespace: "riviera",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Riviera.GetTextAsyncCheckResultSerializer(),
         errorSerializer: Async.PollErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.app, .user],

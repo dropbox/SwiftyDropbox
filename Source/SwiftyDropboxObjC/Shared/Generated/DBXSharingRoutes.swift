@@ -32,8 +32,6 @@ public class DBXSharingRoutes: NSObject {
     /// - parameter accessLevel: AccessLevel union object, describing what access level we want to give new members.
     /// - parameter addMessageAsComment: If the custom message should be added as a comment on the file. Only meant for
     /// Paper files.
-    /// - parameter fpSealedResult: Field is only returned for "internal" callers. The FingerprintJS Sealed Client
-    /// Result value
     ///
     /// - returns: Through the response callback, the caller will receive a `Array<Sharing.FileMemberActionResult>`
     /// object on success or a `Sharing.AddFileMemberError` object on failure.
@@ -44,8 +42,7 @@ public class DBXSharingRoutes: NSObject {
         customMessage: String?,
         quiet: NSNumber,
         accessLevel: DBXSharingAccessLevel?,
-        addMessageAsComment: NSNumber,
-        fpSealedResult: String?
+        addMessageAsComment: NSNumber
     ) -> DBXSharingAddFileMemberRpcRequest {
         let swift = swift.addFileMember(
             file: file,
@@ -53,8 +50,7 @@ public class DBXSharingRoutes: NSObject {
             customMessage: customMessage,
             quiet: quiet.boolValue,
             accessLevel: accessLevel?.swift,
-            addMessageAsComment: addMessageAsComment.boolValue,
-            fpSealedResult: fpSealedResult
+            addMessageAsComment: addMessageAsComment.boolValue
         )
         return DBXSharingAddFileMemberRpcRequest(swift: swift)
     }
@@ -82,26 +78,12 @@ public class DBXSharingRoutes: NSObject {
     /// folder.
     /// - parameter quiet: Whether added members should be notified via email and device notifications of their invite.
     /// - parameter customMessage: Optional message to display to added members in their invitation.
-    /// - parameter fpSealedResult: Field is only returned for "internal" callers. The FingerprintJS Sealed Client
-    /// Result value
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.AddFolderMemberError` object on failure.
     @objc
-    @discardableResult public func addFolderMember(
-        sharedFolderId: String,
-        members: [DBXSharingAddMember],
-        quiet: NSNumber,
-        customMessage: String?,
-        fpSealedResult: String?
-    ) -> DBXSharingAddFolderMemberRpcRequest {
-        let swift = swift.addFolderMember(
-            sharedFolderId: sharedFolderId,
-            members: members.map(\.swift),
-            quiet: quiet.boolValue,
-            customMessage: customMessage,
-            fpSealedResult: fpSealedResult
-        )
+    @discardableResult public func addFolderMember(sharedFolderId: String, members: [DBXSharingAddMember], quiet: NSNumber, customMessage: String?) -> DBXSharingAddFolderMemberRpcRequest {
+        let swift = swift.addFolderMember(sharedFolderId: sharedFolderId, members: members.map(\.swift), quiet: quiet.boolValue, customMessage: customMessage)
         return DBXSharingAddFolderMemberRpcRequest(swift: swift)
     }
 
