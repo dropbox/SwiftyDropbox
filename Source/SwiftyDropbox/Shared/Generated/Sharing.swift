@@ -242,16 +242,13 @@ public class Sharing {
         public let accessLevel: Sharing.AccessLevel?
         /// If the custom message should be added as a comment on the file. Only meant for Paper files.
         public let addMessageAsComment: Bool
-        /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
-        public let fpSealedResult: String?
         public init(
             file: String,
             members: [Sharing.MemberSelector],
             customMessage: String? = nil,
             quiet: Bool = false,
             accessLevel: Sharing.AccessLevel? = nil,
-            addMessageAsComment: Bool = false,
-            fpSealedResult: String? = nil
+            addMessageAsComment: Bool = false
         ) {
             stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
             self.file = file
@@ -261,8 +258,6 @@ public class Sharing {
             self.quiet = quiet
             self.accessLevel = accessLevel
             self.addMessageAsComment = addMessageAsComment
-            nullableValidator(stringValidator())(fpSealedResult)
-            self.fpSealedResult = fpSealedResult
         }
 
         func json() throws -> JSON {
@@ -288,7 +283,6 @@ public class Sharing {
                 "quiet": try Serialization._BoolSerializer.serialize(value.quiet),
                 "access_level": try NullableSerializer(Sharing.AccessLevelSerializer()).serialize(value.accessLevel),
                 "add_message_as_comment": try Serialization._BoolSerializer.serialize(value.addMessageAsComment),
-                "fp_sealed_result": try NullableSerializer(Serialization._StringSerializer).serialize(value.fpSealedResult),
             ]
             return .dictionary(output)
         }
@@ -302,15 +296,13 @@ public class Sharing {
                 let quiet = try Serialization._BoolSerializer.deserialize(dict["quiet"] ?? .number(0))
                 let accessLevel = try NullableSerializer(Sharing.AccessLevelSerializer()).deserialize(dict["access_level"] ?? .null)
                 let addMessageAsComment = try Serialization._BoolSerializer.deserialize(dict["add_message_as_comment"] ?? .number(0))
-                let fpSealedResult = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["fp_sealed_result"] ?? .null)
                 return AddFileMemberArgs(
                     file: file,
                     members: members,
                     customMessage: customMessage,
                     quiet: quiet,
                     accessLevel: accessLevel,
-                    addMessageAsComment: addMessageAsComment,
-                    fpSealedResult: fpSealedResult
+                    addMessageAsComment: addMessageAsComment
                 )
             default:
                 throw JSONSerializerError.deserializeError(type: AddFileMemberArgs.self, json: json)
@@ -415,17 +407,13 @@ public class Sharing {
         public let quiet: Bool
         /// Optional message to display to added members in their invitation.
         public let customMessage: String?
-        /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
-        public let fpSealedResult: String?
-        public init(sharedFolderId: String, members: [Sharing.AddMember], quiet: Bool = false, customMessage: String? = nil, fpSealedResult: String? = nil) {
+        public init(sharedFolderId: String, members: [Sharing.AddMember], quiet: Bool = false, customMessage: String? = nil) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(sharedFolderId)
             self.sharedFolderId = sharedFolderId
             self.members = members
             self.quiet = quiet
             nullableValidator(stringValidator(minLength: 1))(customMessage)
             self.customMessage = customMessage
-            nullableValidator(stringValidator())(fpSealedResult)
-            self.fpSealedResult = fpSealedResult
         }
 
         func json() throws -> JSON {
@@ -449,7 +437,6 @@ public class Sharing {
                 "members": try ArraySerializer(Sharing.AddMemberSerializer()).serialize(value.members),
                 "quiet": try Serialization._BoolSerializer.serialize(value.quiet),
                 "custom_message": try NullableSerializer(Serialization._StringSerializer).serialize(value.customMessage),
-                "fp_sealed_result": try NullableSerializer(Serialization._StringSerializer).serialize(value.fpSealedResult),
             ]
             return .dictionary(output)
         }
@@ -461,14 +448,7 @@ public class Sharing {
                 let members = try ArraySerializer(Sharing.AddMemberSerializer()).deserialize(dict["members"] ?? .null)
                 let quiet = try Serialization._BoolSerializer.deserialize(dict["quiet"] ?? .number(0))
                 let customMessage = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["custom_message"] ?? .null)
-                let fpSealedResult = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["fp_sealed_result"] ?? .null)
-                return AddFolderMemberArg(
-                    sharedFolderId: sharedFolderId,
-                    members: members,
-                    quiet: quiet,
-                    customMessage: customMessage,
-                    fpSealedResult: fpSealedResult
-                )
+                return AddFolderMemberArg(sharedFolderId: sharedFolderId, members: members, quiet: quiet, customMessage: customMessage)
             default:
                 throw JSONSerializerError.deserializeError(type: AddFolderMemberArg.self, json: json)
             }
@@ -8973,9 +8953,11 @@ public class Sharing {
         case isOsxPackage
         /// We do not support sharing a folder inside a Mac OS X package.
         case insideOsxPackage
-        /// We do not support sharing the Vault folder.
+        /// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no
+        /// longer emitted.
         case isVault
-        /// We do not support sharing a folder inside a locked Vault.
+        /// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing
+        /// errors are no longer emitted.
         case isVaultLocked
         /// We do not support sharing the Family folder.
         case isFamily
@@ -9145,9 +9127,11 @@ public class Sharing {
         case isOsxPackage
         /// We do not support sharing a folder inside a Mac OS X package.
         case insideOsxPackage
-        /// We do not support sharing the Vault folder.
+        /// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no
+        /// longer emitted.
         case isVault
-        /// We do not support sharing a folder inside a locked Vault.
+        /// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing
+        /// errors are no longer emitted.
         case isVaultLocked
         /// An unspecified error.
         case other
@@ -9303,9 +9287,11 @@ public class Sharing {
         case isOsxPackage
         /// We do not support sharing a folder inside a Mac OS X package.
         case insideOsxPackage
-        /// We do not support sharing the Vault folder.
+        /// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no
+        /// longer emitted.
         case isVault
-        /// We do not support sharing a folder inside a locked Vault.
+        /// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing
+        /// errors are no longer emitted.
         case isVaultLocked
         /// An unspecified error.
         case other

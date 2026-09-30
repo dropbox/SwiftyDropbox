@@ -14,15 +14,73 @@ public class RivieraAppAuthRoutes: DropboxTransportClientOwning {
         self.client = client
     }
 
-    /// Asynchronous document-to-markdown conversion for supported file formats. Supported formats: .binder, .docx,
-    /// .html, .paper, .papert, .pptx, .xlsx, .gsheet, .ods, .pdf. Unsupported formats return an
-    /// `unsupported_format_error`. Size limit: the source file must be at most 50 MB. Larger files are rejected.
+    /// Asynchronous scene-change keyframe extraction for video files. Detects scene changes in the source video and
+    /// returns one representative keyframe per detected scene, each tagged with its timestamp (seconds from the
+    /// start of the video) and scene-change score. Set `include_images = true` to also receive each frame as a
+    /// base64-encoded JPEG; when the field is omitted the response carries keyframe metadata only. Supported video
+    /// formats: .3gp, .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts,
+    /// .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm, .wmv. Unsupported formats return an
+    /// `unsupported_format_error`. Limits: the source file must be at most 10 GB. To keep responses within service
+    /// limits the number of keyframes and the total image payload are bounded; requests that would exceed these
+    /// limits return a `limit_exceeded_error` -- raise `scene_change_threshold` or set `include_images = false` to
+    /// stay within bounds.
     ///
     /// - scope: files.content.read
     ///
-    /// - parameter fileIdOrUrl: Identifier of the document to convert. Callers must set exactly one of the
-    /// `FileIdOrUrl` variants. The referenced file must be a document in a supported format (see the route
-    /// description for the list); requests against unsupported formats return `unsupported_format_error`.
+    /// - parameter fileIdOrUrl: Identifier of the video file to extract keyframes from. Callers must set exactly one of
+    /// the `FileIdOrUrl` variants. Keyframe extraction is supported for video files only; see the route description
+    /// for the supported formats. Requests against unsupported formats return `unsupported_format_error`.
+    /// - parameter sceneChangeThreshold: Sensitivity of scene-change detection. A keyframe is emitted whenever the
+    /// frame-to-frame scene score crosses this threshold, so a LOWER value yields MORE keyframes. Valid range is
+    /// (0.0, 1.0]. When omitted (0.0) the service uses a default of 0.3, which is a good starting point for most
+    /// videos.
+    /// - parameter includeImages: When true, each returned keyframe includes the JPEG image bytes, base64-encoded, in
+    /// `ApiKeyframe.image_base64`. When false, the response contains only per-keyframe metadata (timestamp and
+    /// scene score) and `image_base64` is left empty -- useful when you only need the scene boundaries and want a
+    /// small response. NOTE: because the field defaults to false in proto3, callers who want images must set this
+    /// explicitly to true.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @discardableResult public func getKeyframesAsync(fileIdOrUrl: Riviera.FileIdOrUrl? = nil, sceneChangeThreshold: Double = 0.0, includeImages: Bool = false) -> RpcRequest<
+        Async.LaunchResultBaseSerializer,
+        VoidSerializer
+    > {
+        let route = Riviera.getKeyframesAsync
+        let serverArgs = Riviera.GetKeyframesArgs(fileIdOrUrl: fileIdOrUrl, sceneChangeThreshold: sceneChangeThreshold, includeImages: includeImages)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the status or result of specified get_keyframes_async task.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetKeyframesAsyncCheckResult`
+    /// object on success or a `Async.PollError` object on failure.
+    @discardableResult public func getKeyframesAsyncCheck(asyncJobId: String) -> RpcRequest<
+        Riviera.GetKeyframesAsyncCheckResultSerializer,
+        Async.PollErrorSerializer
+    > {
+        let route = Riviera.getKeyframesAsyncCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Asynchronous document-to-markdown conversion for supported file formats. Supported formats: .binder, .docx,
+    /// .html, .paper, .papert, .pptx, .xlsx, .gsheet, .ods, .pdf. Files in other formats fail with userError in
+    /// MarkdownConversionApiV2Error. Size limit: the source file must be at most 50 MB. Larger files fail with
+    /// userError in MarkdownConversionApiV2Error. The markdown is not returned by this route. Poll
+    /// getMarkdownAsyncCheck with the returned async job ID until it reports complete in
+    /// GetMarkdownAsyncCheckResult or failed in GetMarkdownAsyncCheckResult.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the document to convert. Callers must set exactly one of the FileIdOrUrl
+    /// variants. The referenced file must be a document in a supported format (see the route description for the
+    /// list); requests against unsupported formats fail with userError in MarkdownConversionApiV2Error.
     /// - parameter enableOcr: Enable OCR for PDF documents. Processing is slower when enabled.
     /// - parameter embedImages: When true, embed images as base64 data URIs in the markdown output. This can
     /// significantly increase output size.
@@ -63,15 +121,20 @@ public class RivieraAppAuthRoutes: DropboxTransportClientOwning {
     /// Audio/video (media) formats: .aac, .aif, .aiff, .flac, .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma, .3gp,
     /// .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf,
     /// .oggtheora, .ogv, .rm, .ts, .vob, .webm, .wmv. - PDF format: .pdf. - MS Office formats: .docx, .pptx, .xlsx.
-    /// Unsupported formats return an `unsupported_format_error`.
+    /// Files in other formats fail with userError in MetadataExtractionApiV2Error. Size limits depend on the kind
+    /// of metadata being extracted: at most 200 MB for image (EXIF) files, 100 GB for audio/video files, 500 MB for
+    /// PDFs, and 288 MB for MS Office files. Files over the limit for their kind fail with userError in
+    /// MetadataExtractionApiV2Error. The metadata is not returned by this route. Poll getMetadataAsyncCheck with
+    /// the returned async job ID until it reports complete in GetMetadataAsyncCheckResult or failed in
+    /// GetMetadataAsyncCheckResult.
     ///
     /// - scope: files.content.read
     ///
     /// - parameter fileIdOrUrl: Identifier of the file to extract metadata from. Callers must set exactly one of the
-    /// `FileIdOrUrl` variants. The kind of metadata returned is determined by the file type: image files return
-    /// EXIF metadata, audio/video files return media metadata, PDFs return PDF metadata, and MS Office documents
-    /// (docx, pptx, xlsx) return Office metadata. See the route description for the supported formats. Requests
-    /// against unsupported formats return `unsupported_format_error`.
+    /// FileIdOrUrl variants. The kind of metadata returned is determined by the file type: image files return EXIF
+    /// metadata, audio/video files return media metadata, PDFs return PDF metadata, and MS Office documents (docx,
+    /// pptx, xlsx) return Office metadata. See the route description for the supported formats. Requests against
+    /// unsupported formats fail with userError in MetadataExtractionApiV2Error.
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Void` object on failure.
@@ -99,27 +162,107 @@ public class RivieraAppAuthRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Asynchronous OCR (optical character recognition) text extraction for images and PDFs, including scanned /
+    /// non-text PDFs. Supported formats: - Image formats: .bmp, .gif, .heic, .jpeg, .jpg, .png, .tif, .tiff, .webp.
+    /// - PDF format: .pdf. Unsupported formats return an `unsupported_format_error`. For the `url` variant only
+    /// Dropbox shared links are supported; external URLs return `unsupported_format_error`. Text-based PDFs already
+    /// carry a text layer, so OCR is not run against them and the result is empty; use `get_text_async` to read the
+    /// embedded text layer of such a PDF. The result carries the extracted words as plain text, plus the same
+    /// content as hOCR with per-word coordinates.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the file to run OCR on. Callers must set exactly one of the `FileIdOrUrl`
+    /// variants. OCR is supported for image files and PDFs, including scanned / non-text PDFs; see the route
+    /// description for the supported formats. Requests against unsupported formats return
+    /// `unsupported_format_error`. NOTE: for the `url` variant, only Dropbox shared links (www.dropbox.com) are
+    /// supported. External (non-Dropbox) URLs are not supported and return `unsupported_format_error`; import the
+    /// file into Dropbox and reference it by `file_id` or `path` instead.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @discardableResult public func getOcrAsync(fileIdOrUrl: Riviera.FileIdOrUrl? = nil) -> RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer> {
+        let route = Riviera.getOcrAsync
+        let serverArgs = Riviera.GetOcrArgs(fileIdOrUrl: fileIdOrUrl)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the status or result of specified get_ocr_async task.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetOcrAsyncCheckResult` object on
+    /// success or a `Async.PollError` object on failure.
+    @discardableResult public func getOcrAsyncCheck(asyncJobId: String) -> RpcRequest<Riviera.GetOcrAsyncCheckResultSerializer, Async.PollErrorSerializer> {
+        let route = Riviera.getOcrAsyncCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Asynchronous plain-text extraction from documents. Supported formats include: - Word processing: .doc, .docx,
+    /// .docm, .rtf. - Presentations: .ppt, .pptx, .pptm. - Spreadsheets: .xls, .xlsx, .xlsm. - PDF: .pdf. - Dropbox
+    /// document types: .paper, .papert, .binder, .gdoc, .gsheet, .gslides. - Plain text / subtitles: .txt, .vtt.
+    /// Unsupported formats return an `unsupported_format_error`. For the `url` variant only Dropbox shared links
+    /// are supported; external URLs return `unsupported_format_error`.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the document to extract text from. Callers must set exactly one of the
+    /// `FileIdOrUrl` variants. Text extraction is supported for common document formats (Word, PowerPoint, Excel,
+    /// PDF, RTF, and Dropbox document types); see the route description for the supported formats. Requests against
+    /// unsupported formats return `unsupported_format_error`. NOTE: for the `url` variant, only Dropbox shared
+    /// links (www.dropbox.com) are supported. External (non-Dropbox) URLs are not supported and return
+    /// `unsupported_format_error`; import the file into Dropbox and reference it by `file_id` or `path` instead.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @discardableResult public func getTextAsync(fileIdOrUrl: Riviera.FileIdOrUrl? = nil) -> RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer> {
+        let route = Riviera.getTextAsync
+        let serverArgs = Riviera.GetTextArgs(fileIdOrUrl: fileIdOrUrl)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the status or result of specified get_text_async task.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetTextAsyncCheckResult` object on
+    /// success or a `Async.PollError` object on failure.
+    @discardableResult public func getTextAsyncCheck(asyncJobId: String) -> RpcRequest<Riviera.GetTextAsyncCheckResultSerializer, Async.PollErrorSerializer> {
+        let route = Riviera.getTextAsyncCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Asynchronous transcript generation for audio and video files. Supported audio formats: .aac, .aif, .aiff, .flac,
     /// .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma. Supported video formats: .3gp, .3gpp, .3gpp2, .asf, .avi, .dv,
     /// .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm,
-    /// .wmv. Unsupported formats return an `unsupported_format_error`. Size limits: the source file must be at most
-    /// 10 GB and its audio track at most 1 hour in duration. Files exceeding these limits are rejected.
+    /// .wmv. Files in other formats fail with userError in ContentApiV2Error. Size limits: the source file must be
+    /// at most 10 GB and its audio track at most 1 hour in duration. Files exceeding either limit fail with
+    /// userError in ContentApiV2Error. The transcript is not returned by this route. Poll getTranscriptAsyncCheck
+    /// with the returned async job ID until it reports complete in GetTranscriptAsyncCheckResult or failed in
+    /// GetTranscriptAsyncCheckResult.
     ///
     /// - scope: files.content.read
     ///
     /// - parameter fileIdOrUrl: Identifier of the media asset to transcribe. Callers must set exactly one of the
-    /// `FileIdOrUrl` variants. The referenced asset must be an audio or video file in a supported format (see the
-    /// route description for the list); requests against files with no audio track return a `no_audio_error`.
+    /// FileIdOrUrl variants. The referenced asset must be an audio or video file in a supported format (see the
+    /// route description for the list); requests against files with no audio track fail with noAudioError in
+    /// ContentApiV2Error.
     /// - parameter timestampLevel: Granularity of the time offsets returned for each transcript segment. Defaults to
-    /// `SENTENCE` when the field is omitted. - SENTENCE: one segment per spoken sentence (recommended). - WORD: one
-    /// segment per word, useful for fine-grained alignment such as captioning or highlight-as-you-listen
-    /// experiences.
+    /// sentence in TimestampLevel when the field is omitted.
     /// - parameter includedSpecialWords: Comma-delimited list of non-lexical filler words to preserve in the transcript
     /// output, e.g. `"uh, ah, uhm"`. By default these fillers are stripped. Unrecognized tokens are ignored. Leave
     /// empty to use the default filtering behavior.
-    /// - parameter audioLanguage: Optional ISO 639-1 two-letter language code hinting the spoken language of the source
-    /// audio (e.g. "en", "ja"). When empty, the service auto-detects the language; supplying a hint improves
-    /// accuracy and latency for short or ambiguous clips. Unsupported languages fall back to auto-detection.
+    /// - parameter audioLanguage: Hint for the spoken language of the source audio, as an ISO 639-1 code (e.g. "en",
+    /// "ja"). When empty, the service auto-detects the language; supplying a hint improves accuracy and latency for
+    /// short or ambiguous clips. Languages the service does not support fall back to auto-detection.
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Void` object on failure.
