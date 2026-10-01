@@ -314,9 +314,6 @@ public class DBXSharingAddFileMemberArgs: NSObject {
     /// If the custom message should be added as a comment on the file. Only meant for Paper files.
     @objc
     public var addMessageAsComment: NSNumber { swift.addMessageAsComment as NSNumber }
-    /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
-    @objc
-    public var fpSealedResult: String? { swift.fpSealedResult }
 
     @objc
     public init(
@@ -325,8 +322,7 @@ public class DBXSharingAddFileMemberArgs: NSObject {
         customMessage: String?,
         quiet: NSNumber,
         accessLevel: DBXSharingAccessLevel?,
-        addMessageAsComment: NSNumber,
-        fpSealedResult: String?
+        addMessageAsComment: NSNumber
     ) {
         self.swift = Sharing.AddFileMemberArgs(
             file: file,
@@ -334,8 +330,7 @@ public class DBXSharingAddFileMemberArgs: NSObject {
             customMessage: customMessage,
             quiet: quiet.boolValue,
             accessLevel: accessLevel?.swift,
-            addMessageAsComment: addMessageAsComment.boolValue,
-            fpSealedResult: fpSealedResult
+            addMessageAsComment: addMessageAsComment.boolValue
         )
     }
 
@@ -494,18 +489,14 @@ public class DBXSharingAddFolderMemberArg: NSObject {
     /// Optional message to display to added members in their invitation.
     @objc
     public var customMessage: String? { swift.customMessage }
-    /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
-    @objc
-    public var fpSealedResult: String? { swift.fpSealedResult }
 
     @objc
-    public init(sharedFolderId: String, members: [DBXSharingAddMember], quiet: NSNumber, customMessage: String?, fpSealedResult: String?) {
+    public init(sharedFolderId: String, members: [DBXSharingAddMember], quiet: NSNumber, customMessage: String?) {
         self.swift = Sharing.AddFolderMemberArg(
             sharedFolderId: sharedFolderId,
             members: members.map(\.swift),
             quiet: quiet.boolValue,
-            customMessage: customMessage,
-            fpSealedResult: fpSealedResult
+            customMessage: customMessage
         )
     }
 
@@ -4457,6 +4448,8 @@ public class DBXSharingLinkAudience: NSObject {
             return DBXSharingLinkAudiencePassword()
         case .members:
             return DBXSharingLinkAudienceMembers()
+        case .publicLoggedInOnly:
+            return DBXSharingLinkAudiencePublicLoggedInOnly()
         case .other:
             return DBXSharingLinkAudienceOther()
         }
@@ -4488,6 +4481,11 @@ public class DBXSharingLinkAudience: NSObject {
     @objc
     public var asMembers: DBXSharingLinkAudienceMembers? {
         self as? DBXSharingLinkAudienceMembers
+    }
+
+    @objc
+    public var asPublicLoggedInOnly: DBXSharingLinkAudiencePublicLoggedInOnly? {
+        self as? DBXSharingLinkAudiencePublicLoggedInOnly
     }
 
     @objc
@@ -4545,6 +4543,17 @@ public class DBXSharingLinkAudienceMembers: DBXSharingLinkAudience {
     @objc
     public init() {
         let swift = Sharing.LinkAudience.members
+        super.init(swift: swift)
+    }
+}
+
+/// Link is accessible only by signed-in Dropbox users. This audience is currently read-only through API v2: API
+/// v2 write methods reject requests that set it.
+@objc
+public class DBXSharingLinkAudiencePublicLoggedInOnly: DBXSharingLinkAudience {
+    @objc
+    public init() {
+        let swift = Sharing.LinkAudience.publicLoggedInOnly
         super.init(swift: swift)
     }
 }
@@ -9536,7 +9545,8 @@ public class DBXSharingSharePathErrorInsideOsxPackage: DBXSharingSharePathError 
     }
 }
 
-/// We do not support sharing the Vault folder.
+/// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no
+/// longer emitted.
 @objc
 public class DBXSharingSharePathErrorIsVault: DBXSharingSharePathError {
     @objc
@@ -9546,7 +9556,8 @@ public class DBXSharingSharePathErrorIsVault: DBXSharingSharePathError {
     }
 }
 
-/// We do not support sharing a folder inside a locked Vault.
+/// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing
+/// errors are no longer emitted.
 @objc
 public class DBXSharingSharePathErrorIsVaultLocked: DBXSharingSharePathError {
     @objc
@@ -9824,7 +9835,8 @@ public class DBXSharingSharePathErrorBaseV2InsideOsxPackage: DBXSharingSharePath
     }
 }
 
-/// We do not support sharing the Vault folder.
+/// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no
+/// longer emitted.
 @objc
 public class DBXSharingSharePathErrorBaseV2IsVault: DBXSharingSharePathErrorBaseV2 {
     @objc
@@ -9834,7 +9846,8 @@ public class DBXSharingSharePathErrorBaseV2IsVault: DBXSharingSharePathErrorBase
     }
 }
 
-/// We do not support sharing a folder inside a locked Vault.
+/// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing
+/// errors are no longer emitted.
 @objc
 public class DBXSharingSharePathErrorBaseV2IsVaultLocked: DBXSharingSharePathErrorBaseV2 {
     @objc
@@ -10116,7 +10129,8 @@ public class DBXSharingSharePathErrorV2InsideOsxPackage: DBXSharingSharePathErro
     }
 }
 
-/// We do not support sharing the Vault folder.
+/// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no
+/// longer emitted.
 @objc
 public class DBXSharingSharePathErrorV2IsVault: DBXSharingSharePathErrorV2 {
     @objc
@@ -10126,7 +10140,8 @@ public class DBXSharingSharePathErrorV2IsVault: DBXSharingSharePathErrorV2 {
     }
 }
 
-/// We do not support sharing a folder inside a locked Vault.
+/// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing
+/// errors are no longer emitted.
 @objc
 public class DBXSharingSharePathErrorV2IsVaultLocked: DBXSharingSharePathErrorV2 {
     @objc
