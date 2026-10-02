@@ -1397,6 +1397,42 @@ public class TeamRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Launch a member suspension batch. The server enforces a maximum of 500 members.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter members: Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
+    /// item IDs and duplicate member selectors.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Team.MembersSuspendBatchError` object on failure.
+    @discardableResult public func membersSuspendBatch(members: [Team.MembersSuspendBatchTarget]) -> RpcRequest<
+        Async.LaunchResultBaseSerializer,
+        Team.MembersSuspendBatchErrorSerializer
+    > {
+        let route = Team.membersSuspendBatch
+        let serverArgs = Team.MembersSuspendBatchArg(members: members)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Poll a previously launched member suspension batch job.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersSuspendBatchJobStatus` object
+    /// on success or a `Async.PollError` object on failure.
+    @discardableResult public func membersSuspendBatchJobStatusCheck(asyncJobId: String) -> RpcRequest<
+        Team.MembersSuspendBatchJobStatusSerializer,
+        Async.PollErrorSerializer
+    > {
+        let route = Team.membersSuspendBatchJobStatusCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Unsuspend a member from a team. Permission : Team member management Exactly one of team_member_id, email, or
     /// external_id must be provided to identify the user account.
     ///

@@ -12023,6 +12023,629 @@ public class Team {
         }
     }
 
+    /// Launches one action-specific member suspension batch job.
+    public class MembersSuspendBatchArg: CustomStringConvertible, JSONRepresentable {
+        /// Must contain between 1 and 500 targets. The launch handler also rejects duplicate client item IDs and
+        /// duplicate member selectors.
+        public let members: [Team.MembersSuspendBatchTarget]
+        public init(members: [Team.MembersSuspendBatchTarget]) {
+            self.members = members
+        }
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchArgSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchArgSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchArg: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchArg) throws -> JSON {
+            let output = [
+                "members": try ArraySerializer(Team.MembersSuspendBatchTargetSerializer()).serialize(value.members),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchArg {
+            switch json {
+            case .dictionary(let dict):
+                let members = try ArraySerializer(Team.MembersSuspendBatchTargetSerializer()).deserialize(dict["members"] ?? .null)
+                return MembersSuspendBatchArg(members: members)
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchArg.self, json: json)
+            }
+        }
+    }
+
+    /// The MembersSuspendBatchComplete struct
+    public class MembersSuspendBatchComplete: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let requested: Int64
+        /// (no description)
+        public let suspended: Int64
+        /// (no description)
+        public let failed: Int64
+        /// (no description)
+        public let unknown: Int64
+        /// (no description)
+        public let reportDelivery: Team.MembersSuspendBatchReportDeliveryStatus
+        public init(requested: Int64, suspended: Int64, failed: Int64, unknown: Int64, reportDelivery: Team.MembersSuspendBatchReportDeliveryStatus) {
+            comparableValidator()(requested)
+            self.requested = requested
+            comparableValidator()(suspended)
+            self.suspended = suspended
+            comparableValidator()(failed)
+            self.failed = failed
+            comparableValidator()(unknown)
+            self.unknown = unknown
+            self.reportDelivery = reportDelivery
+        }
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchCompleteSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchCompleteSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchComplete: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchCompleteSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchComplete) throws -> JSON {
+            let output = [
+                "requested": try Serialization._Int64Serializer.serialize(value.requested),
+                "suspended": try Serialization._Int64Serializer.serialize(value.suspended),
+                "failed": try Serialization._Int64Serializer.serialize(value.failed),
+                "unknown": try Serialization._Int64Serializer.serialize(value.unknown),
+                "report_delivery": try Team.MembersSuspendBatchReportDeliveryStatusSerializer().serialize(value.reportDelivery),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchComplete {
+            switch json {
+            case .dictionary(let dict):
+                let requested = try Serialization._Int64Serializer.deserialize(dict["requested"] ?? .null)
+                let suspended = try Serialization._Int64Serializer.deserialize(dict["suspended"] ?? .null)
+                let failed = try Serialization._Int64Serializer.deserialize(dict["failed"] ?? .null)
+                let unknown = try Serialization._Int64Serializer.deserialize(dict["unknown"] ?? .null)
+                let reportDelivery = try Team.MembersSuspendBatchReportDeliveryStatusSerializer().deserialize(dict["report_delivery"] ?? .null)
+                return MembersSuspendBatchComplete(requested: requested, suspended: suspended, failed: failed, unknown: unknown, reportDelivery: reportDelivery)
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchComplete.self, json: json)
+            }
+        }
+    }
+
+    /// A typed launch rejection. Authorization failures continue to use the API v2 authentication/permission error
+    /// surface.
+    public enum MembersSuspendBatchError: CustomStringConvertible, JSONRepresentable {
+        /// The request contains more than 500 members.
+        case tooManyMembers
+        /// More than one target uses the same client item ID.
+        case duplicateClientItemId
+        /// More than one target selects the same team member.
+        case duplicateTeamMemberId
+        /// The acting administrator cannot suspend their own account.
+        case actingAdmin
+        /// Suspending the selected members would leave the team without an active admin.
+        case lastAdmin
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchError: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchError) throws -> JSON {
+            switch value {
+            case .tooManyMembers:
+                var d = [String: JSON]()
+                d[".tag"] = .str("too_many_members")
+                return .dictionary(d)
+            case .duplicateClientItemId:
+                var d = [String: JSON]()
+                d[".tag"] = .str("duplicate_client_item_id")
+                return .dictionary(d)
+            case .duplicateTeamMemberId:
+                var d = [String: JSON]()
+                d[".tag"] = .str("duplicate_team_member_id")
+                return .dictionary(d)
+            case .actingAdmin:
+                var d = [String: JSON]()
+                d[".tag"] = .str("acting_admin")
+                return .dictionary(d)
+            case .lastAdmin:
+                var d = [String: JSON]()
+                d[".tag"] = .str("last_admin")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "too_many_members":
+                    return MembersSuspendBatchError.tooManyMembers
+                case "duplicate_client_item_id":
+                    return MembersSuspendBatchError.duplicateClientItemId
+                case "duplicate_team_member_id":
+                    return MembersSuspendBatchError.duplicateTeamMemberId
+                case "acting_admin":
+                    return MembersSuspendBatchError.actingAdmin
+                case "last_admin":
+                    return MembersSuspendBatchError.lastAdmin
+                case "other":
+                    return MembersSuspendBatchError.other
+                default:
+                    return MembersSuspendBatchError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchError.self, json: json)
+            }
+        }
+    }
+
+    /// Coarse job state. Live row progress and report contents are intentionally omitted; the authorized team admin who
+    /// initiated the batch receives row details in the terminal email report.
+    public enum MembersSuspendBatchJobStatus: CustomStringConvertible, JSONRepresentable {
+        /// The asynchronous job is still in progress.
+        case inProgress
+        /// An unspecified error.
+        case complete(Team.MembersSuspendBatchComplete)
+        /// An unspecified error.
+        case failed(Team.MembersSuspendBatchTaskFailure)
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchJobStatusSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchJobStatusSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchJobStatus: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchJobStatusSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchJobStatus) throws -> JSON {
+            switch value {
+            case .inProgress:
+                var d = [String: JSON]()
+                d[".tag"] = .str("in_progress")
+                return .dictionary(d)
+            case .complete(let arg):
+                var d = try Serialization.getFields(Team.MembersSuspendBatchCompleteSerializer().serialize(arg))
+                d[".tag"] = .str("complete")
+                return .dictionary(d)
+            case .failed(let arg):
+                var d = try ["failed": Team.MembersSuspendBatchTaskFailureSerializer().serialize(arg)]
+                d[".tag"] = .str("failed")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchJobStatus {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "in_progress":
+                    return MembersSuspendBatchJobStatus.inProgress
+                case "complete":
+                    let v = try Team.MembersSuspendBatchCompleteSerializer().deserialize(json)
+                    return MembersSuspendBatchJobStatus.complete(v)
+                case "failed":
+                    let v = try Team.MembersSuspendBatchTaskFailureSerializer().deserialize(d["failed"] ?? .null)
+                    return MembersSuspendBatchJobStatus.failed(v)
+                case "other":
+                    return MembersSuspendBatchJobStatus.other
+                default:
+                    return MembersSuspendBatchJobStatus.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchJobStatus.self, json: json)
+            }
+        }
+    }
+
+    /// The MembersSuspendBatchReportDeliveryStatus union
+    public enum MembersSuspendBatchReportDeliveryStatus: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case membersSuspendBatchReportDeliveryStatusUnspecified
+        /// An unspecified error.
+        case membersSuspendBatchReportDeliveryStatusPending
+        /// An unspecified error.
+        case membersSuspendBatchReportDeliveryStatusDelivered
+        /// An unspecified error.
+        case membersSuspendBatchReportDeliveryStatusFailed
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchReportDeliveryStatusSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchReportDeliveryStatusSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchReportDeliveryStatus: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchReportDeliveryStatusSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchReportDeliveryStatus) throws -> JSON {
+            switch value {
+            case .membersSuspendBatchReportDeliveryStatusUnspecified:
+                var d = [String: JSON]()
+                d[".tag"] = .str("members_suspend_batch_report_delivery_status_unspecified")
+                return .dictionary(d)
+            case .membersSuspendBatchReportDeliveryStatusPending:
+                var d = [String: JSON]()
+                d[".tag"] = .str("members_suspend_batch_report_delivery_status_pending")
+                return .dictionary(d)
+            case .membersSuspendBatchReportDeliveryStatusDelivered:
+                var d = [String: JSON]()
+                d[".tag"] = .str("members_suspend_batch_report_delivery_status_delivered")
+                return .dictionary(d)
+            case .membersSuspendBatchReportDeliveryStatusFailed:
+                var d = [String: JSON]()
+                d[".tag"] = .str("members_suspend_batch_report_delivery_status_failed")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchReportDeliveryStatus {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "members_suspend_batch_report_delivery_status_unspecified":
+                    return MembersSuspendBatchReportDeliveryStatus.membersSuspendBatchReportDeliveryStatusUnspecified
+                case "members_suspend_batch_report_delivery_status_pending":
+                    return MembersSuspendBatchReportDeliveryStatus.membersSuspendBatchReportDeliveryStatusPending
+                case "members_suspend_batch_report_delivery_status_delivered":
+                    return MembersSuspendBatchReportDeliveryStatus.membersSuspendBatchReportDeliveryStatusDelivered
+                case "members_suspend_batch_report_delivery_status_failed":
+                    return MembersSuspendBatchReportDeliveryStatus.membersSuspendBatchReportDeliveryStatusFailed
+                case "other":
+                    return MembersSuspendBatchReportDeliveryStatus.other
+                default:
+                    return MembersSuspendBatchReportDeliveryStatus.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchReportDeliveryStatus.self, json: json)
+            }
+        }
+    }
+
+    /// Stable machine-readable reasons used by the terminal row report.
+    public enum MembersSuspendBatchRowFailure: CustomStringConvertible, JSONRepresentable {
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+        case userNotFound
+        /// The user is not a member of the team.
+        case userNotInTeam
+        /// An unspecified error.
+        case other
+        /// The user is not active, so it cannot be suspended.
+        case suspendInactiveUser
+        /// The user is the last admin of the team, so it cannot be suspended.
+        case suspendLastAdmin
+        /// Team is full. The organization has no available licenses.
+        case teamLicenseLimit
+        /// An unspecified error.
+        case protectedActingAdmin
+        /// An unspecified error.
+        case permissionChanged
+        /// An unspecified error.
+        case suspendFailed
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchRowFailureSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchRowFailureSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchRowFailure: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchRowFailureSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchRowFailure) throws -> JSON {
+            switch value {
+            case .userNotFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("user_not_found")
+                return .dictionary(d)
+            case .userNotInTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("user_not_in_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .suspendInactiveUser:
+                var d = [String: JSON]()
+                d[".tag"] = .str("suspend_inactive_user")
+                return .dictionary(d)
+            case .suspendLastAdmin:
+                var d = [String: JSON]()
+                d[".tag"] = .str("suspend_last_admin")
+                return .dictionary(d)
+            case .teamLicenseLimit:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_license_limit")
+                return .dictionary(d)
+            case .protectedActingAdmin:
+                var d = [String: JSON]()
+                d[".tag"] = .str("protected_acting_admin")
+                return .dictionary(d)
+            case .permissionChanged:
+                var d = [String: JSON]()
+                d[".tag"] = .str("permission_changed")
+                return .dictionary(d)
+            case .suspendFailed:
+                var d = [String: JSON]()
+                d[".tag"] = .str("suspend_failed")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchRowFailure {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "user_not_found":
+                    return MembersSuspendBatchRowFailure.userNotFound
+                case "user_not_in_team":
+                    return MembersSuspendBatchRowFailure.userNotInTeam
+                case "other":
+                    return MembersSuspendBatchRowFailure.other
+                case "suspend_inactive_user":
+                    return MembersSuspendBatchRowFailure.suspendInactiveUser
+                case "suspend_last_admin":
+                    return MembersSuspendBatchRowFailure.suspendLastAdmin
+                case "team_license_limit":
+                    return MembersSuspendBatchRowFailure.teamLicenseLimit
+                case "protected_acting_admin":
+                    return MembersSuspendBatchRowFailure.protectedActingAdmin
+                case "permission_changed":
+                    return MembersSuspendBatchRowFailure.permissionChanged
+                case "suspend_failed":
+                    return MembersSuspendBatchRowFailure.suspendFailed
+                default:
+                    throw JSONSerializerError.unknownTag(type: MembersSuspendBatchRowFailure.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchRowFailure.self, json: json)
+            }
+        }
+    }
+
+    /// The terminal outcome for one requested member. Row outcomes are delivered in the report rather than embedded in
+    /// the status response.
+    public enum MembersSuspendBatchRowOutcome: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case suspended
+        /// An unspecified error.
+        case failed(Team.MembersSuspendBatchRowFailure)
+        /// An unspecified error.
+        case unknown
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchRowOutcomeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchRowOutcomeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchRowOutcome: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchRowOutcomeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchRowOutcome) throws -> JSON {
+            switch value {
+            case .suspended:
+                var d = [String: JSON]()
+                d[".tag"] = .str("suspended")
+                return .dictionary(d)
+            case .failed(let arg):
+                var d = try ["failed": Team.MembersSuspendBatchRowFailureSerializer().serialize(arg)]
+                d[".tag"] = .str("failed")
+                return .dictionary(d)
+            case .unknown:
+                var d = [String: JSON]()
+                d[".tag"] = .str("unknown")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchRowOutcome {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "suspended":
+                    return MembersSuspendBatchRowOutcome.suspended
+                case "failed":
+                    let v = try Team.MembersSuspendBatchRowFailureSerializer().deserialize(d["failed"] ?? .null)
+                    return MembersSuspendBatchRowOutcome.failed(v)
+                case "unknown":
+                    return MembersSuspendBatchRowOutcome.unknown
+                case "other":
+                    return MembersSuspendBatchRowOutcome.other
+                default:
+                    return MembersSuspendBatchRowOutcome.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchRowOutcome.self, json: json)
+            }
+        }
+    }
+
+    /// One member selected for suspension. The opaque client item ID correlates the eventual report row with the
+    /// caller's input without sending CSV data.
+    public class MembersSuspendBatchTarget: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let clientItemId: String
+        /// (no description)
+        public let suspendArg: Team.MembersDeactivateArg
+        public init(clientItemId: String, suspendArg: Team.MembersDeactivateArg) {
+            stringValidator(minLength: 1, maxLength: 128)(clientItemId)
+            self.clientItemId = clientItemId
+            self.suspendArg = suspendArg
+        }
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchTargetSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchTargetSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchTarget: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchTargetSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchTarget) throws -> JSON {
+            let output = [
+                "client_item_id": try Serialization._StringSerializer.serialize(value.clientItemId),
+                "suspend_arg": try Team.MembersDeactivateArgSerializer().serialize(value.suspendArg),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchTarget {
+            switch json {
+            case .dictionary(let dict):
+                let clientItemId = try Serialization._StringSerializer.deserialize(dict["client_item_id"] ?? .null)
+                let suspendArg = try Team.MembersDeactivateArgSerializer().deserialize(dict["suspend_arg"] ?? .null)
+                return MembersSuspendBatchTarget(clientItemId: clientItemId, suspendArg: suspendArg)
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchTarget.self, json: json)
+            }
+        }
+    }
+
+    /// The MembersSuspendBatchTaskFailure union
+    public enum MembersSuspendBatchTaskFailure: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case unusableResult
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchTaskFailureSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchTaskFailureSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchTaskFailure: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchTaskFailureSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchTaskFailure) throws -> JSON {
+            switch value {
+            case .unusableResult:
+                var d = [String: JSON]()
+                d[".tag"] = .str("unusable_result")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchTaskFailure {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "unusable_result":
+                    return MembersSuspendBatchTaskFailure.unusableResult
+                case "other":
+                    return MembersSuspendBatchTaskFailure.other
+                default:
+                    return MembersSuspendBatchTaskFailure.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchTaskFailure.self, json: json)
+            }
+        }
+    }
+
     /// The MembersTransferFormerMembersFilesError union
     public enum MembersTransferFormerMembersFilesError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
@@ -18487,6 +19110,34 @@ public class Team {
         argSerializer: Team.MembersDeactivateArgSerializer(),
         responseSerializer: Serialization._VoidSerializer,
         errorSerializer: Team.MembersSuspendErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.team],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let membersSuspendBatch = Route(
+        name: "members/suspend_batch",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersSuspendBatchArgSerializer(),
+        responseSerializer: Async.LaunchResultBaseSerializer(),
+        errorSerializer: Team.MembersSuspendBatchErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.team],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let membersSuspendBatchJobStatusCheck = Route(
+        name: "members/suspend_batch/job_status/check",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Team.MembersSuspendBatchJobStatusSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.team],
             host: .api,

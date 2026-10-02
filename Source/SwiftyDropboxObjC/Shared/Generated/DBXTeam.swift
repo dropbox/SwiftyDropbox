@@ -11947,6 +11947,731 @@ public class DBXTeamMembersSetProfilePhotoErrorOther: DBXTeamMembersSetProfilePh
     }
 }
 
+/// Launches one action-specific member suspension batch job.
+@objc
+public class DBXTeamMembersSuspendBatchArg: NSObject {
+    /// Must contain between 1 and 500 targets. The launch handler also rejects duplicate client item IDs and
+    /// duplicate member selectors.
+    @objc
+    public var members: [DBXTeamMembersSuspendBatchTarget] { swift.members.map { DBXTeamMembersSuspendBatchTarget(swift: $0) } }
+
+    @objc
+    public init(members: [DBXTeamMembersSuspendBatchTarget]) {
+        self.swift = Team.MembersSuspendBatchArg(members: members.map(\.swift))
+    }
+
+    let swift: Team.MembersSuspendBatchArg
+
+    public init(swift: Team.MembersSuspendBatchArg) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible MembersSuspendBatchComplete struct
+@objc
+public class DBXTeamMembersSuspendBatchComplete: NSObject {
+    /// (no description)
+    @objc
+    public var requested: NSNumber { swift.requested as NSNumber }
+    /// (no description)
+    @objc
+    public var suspended: NSNumber { swift.suspended as NSNumber }
+    /// (no description)
+    @objc
+    public var failed: NSNumber { swift.failed as NSNumber }
+    /// (no description)
+    @objc
+    public var unknown: NSNumber { swift.unknown as NSNumber }
+    /// (no description)
+    @objc
+    public var reportDelivery: DBXTeamMembersSuspendBatchReportDeliveryStatus { DBXTeamMembersSuspendBatchReportDeliveryStatus(swift: swift.reportDelivery) }
+
+    @objc
+    public init(requested: NSNumber, suspended: NSNumber, failed: NSNumber, unknown: NSNumber, reportDelivery: DBXTeamMembersSuspendBatchReportDeliveryStatus) {
+        self.swift = Team.MembersSuspendBatchComplete(
+            requested: requested.int64Value,
+            suspended: suspended.int64Value,
+            failed: failed.int64Value,
+            unknown: unknown.int64Value,
+            reportDelivery: reportDelivery.swift
+        )
+    }
+
+    let swift: Team.MembersSuspendBatchComplete
+
+    public init(swift: Team.MembersSuspendBatchComplete) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// A typed launch rejection. Authorization failures continue to use the API v2 authentication/permission error
+/// surface.
+@objc
+public class DBXTeamMembersSuspendBatchError: NSObject {
+    let swift: Team.MembersSuspendBatchError
+
+    public init(swift: Team.MembersSuspendBatchError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.MembersSuspendBatchError) -> DBXTeamMembersSuspendBatchError {
+        switch swift {
+        case .tooManyMembers:
+            return DBXTeamMembersSuspendBatchErrorTooManyMembers()
+        case .duplicateClientItemId:
+            return DBXTeamMembersSuspendBatchErrorDuplicateClientItemId()
+        case .duplicateTeamMemberId:
+            return DBXTeamMembersSuspendBatchErrorDuplicateTeamMemberId()
+        case .actingAdmin:
+            return DBXTeamMembersSuspendBatchErrorActingAdmin()
+        case .lastAdmin:
+            return DBXTeamMembersSuspendBatchErrorLastAdmin()
+        case .other:
+            return DBXTeamMembersSuspendBatchErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asTooManyMembers: DBXTeamMembersSuspendBatchErrorTooManyMembers? {
+        self as? DBXTeamMembersSuspendBatchErrorTooManyMembers
+    }
+
+    @objc
+    public var asDuplicateClientItemId: DBXTeamMembersSuspendBatchErrorDuplicateClientItemId? {
+        self as? DBXTeamMembersSuspendBatchErrorDuplicateClientItemId
+    }
+
+    @objc
+    public var asDuplicateTeamMemberId: DBXTeamMembersSuspendBatchErrorDuplicateTeamMemberId? {
+        self as? DBXTeamMembersSuspendBatchErrorDuplicateTeamMemberId
+    }
+
+    @objc
+    public var asActingAdmin: DBXTeamMembersSuspendBatchErrorActingAdmin? {
+        self as? DBXTeamMembersSuspendBatchErrorActingAdmin
+    }
+
+    @objc
+    public var asLastAdmin: DBXTeamMembersSuspendBatchErrorLastAdmin? {
+        self as? DBXTeamMembersSuspendBatchErrorLastAdmin
+    }
+
+    @objc
+    public var asOther: DBXTeamMembersSuspendBatchErrorOther? {
+        self as? DBXTeamMembersSuspendBatchErrorOther
+    }
+}
+
+/// The request contains more than 500 members.
+@objc
+public class DBXTeamMembersSuspendBatchErrorTooManyMembers: DBXTeamMembersSuspendBatchError {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchError.tooManyMembers
+        super.init(swift: swift)
+    }
+}
+
+/// More than one target uses the same client item ID.
+@objc
+public class DBXTeamMembersSuspendBatchErrorDuplicateClientItemId: DBXTeamMembersSuspendBatchError {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchError.duplicateClientItemId
+        super.init(swift: swift)
+    }
+}
+
+/// More than one target selects the same team member.
+@objc
+public class DBXTeamMembersSuspendBatchErrorDuplicateTeamMemberId: DBXTeamMembersSuspendBatchError {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchError.duplicateTeamMemberId
+        super.init(swift: swift)
+    }
+}
+
+/// The acting administrator cannot suspend their own account.
+@objc
+public class DBXTeamMembersSuspendBatchErrorActingAdmin: DBXTeamMembersSuspendBatchError {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchError.actingAdmin
+        super.init(swift: swift)
+    }
+}
+
+/// Suspending the selected members would leave the team without an active admin.
+@objc
+public class DBXTeamMembersSuspendBatchErrorLastAdmin: DBXTeamMembersSuspendBatchError {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchError.lastAdmin
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchErrorOther: DBXTeamMembersSuspendBatchError {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchError.other
+        super.init(swift: swift)
+    }
+}
+
+/// Coarse job state. Live row progress and report contents are intentionally omitted; the authorized team admin who
+/// initiated the batch receives row details in the terminal email report.
+@objc
+public class DBXTeamMembersSuspendBatchJobStatus: NSObject {
+    let swift: Team.MembersSuspendBatchJobStatus
+
+    public init(swift: Team.MembersSuspendBatchJobStatus) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.MembersSuspendBatchJobStatus) -> DBXTeamMembersSuspendBatchJobStatus {
+        switch swift {
+        case .inProgress:
+            return DBXTeamMembersSuspendBatchJobStatusInProgress()
+        case .complete(let swiftArg):
+            let arg = DBXTeamMembersSuspendBatchComplete(swift: swiftArg)
+            return DBXTeamMembersSuspendBatchJobStatusComplete(arg)
+        case .failed(let swiftArg):
+            let arg = DBXTeamMembersSuspendBatchTaskFailure(swift: swiftArg)
+            return DBXTeamMembersSuspendBatchJobStatusFailed(arg)
+        case .other:
+            return DBXTeamMembersSuspendBatchJobStatusOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asInProgress: DBXTeamMembersSuspendBatchJobStatusInProgress? {
+        self as? DBXTeamMembersSuspendBatchJobStatusInProgress
+    }
+
+    @objc
+    public var asComplete: DBXTeamMembersSuspendBatchJobStatusComplete? {
+        self as? DBXTeamMembersSuspendBatchJobStatusComplete
+    }
+
+    @objc
+    public var asFailed: DBXTeamMembersSuspendBatchJobStatusFailed? {
+        self as? DBXTeamMembersSuspendBatchJobStatusFailed
+    }
+
+    @objc
+    public var asOther: DBXTeamMembersSuspendBatchJobStatusOther? {
+        self as? DBXTeamMembersSuspendBatchJobStatusOther
+    }
+}
+
+/// The asynchronous job is still in progress.
+@objc
+public class DBXTeamMembersSuspendBatchJobStatusInProgress: DBXTeamMembersSuspendBatchJobStatus {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchJobStatus.inProgress
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchJobStatusComplete: DBXTeamMembersSuspendBatchJobStatus {
+    @objc
+    public var complete: DBXTeamMembersSuspendBatchComplete
+
+    @objc
+    public init(_ arg: DBXTeamMembersSuspendBatchComplete) {
+        self.complete = arg
+        let swift = Team.MembersSuspendBatchJobStatus.complete(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchJobStatusFailed: DBXTeamMembersSuspendBatchJobStatus {
+    @objc
+    public var failed: DBXTeamMembersSuspendBatchTaskFailure
+
+    @objc
+    public init(_ arg: DBXTeamMembersSuspendBatchTaskFailure) {
+        self.failed = arg
+        let swift = Team.MembersSuspendBatchJobStatus.failed(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchJobStatusOther: DBXTeamMembersSuspendBatchJobStatus {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchJobStatus.other
+        super.init(swift: swift)
+    }
+}
+
+/// Objective-C compatible MembersSuspendBatchReportDeliveryStatus union
+@objc
+public class DBXTeamMembersSuspendBatchReportDeliveryStatus: NSObject {
+    let swift: Team.MembersSuspendBatchReportDeliveryStatus
+
+    public init(swift: Team.MembersSuspendBatchReportDeliveryStatus) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.MembersSuspendBatchReportDeliveryStatus) -> DBXTeamMembersSuspendBatchReportDeliveryStatus {
+        switch swift {
+        case .membersSuspendBatchReportDeliveryStatusUnspecified:
+            return DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusUnspecified()
+        case .membersSuspendBatchReportDeliveryStatusPending:
+            return DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusPending()
+        case .membersSuspendBatchReportDeliveryStatusDelivered:
+            return DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusDelivered()
+        case .membersSuspendBatchReportDeliveryStatusFailed:
+            return DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusFailed()
+        case .other:
+            return DBXTeamMembersSuspendBatchReportDeliveryStatusOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asMembersSuspendBatchReportDeliveryStatusUnspecified: DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusUnspecified? {
+        self as? DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusUnspecified
+    }
+
+    @objc
+    public var asMembersSuspendBatchReportDeliveryStatusPending: DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusPending? {
+        self as? DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusPending
+    }
+
+    @objc
+    public var asMembersSuspendBatchReportDeliveryStatusDelivered: DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusDelivered? {
+        self as? DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusDelivered
+    }
+
+    @objc
+    public var asMembersSuspendBatchReportDeliveryStatusFailed: DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusFailed? {
+        self as? DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusFailed
+    }
+
+    @objc
+    public var asOther: DBXTeamMembersSuspendBatchReportDeliveryStatusOther? {
+        self as? DBXTeamMembersSuspendBatchReportDeliveryStatusOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusUnspecified: DBXTeamMembersSuspendBatchReportDeliveryStatus {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchReportDeliveryStatus.membersSuspendBatchReportDeliveryStatusUnspecified
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusPending: DBXTeamMembersSuspendBatchReportDeliveryStatus {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchReportDeliveryStatus.membersSuspendBatchReportDeliveryStatusPending
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusDelivered: DBXTeamMembersSuspendBatchReportDeliveryStatus {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchReportDeliveryStatus.membersSuspendBatchReportDeliveryStatusDelivered
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchReportDeliveryStatusMembersSuspendBatchReportDeliveryStatusFailed: DBXTeamMembersSuspendBatchReportDeliveryStatus {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchReportDeliveryStatus.membersSuspendBatchReportDeliveryStatusFailed
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchReportDeliveryStatusOther: DBXTeamMembersSuspendBatchReportDeliveryStatus {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchReportDeliveryStatus.other
+        super.init(swift: swift)
+    }
+}
+
+/// Stable machine-readable reasons used by the terminal row report.
+@objc
+public class DBXTeamMembersSuspendBatchRowFailure: NSObject {
+    let swift: Team.MembersSuspendBatchRowFailure
+
+    public init(swift: Team.MembersSuspendBatchRowFailure) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.MembersSuspendBatchRowFailure) -> DBXTeamMembersSuspendBatchRowFailure {
+        switch swift {
+        case .userNotFound:
+            return DBXTeamMembersSuspendBatchRowFailureUserNotFound()
+        case .userNotInTeam:
+            return DBXTeamMembersSuspendBatchRowFailureUserNotInTeam()
+        case .other:
+            return DBXTeamMembersSuspendBatchRowFailureOther()
+        case .suspendInactiveUser:
+            return DBXTeamMembersSuspendBatchRowFailureSuspendInactiveUser()
+        case .suspendLastAdmin:
+            return DBXTeamMembersSuspendBatchRowFailureSuspendLastAdmin()
+        case .teamLicenseLimit:
+            return DBXTeamMembersSuspendBatchRowFailureTeamLicenseLimit()
+        case .protectedActingAdmin:
+            return DBXTeamMembersSuspendBatchRowFailureProtectedActingAdmin()
+        case .permissionChanged:
+            return DBXTeamMembersSuspendBatchRowFailurePermissionChanged()
+        case .suspendFailed:
+            return DBXTeamMembersSuspendBatchRowFailureSuspendFailed()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asUserNotFound: DBXTeamMembersSuspendBatchRowFailureUserNotFound? {
+        self as? DBXTeamMembersSuspendBatchRowFailureUserNotFound
+    }
+
+    @objc
+    public var asUserNotInTeam: DBXTeamMembersSuspendBatchRowFailureUserNotInTeam? {
+        self as? DBXTeamMembersSuspendBatchRowFailureUserNotInTeam
+    }
+
+    @objc
+    public var asOther: DBXTeamMembersSuspendBatchRowFailureOther? {
+        self as? DBXTeamMembersSuspendBatchRowFailureOther
+    }
+
+    @objc
+    public var asSuspendInactiveUser: DBXTeamMembersSuspendBatchRowFailureSuspendInactiveUser? {
+        self as? DBXTeamMembersSuspendBatchRowFailureSuspendInactiveUser
+    }
+
+    @objc
+    public var asSuspendLastAdmin: DBXTeamMembersSuspendBatchRowFailureSuspendLastAdmin? {
+        self as? DBXTeamMembersSuspendBatchRowFailureSuspendLastAdmin
+    }
+
+    @objc
+    public var asTeamLicenseLimit: DBXTeamMembersSuspendBatchRowFailureTeamLicenseLimit? {
+        self as? DBXTeamMembersSuspendBatchRowFailureTeamLicenseLimit
+    }
+
+    @objc
+    public var asProtectedActingAdmin: DBXTeamMembersSuspendBatchRowFailureProtectedActingAdmin? {
+        self as? DBXTeamMembersSuspendBatchRowFailureProtectedActingAdmin
+    }
+
+    @objc
+    public var asPermissionChanged: DBXTeamMembersSuspendBatchRowFailurePermissionChanged? {
+        self as? DBXTeamMembersSuspendBatchRowFailurePermissionChanged
+    }
+
+    @objc
+    public var asSuspendFailed: DBXTeamMembersSuspendBatchRowFailureSuspendFailed? {
+        self as? DBXTeamMembersSuspendBatchRowFailureSuspendFailed
+    }
+}
+
+/// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+@objc
+public class DBXTeamMembersSuspendBatchRowFailureUserNotFound: DBXTeamMembersSuspendBatchRowFailure {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchRowFailure.userNotFound
+        super.init(swift: swift)
+    }
+}
+
+/// The user is not a member of the team.
+@objc
+public class DBXTeamMembersSuspendBatchRowFailureUserNotInTeam: DBXTeamMembersSuspendBatchRowFailure {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchRowFailure.userNotInTeam
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchRowFailureOther: DBXTeamMembersSuspendBatchRowFailure {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchRowFailure.other
+        super.init(swift: swift)
+    }
+}
+
+/// The user is not active, so it cannot be suspended.
+@objc
+public class DBXTeamMembersSuspendBatchRowFailureSuspendInactiveUser: DBXTeamMembersSuspendBatchRowFailure {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchRowFailure.suspendInactiveUser
+        super.init(swift: swift)
+    }
+}
+
+/// The user is the last admin of the team, so it cannot be suspended.
+@objc
+public class DBXTeamMembersSuspendBatchRowFailureSuspendLastAdmin: DBXTeamMembersSuspendBatchRowFailure {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchRowFailure.suspendLastAdmin
+        super.init(swift: swift)
+    }
+}
+
+/// Team is full. The organization has no available licenses.
+@objc
+public class DBXTeamMembersSuspendBatchRowFailureTeamLicenseLimit: DBXTeamMembersSuspendBatchRowFailure {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchRowFailure.teamLicenseLimit
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchRowFailureProtectedActingAdmin: DBXTeamMembersSuspendBatchRowFailure {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchRowFailure.protectedActingAdmin
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchRowFailurePermissionChanged: DBXTeamMembersSuspendBatchRowFailure {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchRowFailure.permissionChanged
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchRowFailureSuspendFailed: DBXTeamMembersSuspendBatchRowFailure {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchRowFailure.suspendFailed
+        super.init(swift: swift)
+    }
+}
+
+/// The terminal outcome for one requested member. Row outcomes are delivered in the report rather than embedded in
+/// the status response.
+@objc
+public class DBXTeamMembersSuspendBatchRowOutcome: NSObject {
+    let swift: Team.MembersSuspendBatchRowOutcome
+
+    public init(swift: Team.MembersSuspendBatchRowOutcome) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.MembersSuspendBatchRowOutcome) -> DBXTeamMembersSuspendBatchRowOutcome {
+        switch swift {
+        case .suspended:
+            return DBXTeamMembersSuspendBatchRowOutcomeSuspended()
+        case .failed(let swiftArg):
+            let arg = DBXTeamMembersSuspendBatchRowFailure(swift: swiftArg)
+            return DBXTeamMembersSuspendBatchRowOutcomeFailed(arg)
+        case .unknown:
+            return DBXTeamMembersSuspendBatchRowOutcomeUnknown()
+        case .other:
+            return DBXTeamMembersSuspendBatchRowOutcomeOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asSuspended: DBXTeamMembersSuspendBatchRowOutcomeSuspended? {
+        self as? DBXTeamMembersSuspendBatchRowOutcomeSuspended
+    }
+
+    @objc
+    public var asFailed: DBXTeamMembersSuspendBatchRowOutcomeFailed? {
+        self as? DBXTeamMembersSuspendBatchRowOutcomeFailed
+    }
+
+    @objc
+    public var asUnknown: DBXTeamMembersSuspendBatchRowOutcomeUnknown? {
+        self as? DBXTeamMembersSuspendBatchRowOutcomeUnknown
+    }
+
+    @objc
+    public var asOther: DBXTeamMembersSuspendBatchRowOutcomeOther? {
+        self as? DBXTeamMembersSuspendBatchRowOutcomeOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchRowOutcomeSuspended: DBXTeamMembersSuspendBatchRowOutcome {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchRowOutcome.suspended
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchRowOutcomeFailed: DBXTeamMembersSuspendBatchRowOutcome {
+    @objc
+    public var failed: DBXTeamMembersSuspendBatchRowFailure
+
+    @objc
+    public init(_ arg: DBXTeamMembersSuspendBatchRowFailure) {
+        self.failed = arg
+        let swift = Team.MembersSuspendBatchRowOutcome.failed(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchRowOutcomeUnknown: DBXTeamMembersSuspendBatchRowOutcome {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchRowOutcome.unknown
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchRowOutcomeOther: DBXTeamMembersSuspendBatchRowOutcome {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchRowOutcome.other
+        super.init(swift: swift)
+    }
+}
+
+/// One member selected for suspension. The opaque client item ID correlates the eventual report row with the
+/// caller's input without sending CSV data.
+@objc
+public class DBXTeamMembersSuspendBatchTarget: NSObject {
+    /// (no description)
+    @objc
+    public var clientItemId: String { swift.clientItemId }
+    /// (no description)
+    @objc
+    public var suspendArg: DBXTeamMembersDeactivateArg { DBXTeamMembersDeactivateArg(swift: swift.suspendArg) }
+
+    @objc
+    public init(clientItemId: String, suspendArg: DBXTeamMembersDeactivateArg) {
+        self.swift = Team.MembersSuspendBatchTarget(clientItemId: clientItemId, suspendArg: suspendArg.subSwift)
+    }
+
+    let swift: Team.MembersSuspendBatchTarget
+
+    public init(swift: Team.MembersSuspendBatchTarget) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible MembersSuspendBatchTaskFailure union
+@objc
+public class DBXTeamMembersSuspendBatchTaskFailure: NSObject {
+    let swift: Team.MembersSuspendBatchTaskFailure
+
+    public init(swift: Team.MembersSuspendBatchTaskFailure) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Team.MembersSuspendBatchTaskFailure) -> DBXTeamMembersSuspendBatchTaskFailure {
+        switch swift {
+        case .unusableResult:
+            return DBXTeamMembersSuspendBatchTaskFailureUnusableResult()
+        case .other:
+            return DBXTeamMembersSuspendBatchTaskFailureOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asUnusableResult: DBXTeamMembersSuspendBatchTaskFailureUnusableResult? {
+        self as? DBXTeamMembersSuspendBatchTaskFailureUnusableResult
+    }
+
+    @objc
+    public var asOther: DBXTeamMembersSuspendBatchTaskFailureOther? {
+        self as? DBXTeamMembersSuspendBatchTaskFailureOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchTaskFailureUnusableResult: DBXTeamMembersSuspendBatchTaskFailure {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchTaskFailure.unusableResult
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamMembersSuspendBatchTaskFailureOther: DBXTeamMembersSuspendBatchTaskFailure {
+    @objc
+    public init() {
+        let swift = Team.MembersSuspendBatchTaskFailure.other
+        super.init(swift: swift)
+    }
+}
+
 /// Objective-C compatible MembersTransferFormerMembersFilesError union
 @objc
 public class DBXTeamMembersTransferFormerMembersFilesError: NSObject {
