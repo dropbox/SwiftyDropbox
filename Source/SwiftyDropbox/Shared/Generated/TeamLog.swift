@@ -16207,11 +16207,33 @@ public class TeamLog {
         /// An unspecified error.
         case protectActionRemoveCollaboratorDetails(TeamLog.ProtectActionRemoveCollaboratorDetails)
         /// An unspecified error.
+        case protectActionRemoveDomainsDetails(TeamLog.ProtectActionRemoveDomainsDetails)
+        /// An unspecified error.
         case protectActionRemoveLinkDetails(TeamLog.ProtectActionRemoveLinkDetails)
         /// An unspecified error.
         case protectActionStopSharingDetails(TeamLog.ProtectActionStopSharingDetails)
         /// An unspecified error.
+        case protectCustomDataTypeCreatedDetails(TeamLog.ProtectCustomDataTypeCreatedDetails)
+        /// An unspecified error.
+        case protectCustomDataTypeDeletedDetails(TeamLog.ProtectCustomDataTypeDeletedDetails)
+        /// An unspecified error.
+        case protectCustomDataTypeDisabledDetails(TeamLog.ProtectCustomDataTypeDisabledDetails)
+        /// An unspecified error.
+        case protectCustomDataTypeEnabledDetails(TeamLog.ProtectCustomDataTypeEnabledDetails)
+        /// An unspecified error.
+        case protectCustomDataTypeModifiedDetails(TeamLog.ProtectCustomDataTypeModifiedDetails)
+        /// An unspecified error.
         case protectInternalDomainsChangedDetails(TeamLog.ProtectInternalDomainsChangedDetails)
+        /// An unspecified error.
+        case protectPolicyActivatedDetails(TeamLog.ProtectPolicyActivatedDetails)
+        /// An unspecified error.
+        case protectPolicyDeactivatedDetails(TeamLog.ProtectPolicyDeactivatedDetails)
+        /// An unspecified error.
+        case protectPolicyScheduledDetails(TeamLog.ProtectPolicyScheduledDetails)
+        /// An unspecified error.
+        case protectPolicyUpdatedDetails(TeamLog.ProtectPolicyUpdatedDetails)
+        /// An unspecified error.
+        case protectReportViewDetails(TeamLog.ProtectReportViewDetails)
         /// An unspecified error.
         case classificationCreateReportDetails(TeamLog.ClassificationCreateReportDetails)
         /// An unspecified error.
@@ -16715,6 +16737,8 @@ public class TeamLog {
         /// An unspecified error.
         case paperEnabledUsersGroupRemovalDetails(TeamLog.PaperEnabledUsersGroupRemovalDetails)
         /// An unspecified error.
+        case paperOfflineModePolicyChangedDetails(TeamLog.PaperOfflineModePolicyChangedDetails)
+        /// An unspecified error.
         case passkeyLoginPolicyChangedDetails(TeamLog.PasskeyLoginPolicyChangedDetails)
         /// An unspecified error.
         case passwordStrengthRequirementsChangePolicyDetails(TeamLog.PasswordStrengthRequirementsChangePolicyDetails)
@@ -16776,6 +16800,10 @@ public class TeamLog {
         case teamBrandingPolicyChangedDetails(TeamLog.TeamBrandingPolicyChangedDetails)
         /// An unspecified error.
         case teamExtensionsPolicyChangedDetails(TeamLog.TeamExtensionsPolicyChangedDetails)
+        /// An unspecified error.
+        case teamExternalSharingControlsActivationStateChangedDetails(TeamLog.TeamExternalSharingControlsActivationStateChangedDetails)
+        /// An unspecified error.
+        case teamExternalSharingControlsRecipientListsChangedDetails(TeamLog.TeamExternalSharingControlsRecipientListsChangedDetails)
         /// An unspecified error.
         case teamMemberStorageRequestPolicyChangedDetails(TeamLog.TeamMemberStorageRequestPolicyChangedDetails)
         /// An unspecified error.
@@ -18043,6 +18071,10 @@ public class TeamLog {
                     var d = try Serialization.getFields(TeamLog.ProtectActionRemoveCollaboratorDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("protect_action_remove_collaborator_details")
                     return .dictionary(d)
+                case .protectActionRemoveDomainsDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectActionRemoveDomainsDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_action_remove_domains_details")
+                    return .dictionary(d)
                 case .protectActionRemoveLinkDetails(let arg):
                     var d = try Serialization.getFields(TeamLog.ProtectActionRemoveLinkDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("protect_action_remove_link_details")
@@ -18051,9 +18083,49 @@ public class TeamLog {
                     var d = try Serialization.getFields(TeamLog.ProtectActionStopSharingDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("protect_action_stop_sharing_details")
                     return .dictionary(d)
+                case .protectCustomDataTypeCreatedDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectCustomDataTypeCreatedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_custom_data_type_created_details")
+                    return .dictionary(d)
+                case .protectCustomDataTypeDeletedDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectCustomDataTypeDeletedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_custom_data_type_deleted_details")
+                    return .dictionary(d)
+                case .protectCustomDataTypeDisabledDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectCustomDataTypeDisabledDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_custom_data_type_disabled_details")
+                    return .dictionary(d)
+                case .protectCustomDataTypeEnabledDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectCustomDataTypeEnabledDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_custom_data_type_enabled_details")
+                    return .dictionary(d)
+                case .protectCustomDataTypeModifiedDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectCustomDataTypeModifiedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_custom_data_type_modified_details")
+                    return .dictionary(d)
                 case .protectInternalDomainsChangedDetails(let arg):
                     var d = try Serialization.getFields(TeamLog.ProtectInternalDomainsChangedDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("protect_internal_domains_changed_details")
+                    return .dictionary(d)
+                case .protectPolicyActivatedDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyActivatedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_activated_details")
+                    return .dictionary(d)
+                case .protectPolicyDeactivatedDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyDeactivatedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_deactivated_details")
+                    return .dictionary(d)
+                case .protectPolicyScheduledDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyScheduledDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_scheduled_details")
+                    return .dictionary(d)
+                case .protectPolicyUpdatedDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyUpdatedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_updated_details")
+                    return .dictionary(d)
+                case .protectReportViewDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectReportViewDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_report_view_details")
                     return .dictionary(d)
                 case .classificationCreateReportDetails(let arg):
                     var d = try Serialization.getFields(TeamLog.ClassificationCreateReportDetailsSerializer().serialize(arg))
@@ -19059,6 +19131,10 @@ public class TeamLog {
                     var d = try Serialization.getFields(TeamLog.PaperEnabledUsersGroupRemovalDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("paper_enabled_users_group_removal_details")
                     return .dictionary(d)
+                case .paperOfflineModePolicyChangedDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.PaperOfflineModePolicyChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_offline_mode_policy_changed_details")
+                    return .dictionary(d)
                 case .passkeyLoginPolicyChangedDetails(let arg):
                     var d = try Serialization.getFields(TeamLog.PasskeyLoginPolicyChangedDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("passkey_login_policy_changed_details")
@@ -19182,6 +19258,14 @@ public class TeamLog {
                 case .teamExtensionsPolicyChangedDetails(let arg):
                     var d = try Serialization.getFields(TeamLog.TeamExtensionsPolicyChangedDetailsSerializer().serialize(arg))
                     d[".tag"] = .str("team_extensions_policy_changed_details")
+                    return .dictionary(d)
+                case .teamExternalSharingControlsActivationStateChangedDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.TeamExternalSharingControlsActivationStateChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_external_sharing_controls_activation_state_changed_details")
+                    return .dictionary(d)
+                case .teamExternalSharingControlsRecipientListsChangedDetails(let arg):
+                    var d = try Serialization.getFields(TeamLog.TeamExternalSharingControlsRecipientListsChangedDetailsSerializer().serialize(arg))
+                    d[".tag"] = .str("team_external_sharing_controls_recipient_lists_changed_details")
                     return .dictionary(d)
                 case .teamMemberStorageRequestPolicyChangedDetails(let arg):
                     var d = try Serialization.getFields(TeamLog.TeamMemberStorageRequestPolicyChangedDetailsSerializer().serialize(arg))
@@ -20280,15 +20364,48 @@ public class TeamLog {
                         case "protect_action_remove_collaborator_details":
                             let v = try TeamLog.ProtectActionRemoveCollaboratorDetailsSerializer().deserialize(json)
                             return EventDetails.protectActionRemoveCollaboratorDetails(v)
+                        case "protect_action_remove_domains_details":
+                            let v = try TeamLog.ProtectActionRemoveDomainsDetailsSerializer().deserialize(json)
+                            return EventDetails.protectActionRemoveDomainsDetails(v)
                         case "protect_action_remove_link_details":
                             let v = try TeamLog.ProtectActionRemoveLinkDetailsSerializer().deserialize(json)
                             return EventDetails.protectActionRemoveLinkDetails(v)
                         case "protect_action_stop_sharing_details":
                             let v = try TeamLog.ProtectActionStopSharingDetailsSerializer().deserialize(json)
                             return EventDetails.protectActionStopSharingDetails(v)
+                        case "protect_custom_data_type_created_details":
+                            let v = try TeamLog.ProtectCustomDataTypeCreatedDetailsSerializer().deserialize(json)
+                            return EventDetails.protectCustomDataTypeCreatedDetails(v)
+                        case "protect_custom_data_type_deleted_details":
+                            let v = try TeamLog.ProtectCustomDataTypeDeletedDetailsSerializer().deserialize(json)
+                            return EventDetails.protectCustomDataTypeDeletedDetails(v)
+                        case "protect_custom_data_type_disabled_details":
+                            let v = try TeamLog.ProtectCustomDataTypeDisabledDetailsSerializer().deserialize(json)
+                            return EventDetails.protectCustomDataTypeDisabledDetails(v)
+                        case "protect_custom_data_type_enabled_details":
+                            let v = try TeamLog.ProtectCustomDataTypeEnabledDetailsSerializer().deserialize(json)
+                            return EventDetails.protectCustomDataTypeEnabledDetails(v)
+                        case "protect_custom_data_type_modified_details":
+                            let v = try TeamLog.ProtectCustomDataTypeModifiedDetailsSerializer().deserialize(json)
+                            return EventDetails.protectCustomDataTypeModifiedDetails(v)
                         case "protect_internal_domains_changed_details":
                             let v = try TeamLog.ProtectInternalDomainsChangedDetailsSerializer().deserialize(json)
                             return EventDetails.protectInternalDomainsChangedDetails(v)
+                        case "protect_policy_activated_details":
+                            let v = try TeamLog.ProtectPolicyActivatedDetailsSerializer().deserialize(json)
+                            return EventDetails.protectPolicyActivatedDetails(v)
+                        case "protect_policy_deactivated_details":
+                            let v = try TeamLog.ProtectPolicyDeactivatedDetailsSerializer().deserialize(json)
+                            return EventDetails.protectPolicyDeactivatedDetails(v)
+                        case "protect_policy_scheduled_details":
+                            let v = try TeamLog.ProtectPolicyScheduledDetailsSerializer().deserialize(json)
+                            return EventDetails.protectPolicyScheduledDetails(v)
+                        case "protect_policy_updated_details":
+                            let v = try TeamLog.ProtectPolicyUpdatedDetailsSerializer().deserialize(json)
+                            return EventDetails.protectPolicyUpdatedDetails(v)
+                        case "protect_report_view_details":
+                            let v = try TeamLog.ProtectReportViewDetailsSerializer().deserialize(json)
+                            return EventDetails.protectReportViewDetails(v)
                         case "classification_create_report_details":
                             let v = try TeamLog.ClassificationCreateReportDetailsSerializer().deserialize(json)
                             return EventDetails.classificationCreateReportDetails(v)
@@ -21042,6 +21159,9 @@ public class TeamLog {
                         case "paper_enabled_users_group_removal_details":
                             let v = try TeamLog.PaperEnabledUsersGroupRemovalDetailsSerializer().deserialize(json)
                             return EventDetails.paperEnabledUsersGroupRemovalDetails(v)
+                        case "paper_offline_mode_policy_changed_details":
+                            let v = try TeamLog.PaperOfflineModePolicyChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.paperOfflineModePolicyChangedDetails(v)
                         case "passkey_login_policy_changed_details":
                             let v = try TeamLog.PasskeyLoginPolicyChangedDetailsSerializer().deserialize(json)
                             return EventDetails.passkeyLoginPolicyChangedDetails(v)
@@ -21135,6 +21255,12 @@ public class TeamLog {
                         case "team_extensions_policy_changed_details":
                             let v = try TeamLog.TeamExtensionsPolicyChangedDetailsSerializer().deserialize(json)
                             return EventDetails.teamExtensionsPolicyChangedDetails(v)
+                        case "team_external_sharing_controls_activation_state_changed_details":
+                            let v = try TeamLog.TeamExternalSharingControlsActivationStateChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.teamExternalSharingControlsActivationStateChangedDetails(v)
+                        case "team_external_sharing_controls_recipient_lists_changed_details":
+                            let v = try TeamLog.TeamExternalSharingControlsRecipientListsChangedDetailsSerializer().deserialize(json)
+                            return EventDetails.teamExternalSharingControlsRecipientListsChangedDetails(v)
                         case "team_member_storage_request_policy_changed_details":
                             let v = try TeamLog.TeamMemberStorageRequestPolicyChangedDetailsSerializer().deserialize(json)
                             return EventDetails.teamMemberStorageRequestPolicyChangedDetails(v)
@@ -21892,12 +22018,34 @@ public class TeamLog {
         case protectActionExport(TeamLog.ProtectActionExportType)
         /// (protect) Removed collaborators via Dropbox Protect
         case protectActionRemoveCollaborator(TeamLog.ProtectActionRemoveCollaboratorType)
+        /// (protect) Removed domains via Dropbox Protect
+        case protectActionRemoveDomains(TeamLog.ProtectActionRemoveDomainsType)
         /// (protect) Removed a link via Dropbox Protect
         case protectActionRemoveLink(TeamLog.ProtectActionRemoveLinkType)
         /// (protect) Stopped sharing content via Dropbox Protect
         case protectActionStopSharing(TeamLog.ProtectActionStopSharingType)
+        /// (protect) Created a Dropbox Protect custom data type
+        case protectCustomDataTypeCreated(TeamLog.ProtectCustomDataTypeCreatedType)
+        /// (protect) Deleted a Dropbox Protect custom data type
+        case protectCustomDataTypeDeleted(TeamLog.ProtectCustomDataTypeDeletedType)
+        /// (protect) Disabled a Dropbox Protect custom data type
+        case protectCustomDataTypeDisabled(TeamLog.ProtectCustomDataTypeDisabledType)
+        /// (protect) Enabled a Dropbox Protect custom data type
+        case protectCustomDataTypeEnabled(TeamLog.ProtectCustomDataTypeEnabledType)
+        /// (protect) Modified a Dropbox Protect custom data type
+        case protectCustomDataTypeModified(TeamLog.ProtectCustomDataTypeModifiedType)
         /// (protect) Modified Protect internal domains list
         case protectInternalDomainsChanged(TeamLog.ProtectInternalDomainsChangedType)
+        /// (protect) Activated a Dropbox Protect policy
+        case protectPolicyActivated(TeamLog.ProtectPolicyActivatedType)
+        /// (protect) Deactivated a Dropbox Protect policy
+        case protectPolicyDeactivated(TeamLog.ProtectPolicyDeactivatedType)
+        /// (protect) Scheduled a Dropbox Protect policy
+        case protectPolicyScheduled(TeamLog.ProtectPolicyScheduledType)
+        /// (protect) Updated a Dropbox Protect policy
+        case protectPolicyUpdated(TeamLog.ProtectPolicyUpdatedType)
+        /// (protect) Viewed a Dropbox Protect report
+        case protectReportView(TeamLog.ProtectReportViewType)
         /// (reports) Created Classification report
         case classificationCreateReport(TeamLog.ClassificationCreateReportType)
         /// (reports) Couldn't create Classification report
@@ -22404,6 +22552,8 @@ public class TeamLog {
         case paperEnabledUsersGroupAddition(TeamLog.PaperEnabledUsersGroupAdditionType)
         /// (team_policies) Removed users from Paper-enabled users list
         case paperEnabledUsersGroupRemoval(TeamLog.PaperEnabledUsersGroupRemovalType)
+        /// (team_policies) Enabled/disabled Paper offline mode for team
+        case paperOfflineModePolicyChanged(TeamLog.PaperOfflineModePolicyChangedType)
         /// (team_policies) Changed passkey login policy for team
         case passkeyLoginPolicyChanged(TeamLog.PasskeyLoginPolicyChangedType)
         /// (team_policies) Changed team password strength requirements
@@ -22468,6 +22618,10 @@ public class TeamLog {
         case teamBrandingPolicyChanged(TeamLog.TeamBrandingPolicyChangedType)
         /// (team_policies) Changed App Integrations setting for team
         case teamExtensionsPolicyChanged(TeamLog.TeamExtensionsPolicyChangedType)
+        /// (team_policies) Changed external sharing controls activation state
+        case teamExternalSharingControlsActivationStateChanged(TeamLog.TeamExternalSharingControlsActivationStateChangedType)
+        /// (team_policies) Changed approved or blocked entries for external sharing controls
+        case teamExternalSharingControlsRecipientListsChanged(TeamLog.TeamExternalSharingControlsRecipientListsChangedType)
         /// (team_policies) Changed team member storage request policy for team
         case teamMemberStorageRequestPolicyChanged(TeamLog.TeamMemberStorageRequestPolicyChangedType)
         /// (team_policies) Enabled/disabled Team Selective Sync for team
@@ -23736,6 +23890,10 @@ public class TeamLog {
                     var d = try Serialization.getFields(TeamLog.ProtectActionRemoveCollaboratorTypeSerializer().serialize(arg))
                     d[".tag"] = .str("protect_action_remove_collaborator")
                     return .dictionary(d)
+                case .protectActionRemoveDomains(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectActionRemoveDomainsTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_action_remove_domains")
+                    return .dictionary(d)
                 case .protectActionRemoveLink(let arg):
                     var d = try Serialization.getFields(TeamLog.ProtectActionRemoveLinkTypeSerializer().serialize(arg))
                     d[".tag"] = .str("protect_action_remove_link")
@@ -23744,9 +23902,49 @@ public class TeamLog {
                     var d = try Serialization.getFields(TeamLog.ProtectActionStopSharingTypeSerializer().serialize(arg))
                     d[".tag"] = .str("protect_action_stop_sharing")
                     return .dictionary(d)
+                case .protectCustomDataTypeCreated(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectCustomDataTypeCreatedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_custom_data_type_created")
+                    return .dictionary(d)
+                case .protectCustomDataTypeDeleted(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectCustomDataTypeDeletedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_custom_data_type_deleted")
+                    return .dictionary(d)
+                case .protectCustomDataTypeDisabled(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectCustomDataTypeDisabledTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_custom_data_type_disabled")
+                    return .dictionary(d)
+                case .protectCustomDataTypeEnabled(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectCustomDataTypeEnabledTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_custom_data_type_enabled")
+                    return .dictionary(d)
+                case .protectCustomDataTypeModified(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectCustomDataTypeModifiedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_custom_data_type_modified")
+                    return .dictionary(d)
                 case .protectInternalDomainsChanged(let arg):
                     var d = try Serialization.getFields(TeamLog.ProtectInternalDomainsChangedTypeSerializer().serialize(arg))
                     d[".tag"] = .str("protect_internal_domains_changed")
+                    return .dictionary(d)
+                case .protectPolicyActivated(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyActivatedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_activated")
+                    return .dictionary(d)
+                case .protectPolicyDeactivated(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyDeactivatedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_deactivated")
+                    return .dictionary(d)
+                case .protectPolicyScheduled(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyScheduledTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_scheduled")
+                    return .dictionary(d)
+                case .protectPolicyUpdated(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectPolicyUpdatedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_policy_updated")
+                    return .dictionary(d)
+                case .protectReportView(let arg):
+                    var d = try Serialization.getFields(TeamLog.ProtectReportViewTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("protect_report_view")
                     return .dictionary(d)
                 case .classificationCreateReport(let arg):
                     var d = try Serialization.getFields(TeamLog.ClassificationCreateReportTypeSerializer().serialize(arg))
@@ -24752,6 +24950,10 @@ public class TeamLog {
                     var d = try Serialization.getFields(TeamLog.PaperEnabledUsersGroupRemovalTypeSerializer().serialize(arg))
                     d[".tag"] = .str("paper_enabled_users_group_removal")
                     return .dictionary(d)
+                case .paperOfflineModePolicyChanged(let arg):
+                    var d = try Serialization.getFields(TeamLog.PaperOfflineModePolicyChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("paper_offline_mode_policy_changed")
+                    return .dictionary(d)
                 case .passkeyLoginPolicyChanged(let arg):
                     var d = try Serialization.getFields(TeamLog.PasskeyLoginPolicyChangedTypeSerializer().serialize(arg))
                     d[".tag"] = .str("passkey_login_policy_changed")
@@ -24875,6 +25077,14 @@ public class TeamLog {
                 case .teamExtensionsPolicyChanged(let arg):
                     var d = try Serialization.getFields(TeamLog.TeamExtensionsPolicyChangedTypeSerializer().serialize(arg))
                     d[".tag"] = .str("team_extensions_policy_changed")
+                    return .dictionary(d)
+                case .teamExternalSharingControlsActivationStateChanged(let arg):
+                    var d = try Serialization.getFields(TeamLog.TeamExternalSharingControlsActivationStateChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_external_sharing_controls_activation_state_changed")
+                    return .dictionary(d)
+                case .teamExternalSharingControlsRecipientListsChanged(let arg):
+                    var d = try Serialization.getFields(TeamLog.TeamExternalSharingControlsRecipientListsChangedTypeSerializer().serialize(arg))
+                    d[".tag"] = .str("team_external_sharing_controls_recipient_lists_changed")
                     return .dictionary(d)
                 case .teamMemberStorageRequestPolicyChanged(let arg):
                     var d = try Serialization.getFields(TeamLog.TeamMemberStorageRequestPolicyChangedTypeSerializer().serialize(arg))
@@ -25969,15 +26179,48 @@ public class TeamLog {
                         case "protect_action_remove_collaborator":
                             let v = try TeamLog.ProtectActionRemoveCollaboratorTypeSerializer().deserialize(json)
                             return EventType.protectActionRemoveCollaborator(v)
+                        case "protect_action_remove_domains":
+                            let v = try TeamLog.ProtectActionRemoveDomainsTypeSerializer().deserialize(json)
+                            return EventType.protectActionRemoveDomains(v)
                         case "protect_action_remove_link":
                             let v = try TeamLog.ProtectActionRemoveLinkTypeSerializer().deserialize(json)
                             return EventType.protectActionRemoveLink(v)
                         case "protect_action_stop_sharing":
                             let v = try TeamLog.ProtectActionStopSharingTypeSerializer().deserialize(json)
                             return EventType.protectActionStopSharing(v)
+                        case "protect_custom_data_type_created":
+                            let v = try TeamLog.ProtectCustomDataTypeCreatedTypeSerializer().deserialize(json)
+                            return EventType.protectCustomDataTypeCreated(v)
+                        case "protect_custom_data_type_deleted":
+                            let v = try TeamLog.ProtectCustomDataTypeDeletedTypeSerializer().deserialize(json)
+                            return EventType.protectCustomDataTypeDeleted(v)
+                        case "protect_custom_data_type_disabled":
+                            let v = try TeamLog.ProtectCustomDataTypeDisabledTypeSerializer().deserialize(json)
+                            return EventType.protectCustomDataTypeDisabled(v)
+                        case "protect_custom_data_type_enabled":
+                            let v = try TeamLog.ProtectCustomDataTypeEnabledTypeSerializer().deserialize(json)
+                            return EventType.protectCustomDataTypeEnabled(v)
+                        case "protect_custom_data_type_modified":
+                            let v = try TeamLog.ProtectCustomDataTypeModifiedTypeSerializer().deserialize(json)
+                            return EventType.protectCustomDataTypeModified(v)
                         case "protect_internal_domains_changed":
                             let v = try TeamLog.ProtectInternalDomainsChangedTypeSerializer().deserialize(json)
                             return EventType.protectInternalDomainsChanged(v)
+                        case "protect_policy_activated":
+                            let v = try TeamLog.ProtectPolicyActivatedTypeSerializer().deserialize(json)
+                            return EventType.protectPolicyActivated(v)
+                        case "protect_policy_deactivated":
+                            let v = try TeamLog.ProtectPolicyDeactivatedTypeSerializer().deserialize(json)
+                            return EventType.protectPolicyDeactivated(v)
+                        case "protect_policy_scheduled":
+                            let v = try TeamLog.ProtectPolicyScheduledTypeSerializer().deserialize(json)
+                            return EventType.protectPolicyScheduled(v)
+                        case "protect_policy_updated":
+                            let v = try TeamLog.ProtectPolicyUpdatedTypeSerializer().deserialize(json)
+                            return EventType.protectPolicyUpdated(v)
+                        case "protect_report_view":
+                            let v = try TeamLog.ProtectReportViewTypeSerializer().deserialize(json)
+                            return EventType.protectReportView(v)
                         case "classification_create_report":
                             let v = try TeamLog.ClassificationCreateReportTypeSerializer().deserialize(json)
                             return EventType.classificationCreateReport(v)
@@ -26731,6 +26974,9 @@ public class TeamLog {
                         case "paper_enabled_users_group_removal":
                             let v = try TeamLog.PaperEnabledUsersGroupRemovalTypeSerializer().deserialize(json)
                             return EventType.paperEnabledUsersGroupRemoval(v)
+                        case "paper_offline_mode_policy_changed":
+                            let v = try TeamLog.PaperOfflineModePolicyChangedTypeSerializer().deserialize(json)
+                            return EventType.paperOfflineModePolicyChanged(v)
                         case "passkey_login_policy_changed":
                             let v = try TeamLog.PasskeyLoginPolicyChangedTypeSerializer().deserialize(json)
                             return EventType.passkeyLoginPolicyChanged(v)
@@ -26824,6 +27070,12 @@ public class TeamLog {
                         case "team_extensions_policy_changed":
                             let v = try TeamLog.TeamExtensionsPolicyChangedTypeSerializer().deserialize(json)
                             return EventType.teamExtensionsPolicyChanged(v)
+                        case "team_external_sharing_controls_activation_state_changed":
+                            let v = try TeamLog.TeamExternalSharingControlsActivationStateChangedTypeSerializer().deserialize(json)
+                            return EventType.teamExternalSharingControlsActivationStateChanged(v)
+                        case "team_external_sharing_controls_recipient_lists_changed":
+                            let v = try TeamLog.TeamExternalSharingControlsRecipientListsChangedTypeSerializer().deserialize(json)
+                            return EventType.teamExternalSharingControlsRecipientListsChanged(v)
                         case "team_member_storage_request_policy_changed":
                             let v = try TeamLog.TeamMemberStorageRequestPolicyChangedTypeSerializer().deserialize(json)
                             return EventType.teamMemberStorageRequestPolicyChanged(v)
@@ -27578,12 +27830,34 @@ public class TeamLog {
         case protectActionExport
         /// (protect) Removed collaborators via Dropbox Protect
         case protectActionRemoveCollaborator
+        /// (protect) Removed domains via Dropbox Protect
+        case protectActionRemoveDomains
         /// (protect) Removed a link via Dropbox Protect
         case protectActionRemoveLink
         /// (protect) Stopped sharing content via Dropbox Protect
         case protectActionStopSharing
+        /// (protect) Created a Dropbox Protect custom data type
+        case protectCustomDataTypeCreated
+        /// (protect) Deleted a Dropbox Protect custom data type
+        case protectCustomDataTypeDeleted
+        /// (protect) Disabled a Dropbox Protect custom data type
+        case protectCustomDataTypeDisabled
+        /// (protect) Enabled a Dropbox Protect custom data type
+        case protectCustomDataTypeEnabled
+        /// (protect) Modified a Dropbox Protect custom data type
+        case protectCustomDataTypeModified
         /// (protect) Modified Protect internal domains list
         case protectInternalDomainsChanged
+        /// (protect) Activated a Dropbox Protect policy
+        case protectPolicyActivated
+        /// (protect) Deactivated a Dropbox Protect policy
+        case protectPolicyDeactivated
+        /// (protect) Scheduled a Dropbox Protect policy
+        case protectPolicyScheduled
+        /// (protect) Updated a Dropbox Protect policy
+        case protectPolicyUpdated
+        /// (protect) Viewed a Dropbox Protect report
+        case protectReportView
         /// (reports) Created Classification report
         case classificationCreateReport
         /// (reports) Couldn't create Classification report
@@ -28090,6 +28364,8 @@ public class TeamLog {
         case paperEnabledUsersGroupAddition
         /// (team_policies) Removed users from Paper-enabled users list
         case paperEnabledUsersGroupRemoval
+        /// (team_policies) Enabled/disabled Paper offline mode for team
+        case paperOfflineModePolicyChanged
         /// (team_policies) Changed passkey login policy for team
         case passkeyLoginPolicyChanged
         /// (team_policies) Changed team password strength requirements
@@ -28154,6 +28430,10 @@ public class TeamLog {
         case teamBrandingPolicyChanged
         /// (team_policies) Changed App Integrations setting for team
         case teamExtensionsPolicyChanged
+        /// (team_policies) Changed external sharing controls activation state
+        case teamExternalSharingControlsActivationStateChanged
+        /// (team_policies) Changed approved or blocked entries for external sharing controls
+        case teamExternalSharingControlsRecipientListsChanged
         /// (team_policies) Changed team member storage request policy for team
         case teamMemberStorageRequestPolicyChanged
         /// (team_policies) Enabled/disabled Team Selective Sync for team
@@ -29422,6 +29702,10 @@ public class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("protect_action_remove_collaborator")
                     return .dictionary(d)
+                case .protectActionRemoveDomains:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_action_remove_domains")
+                    return .dictionary(d)
                 case .protectActionRemoveLink:
                     var d = [String: JSON]()
                     d[".tag"] = .str("protect_action_remove_link")
@@ -29430,9 +29714,49 @@ public class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("protect_action_stop_sharing")
                     return .dictionary(d)
+                case .protectCustomDataTypeCreated:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_custom_data_type_created")
+                    return .dictionary(d)
+                case .protectCustomDataTypeDeleted:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_custom_data_type_deleted")
+                    return .dictionary(d)
+                case .protectCustomDataTypeDisabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_custom_data_type_disabled")
+                    return .dictionary(d)
+                case .protectCustomDataTypeEnabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_custom_data_type_enabled")
+                    return .dictionary(d)
+                case .protectCustomDataTypeModified:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_custom_data_type_modified")
+                    return .dictionary(d)
                 case .protectInternalDomainsChanged:
                     var d = [String: JSON]()
                     d[".tag"] = .str("protect_internal_domains_changed")
+                    return .dictionary(d)
+                case .protectPolicyActivated:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_policy_activated")
+                    return .dictionary(d)
+                case .protectPolicyDeactivated:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_policy_deactivated")
+                    return .dictionary(d)
+                case .protectPolicyScheduled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_policy_scheduled")
+                    return .dictionary(d)
+                case .protectPolicyUpdated:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_policy_updated")
+                    return .dictionary(d)
+                case .protectReportView:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("protect_report_view")
                     return .dictionary(d)
                 case .classificationCreateReport:
                     var d = [String: JSON]()
@@ -30438,6 +30762,10 @@ public class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("paper_enabled_users_group_removal")
                     return .dictionary(d)
+                case .paperOfflineModePolicyChanged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("paper_offline_mode_policy_changed")
+                    return .dictionary(d)
                 case .passkeyLoginPolicyChanged:
                     var d = [String: JSON]()
                     d[".tag"] = .str("passkey_login_policy_changed")
@@ -30561,6 +30889,14 @@ public class TeamLog {
                 case .teamExtensionsPolicyChanged:
                     var d = [String: JSON]()
                     d[".tag"] = .str("team_extensions_policy_changed")
+                    return .dictionary(d)
+                case .teamExternalSharingControlsActivationStateChanged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_external_sharing_controls_activation_state_changed")
+                    return .dictionary(d)
+                case .teamExternalSharingControlsRecipientListsChanged:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("team_external_sharing_controls_recipient_lists_changed")
                     return .dictionary(d)
                 case .teamMemberStorageRequestPolicyChanged:
                     var d = [String: JSON]()
@@ -31373,12 +31709,34 @@ public class TeamLog {
                             return EventTypeArg.protectActionExport
                         case "protect_action_remove_collaborator":
                             return EventTypeArg.protectActionRemoveCollaborator
+                        case "protect_action_remove_domains":
+                            return EventTypeArg.protectActionRemoveDomains
                         case "protect_action_remove_link":
                             return EventTypeArg.protectActionRemoveLink
                         case "protect_action_stop_sharing":
                             return EventTypeArg.protectActionStopSharing
+                        case "protect_custom_data_type_created":
+                            return EventTypeArg.protectCustomDataTypeCreated
+                        case "protect_custom_data_type_deleted":
+                            return EventTypeArg.protectCustomDataTypeDeleted
+                        case "protect_custom_data_type_disabled":
+                            return EventTypeArg.protectCustomDataTypeDisabled
+                        case "protect_custom_data_type_enabled":
+                            return EventTypeArg.protectCustomDataTypeEnabled
+                        case "protect_custom_data_type_modified":
+                            return EventTypeArg.protectCustomDataTypeModified
                         case "protect_internal_domains_changed":
                             return EventTypeArg.protectInternalDomainsChanged
+                        case "protect_policy_activated":
+                            return EventTypeArg.protectPolicyActivated
+                        case "protect_policy_deactivated":
+                            return EventTypeArg.protectPolicyDeactivated
+                        case "protect_policy_scheduled":
+                            return EventTypeArg.protectPolicyScheduled
+                        case "protect_policy_updated":
+                            return EventTypeArg.protectPolicyUpdated
+                        case "protect_report_view":
+                            return EventTypeArg.protectReportView
                         case "classification_create_report":
                             return EventTypeArg.classificationCreateReport
                         case "classification_create_report_fail":
@@ -31881,6 +32239,8 @@ public class TeamLog {
                             return EventTypeArg.paperEnabledUsersGroupAddition
                         case "paper_enabled_users_group_removal":
                             return EventTypeArg.paperEnabledUsersGroupRemoval
+                        case "paper_offline_mode_policy_changed":
+                            return EventTypeArg.paperOfflineModePolicyChanged
                         case "passkey_login_policy_changed":
                             return EventTypeArg.passkeyLoginPolicyChanged
                         case "password_strength_requirements_change_policy":
@@ -31943,6 +32303,10 @@ public class TeamLog {
                             return EventTypeArg.teamBrandingPolicyChanged
                         case "team_extensions_policy_changed":
                             return EventTypeArg.teamExtensionsPolicyChanged
+                        case "team_external_sharing_controls_activation_state_changed":
+                            return EventTypeArg.teamExternalSharingControlsActivationStateChanged
+                        case "team_external_sharing_controls_recipient_lists_changed":
+                            return EventTypeArg.teamExternalSharingControlsRecipientListsChanged
                         case "team_member_storage_request_policy_changed":
                             return EventTypeArg.teamMemberStorageRequestPolicyChanged
                         case "team_selective_sync_policy_changed":
@@ -32865,6 +33229,73 @@ public class TeamLog {
                     return ExternalDriveBackupStatusChangedType(description_: description_)
                 default:
                     throw JSONSerializerError.deserializeError(type: ExternalDriveBackupStatusChangedType.self, json: json)
+            }
+        }
+    }
+
+    /// The ExternalSharingControlsActivationState union
+    public enum ExternalSharingControlsActivationState: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case active
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case legacy
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try ExternalSharingControlsActivationStateSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ExternalSharingControlsActivationStateSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ExternalSharingControlsActivationState: \(error)"
+            }
+        }
+    }
+    public class ExternalSharingControlsActivationStateSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ExternalSharingControlsActivationState) throws -> JSON {
+            switch value {
+                case .active:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("active")
+                    return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .legacy:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("legacy")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        public func deserialize(_ json: JSON) throws -> ExternalSharingControlsActivationState {
+            switch json {
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "active":
+                            return ExternalSharingControlsActivationState.active
+                        case "disabled":
+                            return ExternalSharingControlsActivationState.disabled
+                        case "legacy":
+                            return ExternalSharingControlsActivationState.legacy
+                        case "other":
+                            return ExternalSharingControlsActivationState.other
+                        default:
+                            return ExternalSharingControlsActivationState.other
+                    }
+                default:
+                    throw JSONSerializerError.deserializeError(type: ExternalSharingControlsActivationState.self, json: json)
             }
         }
     }
@@ -44214,8 +44645,12 @@ public class TeamLog {
     public class MediaHubProjectTeamAddDetails: CustomStringConvertible, JSONRepresentable {
         /// Replay project.
         public let project: TeamLog.MediaHubProjectLogInfo?
-        public init(project: TeamLog.MediaHubProjectLogInfo? = nil) {
+        /// The email address of the Replay project member targeted by the event.
+        public let invitee: String?
+        public init(project: TeamLog.MediaHubProjectLogInfo? = nil, invitee: String? = nil) {
             self.project = project
+            nullableValidator(stringValidator(maxLength: 255))(invitee)
+            self.invitee = invitee
         }
 
         func json() throws -> JSON {
@@ -44235,6 +44670,7 @@ public class TeamLog {
         public func serialize(_ value: MediaHubProjectTeamAddDetails) throws -> JSON {
             let output = [
             "project": try NullableSerializer(TeamLog.MediaHubProjectLogInfoSerializer()).serialize(value.project),
+            "invitee": try NullableSerializer(Serialization._StringSerializer).serialize(value.invitee),
             ]
             return .dictionary(output)
         }
@@ -44242,7 +44678,8 @@ public class TeamLog {
             switch json {
                 case .dictionary(let dict):
                     let project = try NullableSerializer(TeamLog.MediaHubProjectLogInfoSerializer()).deserialize(dict["project"] ?? .null)
-                    return MediaHubProjectTeamAddDetails(project: project)
+                    let invitee = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["invitee"] ?? .null)
+                    return MediaHubProjectTeamAddDetails(project: project, invitee: invitee)
                 default:
                     throw JSONSerializerError.deserializeError(type: MediaHubProjectTeamAddDetails.self, json: json)
             }
@@ -44293,8 +44730,12 @@ public class TeamLog {
     public class MediaHubProjectTeamDeleteDetails: CustomStringConvertible, JSONRepresentable {
         /// Replay project.
         public let project: TeamLog.MediaHubProjectLogInfo?
-        public init(project: TeamLog.MediaHubProjectLogInfo? = nil) {
+        /// The email address of the Replay project member targeted by the event.
+        public let invitee: String?
+        public init(project: TeamLog.MediaHubProjectLogInfo? = nil, invitee: String? = nil) {
             self.project = project
+            nullableValidator(stringValidator(maxLength: 255))(invitee)
+            self.invitee = invitee
         }
 
         func json() throws -> JSON {
@@ -44314,6 +44755,7 @@ public class TeamLog {
         public func serialize(_ value: MediaHubProjectTeamDeleteDetails) throws -> JSON {
             let output = [
             "project": try NullableSerializer(TeamLog.MediaHubProjectLogInfoSerializer()).serialize(value.project),
+            "invitee": try NullableSerializer(Serialization._StringSerializer).serialize(value.invitee),
             ]
             return .dictionary(output)
         }
@@ -44321,7 +44763,8 @@ public class TeamLog {
             switch json {
                 case .dictionary(let dict):
                     let project = try NullableSerializer(TeamLog.MediaHubProjectLogInfoSerializer()).deserialize(dict["project"] ?? .null)
-                    return MediaHubProjectTeamDeleteDetails(project: project)
+                    let invitee = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["invitee"] ?? .null)
+                    return MediaHubProjectTeamDeleteDetails(project: project, invitee: invitee)
                 default:
                     throw JSONSerializerError.deserializeError(type: MediaHubProjectTeamDeleteDetails.self, json: json)
             }
@@ -44376,10 +44819,14 @@ public class TeamLog {
         public let newRole: TeamLog.MediaHubProjectRole
         /// Replay project.
         public let project: TeamLog.MediaHubProjectLogInfo?
-        public init(previousRole: TeamLog.MediaHubProjectRole, newRole: TeamLog.MediaHubProjectRole, project: TeamLog.MediaHubProjectLogInfo? = nil) {
+        /// The email address of the Replay project member targeted by the event.
+        public let invitee: String?
+        public init(previousRole: TeamLog.MediaHubProjectRole, newRole: TeamLog.MediaHubProjectRole, project: TeamLog.MediaHubProjectLogInfo? = nil, invitee: String? = nil) {
             self.previousRole = previousRole
             self.newRole = newRole
             self.project = project
+            nullableValidator(stringValidator(maxLength: 255))(invitee)
+            self.invitee = invitee
         }
 
         func json() throws -> JSON {
@@ -44401,6 +44848,7 @@ public class TeamLog {
             "previous_role": try TeamLog.MediaHubProjectRoleSerializer().serialize(value.previousRole),
             "new_role": try TeamLog.MediaHubProjectRoleSerializer().serialize(value.newRole),
             "project": try NullableSerializer(TeamLog.MediaHubProjectLogInfoSerializer()).serialize(value.project),
+            "invitee": try NullableSerializer(Serialization._StringSerializer).serialize(value.invitee),
             ]
             return .dictionary(output)
         }
@@ -44410,7 +44858,8 @@ public class TeamLog {
                     let previousRole = try TeamLog.MediaHubProjectRoleSerializer().deserialize(dict["previous_role"] ?? .null)
                     let newRole = try TeamLog.MediaHubProjectRoleSerializer().deserialize(dict["new_role"] ?? .null)
                     let project = try NullableSerializer(TeamLog.MediaHubProjectLogInfoSerializer()).deserialize(dict["project"] ?? .null)
-                    return MediaHubProjectTeamRoleChangedDetails(previousRole: previousRole, newRole: newRole, project: project)
+                    let invitee = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["invitee"] ?? .null)
+                    return MediaHubProjectTeamRoleChangedDetails(previousRole: previousRole, newRole: newRole, project: project, invitee: invitee)
                 default:
                     throw JSONSerializerError.deserializeError(type: MediaHubProjectTeamRoleChangedDetails.self, json: json)
             }
@@ -44464,6 +44913,8 @@ public class TeamLog {
         /// An unspecified error.
         case public_
         /// An unspecified error.
+        case publicLoggedInOnly
+        /// An unspecified error.
         case teamOnly
         /// An unspecified error.
         case other
@@ -44492,6 +44943,10 @@ public class TeamLog {
                     var d = [String: JSON]()
                     d[".tag"] = .str("public")
                     return .dictionary(d)
+                case .publicLoggedInOnly:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("public_logged_in_only")
+                    return .dictionary(d)
                 case .teamOnly:
                     var d = [String: JSON]()
                     d[".tag"] = .str("team_only")
@@ -44511,6 +44966,8 @@ public class TeamLog {
                             return MediaHubSharedLinkAudience.noOne
                         case "public":
                             return MediaHubSharedLinkAudience.public_
+                        case "public_logged_in_only":
+                            return MediaHubSharedLinkAudience.publicLoggedInOnly
                         case "team_only":
                             return MediaHubSharedLinkAudience.teamOnly
                         case "other":
@@ -54453,6 +54910,157 @@ public class TeamLog {
         }
     }
 
+    /// Policy for controlling if team members can use Paper offline mode
+    public enum PaperOfflineModePolicy: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case default_
+        /// An unspecified error.
+        case disabled
+        /// An unspecified error.
+        case enabled
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try PaperOfflineModePolicySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperOfflineModePolicySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperOfflineModePolicy: \(error)"
+            }
+        }
+    }
+    public class PaperOfflineModePolicySerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: PaperOfflineModePolicy) throws -> JSON {
+            switch value {
+                case .default_:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("default")
+                    return .dictionary(d)
+                case .disabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("disabled")
+                    return .dictionary(d)
+                case .enabled:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("enabled")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        public func deserialize(_ json: JSON) throws -> PaperOfflineModePolicy {
+            switch json {
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "default":
+                            return PaperOfflineModePolicy.default_
+                        case "disabled":
+                            return PaperOfflineModePolicy.disabled
+                        case "enabled":
+                            return PaperOfflineModePolicy.enabled
+                        case "other":
+                            return PaperOfflineModePolicy.other
+                        default:
+                            return PaperOfflineModePolicy.other
+                    }
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperOfflineModePolicy.self, json: json)
+            }
+        }
+    }
+
+    /// Enabled/disabled Paper offline mode for team.
+    public class PaperOfflineModePolicyChangedDetails: CustomStringConvertible, JSONRepresentable {
+        /// New Paper offline mode policy.
+        public let newValue: TeamLog.PaperOfflineModePolicy
+        /// Previous Paper offline mode policy.
+        public let previousValue: TeamLog.PaperOfflineModePolicy
+        public init(newValue: TeamLog.PaperOfflineModePolicy, previousValue: TeamLog.PaperOfflineModePolicy) {
+            self.newValue = newValue
+            self.previousValue = previousValue
+        }
+
+        func json() throws -> JSON {
+            try PaperOfflineModePolicyChangedDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperOfflineModePolicyChangedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperOfflineModePolicyChangedDetails: \(error)"
+            }
+        }
+    }
+    public class PaperOfflineModePolicyChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: PaperOfflineModePolicyChangedDetails) throws -> JSON {
+            let output = [
+            "new_value": try TeamLog.PaperOfflineModePolicySerializer().serialize(value.newValue),
+            "previous_value": try TeamLog.PaperOfflineModePolicySerializer().serialize(value.previousValue),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> PaperOfflineModePolicyChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let newValue = try TeamLog.PaperOfflineModePolicySerializer().deserialize(dict["new_value"] ?? .null)
+                    let previousValue = try TeamLog.PaperOfflineModePolicySerializer().deserialize(dict["previous_value"] ?? .null)
+                    return PaperOfflineModePolicyChangedDetails(newValue: newValue, previousValue: previousValue)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperOfflineModePolicyChangedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The PaperOfflineModePolicyChangedType struct
+    public class PaperOfflineModePolicyChangedType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try PaperOfflineModePolicyChangedTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try PaperOfflineModePolicyChangedTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for PaperOfflineModePolicyChangedType: \(error)"
+            }
+        }
+    }
+    public class PaperOfflineModePolicyChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: PaperOfflineModePolicyChangedType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> PaperOfflineModePolicyChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return PaperOfflineModePolicyChangedType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: PaperOfflineModePolicyChangedType.self, json: json)
+            }
+        }
+    }
+
     /// Changed permissions for published doc.
     public class PaperPublishedLinkChangePermissionDetails: CustomStringConvertible, JSONRepresentable {
         /// Event unique identifier.
@@ -56813,6 +57421,86 @@ public class TeamLog {
         }
     }
 
+    /// Removed domains via Dropbox Protect.
+    public class ProtectActionRemoveDomainsDetails: CustomStringConvertible, JSONRepresentable {
+        /// Action ID.
+        public let actionId: String
+        public init(actionId: String) {
+            stringValidator()(actionId)
+            self.actionId = actionId
+        }
+
+        func json() throws -> JSON {
+            try ProtectActionRemoveDomainsDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectActionRemoveDomainsDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectActionRemoveDomainsDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectActionRemoveDomainsDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectActionRemoveDomainsDetails) throws -> JSON {
+            let output = [
+            "action_id": try Serialization._StringSerializer.serialize(value.actionId),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectActionRemoveDomainsDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let actionId = try Serialization._StringSerializer.deserialize(dict["action_id"] ?? .null)
+                    return ProtectActionRemoveDomainsDetails(actionId: actionId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectActionRemoveDomainsDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectActionRemoveDomainsType struct
+    public class ProtectActionRemoveDomainsType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectActionRemoveDomainsTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectActionRemoveDomainsTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectActionRemoveDomainsType: \(error)"
+            }
+        }
+    }
+    public class ProtectActionRemoveDomainsTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectActionRemoveDomainsType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectActionRemoveDomainsType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectActionRemoveDomainsType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectActionRemoveDomainsType.self, json: json)
+            }
+        }
+    }
+
     /// Removed a link via Dropbox Protect.
     public class ProtectActionRemoveLinkDetails: CustomStringConvertible, JSONRepresentable {
         /// Action ID.
@@ -56973,6 +57661,436 @@ public class TeamLog {
         }
     }
 
+    /// Created a Dropbox Protect custom data type.
+    public class ProtectCustomDataTypeCreatedDetails: CustomStringConvertible, JSONRepresentable {
+        /// ID.
+        public let customDataTypeId: String
+        /// Name.
+        public let name: String
+        public init(customDataTypeId: String, name: String) {
+            stringValidator()(customDataTypeId)
+            self.customDataTypeId = customDataTypeId
+            stringValidator()(name)
+            self.name = name
+        }
+
+        func json() throws -> JSON {
+            try ProtectCustomDataTypeCreatedDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectCustomDataTypeCreatedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectCustomDataTypeCreatedDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectCustomDataTypeCreatedDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectCustomDataTypeCreatedDetails) throws -> JSON {
+            let output = [
+            "custom_data_type_id": try Serialization._StringSerializer.serialize(value.customDataTypeId),
+            "name": try Serialization._StringSerializer.serialize(value.name),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectCustomDataTypeCreatedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let customDataTypeId = try Serialization._StringSerializer.deserialize(dict["custom_data_type_id"] ?? .null)
+                    let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    return ProtectCustomDataTypeCreatedDetails(customDataTypeId: customDataTypeId, name: name)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectCustomDataTypeCreatedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectCustomDataTypeCreatedType struct
+    public class ProtectCustomDataTypeCreatedType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectCustomDataTypeCreatedTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectCustomDataTypeCreatedTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectCustomDataTypeCreatedType: \(error)"
+            }
+        }
+    }
+    public class ProtectCustomDataTypeCreatedTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectCustomDataTypeCreatedType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectCustomDataTypeCreatedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectCustomDataTypeCreatedType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectCustomDataTypeCreatedType.self, json: json)
+            }
+        }
+    }
+
+    /// Deleted a Dropbox Protect custom data type.
+    public class ProtectCustomDataTypeDeletedDetails: CustomStringConvertible, JSONRepresentable {
+        /// ID.
+        public let customDataTypeId: String
+        /// Name.
+        public let name: String
+        public init(customDataTypeId: String, name: String) {
+            stringValidator()(customDataTypeId)
+            self.customDataTypeId = customDataTypeId
+            stringValidator()(name)
+            self.name = name
+        }
+
+        func json() throws -> JSON {
+            try ProtectCustomDataTypeDeletedDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectCustomDataTypeDeletedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectCustomDataTypeDeletedDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectCustomDataTypeDeletedDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectCustomDataTypeDeletedDetails) throws -> JSON {
+            let output = [
+            "custom_data_type_id": try Serialization._StringSerializer.serialize(value.customDataTypeId),
+            "name": try Serialization._StringSerializer.serialize(value.name),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectCustomDataTypeDeletedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let customDataTypeId = try Serialization._StringSerializer.deserialize(dict["custom_data_type_id"] ?? .null)
+                    let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    return ProtectCustomDataTypeDeletedDetails(customDataTypeId: customDataTypeId, name: name)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectCustomDataTypeDeletedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectCustomDataTypeDeletedType struct
+    public class ProtectCustomDataTypeDeletedType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectCustomDataTypeDeletedTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectCustomDataTypeDeletedTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectCustomDataTypeDeletedType: \(error)"
+            }
+        }
+    }
+    public class ProtectCustomDataTypeDeletedTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectCustomDataTypeDeletedType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectCustomDataTypeDeletedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectCustomDataTypeDeletedType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectCustomDataTypeDeletedType.self, json: json)
+            }
+        }
+    }
+
+    /// Disabled a Dropbox Protect custom data type.
+    public class ProtectCustomDataTypeDisabledDetails: CustomStringConvertible, JSONRepresentable {
+        /// ID.
+        public let customDataTypeId: String
+        /// Name.
+        public let name: String
+        public init(customDataTypeId: String, name: String) {
+            stringValidator()(customDataTypeId)
+            self.customDataTypeId = customDataTypeId
+            stringValidator()(name)
+            self.name = name
+        }
+
+        func json() throws -> JSON {
+            try ProtectCustomDataTypeDisabledDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectCustomDataTypeDisabledDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectCustomDataTypeDisabledDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectCustomDataTypeDisabledDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectCustomDataTypeDisabledDetails) throws -> JSON {
+            let output = [
+            "custom_data_type_id": try Serialization._StringSerializer.serialize(value.customDataTypeId),
+            "name": try Serialization._StringSerializer.serialize(value.name),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectCustomDataTypeDisabledDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let customDataTypeId = try Serialization._StringSerializer.deserialize(dict["custom_data_type_id"] ?? .null)
+                    let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    return ProtectCustomDataTypeDisabledDetails(customDataTypeId: customDataTypeId, name: name)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectCustomDataTypeDisabledDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectCustomDataTypeDisabledType struct
+    public class ProtectCustomDataTypeDisabledType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectCustomDataTypeDisabledTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectCustomDataTypeDisabledTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectCustomDataTypeDisabledType: \(error)"
+            }
+        }
+    }
+    public class ProtectCustomDataTypeDisabledTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectCustomDataTypeDisabledType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectCustomDataTypeDisabledType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectCustomDataTypeDisabledType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectCustomDataTypeDisabledType.self, json: json)
+            }
+        }
+    }
+
+    /// Enabled a Dropbox Protect custom data type.
+    public class ProtectCustomDataTypeEnabledDetails: CustomStringConvertible, JSONRepresentable {
+        /// ID.
+        public let customDataTypeId: String
+        /// Name.
+        public let name: String
+        public init(customDataTypeId: String, name: String) {
+            stringValidator()(customDataTypeId)
+            self.customDataTypeId = customDataTypeId
+            stringValidator()(name)
+            self.name = name
+        }
+
+        func json() throws -> JSON {
+            try ProtectCustomDataTypeEnabledDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectCustomDataTypeEnabledDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectCustomDataTypeEnabledDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectCustomDataTypeEnabledDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectCustomDataTypeEnabledDetails) throws -> JSON {
+            let output = [
+            "custom_data_type_id": try Serialization._StringSerializer.serialize(value.customDataTypeId),
+            "name": try Serialization._StringSerializer.serialize(value.name),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectCustomDataTypeEnabledDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let customDataTypeId = try Serialization._StringSerializer.deserialize(dict["custom_data_type_id"] ?? .null)
+                    let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    return ProtectCustomDataTypeEnabledDetails(customDataTypeId: customDataTypeId, name: name)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectCustomDataTypeEnabledDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectCustomDataTypeEnabledType struct
+    public class ProtectCustomDataTypeEnabledType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectCustomDataTypeEnabledTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectCustomDataTypeEnabledTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectCustomDataTypeEnabledType: \(error)"
+            }
+        }
+    }
+    public class ProtectCustomDataTypeEnabledTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectCustomDataTypeEnabledType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectCustomDataTypeEnabledType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectCustomDataTypeEnabledType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectCustomDataTypeEnabledType.self, json: json)
+            }
+        }
+    }
+
+    /// Modified a Dropbox Protect custom data type.
+    public class ProtectCustomDataTypeModifiedDetails: CustomStringConvertible, JSONRepresentable {
+        /// ID.
+        public let customDataTypeId: String
+        /// Name.
+        public let name: String
+        public init(customDataTypeId: String, name: String) {
+            stringValidator()(customDataTypeId)
+            self.customDataTypeId = customDataTypeId
+            stringValidator()(name)
+            self.name = name
+        }
+
+        func json() throws -> JSON {
+            try ProtectCustomDataTypeModifiedDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectCustomDataTypeModifiedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectCustomDataTypeModifiedDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectCustomDataTypeModifiedDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectCustomDataTypeModifiedDetails) throws -> JSON {
+            let output = [
+            "custom_data_type_id": try Serialization._StringSerializer.serialize(value.customDataTypeId),
+            "name": try Serialization._StringSerializer.serialize(value.name),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectCustomDataTypeModifiedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let customDataTypeId = try Serialization._StringSerializer.deserialize(dict["custom_data_type_id"] ?? .null)
+                    let name = try Serialization._StringSerializer.deserialize(dict["name"] ?? .null)
+                    return ProtectCustomDataTypeModifiedDetails(customDataTypeId: customDataTypeId, name: name)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectCustomDataTypeModifiedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectCustomDataTypeModifiedType struct
+    public class ProtectCustomDataTypeModifiedType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectCustomDataTypeModifiedTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectCustomDataTypeModifiedTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectCustomDataTypeModifiedType: \(error)"
+            }
+        }
+    }
+    public class ProtectCustomDataTypeModifiedTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectCustomDataTypeModifiedType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectCustomDataTypeModifiedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectCustomDataTypeModifiedType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectCustomDataTypeModifiedType.self, json: json)
+            }
+        }
+    }
+
     /// Modified Protect internal domains list.
     public class ProtectInternalDomainsChangedDetails: CustomStringConvertible, JSONRepresentable {
         /// Domains added to the internal domains list.
@@ -57055,6 +58173,1056 @@ public class TeamLog {
                     return ProtectInternalDomainsChangedType(description_: description_)
                 default:
                     throw JSONSerializerError.deserializeError(type: ProtectInternalDomainsChangedType.self, json: json)
+            }
+        }
+    }
+
+    /// Activated a Dropbox Protect policy.
+    public class ProtectPolicyActivatedDetails: CustomStringConvertible, JSONRepresentable {
+        /// Policy ID.
+        public let policyId: String
+        public init(policyId: String) {
+            stringValidator()(policyId)
+            self.policyId = policyId
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyActivatedDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyActivatedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyActivatedDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyActivatedDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyActivatedDetails) throws -> JSON {
+            let output = [
+            "policy_id": try Serialization._StringSerializer.serialize(value.policyId),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyActivatedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let policyId = try Serialization._StringSerializer.deserialize(dict["policy_id"] ?? .null)
+                    return ProtectPolicyActivatedDetails(policyId: policyId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyActivatedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectPolicyActivatedType struct
+    public class ProtectPolicyActivatedType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyActivatedTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyActivatedTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyActivatedType: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyActivatedTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyActivatedType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyActivatedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectPolicyActivatedType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyActivatedType.self, json: json)
+            }
+        }
+    }
+
+    /// Deactivated a Dropbox Protect policy.
+    public class ProtectPolicyDeactivatedDetails: CustomStringConvertible, JSONRepresentable {
+        /// Policy ID.
+        public let policyId: String
+        public init(policyId: String) {
+            stringValidator()(policyId)
+            self.policyId = policyId
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyDeactivatedDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyDeactivatedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyDeactivatedDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyDeactivatedDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyDeactivatedDetails) throws -> JSON {
+            let output = [
+            "policy_id": try Serialization._StringSerializer.serialize(value.policyId),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyDeactivatedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let policyId = try Serialization._StringSerializer.deserialize(dict["policy_id"] ?? .null)
+                    return ProtectPolicyDeactivatedDetails(policyId: policyId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyDeactivatedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectPolicyDeactivatedType struct
+    public class ProtectPolicyDeactivatedType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyDeactivatedTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyDeactivatedTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyDeactivatedType: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyDeactivatedTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyDeactivatedType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyDeactivatedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectPolicyDeactivatedType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyDeactivatedType.self, json: json)
+            }
+        }
+    }
+
+    /// Scheduled a Dropbox Protect policy.
+    public class ProtectPolicyScheduledDetails: CustomStringConvertible, JSONRepresentable {
+        /// Policy ID.
+        public let policyId: String
+        public init(policyId: String) {
+            stringValidator()(policyId)
+            self.policyId = policyId
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyScheduledDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyScheduledDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyScheduledDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyScheduledDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyScheduledDetails) throws -> JSON {
+            let output = [
+            "policy_id": try Serialization._StringSerializer.serialize(value.policyId),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyScheduledDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let policyId = try Serialization._StringSerializer.deserialize(dict["policy_id"] ?? .null)
+                    return ProtectPolicyScheduledDetails(policyId: policyId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyScheduledDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectPolicyScheduledType struct
+    public class ProtectPolicyScheduledType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyScheduledTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyScheduledTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyScheduledType: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyScheduledTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyScheduledType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyScheduledType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectPolicyScheduledType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyScheduledType.self, json: json)
+            }
+        }
+    }
+
+    /// Updated a Dropbox Protect policy.
+    public class ProtectPolicyUpdatedDetails: CustomStringConvertible, JSONRepresentable {
+        /// Policy ID.
+        public let policyId: String
+        public init(policyId: String) {
+            stringValidator()(policyId)
+            self.policyId = policyId
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyUpdatedDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyUpdatedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyUpdatedDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyUpdatedDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyUpdatedDetails) throws -> JSON {
+            let output = [
+            "policy_id": try Serialization._StringSerializer.serialize(value.policyId),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyUpdatedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let policyId = try Serialization._StringSerializer.deserialize(dict["policy_id"] ?? .null)
+                    return ProtectPolicyUpdatedDetails(policyId: policyId)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyUpdatedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectPolicyUpdatedType struct
+    public class ProtectPolicyUpdatedType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectPolicyUpdatedTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectPolicyUpdatedTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectPolicyUpdatedType: \(error)"
+            }
+        }
+    }
+    public class ProtectPolicyUpdatedTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectPolicyUpdatedType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectPolicyUpdatedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectPolicyUpdatedType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectPolicyUpdatedType.self, json: json)
+            }
+        }
+    }
+
+    /// The category that a Dropbox Protect report belongs to
+    public enum ProtectReportCategory: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case overview
+        /// An unspecified error.
+        case staleAccess
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try ProtectReportCategorySerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectReportCategorySerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectReportCategory: \(error)"
+            }
+        }
+    }
+    public class ProtectReportCategorySerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectReportCategory) throws -> JSON {
+            switch value {
+                case .overview:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("overview")
+                    return .dictionary(d)
+                case .staleAccess:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("stale_access")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectReportCategory {
+            switch json {
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "overview":
+                            return ProtectReportCategory.overview
+                        case "stale_access":
+                            return ProtectReportCategory.staleAccess
+                        case "other":
+                            return ProtectReportCategory.other
+                        default:
+                            return ProtectReportCategory.other
+                    }
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectReportCategory.self, json: json)
+            }
+        }
+    }
+
+    /// The metric that a Dropbox Protect report corresponds to
+    public enum ProtectReportMetric: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case externalModifiedOver1Year
+        /// An unspecified error.
+        case externalModifiedOver1YearCompany
+        /// An unspecified error.
+        case externalModifiedOver1YearOutside
+        /// An unspecified error.
+        case externalModifiedOver1YearPersonal
+        /// An unspecified error.
+        case externalModifiedOver1YearPublic
+        /// An unspecified error.
+        case externalModifiedOver2Years
+        /// An unspecified error.
+        case externalModifiedOver2YearsCompany
+        /// An unspecified error.
+        case externalModifiedOver2YearsOutside
+        /// An unspecified error.
+        case externalModifiedOver2YearsPersonal
+        /// An unspecified error.
+        case externalModifiedOver2YearsPublic
+        /// An unspecified error.
+        case externalModifiedOver3Years
+        /// An unspecified error.
+        case externalModifiedOver3YearsCompany
+        /// An unspecified error.
+        case externalModifiedOver3YearsOutside
+        /// An unspecified error.
+        case externalModifiedOver3YearsPersonal
+        /// An unspecified error.
+        case externalModifiedOver3YearsPublic
+        /// An unspecified error.
+        case externalModifiedOver5Years
+        /// An unspecified error.
+        case externalModifiedOver5YearsCompany
+        /// An unspecified error.
+        case externalModifiedOver5YearsOutside
+        /// An unspecified error.
+        case externalModifiedOver5YearsPersonal
+        /// An unspecified error.
+        case externalModifiedOver5YearsPublic
+        /// An unspecified error.
+        case foldersCompany
+        /// An unspecified error.
+        case foldersInternal
+        /// An unspecified error.
+        case foldersOutside
+        /// An unspecified error.
+        case foldersPersonal
+        /// An unspecified error.
+        case foldersPublic
+        /// An unspecified error.
+        case internalModifiedOver1Year
+        /// An unspecified error.
+        case internalModifiedOver1YearCompany
+        /// An unspecified error.
+        case internalModifiedOver1YearOutside
+        /// An unspecified error.
+        case internalModifiedOver1YearPersonal
+        /// An unspecified error.
+        case internalModifiedOver1YearPublic
+        /// An unspecified error.
+        case internalModifiedOver2Years
+        /// An unspecified error.
+        case internalModifiedOver2YearsCompany
+        /// An unspecified error.
+        case internalModifiedOver2YearsOutside
+        /// An unspecified error.
+        case internalModifiedOver2YearsPersonal
+        /// An unspecified error.
+        case internalModifiedOver2YearsPublic
+        /// An unspecified error.
+        case internalModifiedOver3Years
+        /// An unspecified error.
+        case internalModifiedOver3YearsCompany
+        /// An unspecified error.
+        case internalModifiedOver3YearsOutside
+        /// An unspecified error.
+        case internalModifiedOver3YearsPersonal
+        /// An unspecified error.
+        case internalModifiedOver3YearsPublic
+        /// An unspecified error.
+        case internalModifiedOver5Years
+        /// An unspecified error.
+        case internalModifiedOver5YearsCompany
+        /// An unspecified error.
+        case internalModifiedOver5YearsOutside
+        /// An unspecified error.
+        case internalModifiedOver5YearsPersonal
+        /// An unspecified error.
+        case internalModifiedOver5YearsPublic
+        /// An unspecified error.
+        case itemsAll
+        /// An unspecified error.
+        case itemsCompanyAccess
+        /// An unspecified error.
+        case itemsInternallyOwned
+        /// An unspecified error.
+        case itemsModifiedOver1Year
+        /// An unspecified error.
+        case itemsModifiedOver3Years
+        /// An unspecified error.
+        case itemsOutsideAccess
+        /// An unspecified error.
+        case itemsPersonalAccess
+        /// An unspecified error.
+        case itemsPublicLinks
+        /// An unspecified error.
+        case otherFolders
+        /// An unspecified error.
+        case otherSharedDrives
+        /// An unspecified error.
+        case sharedDrivesInternal
+        /// An unspecified error.
+        case sharedDrivesOutside
+        /// An unspecified error.
+        case sharedDrivesPersonal
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try ProtectReportMetricSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectReportMetricSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectReportMetric: \(error)"
+            }
+        }
+    }
+    public class ProtectReportMetricSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectReportMetric) throws -> JSON {
+            switch value {
+                case .externalModifiedOver1Year:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_1_year")
+                    return .dictionary(d)
+                case .externalModifiedOver1YearCompany:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_1_year_company")
+                    return .dictionary(d)
+                case .externalModifiedOver1YearOutside:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_1_year_outside")
+                    return .dictionary(d)
+                case .externalModifiedOver1YearPersonal:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_1_year_personal")
+                    return .dictionary(d)
+                case .externalModifiedOver1YearPublic:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_1_year_public")
+                    return .dictionary(d)
+                case .externalModifiedOver2Years:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_2_years")
+                    return .dictionary(d)
+                case .externalModifiedOver2YearsCompany:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_2_years_company")
+                    return .dictionary(d)
+                case .externalModifiedOver2YearsOutside:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_2_years_outside")
+                    return .dictionary(d)
+                case .externalModifiedOver2YearsPersonal:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_2_years_personal")
+                    return .dictionary(d)
+                case .externalModifiedOver2YearsPublic:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_2_years_public")
+                    return .dictionary(d)
+                case .externalModifiedOver3Years:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_3_years")
+                    return .dictionary(d)
+                case .externalModifiedOver3YearsCompany:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_3_years_company")
+                    return .dictionary(d)
+                case .externalModifiedOver3YearsOutside:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_3_years_outside")
+                    return .dictionary(d)
+                case .externalModifiedOver3YearsPersonal:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_3_years_personal")
+                    return .dictionary(d)
+                case .externalModifiedOver3YearsPublic:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_3_years_public")
+                    return .dictionary(d)
+                case .externalModifiedOver5Years:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_5_years")
+                    return .dictionary(d)
+                case .externalModifiedOver5YearsCompany:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_5_years_company")
+                    return .dictionary(d)
+                case .externalModifiedOver5YearsOutside:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_5_years_outside")
+                    return .dictionary(d)
+                case .externalModifiedOver5YearsPersonal:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_5_years_personal")
+                    return .dictionary(d)
+                case .externalModifiedOver5YearsPublic:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("external_modified_over_5_years_public")
+                    return .dictionary(d)
+                case .foldersCompany:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folders_company")
+                    return .dictionary(d)
+                case .foldersInternal:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folders_internal")
+                    return .dictionary(d)
+                case .foldersOutside:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folders_outside")
+                    return .dictionary(d)
+                case .foldersPersonal:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folders_personal")
+                    return .dictionary(d)
+                case .foldersPublic:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("folders_public")
+                    return .dictionary(d)
+                case .internalModifiedOver1Year:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_1_year")
+                    return .dictionary(d)
+                case .internalModifiedOver1YearCompany:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_1_year_company")
+                    return .dictionary(d)
+                case .internalModifiedOver1YearOutside:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_1_year_outside")
+                    return .dictionary(d)
+                case .internalModifiedOver1YearPersonal:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_1_year_personal")
+                    return .dictionary(d)
+                case .internalModifiedOver1YearPublic:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_1_year_public")
+                    return .dictionary(d)
+                case .internalModifiedOver2Years:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_2_years")
+                    return .dictionary(d)
+                case .internalModifiedOver2YearsCompany:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_2_years_company")
+                    return .dictionary(d)
+                case .internalModifiedOver2YearsOutside:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_2_years_outside")
+                    return .dictionary(d)
+                case .internalModifiedOver2YearsPersonal:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_2_years_personal")
+                    return .dictionary(d)
+                case .internalModifiedOver2YearsPublic:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_2_years_public")
+                    return .dictionary(d)
+                case .internalModifiedOver3Years:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_3_years")
+                    return .dictionary(d)
+                case .internalModifiedOver3YearsCompany:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_3_years_company")
+                    return .dictionary(d)
+                case .internalModifiedOver3YearsOutside:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_3_years_outside")
+                    return .dictionary(d)
+                case .internalModifiedOver3YearsPersonal:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_3_years_personal")
+                    return .dictionary(d)
+                case .internalModifiedOver3YearsPublic:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_3_years_public")
+                    return .dictionary(d)
+                case .internalModifiedOver5Years:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_5_years")
+                    return .dictionary(d)
+                case .internalModifiedOver5YearsCompany:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_5_years_company")
+                    return .dictionary(d)
+                case .internalModifiedOver5YearsOutside:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_5_years_outside")
+                    return .dictionary(d)
+                case .internalModifiedOver5YearsPersonal:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_5_years_personal")
+                    return .dictionary(d)
+                case .internalModifiedOver5YearsPublic:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("internal_modified_over_5_years_public")
+                    return .dictionary(d)
+                case .itemsAll:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("items_all")
+                    return .dictionary(d)
+                case .itemsCompanyAccess:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("items_company_access")
+                    return .dictionary(d)
+                case .itemsInternallyOwned:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("items_internally_owned")
+                    return .dictionary(d)
+                case .itemsModifiedOver1Year:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("items_modified_over_1_year")
+                    return .dictionary(d)
+                case .itemsModifiedOver3Years:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("items_modified_over_3_years")
+                    return .dictionary(d)
+                case .itemsOutsideAccess:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("items_outside_access")
+                    return .dictionary(d)
+                case .itemsPersonalAccess:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("items_personal_access")
+                    return .dictionary(d)
+                case .itemsPublicLinks:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("items_public_links")
+                    return .dictionary(d)
+                case .otherFolders:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other_folders")
+                    return .dictionary(d)
+                case .otherSharedDrives:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other_shared_drives")
+                    return .dictionary(d)
+                case .sharedDrivesInternal:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("shared_drives_internal")
+                    return .dictionary(d)
+                case .sharedDrivesOutside:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("shared_drives_outside")
+                    return .dictionary(d)
+                case .sharedDrivesPersonal:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("shared_drives_personal")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectReportMetric {
+            switch json {
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "external_modified_over_1_year":
+                            return ProtectReportMetric.externalModifiedOver1Year
+                        case "external_modified_over_1_year_company":
+                            return ProtectReportMetric.externalModifiedOver1YearCompany
+                        case "external_modified_over_1_year_outside":
+                            return ProtectReportMetric.externalModifiedOver1YearOutside
+                        case "external_modified_over_1_year_personal":
+                            return ProtectReportMetric.externalModifiedOver1YearPersonal
+                        case "external_modified_over_1_year_public":
+                            return ProtectReportMetric.externalModifiedOver1YearPublic
+                        case "external_modified_over_2_years":
+                            return ProtectReportMetric.externalModifiedOver2Years
+                        case "external_modified_over_2_years_company":
+                            return ProtectReportMetric.externalModifiedOver2YearsCompany
+                        case "external_modified_over_2_years_outside":
+                            return ProtectReportMetric.externalModifiedOver2YearsOutside
+                        case "external_modified_over_2_years_personal":
+                            return ProtectReportMetric.externalModifiedOver2YearsPersonal
+                        case "external_modified_over_2_years_public":
+                            return ProtectReportMetric.externalModifiedOver2YearsPublic
+                        case "external_modified_over_3_years":
+                            return ProtectReportMetric.externalModifiedOver3Years
+                        case "external_modified_over_3_years_company":
+                            return ProtectReportMetric.externalModifiedOver3YearsCompany
+                        case "external_modified_over_3_years_outside":
+                            return ProtectReportMetric.externalModifiedOver3YearsOutside
+                        case "external_modified_over_3_years_personal":
+                            return ProtectReportMetric.externalModifiedOver3YearsPersonal
+                        case "external_modified_over_3_years_public":
+                            return ProtectReportMetric.externalModifiedOver3YearsPublic
+                        case "external_modified_over_5_years":
+                            return ProtectReportMetric.externalModifiedOver5Years
+                        case "external_modified_over_5_years_company":
+                            return ProtectReportMetric.externalModifiedOver5YearsCompany
+                        case "external_modified_over_5_years_outside":
+                            return ProtectReportMetric.externalModifiedOver5YearsOutside
+                        case "external_modified_over_5_years_personal":
+                            return ProtectReportMetric.externalModifiedOver5YearsPersonal
+                        case "external_modified_over_5_years_public":
+                            return ProtectReportMetric.externalModifiedOver5YearsPublic
+                        case "folders_company":
+                            return ProtectReportMetric.foldersCompany
+                        case "folders_internal":
+                            return ProtectReportMetric.foldersInternal
+                        case "folders_outside":
+                            return ProtectReportMetric.foldersOutside
+                        case "folders_personal":
+                            return ProtectReportMetric.foldersPersonal
+                        case "folders_public":
+                            return ProtectReportMetric.foldersPublic
+                        case "internal_modified_over_1_year":
+                            return ProtectReportMetric.internalModifiedOver1Year
+                        case "internal_modified_over_1_year_company":
+                            return ProtectReportMetric.internalModifiedOver1YearCompany
+                        case "internal_modified_over_1_year_outside":
+                            return ProtectReportMetric.internalModifiedOver1YearOutside
+                        case "internal_modified_over_1_year_personal":
+                            return ProtectReportMetric.internalModifiedOver1YearPersonal
+                        case "internal_modified_over_1_year_public":
+                            return ProtectReportMetric.internalModifiedOver1YearPublic
+                        case "internal_modified_over_2_years":
+                            return ProtectReportMetric.internalModifiedOver2Years
+                        case "internal_modified_over_2_years_company":
+                            return ProtectReportMetric.internalModifiedOver2YearsCompany
+                        case "internal_modified_over_2_years_outside":
+                            return ProtectReportMetric.internalModifiedOver2YearsOutside
+                        case "internal_modified_over_2_years_personal":
+                            return ProtectReportMetric.internalModifiedOver2YearsPersonal
+                        case "internal_modified_over_2_years_public":
+                            return ProtectReportMetric.internalModifiedOver2YearsPublic
+                        case "internal_modified_over_3_years":
+                            return ProtectReportMetric.internalModifiedOver3Years
+                        case "internal_modified_over_3_years_company":
+                            return ProtectReportMetric.internalModifiedOver3YearsCompany
+                        case "internal_modified_over_3_years_outside":
+                            return ProtectReportMetric.internalModifiedOver3YearsOutside
+                        case "internal_modified_over_3_years_personal":
+                            return ProtectReportMetric.internalModifiedOver3YearsPersonal
+                        case "internal_modified_over_3_years_public":
+                            return ProtectReportMetric.internalModifiedOver3YearsPublic
+                        case "internal_modified_over_5_years":
+                            return ProtectReportMetric.internalModifiedOver5Years
+                        case "internal_modified_over_5_years_company":
+                            return ProtectReportMetric.internalModifiedOver5YearsCompany
+                        case "internal_modified_over_5_years_outside":
+                            return ProtectReportMetric.internalModifiedOver5YearsOutside
+                        case "internal_modified_over_5_years_personal":
+                            return ProtectReportMetric.internalModifiedOver5YearsPersonal
+                        case "internal_modified_over_5_years_public":
+                            return ProtectReportMetric.internalModifiedOver5YearsPublic
+                        case "items_all":
+                            return ProtectReportMetric.itemsAll
+                        case "items_company_access":
+                            return ProtectReportMetric.itemsCompanyAccess
+                        case "items_internally_owned":
+                            return ProtectReportMetric.itemsInternallyOwned
+                        case "items_modified_over_1_year":
+                            return ProtectReportMetric.itemsModifiedOver1Year
+                        case "items_modified_over_3_years":
+                            return ProtectReportMetric.itemsModifiedOver3Years
+                        case "items_outside_access":
+                            return ProtectReportMetric.itemsOutsideAccess
+                        case "items_personal_access":
+                            return ProtectReportMetric.itemsPersonalAccess
+                        case "items_public_links":
+                            return ProtectReportMetric.itemsPublicLinks
+                        case "other_folders":
+                            return ProtectReportMetric.otherFolders
+                        case "other_shared_drives":
+                            return ProtectReportMetric.otherSharedDrives
+                        case "shared_drives_internal":
+                            return ProtectReportMetric.sharedDrivesInternal
+                        case "shared_drives_outside":
+                            return ProtectReportMetric.sharedDrivesOutside
+                        case "shared_drives_personal":
+                            return ProtectReportMetric.sharedDrivesPersonal
+                        case "other":
+                            return ProtectReportMetric.other
+                        default:
+                            return ProtectReportMetric.other
+                    }
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectReportMetric.self, json: json)
+            }
+        }
+    }
+
+    /// The section that a Dropbox Protect report belongs to
+    public enum ProtectReportSection: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case items
+        /// An unspecified error.
+        case overviewOther
+        /// An unspecified error.
+        case ownedExternally
+        /// An unspecified error.
+        case ownedInternally
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try ProtectReportSectionSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectReportSectionSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectReportSection: \(error)"
+            }
+        }
+    }
+    public class ProtectReportSectionSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectReportSection) throws -> JSON {
+            switch value {
+                case .items:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("items")
+                    return .dictionary(d)
+                case .overviewOther:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("overview_other")
+                    return .dictionary(d)
+                case .ownedExternally:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("owned_externally")
+                    return .dictionary(d)
+                case .ownedInternally:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("owned_internally")
+                    return .dictionary(d)
+                case .other:
+                    var d = [String: JSON]()
+                    d[".tag"] = .str("other")
+                    return .dictionary(d)
+            }
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectReportSection {
+            switch json {
+                case .dictionary(let d):
+                    let tag = try Serialization.getTag(d)
+                    switch tag {
+                        case "items":
+                            return ProtectReportSection.items
+                        case "overview_other":
+                            return ProtectReportSection.overviewOther
+                        case "owned_externally":
+                            return ProtectReportSection.ownedExternally
+                        case "owned_internally":
+                            return ProtectReportSection.ownedInternally
+                        case "other":
+                            return ProtectReportSection.other
+                        default:
+                            return ProtectReportSection.other
+                    }
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectReportSection.self, json: json)
+            }
+        }
+    }
+
+    /// Viewed a Dropbox Protect report.
+    public class ProtectReportViewDetails: CustomStringConvertible, JSONRepresentable {
+        /// The category of the report that was viewed.
+        public let reportCategory: TeamLog.ProtectReportCategory
+        /// The section of the report that was viewed.
+        public let reportSection: TeamLog.ProtectReportSection?
+        /// The metric of the report that was viewed.
+        public let reportMetric: TeamLog.ProtectReportMetric?
+        public init(reportCategory: TeamLog.ProtectReportCategory, reportSection: TeamLog.ProtectReportSection? = nil, reportMetric: TeamLog.ProtectReportMetric? = nil) {
+            self.reportCategory = reportCategory
+            self.reportSection = reportSection
+            self.reportMetric = reportMetric
+        }
+
+        func json() throws -> JSON {
+            try ProtectReportViewDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectReportViewDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectReportViewDetails: \(error)"
+            }
+        }
+    }
+    public class ProtectReportViewDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectReportViewDetails) throws -> JSON {
+            let output = [
+            "report_category": try TeamLog.ProtectReportCategorySerializer().serialize(value.reportCategory),
+            "report_section": try NullableSerializer(TeamLog.ProtectReportSectionSerializer()).serialize(value.reportSection),
+            "report_metric": try NullableSerializer(TeamLog.ProtectReportMetricSerializer()).serialize(value.reportMetric),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectReportViewDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let reportCategory = try TeamLog.ProtectReportCategorySerializer().deserialize(dict["report_category"] ?? .null)
+                    let reportSection = try NullableSerializer(TeamLog.ProtectReportSectionSerializer()).deserialize(dict["report_section"] ?? .null)
+                    let reportMetric = try NullableSerializer(TeamLog.ProtectReportMetricSerializer()).deserialize(dict["report_metric"] ?? .null)
+                    return ProtectReportViewDetails(reportCategory: reportCategory, reportSection: reportSection, reportMetric: reportMetric)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectReportViewDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The ProtectReportViewType struct
+    public class ProtectReportViewType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try ProtectReportViewTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try ProtectReportViewTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for ProtectReportViewType: \(error)"
+            }
+        }
+    }
+    public class ProtectReportViewTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: ProtectReportViewType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> ProtectReportViewType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return ProtectReportViewType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: ProtectReportViewType.self, json: json)
             }
         }
     }
@@ -74455,6 +76623,188 @@ public class TeamLog {
                     return TeamExtensionsPolicyChangedType(description_: description_)
                 default:
                     throw JSONSerializerError.deserializeError(type: TeamExtensionsPolicyChangedType.self, json: json)
+            }
+        }
+    }
+
+    /// Changed external sharing controls activation state.
+    public class TeamExternalSharingControlsActivationStateChangedDetails: CustomStringConvertible, JSONRepresentable {
+        /// Previous external sharing controls activation state.
+        public let previousActivationState: TeamLog.ExternalSharingControlsActivationState
+        /// New external sharing controls activation state.
+        public let newActivationState: TeamLog.ExternalSharingControlsActivationState
+        public init(previousActivationState: TeamLog.ExternalSharingControlsActivationState, newActivationState: TeamLog.ExternalSharingControlsActivationState) {
+            self.previousActivationState = previousActivationState
+            self.newActivationState = newActivationState
+        }
+
+        func json() throws -> JSON {
+            try TeamExternalSharingControlsActivationStateChangedDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamExternalSharingControlsActivationStateChangedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for TeamExternalSharingControlsActivationStateChangedDetails: \(error)"
+            }
+        }
+    }
+    public class TeamExternalSharingControlsActivationStateChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: TeamExternalSharingControlsActivationStateChangedDetails) throws -> JSON {
+            let output = [
+            "previous_activation_state": try TeamLog.ExternalSharingControlsActivationStateSerializer().serialize(value.previousActivationState),
+            "new_activation_state": try TeamLog.ExternalSharingControlsActivationStateSerializer().serialize(value.newActivationState),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> TeamExternalSharingControlsActivationStateChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let previousActivationState = try TeamLog.ExternalSharingControlsActivationStateSerializer().deserialize(dict["previous_activation_state"] ?? .null)
+                    let newActivationState = try TeamLog.ExternalSharingControlsActivationStateSerializer().deserialize(dict["new_activation_state"] ?? .null)
+                    return TeamExternalSharingControlsActivationStateChangedDetails(previousActivationState: previousActivationState, newActivationState: newActivationState)
+                default:
+                    throw JSONSerializerError.deserializeError(type: TeamExternalSharingControlsActivationStateChangedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The TeamExternalSharingControlsActivationStateChangedType struct
+    public class TeamExternalSharingControlsActivationStateChangedType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try TeamExternalSharingControlsActivationStateChangedTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamExternalSharingControlsActivationStateChangedTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for TeamExternalSharingControlsActivationStateChangedType: \(error)"
+            }
+        }
+    }
+    public class TeamExternalSharingControlsActivationStateChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: TeamExternalSharingControlsActivationStateChangedType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> TeamExternalSharingControlsActivationStateChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamExternalSharingControlsActivationStateChangedType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: TeamExternalSharingControlsActivationStateChangedType.self, json: json)
+            }
+        }
+    }
+
+    /// Changed approved or blocked entries for external sharing controls.
+    public class TeamExternalSharingControlsRecipientListsChangedDetails: CustomStringConvertible, JSONRepresentable {
+        /// Added approved external sharing recipient entries.
+        public let addedApprovedEntries: Array<String>?
+        /// Removed approved external sharing recipient entries.
+        public let removedApprovedEntries: Array<String>?
+        /// Added blocked external sharing recipient entries.
+        public let addedBlockedEntries: Array<String>?
+        /// Removed blocked external sharing recipient entries.
+        public let removedBlockedEntries: Array<String>?
+        public init(addedApprovedEntries: Array<String>? = nil, removedApprovedEntries: Array<String>? = nil, addedBlockedEntries: Array<String>? = nil, removedBlockedEntries: Array<String>? = nil) {
+            nullableValidator(arrayValidator(minItems: 1, itemValidator: stringValidator()))(addedApprovedEntries)
+            self.addedApprovedEntries = addedApprovedEntries
+            nullableValidator(arrayValidator(minItems: 1, itemValidator: stringValidator()))(removedApprovedEntries)
+            self.removedApprovedEntries = removedApprovedEntries
+            nullableValidator(arrayValidator(minItems: 1, itemValidator: stringValidator()))(addedBlockedEntries)
+            self.addedBlockedEntries = addedBlockedEntries
+            nullableValidator(arrayValidator(minItems: 1, itemValidator: stringValidator()))(removedBlockedEntries)
+            self.removedBlockedEntries = removedBlockedEntries
+        }
+
+        func json() throws -> JSON {
+            try TeamExternalSharingControlsRecipientListsChangedDetailsSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamExternalSharingControlsRecipientListsChangedDetailsSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for TeamExternalSharingControlsRecipientListsChangedDetails: \(error)"
+            }
+        }
+    }
+    public class TeamExternalSharingControlsRecipientListsChangedDetailsSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: TeamExternalSharingControlsRecipientListsChangedDetails) throws -> JSON {
+            let output = [
+            "added_approved_entries": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.addedApprovedEntries),
+            "removed_approved_entries": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.removedApprovedEntries),
+            "added_blocked_entries": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.addedBlockedEntries),
+            "removed_blocked_entries": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.removedBlockedEntries),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> TeamExternalSharingControlsRecipientListsChangedDetails {
+            switch json {
+                case .dictionary(let dict):
+                    let addedApprovedEntries = try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["added_approved_entries"] ?? .null)
+                    let removedApprovedEntries = try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["removed_approved_entries"] ?? .null)
+                    let addedBlockedEntries = try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["added_blocked_entries"] ?? .null)
+                    let removedBlockedEntries = try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["removed_blocked_entries"] ?? .null)
+                    return TeamExternalSharingControlsRecipientListsChangedDetails(addedApprovedEntries: addedApprovedEntries, removedApprovedEntries: removedApprovedEntries, addedBlockedEntries: addedBlockedEntries, removedBlockedEntries: removedBlockedEntries)
+                default:
+                    throw JSONSerializerError.deserializeError(type: TeamExternalSharingControlsRecipientListsChangedDetails.self, json: json)
+            }
+        }
+    }
+
+    /// The TeamExternalSharingControlsRecipientListsChangedType struct
+    public class TeamExternalSharingControlsRecipientListsChangedType: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let description_: String
+        public init(description_: String) {
+            stringValidator()(description_)
+            self.description_ = description_
+        }
+
+        func json() throws -> JSON {
+            try TeamExternalSharingControlsRecipientListsChangedTypeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TeamExternalSharingControlsRecipientListsChangedTypeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for TeamExternalSharingControlsRecipientListsChangedType: \(error)"
+            }
+        }
+    }
+    public class TeamExternalSharingControlsRecipientListsChangedTypeSerializer: JSONSerializer {
+        public init() { }
+        public func serialize(_ value: TeamExternalSharingControlsRecipientListsChangedType) throws -> JSON {
+            let output = [
+            "description": try Serialization._StringSerializer.serialize(value.description_),
+            ]
+            return .dictionary(output)
+        }
+        public func deserialize(_ json: JSON) throws -> TeamExternalSharingControlsRecipientListsChangedType {
+            switch json {
+                case .dictionary(let dict):
+                    let description_ = try Serialization._StringSerializer.deserialize(dict["description"] ?? .null)
+                    return TeamExternalSharingControlsRecipientListsChangedType(description_: description_)
+                default:
+                    throw JSONSerializerError.deserializeError(type: TeamExternalSharingControlsRecipientListsChangedType.self, json: json)
             }
         }
     }
