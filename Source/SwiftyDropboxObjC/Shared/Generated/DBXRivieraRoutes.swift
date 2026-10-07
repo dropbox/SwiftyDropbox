@@ -19,15 +19,132 @@ public class DBXRivieraRoutes: NSObject {
 
     public let client: DBXDropboxTransportClient
 
-    /// Asynchronous document-to-markdown conversion for supported file formats. Supported formats: .binder, .docx,
-    /// .html, .paper, .papert, .pptx, .xlsx, .gsheet, .ods, .pdf. Unsupported formats return an
-    /// `unsupported_format_error`. Size limit: the source file must be at most 50 MB. Larger files are rejected.
+    /// Download the output of a completed `get_transform_async` job. Pass the `output_handle` from the job's `complete`
+    /// result. The body is the produced file, and the `Dropbox-API-Result` header describes it. A handle can only
+    /// be redeemed by the user who requested the transform, and only until its `expires_ts`; after that this route
+    /// fails with `expired_handle_error`, and the transform has to be requested again. A handle that was never
+    /// valid, or that belongs to another user, fails with `user_error`.
     ///
     /// - scope: files.content.read
     ///
-    /// - parameter fileIdOrUrl: Identifier of the document to convert. Callers must set exactly one of the
-    /// `FileIdOrUrl` variants. The referenced file must be a document in a supported format (see the route
-    /// description for the list); requests against unsupported formats return `unsupported_format_error`.
+    /// - parameter outputHandle: The `output_handle` from a `complete` `get_transform_async/check` result.
+    /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
+    /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
+    /// an NSError will be thrown).
+    /// - parameter destination: The location to write the download to.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.DownloadTransformOutputResult`
+    /// object on success or a `Riviera.TransformApiV2Error` object on failure.
+    @objc
+    @discardableResult public func downloadTransformOutputURL(outputHandle: String, overwrite: Bool, destination: URL) -> DBXRivieraDownloadTransformOutputDownloadRequestFile {
+        let swift = swift.downloadTransformOutput(outputHandle: outputHandle, overwrite: overwrite, destination: destination)
+        return DBXRivieraDownloadTransformOutputDownloadRequestFile(swift: swift)
+    }
+
+    /// Download the output of a completed `get_transform_async` job. Pass the `output_handle` from the job's `complete`
+    /// result. The body is the produced file, and the `Dropbox-API-Result` header describes it. A handle can only
+    /// be redeemed by the user who requested the transform, and only until its `expires_ts`; after that this route
+    /// fails with `expired_handle_error`, and the transform has to be requested again. A handle that was never
+    /// valid, or that belongs to another user, fails with `user_error`.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter outputHandle: The `output_handle` from a `complete` `get_transform_async/check` result.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.DownloadTransformOutputResult`
+    /// object on success or a `Riviera.TransformApiV2Error` object on failure.
+    @objc
+    @discardableResult public func downloadTransformOutput(outputHandle: String) -> DBXRivieraDownloadTransformOutputDownloadRequestMemory {
+        let swift = swift.downloadTransformOutput(outputHandle: outputHandle)
+        return DBXRivieraDownloadTransformOutputDownloadRequestMemory(swift: swift)
+    }
+
+    /// Asynchronous scene-change keyframe extraction for video files. Detects scene changes in the source video and
+    /// returns one representative keyframe per detected scene, each tagged with its timestamp (seconds from the
+    /// start of the video) and scene-change score. Set `include_images = true` to also receive each frame as a
+    /// base64-encoded JPEG; when the field is omitted the response carries keyframe metadata only. Supported video
+    /// formats: .3gp, .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts,
+    /// .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm, .wmv. Unsupported formats return an
+    /// `unsupported_format_error`. Limits: the source file must be at most 10 GB. To keep responses within service
+    /// limits the number of keyframes and the total image payload are bounded; requests that would exceed these
+    /// limits return a `limit_exceeded_error` -- raise `scene_change_threshold` or set `include_images = false` to
+    /// stay within bounds.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the video file to extract keyframes from. Callers must set exactly one of
+    /// the `FileIdOrUrl` variants. Keyframe extraction is supported for video files only; see the route description
+    /// for the supported formats. Requests against unsupported formats return `unsupported_format_error`.
+    /// - parameter sceneChangeThreshold: Sensitivity of scene-change detection. A keyframe is emitted whenever the
+    /// frame-to-frame scene score crosses this threshold, so a LOWER value yields MORE keyframes. Valid range is
+    /// (0.0, 1.0]. When omitted (0.0) the service uses a default of 0.3, which is a good starting point for most
+    /// videos.
+    /// - parameter includeImages: When true, each returned keyframe includes the JPEG image bytes, base64-encoded, in
+    /// `ApiKeyframe.image_base64`. When false, the response contains only per-keyframe metadata (timestamp and
+    /// scene score) and `image_base64` is left empty -- useful when you only need the scene boundaries and want a
+    /// small response. NOTE: because the field defaults to false in proto3, callers who want images must set this
+    /// explicitly to true.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getKeyframesAsync(fileIdOrUrl: DBXRivieraFileIdOrUrl?, sceneChangeThreshold: NSNumber, includeImages: NSNumber) -> DBXRivieraGetKeyframesAsyncRpcRequest {
+        let swift = swift.getKeyframesAsync(
+            fileIdOrUrl: fileIdOrUrl?.swift,
+            sceneChangeThreshold: sceneChangeThreshold.doubleValue,
+            includeImages: includeImages.boolValue
+        )
+        return DBXRivieraGetKeyframesAsyncRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous scene-change keyframe extraction for video files. Detects scene changes in the source video and
+    /// returns one representative keyframe per detected scene, each tagged with its timestamp (seconds from the
+    /// start of the video) and scene-change score. Set `include_images = true` to also receive each frame as a
+    /// base64-encoded JPEG; when the field is omitted the response carries keyframe metadata only. Supported video
+    /// formats: .3gp, .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts,
+    /// .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm, .wmv. Unsupported formats return an
+    /// `unsupported_format_error`. Limits: the source file must be at most 10 GB. To keep responses within service
+    /// limits the number of keyframes and the total image payload are bounded; requests that would exceed these
+    /// limits return a `limit_exceeded_error` -- raise `scene_change_threshold` or set `include_images = false` to
+    /// stay within bounds.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getKeyframesAsync() -> DBXRivieraGetKeyframesAsyncRpcRequest {
+        let swift = swift.getKeyframesAsync()
+        return DBXRivieraGetKeyframesAsyncRpcRequest(swift: swift)
+    }
+
+    /// Returns the status or result of specified get_keyframes_async task.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetKeyframesAsyncCheckResult`
+    /// object on success or a `Async.PollError` object on failure.
+    @objc
+    @discardableResult public func getKeyframesAsyncCheck(asyncJobId: String) -> DBXRivieraGetKeyframesAsyncCheckRpcRequest {
+        let swift = swift.getKeyframesAsyncCheck(asyncJobId: asyncJobId)
+        return DBXRivieraGetKeyframesAsyncCheckRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous document-to-markdown conversion for supported file formats. Supported formats: .binder, .docx,
+    /// .html, .paper, .papert, .pptx, .xlsx, .gsheet, .ods, .pdf. Files in other formats fail with userError in
+    /// MarkdownConversionApiV2Error. Size limit: the source file must be at most 50 MB. Larger files fail with
+    /// userError in MarkdownConversionApiV2Error. The markdown is not returned by this route. Poll
+    /// getMarkdownAsyncCheck with the returned async job ID until it reports complete in
+    /// GetMarkdownAsyncCheckResult or failed in GetMarkdownAsyncCheckResult.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the document to convert. Callers must set exactly one of the FileIdOrUrl
+    /// variants. The referenced file must be a document in a supported format (see the route description for the
+    /// list); requests against unsupported formats fail with userError in MarkdownConversionApiV2Error.
     /// - parameter enableOcr: Enable OCR for PDF documents. Processing is slower when enabled.
     /// - parameter embedImages: When true, embed images as base64 data URIs in the markdown output. This can
     /// significantly increase output size.
@@ -41,8 +158,11 @@ public class DBXRivieraRoutes: NSObject {
     }
 
     /// Asynchronous document-to-markdown conversion for supported file formats. Supported formats: .binder, .docx,
-    /// .html, .paper, .papert, .pptx, .xlsx, .gsheet, .ods, .pdf. Unsupported formats return an
-    /// `unsupported_format_error`. Size limit: the source file must be at most 50 MB. Larger files are rejected.
+    /// .html, .paper, .papert, .pptx, .xlsx, .gsheet, .ods, .pdf. Files in other formats fail with userError in
+    /// MarkdownConversionApiV2Error. Size limit: the source file must be at most 50 MB. Larger files fail with
+    /// userError in MarkdownConversionApiV2Error. The markdown is not returned by this route. Poll
+    /// getMarkdownAsyncCheck with the returned async job ID until it reports complete in
+    /// GetMarkdownAsyncCheckResult or failed in GetMarkdownAsyncCheckResult.
     ///
     /// - scope: files.content.read
     ///
@@ -76,15 +196,20 @@ public class DBXRivieraRoutes: NSObject {
     /// Audio/video (media) formats: .aac, .aif, .aiff, .flac, .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma, .3gp,
     /// .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf,
     /// .oggtheora, .ogv, .rm, .ts, .vob, .webm, .wmv. - PDF format: .pdf. - MS Office formats: .docx, .pptx, .xlsx.
-    /// Unsupported formats return an `unsupported_format_error`.
+    /// Files in other formats fail with userError in MetadataExtractionApiV2Error. Size limits depend on the kind
+    /// of metadata being extracted: at most 200 MB for image (EXIF) files, 100 GB for audio/video files, 500 MB for
+    /// PDFs, and 288 MB for MS Office files. Files over the limit for their kind fail with userError in
+    /// MetadataExtractionApiV2Error. The metadata is not returned by this route. Poll getMetadataAsyncCheck with
+    /// the returned async job ID until it reports complete in GetMetadataAsyncCheckResult or failed in
+    /// GetMetadataAsyncCheckResult.
     ///
     /// - scope: files.content.read
     ///
     /// - parameter fileIdOrUrl: Identifier of the file to extract metadata from. Callers must set exactly one of the
-    /// `FileIdOrUrl` variants. The kind of metadata returned is determined by the file type: image files return
-    /// EXIF metadata, audio/video files return media metadata, PDFs return PDF metadata, and MS Office documents
-    /// (docx, pptx, xlsx) return Office metadata. See the route description for the supported formats. Requests
-    /// against unsupported formats return `unsupported_format_error`.
+    /// FileIdOrUrl variants. The kind of metadata returned is determined by the file type: image files return EXIF
+    /// metadata, audio/video files return media metadata, PDFs return PDF metadata, and MS Office documents (docx,
+    /// pptx, xlsx) return Office metadata. See the route description for the supported formats. Requests against
+    /// unsupported formats fail with userError in MetadataExtractionApiV2Error.
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Void` object on failure.
@@ -101,7 +226,12 @@ public class DBXRivieraRoutes: NSObject {
     /// Audio/video (media) formats: .aac, .aif, .aiff, .flac, .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma, .3gp,
     /// .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf,
     /// .oggtheora, .ogv, .rm, .ts, .vob, .webm, .wmv. - PDF format: .pdf. - MS Office formats: .docx, .pptx, .xlsx.
-    /// Unsupported formats return an `unsupported_format_error`.
+    /// Files in other formats fail with userError in MetadataExtractionApiV2Error. Size limits depend on the kind
+    /// of metadata being extracted: at most 200 MB for image (EXIF) files, 100 GB for audio/video files, 500 MB for
+    /// PDFs, and 288 MB for MS Office files. Files over the limit for their kind fail with userError in
+    /// MetadataExtractionApiV2Error. The metadata is not returned by this route. Poll getMetadataAsyncCheck with
+    /// the returned async job ID until it reports complete in GetMetadataAsyncCheckResult or failed in
+    /// GetMetadataAsyncCheckResult.
     ///
     /// - scope: files.content.read
     ///
@@ -128,27 +258,141 @@ public class DBXRivieraRoutes: NSObject {
         return DBXRivieraGetMetadataAsyncCheckRpcRequest(swift: swift)
     }
 
+    /// Asynchronous OCR (optical character recognition) text extraction for images and PDFs, including scanned /
+    /// non-text PDFs. Supported formats: - Image formats: .bmp, .gif, .heic, .jpeg, .jpg, .png, .tif, .tiff, .webp.
+    /// - PDF format: .pdf. Unsupported formats return an `unsupported_format_error`. For the `url` variant only
+    /// Dropbox shared links are supported; external URLs return `unsupported_format_error`. Text-based PDFs already
+    /// carry a text layer, so OCR is not run against them and the result is empty; use `get_text_async` to read the
+    /// embedded text layer of such a PDF. The result carries the extracted words as plain text, plus the same
+    /// content as hOCR with per-word coordinates.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the file to run OCR on. Callers must set exactly one of the `FileIdOrUrl`
+    /// variants. OCR is supported for image files and PDFs, including scanned / non-text PDFs; see the route
+    /// description for the supported formats. Requests against unsupported formats return
+    /// `unsupported_format_error`. NOTE: for the `url` variant, only Dropbox shared links (www.dropbox.com) are
+    /// supported. External (non-Dropbox) URLs are not supported and return `unsupported_format_error`; import the
+    /// file into Dropbox and reference it by `file_id` or `path` instead.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getOcrAsync(fileIdOrUrl: DBXRivieraFileIdOrUrl?) -> DBXRivieraGetOcrAsyncRpcRequest {
+        let swift = swift.getOcrAsync(fileIdOrUrl: fileIdOrUrl?.swift)
+        return DBXRivieraGetOcrAsyncRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous OCR (optical character recognition) text extraction for images and PDFs, including scanned /
+    /// non-text PDFs. Supported formats: - Image formats: .bmp, .gif, .heic, .jpeg, .jpg, .png, .tif, .tiff, .webp.
+    /// - PDF format: .pdf. Unsupported formats return an `unsupported_format_error`. For the `url` variant only
+    /// Dropbox shared links are supported; external URLs return `unsupported_format_error`. Text-based PDFs already
+    /// carry a text layer, so OCR is not run against them and the result is empty; use `get_text_async` to read the
+    /// embedded text layer of such a PDF. The result carries the extracted words as plain text, plus the same
+    /// content as hOCR with per-word coordinates.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getOcrAsync() -> DBXRivieraGetOcrAsyncRpcRequest {
+        let swift = swift.getOcrAsync()
+        return DBXRivieraGetOcrAsyncRpcRequest(swift: swift)
+    }
+
+    /// Returns the status or result of specified get_ocr_async task.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetOcrAsyncCheckResult` object on
+    /// success or a `Async.PollError` object on failure.
+    @objc
+    @discardableResult public func getOcrAsyncCheck(asyncJobId: String) -> DBXRivieraGetOcrAsyncCheckRpcRequest {
+        let swift = swift.getOcrAsyncCheck(asyncJobId: asyncJobId)
+        return DBXRivieraGetOcrAsyncCheckRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous plain-text extraction from documents. Supported formats include: - Word processing: .doc, .docx,
+    /// .docm, .rtf. - Presentations: .ppt, .pptx, .pptm. - Spreadsheets: .xls, .xlsx, .xlsm. - PDF: .pdf. - Dropbox
+    /// document types: .paper, .papert, .binder, .gdoc, .gsheet, .gslides. - Plain text / subtitles: .txt, .vtt.
+    /// Unsupported formats return an `unsupported_format_error`. For the `url` variant only Dropbox shared links
+    /// are supported; external URLs return `unsupported_format_error`.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the document to extract text from. Callers must set exactly one of the
+    /// `FileIdOrUrl` variants. Text extraction is supported for common document formats (Word, PowerPoint, Excel,
+    /// PDF, RTF, and Dropbox document types); see the route description for the supported formats. Requests against
+    /// unsupported formats return `unsupported_format_error`. NOTE: for the `url` variant, only Dropbox shared
+    /// links (www.dropbox.com) are supported. External (non-Dropbox) URLs are not supported and return
+    /// `unsupported_format_error`; import the file into Dropbox and reference it by `file_id` or `path` instead.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getTextAsync(fileIdOrUrl: DBXRivieraFileIdOrUrl?) -> DBXRivieraGetTextAsyncRpcRequest {
+        let swift = swift.getTextAsync(fileIdOrUrl: fileIdOrUrl?.swift)
+        return DBXRivieraGetTextAsyncRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous plain-text extraction from documents. Supported formats include: - Word processing: .doc, .docx,
+    /// .docm, .rtf. - Presentations: .ppt, .pptx, .pptm. - Spreadsheets: .xls, .xlsx, .xlsm. - PDF: .pdf. - Dropbox
+    /// document types: .paper, .papert, .binder, .gdoc, .gsheet, .gslides. - Plain text / subtitles: .txt, .vtt.
+    /// Unsupported formats return an `unsupported_format_error`. For the `url` variant only Dropbox shared links
+    /// are supported; external URLs return `unsupported_format_error`.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getTextAsync() -> DBXRivieraGetTextAsyncRpcRequest {
+        let swift = swift.getTextAsync()
+        return DBXRivieraGetTextAsyncRpcRequest(swift: swift)
+    }
+
+    /// Returns the status or result of specified get_text_async task.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetTextAsyncCheckResult` object on
+    /// success or a `Async.PollError` object on failure.
+    @objc
+    @discardableResult public func getTextAsyncCheck(asyncJobId: String) -> DBXRivieraGetTextAsyncCheckRpcRequest {
+        let swift = swift.getTextAsyncCheck(asyncJobId: asyncJobId)
+        return DBXRivieraGetTextAsyncCheckRpcRequest(swift: swift)
+    }
+
     /// Asynchronous transcript generation for audio and video files. Supported audio formats: .aac, .aif, .aiff, .flac,
     /// .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma. Supported video formats: .3gp, .3gpp, .3gpp2, .asf, .avi, .dv,
     /// .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm,
-    /// .wmv. Unsupported formats return an `unsupported_format_error`. Size limits: the source file must be at most
-    /// 10 GB and its audio track at most 1 hour in duration. Files exceeding these limits are rejected.
+    /// .wmv. Files in other formats fail with userError in ContentApiV2Error. Size limits: the source file must be
+    /// at most 10 GB and its audio track at most 1 hour in duration. Files exceeding either limit fail with
+    /// userError in ContentApiV2Error. The transcript is not returned by this route. Poll getTranscriptAsyncCheck
+    /// with the returned async job ID until it reports complete in GetTranscriptAsyncCheckResult or failed in
+    /// GetTranscriptAsyncCheckResult.
     ///
     /// - scope: files.content.read
     ///
     /// - parameter fileIdOrUrl: Identifier of the media asset to transcribe. Callers must set exactly one of the
-    /// `FileIdOrUrl` variants. The referenced asset must be an audio or video file in a supported format (see the
-    /// route description for the list); requests against files with no audio track return a `no_audio_error`.
+    /// FileIdOrUrl variants. The referenced asset must be an audio or video file in a supported format (see the
+    /// route description for the list); requests against files with no audio track fail with noAudioError in
+    /// ContentApiV2Error.
     /// - parameter timestampLevel: Granularity of the time offsets returned for each transcript segment. Defaults to
-    /// `SENTENCE` when the field is omitted. - SENTENCE: one segment per spoken sentence (recommended). - WORD: one
-    /// segment per word, useful for fine-grained alignment such as captioning or highlight-as-you-listen
-    /// experiences.
+    /// sentence in TimestampLevel when the field is omitted.
     /// - parameter includedSpecialWords: Comma-delimited list of non-lexical filler words to preserve in the transcript
     /// output, e.g. `"uh, ah, uhm"`. By default these fillers are stripped. Unrecognized tokens are ignored. Leave
     /// empty to use the default filtering behavior.
-    /// - parameter audioLanguage: Optional ISO 639-1 two-letter language code hinting the spoken language of the source
-    /// audio (e.g. "en", "ja"). When empty, the service auto-detects the language; supplying a hint improves
-    /// accuracy and latency for short or ambiguous clips. Unsupported languages fall back to auto-detection.
+    /// - parameter audioLanguage: Hint for the spoken language of the source audio, as an ISO 639-1 code (e.g. "en",
+    /// "ja"). When empty, the service auto-detects the language; supplying a hint improves accuracy and latency for
+    /// short or ambiguous clips. Languages the service does not support fall back to auto-detection.
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Void` object on failure.
@@ -171,8 +415,11 @@ public class DBXRivieraRoutes: NSObject {
     /// Asynchronous transcript generation for audio and video files. Supported audio formats: .aac, .aif, .aiff, .flac,
     /// .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma. Supported video formats: .3gp, .3gpp, .3gpp2, .asf, .avi, .dv,
     /// .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm,
-    /// .wmv. Unsupported formats return an `unsupported_format_error`. Size limits: the source file must be at most
-    /// 10 GB and its audio track at most 1 hour in duration. Files exceeding these limits are rejected.
+    /// .wmv. Files in other formats fail with userError in ContentApiV2Error. Size limits: the source file must be
+    /// at most 10 GB and its audio track at most 1 hour in duration. Files exceeding either limit fail with
+    /// userError in ContentApiV2Error. The transcript is not returned by this route. Poll getTranscriptAsyncCheck
+    /// with the returned async job ID until it reports complete in GetTranscriptAsyncCheckResult or failed in
+    /// GetTranscriptAsyncCheckResult.
     ///
     /// - scope: files.content.read
     ///
@@ -197,6 +444,389 @@ public class DBXRivieraRoutes: NSObject {
     @discardableResult public func getTranscriptAsyncCheck(asyncJobId: String) -> DBXRivieraGetTranscriptAsyncCheckRpcRequest {
         let swift = swift.getTranscriptAsyncCheck(asyncJobId: asyncJobId)
         return DBXRivieraGetTranscriptAsyncCheckRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous file transformation: produces a new file from an existing one. One route covers many conversions.
+    /// Name the source file in `file_id_or_url`, say what you want back in `transform_type`, and supply that type's
+    /// options message if it needs one: - `pdf`: documents and images, to PDF. - `html`: spreadsheets, to HTML,
+    /// preserving the sheet layout. - `image`: images and single document pages, to JPEG or PNG. - `thumbnail`: any
+    /// thumbnailable source, resized to a named size bucket. - `image_pdf`: documents, to a page image rendered by
+    /// way of PDF. - `video_frame`: one still frame from a video, at a requested offset. The accepted input formats
+    /// differ per transform -- they are not one shared list -- and each is the intersection of the source format
+    /// with the pipeline that transform uses: - `pdf` and `image_pdf`: word-processing, presentation and
+    /// spreadsheet documents (.doc, .docx, .ppt, .pptx, .xls, .xlsx, .odt, .odp, .ods, .rtf, .epub, .gdoc,
+    /// .gslides, .hwp, .ai, .eps, .dwg among others). Images are not accepted. - `html`: spreadsheets only -- .xls,
+    /// .xlsm, .xlsx, .ods, .gsheet. This is the complete list. Note that .csv and .txt are *not* accepted here. -
+    /// `image`: the documents above, plus .pdf and .html, plus the iWork and design formats .pages, .key, .numbers,
+    /// .sketch, .xd, .indd and .psd, plus .avif, .heic, .svg and camera RAW, plus fonts (.otf, .ttf), plus video.
+    /// Formats a browser can already display (.bmp, .gif, .ico, .jpeg, .png, .tif, .tiff, .webp) are not accepted;
+    /// use `thumbnail` for those. - `thumbnail`: everything `image` accepts, plus .bmp, .gif, .ico, .jpeg, .png,
+    /// .tif, .tiff, .webp and JPEG 2000. - `video_frame`: .3g2, .3gp, .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t,
+    /// .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf, .ogv, .rm, .ts, .vob, .webm, .wmv. This is the
+    /// complete list. These lists track Riviera's capability registry
+    /// (`dropbox/riviera/supported_types/previews_supported_types.yaml`), which is generated and authoritative;
+    /// treat it rather than this comment as the final word. Formats the requested transform does not support fail
+    /// with `unsupported_format_error`. Options belonging to a different transform type than the one requested fail
+    /// with `invalid_options_error`. The produced bytes are not returned by this route, and not by its `/check`
+    /// poll either. Poll `get_transform_async/check` with the returned async job ID until it reports `complete` or
+    /// `failed`; a `complete` result carries a `TransformOutput` whose `output_handle` `download_transform_output`
+    /// exchanges for the bytes. Splitting retrieval out this way is what lets the route return outputs larger than
+    /// an async result can carry.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the source file to transform. Callers must set exactly one of the
+    /// `FileIdOrUrl` variants. The referenced file must be in a format the requested `transform_type` supports; see
+    /// the route description for the per-transform format lists. Requests against unsupported formats fail with
+    /// `unsupported_format_error`.
+    /// - parameter transformType: What to produce from the source file. Required.
+    /// - parameter thumbnail: Options for `TransformType.thumbnail`.
+    /// - parameter image: Options for `TransformType.image` and `TransformType.image_pdf`.
+    /// - parameter videoFrame: Options for `TransformType.video_frame`.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getTransformAsync(
+        transformType: DBXRivieraTransformType,
+        fileIdOrUrl: DBXRivieraFileIdOrUrl?,
+        thumbnail: DBXRivieraThumbnailOptions?,
+        image: DBXRivieraImageOptions?,
+        videoFrame: DBXRivieraVideoFrameOptions?
+    ) -> DBXRivieraGetTransformAsyncRpcRequest {
+        let swift = swift.getTransformAsync(
+            transformType: transformType.swift,
+            fileIdOrUrl: fileIdOrUrl?.swift,
+            thumbnail: thumbnail?.swift,
+            image: image?.swift,
+            videoFrame: videoFrame?.swift
+        )
+        return DBXRivieraGetTransformAsyncRpcRequest(swift: swift)
+    }
+
+    /// Asynchronous file transformation: produces a new file from an existing one. One route covers many conversions.
+    /// Name the source file in `file_id_or_url`, say what you want back in `transform_type`, and supply that type's
+    /// options message if it needs one: - `pdf`: documents and images, to PDF. - `html`: spreadsheets, to HTML,
+    /// preserving the sheet layout. - `image`: images and single document pages, to JPEG or PNG. - `thumbnail`: any
+    /// thumbnailable source, resized to a named size bucket. - `image_pdf`: documents, to a page image rendered by
+    /// way of PDF. - `video_frame`: one still frame from a video, at a requested offset. The accepted input formats
+    /// differ per transform -- they are not one shared list -- and each is the intersection of the source format
+    /// with the pipeline that transform uses: - `pdf` and `image_pdf`: word-processing, presentation and
+    /// spreadsheet documents (.doc, .docx, .ppt, .pptx, .xls, .xlsx, .odt, .odp, .ods, .rtf, .epub, .gdoc,
+    /// .gslides, .hwp, .ai, .eps, .dwg among others). Images are not accepted. - `html`: spreadsheets only -- .xls,
+    /// .xlsm, .xlsx, .ods, .gsheet. This is the complete list. Note that .csv and .txt are *not* accepted here. -
+    /// `image`: the documents above, plus .pdf and .html, plus the iWork and design formats .pages, .key, .numbers,
+    /// .sketch, .xd, .indd and .psd, plus .avif, .heic, .svg and camera RAW, plus fonts (.otf, .ttf), plus video.
+    /// Formats a browser can already display (.bmp, .gif, .ico, .jpeg, .png, .tif, .tiff, .webp) are not accepted;
+    /// use `thumbnail` for those. - `thumbnail`: everything `image` accepts, plus .bmp, .gif, .ico, .jpeg, .png,
+    /// .tif, .tiff, .webp and JPEG 2000. - `video_frame`: .3g2, .3gp, .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t,
+    /// .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf, .ogv, .rm, .ts, .vob, .webm, .wmv. This is the
+    /// complete list. These lists track Riviera's capability registry
+    /// (`dropbox/riviera/supported_types/previews_supported_types.yaml`), which is generated and authoritative;
+    /// treat it rather than this comment as the final word. Formats the requested transform does not support fail
+    /// with `unsupported_format_error`. Options belonging to a different transform type than the one requested fail
+    /// with `invalid_options_error`. The produced bytes are not returned by this route, and not by its `/check`
+    /// poll either. Poll `get_transform_async/check` with the returned async job ID until it reports `complete` or
+    /// `failed`; a `complete` result carries a `TransformOutput` whose `output_handle` `download_transform_output`
+    /// exchanges for the bytes. Splitting retrieval out this way is what lets the route return outputs larger than
+    /// an async result can carry.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Void` object on failure.
+    @objc
+    @discardableResult public func getTransformAsync(transformType: DBXRivieraTransformType) -> DBXRivieraGetTransformAsyncRpcRequest {
+        let swift = swift.getTransformAsync(transformType: transformType.swift)
+        return DBXRivieraGetTransformAsyncRpcRequest(swift: swift)
+    }
+
+    /// Returns the status or result of specified get_transform_async task.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetTransformAsyncCheckResult`
+    /// object on success or a `Async.PollError` object on failure.
+    @objc
+    @discardableResult public func getTransformAsyncCheck(asyncJobId: String) -> DBXRivieraGetTransformAsyncCheckRpcRequest {
+        let swift = swift.getTransformAsyncCheck(asyncJobId: asyncJobId)
+        return DBXRivieraGetTransformAsyncCheckRpcRequest(swift: swift)
+    }
+}
+
+@objc
+public class DBXRivieraDownloadTransformOutputDownloadRequestFile: NSObject, DBXRequest {
+    var swift: DownloadRequestFile<Riviera.DownloadTransformOutputResultSerializer, Riviera.TransformApiV2ErrorSerializer>
+
+    init(swift: DownloadRequestFile<Riviera.DownloadTransformOutputResultSerializer, Riviera.TransformApiV2ErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXRivieraDownloadTransformOutputResult?, URL?, DBXRivieraTransformApiV2Error?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXRivieraDownloadTransformOutputResult?, URL?, DBXRivieraTransformApiV2Error?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXRivieraTransformApiV2Error?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXRivieraTransformApiV2Error(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXRivieraDownloadTransformOutputResult? = nil
+            var destination: URL? = nil
+            if let swift = result {
+                objc = DBXRivieraDownloadTransformOutputResult(swift: swift.0)
+                destination = swift.1
+            }
+            completionHandler(objc, destination, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
+        swift.progress(progressHandler)
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXRivieraDownloadTransformOutputDownloadRequestMemory: NSObject, DBXRequest {
+    var swift: DownloadRequestMemory<Riviera.DownloadTransformOutputResultSerializer, Riviera.TransformApiV2ErrorSerializer>
+
+    init(swift: DownloadRequestMemory<Riviera.DownloadTransformOutputResultSerializer, Riviera.TransformApiV2ErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXRivieraDownloadTransformOutputResult?, Data?, DBXRivieraTransformApiV2Error?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXRivieraDownloadTransformOutputResult?, Data?, DBXRivieraTransformApiV2Error?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXRivieraTransformApiV2Error?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXRivieraTransformApiV2Error(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXRivieraDownloadTransformOutputResult? = nil
+            var destination: Data? = nil
+            if let swift = result {
+                objc = DBXRivieraDownloadTransformOutputResult(swift: swift.0)
+                destination = swift.1
+            }
+            completionHandler(objc, destination, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public func progress(_ progressHandler: @escaping ((Progress) -> Void)) -> Self {
+        swift.progress(progressHandler)
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXRivieraGetKeyframesAsyncRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>
+
+    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var objc: DBXAsyncLaunchResultBase? = nil
+            if let swift = result {
+                objc = DBXAsyncLaunchResultBase.factory(swift: swift)
+            }
+            completionHandler(objc, error?.objc)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXRivieraGetKeyframesAsyncCheckRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Riviera.GetKeyframesAsyncCheckResultSerializer, Async.PollErrorSerializer>
+
+    init(swift: RpcRequest<Riviera.GetKeyframesAsyncCheckResultSerializer, Async.PollErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXRivieraGetKeyframesAsyncCheckResult?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXRivieraGetKeyframesAsyncCheckResult?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAsyncPollError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAsyncPollError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXRivieraGetKeyframesAsyncCheckResult? = nil
+            if let swift = result {
+                objc = DBXRivieraGetKeyframesAsyncCheckResult.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
     }
 }
 
@@ -447,6 +1077,252 @@ public class DBXRivieraGetMetadataAsyncCheckRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
+public class DBXRivieraGetOcrAsyncRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>
+
+    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var objc: DBXAsyncLaunchResultBase? = nil
+            if let swift = result {
+                objc = DBXAsyncLaunchResultBase.factory(swift: swift)
+            }
+            completionHandler(objc, error?.objc)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXRivieraGetOcrAsyncCheckRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Riviera.GetOcrAsyncCheckResultSerializer, Async.PollErrorSerializer>
+
+    init(swift: RpcRequest<Riviera.GetOcrAsyncCheckResultSerializer, Async.PollErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXRivieraGetOcrAsyncCheckResult?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXRivieraGetOcrAsyncCheckResult?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAsyncPollError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAsyncPollError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXRivieraGetOcrAsyncCheckResult? = nil
+            if let swift = result {
+                objc = DBXRivieraGetOcrAsyncCheckResult.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXRivieraGetTextAsyncRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>
+
+    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var objc: DBXAsyncLaunchResultBase? = nil
+            if let swift = result {
+                objc = DBXAsyncLaunchResultBase.factory(swift: swift)
+            }
+            completionHandler(objc, error?.objc)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXRivieraGetTextAsyncCheckRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Riviera.GetTextAsyncCheckResultSerializer, Async.PollErrorSerializer>
+
+    init(swift: RpcRequest<Riviera.GetTextAsyncCheckResultSerializer, Async.PollErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXRivieraGetTextAsyncCheckResult?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXRivieraGetTextAsyncCheckResult?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAsyncPollError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAsyncPollError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXRivieraGetTextAsyncCheckResult? = nil
+            if let swift = result {
+                objc = DBXRivieraGetTextAsyncCheckResult.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
 public class DBXRivieraGetTranscriptAsyncRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>
 
@@ -537,6 +1413,129 @@ public class DBXRivieraGetTranscriptAsyncCheckRpcRequest: NSObject, DBXRequest {
             var objc: DBXRivieraGetTranscriptAsyncCheckResult? = nil
             if let swift = result {
                 objc = DBXRivieraGetTranscriptAsyncCheckResult.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXRivieraGetTransformAsyncRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>
+
+    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, VoidSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var objc: DBXAsyncLaunchResultBase? = nil
+            if let swift = result {
+                objc = DBXAsyncLaunchResultBase.factory(swift: swift)
+            }
+            completionHandler(objc, error?.objc)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXRivieraGetTransformAsyncCheckRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Riviera.GetTransformAsyncCheckResultSerializer, Async.PollErrorSerializer>
+
+    init(swift: RpcRequest<Riviera.GetTransformAsyncCheckResultSerializer, Async.PollErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXRivieraGetTransformAsyncCheckResult?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXRivieraGetTransformAsyncCheckResult?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAsyncPollError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAsyncPollError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXRivieraGetTransformAsyncCheckResult? = nil
+            if let swift = result {
+                objc = DBXRivieraGetTransformAsyncCheckResult.factory(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
