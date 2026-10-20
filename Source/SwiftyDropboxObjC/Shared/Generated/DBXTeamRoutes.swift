@@ -962,36 +962,6 @@ public class DBXTeamRoutes: NSObject {
         return DBXTeamMembersAddJobStatusGetRpcRequestV2(swift: swift)
     }
 
-    /// Launch a bulk suspend job. The server enforces a maximum of 500 members.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter members: Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
-    /// item IDs and duplicate member selectors.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
-    /// or a `Team.BulkSuspendError` object on failure.
-    @objc
-    @discardableResult public func membersBulkSuspend(members: [DBXTeamBulkSuspendMemberTarget]) -> DBXTeamMembersBulkSuspendRpcRequest {
-        let swift = swift.membersBulkSuspend(members: members.map(\.swift))
-        return DBXTeamMembersBulkSuspendRpcRequest(swift: swift)
-    }
-
-    /// Poll a previously launched bulk suspend job.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
-    /// that launched the job.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.BulkSuspendJobStatus` object on
-    /// success or a `Async.PollError` object on failure.
-    @objc
-    @discardableResult public func membersBulkSuspendJobStatusCheck(asyncJobId: String) -> DBXTeamMembersBulkSuspendJobStatusCheckRpcRequest {
-        let swift = swift.membersBulkSuspendJobStatusCheck(asyncJobId: asyncJobId)
-        return DBXTeamMembersBulkSuspendJobStatusCheckRpcRequest(swift: swift)
-    }
-
     /// Permanently delete the files of a user who has been removed from the team. After permanent deletion, those files
     /// will not be available to be transferred to another team member. Permission : Team member management Exactly
     /// one of team_member_id, email, or external_id must be provided to identify the user account.
@@ -1558,6 +1528,36 @@ public class DBXTeamRoutes: NSObject {
     @discardableResult public func membersSuspend(user: DBXTeamUserSelectorArg) -> DBXTeamMembersSuspendRpcRequest {
         let swift = swift.membersSuspend(user: user.swift)
         return DBXTeamMembersSuspendRpcRequest(swift: swift)
+    }
+
+    /// Launch a member suspension batch. The server enforces a maximum of 500 members.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter members: Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
+    /// item IDs and duplicate member selectors.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Team.MembersSuspendBatchError` object on failure.
+    @objc
+    @discardableResult public func membersSuspendBatch(members: [DBXTeamMembersSuspendBatchTarget]) -> DBXTeamMembersSuspendBatchRpcRequest {
+        let swift = swift.membersSuspendBatch(members: members.map(\.swift))
+        return DBXTeamMembersSuspendBatchRpcRequest(swift: swift)
+    }
+
+    /// Poll a previously launched member suspension batch job.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersSuspendBatchJobStatus` object
+    /// on success or a `Async.PollError` object on failure.
+    @objc
+    @discardableResult public func membersSuspendBatchJobStatusCheck(asyncJobId: String) -> DBXTeamMembersSuspendBatchJobStatusCheckRpcRequest {
+        let swift = swift.membersSuspendBatchJobStatusCheck(asyncJobId: asyncJobId)
+        return DBXTeamMembersSuspendBatchJobStatusCheckRpcRequest(swift: swift)
     }
 
     /// Unsuspend a member from a team. Permission : Team member management Exactly one of team_member_id, email, or
@@ -4737,15 +4737,15 @@ public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
 
 @objc
 public class DBXTeamMembersBulkSuspendRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.BulkSuspendErrorSerializer>
+    var swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.MembersSuspendBatchErrorSerializer>
 
-    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.BulkSuspendErrorSerializer>) {
+    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.MembersSuspendBatchErrorSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamBulkSuspendError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamMembersSuspendBatchError?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -4753,14 +4753,14 @@ public class DBXTeamMembersBulkSuspendRpcRequest: NSObject, DBXRequest {
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamBulkSuspendError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamMembersSuspendBatchError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamBulkSuspendError?
+            var routeError: DBXTeamMembersSuspendBatchError?
             var callError: DBXCallError?
             switch error {
             case .routeError(let box, _, _, _):
-                routeError = DBXTeamBulkSuspendError(swift: box.unboxed)
+                routeError = DBXTeamMembersSuspendBatchError(swift: box.unboxed)
                 callError = nil
             default:
                 routeError = nil
@@ -4804,15 +4804,15 @@ public class DBXTeamMembersBulkSuspendRpcRequest: NSObject, DBXRequest {
 
 @objc
 public class DBXTeamMembersBulkSuspendJobStatusCheckRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.BulkSuspendJobStatusSerializer, Async.PollErrorSerializer>
+    var swift: RpcRequest<Team.MembersSuspendBatchJobStatusSerializer, Async.PollErrorSerializer>
 
-    init(swift: RpcRequest<Team.BulkSuspendJobStatusSerializer, Async.PollErrorSerializer>) {
+    init(swift: RpcRequest<Team.MembersSuspendBatchJobStatusSerializer, Async.PollErrorSerializer>) {
         self.swift = swift
     }
 
     @objc
     @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamBulkSuspendJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersSuspendBatchJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         response(queue: nil, completionHandler: completionHandler)
     }
@@ -4820,7 +4820,7 @@ public class DBXTeamMembersBulkSuspendJobStatusCheckRpcRequest: NSObject, DBXReq
     @objc
     @discardableResult public func response(
         queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamBulkSuspendJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+        completionHandler: @escaping (DBXTeamMembersSuspendBatchJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
     ) -> Self {
         swift.response(queue: queue) { result, error in
             var routeError: DBXAsyncPollError?
@@ -4834,9 +4834,9 @@ public class DBXTeamMembersBulkSuspendJobStatusCheckRpcRequest: NSObject, DBXReq
                 callError = error?.objc
             }
 
-            var objc: DBXTeamBulkSuspendJobStatus? = nil
+            var objc: DBXTeamMembersSuspendBatchJobStatus? = nil
             if let swift = result {
-                objc = DBXTeamBulkSuspendJobStatus.factory(swift: swift)
+                objc = DBXTeamMembersSuspendBatchJobStatus.factory(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
@@ -6532,6 +6532,140 @@ public class DBXTeamMembersSuspendRpcRequest: NSObject, DBXRequest {
             }
 
             completionHandler(routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXTeamMembersSuspendBatchRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.MembersSuspendBatchErrorSerializer>
+
+    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.MembersSuspendBatchErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamMembersSuspendBatchError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamMembersSuspendBatchError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXTeamMembersSuspendBatchError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXTeamMembersSuspendBatchError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXAsyncLaunchResultBase? = nil
+            if let swift = result {
+                objc = DBXAsyncLaunchResultBase.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXTeamMembersSuspendBatchJobStatusCheckRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.MembersSuspendBatchJobStatusSerializer, Async.PollErrorSerializer>
+
+    init(swift: RpcRequest<Team.MembersSuspendBatchJobStatusSerializer, Async.PollErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXTeamMembersSuspendBatchJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXTeamMembersSuspendBatchJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAsyncPollError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAsyncPollError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXTeamMembersSuspendBatchJobStatus? = nil
+            if let swift = result {
+                objc = DBXTeamMembersSuspendBatchJobStatus.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
         }
         return self
     }

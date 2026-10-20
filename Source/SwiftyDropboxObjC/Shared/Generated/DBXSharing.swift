@@ -314,9 +314,6 @@ public class DBXSharingAddFileMemberArgs: NSObject {
     /// If the custom message should be added as a comment on the file. Only meant for Paper files.
     @objc
     public var addMessageAsComment: NSNumber { swift.addMessageAsComment as NSNumber }
-    /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
-    @objc
-    public var fpSealedResult: String? { swift.fpSealedResult }
 
     @objc
     public init(
@@ -325,8 +322,7 @@ public class DBXSharingAddFileMemberArgs: NSObject {
         customMessage: String?,
         quiet: NSNumber,
         accessLevel: DBXSharingAccessLevel?,
-        addMessageAsComment: NSNumber,
-        fpSealedResult: String?
+        addMessageAsComment: NSNumber
     ) {
         self.swift = Sharing.AddFileMemberArgs(
             file: file,
@@ -334,8 +330,7 @@ public class DBXSharingAddFileMemberArgs: NSObject {
             customMessage: customMessage,
             quiet: quiet.boolValue,
             accessLevel: accessLevel?.swift,
-            addMessageAsComment: addMessageAsComment.boolValue,
-            fpSealedResult: fpSealedResult
+            addMessageAsComment: addMessageAsComment.boolValue
         )
     }
 
@@ -494,18 +489,14 @@ public class DBXSharingAddFolderMemberArg: NSObject {
     /// Optional message to display to added members in their invitation.
     @objc
     public var customMessage: String? { swift.customMessage }
-    /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
-    @objc
-    public var fpSealedResult: String? { swift.fpSealedResult }
 
     @objc
-    public init(sharedFolderId: String, members: [DBXSharingAddMember], quiet: NSNumber, customMessage: String?, fpSealedResult: String?) {
+    public init(sharedFolderId: String, members: [DBXSharingAddMember], quiet: NSNumber, customMessage: String?) {
         self.swift = Sharing.AddFolderMemberArg(
             sharedFolderId: sharedFolderId,
             members: members.map(\.swift),
             quiet: quiet.boolValue,
-            customMessage: customMessage,
-            fpSealedResult: fpSealedResult
+            customMessage: customMessage
         )
     }
 
@@ -4457,6 +4448,8 @@ public class DBXSharingLinkAudience: NSObject {
             return DBXSharingLinkAudiencePassword()
         case .members:
             return DBXSharingLinkAudienceMembers()
+        case .publicLoggedInOnly:
+            return DBXSharingLinkAudiencePublicLoggedInOnly()
         case .other:
             return DBXSharingLinkAudienceOther()
         }
@@ -4488,6 +4481,11 @@ public class DBXSharingLinkAudience: NSObject {
     @objc
     public var asMembers: DBXSharingLinkAudienceMembers? {
         self as? DBXSharingLinkAudienceMembers
+    }
+
+    @objc
+    public var asPublicLoggedInOnly: DBXSharingLinkAudiencePublicLoggedInOnly? {
+        self as? DBXSharingLinkAudiencePublicLoggedInOnly
     }
 
     @objc
@@ -4545,6 +4543,17 @@ public class DBXSharingLinkAudienceMembers: DBXSharingLinkAudience {
     @objc
     public init() {
         let swift = Sharing.LinkAudience.members
+        super.init(swift: swift)
+    }
+}
+
+/// Link is accessible only by signed-in Dropbox users. This audience is currently read-only through API v2: API
+/// v2 write methods reject requests that set it.
+@objc
+public class DBXSharingLinkAudiencePublicLoggedInOnly: DBXSharingLinkAudience {
+    @objc
+    public init() {
+        let swift = Sharing.LinkAudience.publicLoggedInOnly
         super.init(swift: swift)
     }
 }
@@ -6806,6 +6815,9 @@ public class DBXSharingMountFolderError: NSObject {
             return DBXSharingMountFolderErrorNotMountable()
         case .mustAutomount:
             return DBXSharingMountFolderErrorMustAutomount()
+        case .tooManyMounts(let swiftArg):
+            let arg = DBXSharingTooManyMountsError(swift: swiftArg)
+            return DBXSharingMountFolderErrorTooManyMounts(arg)
         case .other:
             return DBXSharingMountFolderErrorOther()
         }
@@ -6847,6 +6859,11 @@ public class DBXSharingMountFolderError: NSObject {
     @objc
     public var asMustAutomount: DBXSharingMountFolderErrorMustAutomount? {
         self as? DBXSharingMountFolderErrorMustAutomount
+    }
+
+    @objc
+    public var asTooManyMounts: DBXSharingMountFolderErrorTooManyMounts? {
+        self as? DBXSharingMountFolderErrorTooManyMounts
     }
 
     @objc
@@ -6935,6 +6952,20 @@ public class DBXSharingMountFolderErrorMustAutomount: DBXSharingMountFolderError
     }
 }
 
+/// User will have too many mounts after this operation.
+@objc
+public class DBXSharingMountFolderErrorTooManyMounts: DBXSharingMountFolderError {
+    @objc
+    public var tooManyMounts: DBXSharingTooManyMountsError
+
+    @objc
+    public init(_ arg: DBXSharingTooManyMountsError) {
+        self.tooManyMounts = arg
+        let swift = Sharing.MountFolderError.tooManyMounts(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
 /// An unspecified error.
 @objc
 public class DBXSharingMountFolderErrorOther: DBXSharingMountFolderError {
@@ -6943,6 +6974,34 @@ public class DBXSharingMountFolderErrorOther: DBXSharingMountFolderError {
         let swift = Sharing.MountFolderError.other
         super.init(swift: swift)
     }
+}
+
+/// Information about the mount limit that the operation would exceed.
+@objc
+public class DBXSharingMountLimitsInfo: NSObject {
+    /// The maximum number allowed for this limit.
+    @objc
+    public var limit: NSNumber { swift.limit as NSNumber }
+    /// The current number of mounts for the user, or of namespaces in the folder tree.
+    @objc
+    public var currentCount: NSNumber { swift.currentCount as NSNumber }
+    /// The number of mounts for the user, or of namespaces in the folder tree, if the operation were completed.
+    @objc
+    public var newCount: NSNumber { swift.newCount as NSNumber }
+
+    @objc
+    public init(limit: NSNumber, currentCount: NSNumber, newCount: NSNumber) {
+        self.swift = Sharing.MountLimitsInfo(limit: limit.uint64Value, currentCount: currentCount.uint64Value, newCount: newCount.uint64Value)
+    }
+
+    let swift: Sharing.MountLimitsInfo
+
+    public init(swift: Sharing.MountLimitsInfo) {
+        self.swift = swift
+    }
+
+    @objc
+    public override var description: String { swift.description }
 }
 
 /// Contains information about a parent folder that a member has access to.
@@ -8716,6 +8775,9 @@ public class DBXSharingShareFolderErrorBase: NSObject {
             return DBXSharingShareFolderErrorBaseTeamPolicyDisallowsMemberPolicy()
         case .disallowedSharedLinkPolicy:
             return DBXSharingShareFolderErrorBaseDisallowedSharedLinkPolicy()
+        case .tooManyMounts(let swiftArg):
+            let arg = DBXSharingTooManyMountsError(swift: swiftArg)
+            return DBXSharingShareFolderErrorBaseTooManyMounts(arg)
         case .other:
             return DBXSharingShareFolderErrorBaseOther()
         }
@@ -8742,6 +8804,11 @@ public class DBXSharingShareFolderErrorBase: NSObject {
     @objc
     public var asDisallowedSharedLinkPolicy: DBXSharingShareFolderErrorBaseDisallowedSharedLinkPolicy? {
         self as? DBXSharingShareFolderErrorBaseDisallowedSharedLinkPolicy
+    }
+
+    @objc
+    public var asTooManyMounts: DBXSharingShareFolderErrorBaseTooManyMounts? {
+        self as? DBXSharingShareFolderErrorBaseTooManyMounts
     }
 
     @objc
@@ -8795,6 +8862,20 @@ public class DBXSharingShareFolderErrorBaseDisallowedSharedLinkPolicy: DBXSharin
     }
 }
 
+/// User will have too many mounts after the operation.
+@objc
+public class DBXSharingShareFolderErrorBaseTooManyMounts: DBXSharingShareFolderErrorBase {
+    @objc
+    public var tooManyMounts: DBXSharingTooManyMountsError
+
+    @objc
+    public init(_ arg: DBXSharingTooManyMountsError) {
+        self.tooManyMounts = arg
+        let swift = Sharing.ShareFolderErrorBase.tooManyMounts(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
 /// An unspecified error.
 @objc
 public class DBXSharingShareFolderErrorBaseOther: DBXSharingShareFolderErrorBase {
@@ -8825,6 +8906,9 @@ public class DBXSharingShareFolderError: NSObject {
             return DBXSharingShareFolderErrorTeamPolicyDisallowsMemberPolicy()
         case .disallowedSharedLinkPolicy:
             return DBXSharingShareFolderErrorDisallowedSharedLinkPolicy()
+        case .tooManyMounts(let swiftArg):
+            let arg = DBXSharingTooManyMountsError(swift: swiftArg)
+            return DBXSharingShareFolderErrorTooManyMounts(arg)
         case .other:
             return DBXSharingShareFolderErrorOther()
         case .noPermission:
@@ -8853,6 +8937,11 @@ public class DBXSharingShareFolderError: NSObject {
     @objc
     public var asDisallowedSharedLinkPolicy: DBXSharingShareFolderErrorDisallowedSharedLinkPolicy? {
         self as? DBXSharingShareFolderErrorDisallowedSharedLinkPolicy
+    }
+
+    @objc
+    public var asTooManyMounts: DBXSharingShareFolderErrorTooManyMounts? {
+        self as? DBXSharingShareFolderErrorTooManyMounts
     }
 
     @objc
@@ -8907,6 +8996,20 @@ public class DBXSharingShareFolderErrorDisallowedSharedLinkPolicy: DBXSharingSha
     @objc
     public init() {
         let swift = Sharing.ShareFolderError.disallowedSharedLinkPolicy
+        super.init(swift: swift)
+    }
+}
+
+/// User will have too many mounts after the operation.
+@objc
+public class DBXSharingShareFolderErrorTooManyMounts: DBXSharingShareFolderError {
+    @objc
+    public var tooManyMounts: DBXSharingTooManyMountsError
+
+    @objc
+    public init(_ arg: DBXSharingTooManyMountsError) {
+        self.tooManyMounts = arg
+        let swift = Sharing.ShareFolderError.tooManyMounts(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -9536,7 +9639,8 @@ public class DBXSharingSharePathErrorInsideOsxPackage: DBXSharingSharePathError 
     }
 }
 
-/// We do not support sharing the Vault folder.
+/// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no
+/// longer emitted.
 @objc
 public class DBXSharingSharePathErrorIsVault: DBXSharingSharePathError {
     @objc
@@ -9546,7 +9650,8 @@ public class DBXSharingSharePathErrorIsVault: DBXSharingSharePathError {
     }
 }
 
-/// We do not support sharing a folder inside a locked Vault.
+/// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing
+/// errors are no longer emitted.
 @objc
 public class DBXSharingSharePathErrorIsVaultLocked: DBXSharingSharePathError {
     @objc
@@ -9824,7 +9929,8 @@ public class DBXSharingSharePathErrorBaseV2InsideOsxPackage: DBXSharingSharePath
     }
 }
 
-/// We do not support sharing the Vault folder.
+/// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no
+/// longer emitted.
 @objc
 public class DBXSharingSharePathErrorBaseV2IsVault: DBXSharingSharePathErrorBaseV2 {
     @objc
@@ -9834,7 +9940,8 @@ public class DBXSharingSharePathErrorBaseV2IsVault: DBXSharingSharePathErrorBase
     }
 }
 
-/// We do not support sharing a folder inside a locked Vault.
+/// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing
+/// errors are no longer emitted.
 @objc
 public class DBXSharingSharePathErrorBaseV2IsVaultLocked: DBXSharingSharePathErrorBaseV2 {
     @objc
@@ -10116,7 +10223,8 @@ public class DBXSharingSharePathErrorV2InsideOsxPackage: DBXSharingSharePathErro
     }
 }
 
-/// We do not support sharing the Vault folder.
+/// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no
+/// longer emitted.
 @objc
 public class DBXSharingSharePathErrorV2IsVault: DBXSharingSharePathErrorV2 {
     @objc
@@ -10126,7 +10234,8 @@ public class DBXSharingSharePathErrorV2IsVault: DBXSharingSharePathErrorV2 {
     }
 }
 
-/// We do not support sharing a folder inside a locked Vault.
+/// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing
+/// errors are no longer emitted.
 @objc
 public class DBXSharingSharePathErrorV2IsVaultLocked: DBXSharingSharePathErrorV2 {
     @objc
@@ -11471,6 +11580,108 @@ public class DBXSharingTeamMemberInfo: NSObject {
 
     @objc
     public override var description: String { swift.description }
+}
+
+/// This operation would exceed the maximum number of mounts allowed.
+@objc
+public class DBXSharingTooManyMountsError: NSObject {
+    let swift: Sharing.TooManyMountsError
+
+    public init(swift: Sharing.TooManyMountsError) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: Sharing.TooManyMountsError) -> DBXSharingTooManyMountsError {
+        switch swift {
+        case .totalMountsExceeded(let swiftArg):
+            let arg = DBXSharingMountLimitsInfo(swift: swiftArg)
+            return DBXSharingTooManyMountsErrorTotalMountsExceeded(arg)
+        case .homeMountsExceeded(let swiftArg):
+            let arg = DBXSharingMountLimitsInfo(swift: swiftArg)
+            return DBXSharingTooManyMountsErrorHomeMountsExceeded(arg)
+        case .treeSizeExceeded(let swiftArg):
+            let arg = DBXSharingMountLimitsInfo(swift: swiftArg)
+            return DBXSharingTooManyMountsErrorTreeSizeExceeded(arg)
+        case .other:
+            return DBXSharingTooManyMountsErrorOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asTotalMountsExceeded: DBXSharingTooManyMountsErrorTotalMountsExceeded? {
+        self as? DBXSharingTooManyMountsErrorTotalMountsExceeded
+    }
+
+    @objc
+    public var asHomeMountsExceeded: DBXSharingTooManyMountsErrorHomeMountsExceeded? {
+        self as? DBXSharingTooManyMountsErrorHomeMountsExceeded
+    }
+
+    @objc
+    public var asTreeSizeExceeded: DBXSharingTooManyMountsErrorTreeSizeExceeded? {
+        self as? DBXSharingTooManyMountsErrorTreeSizeExceeded
+    }
+
+    @objc
+    public var asOther: DBXSharingTooManyMountsErrorOther? {
+        self as? DBXSharingTooManyMountsErrorOther
+    }
+}
+
+/// The user can't add more mounts because it would exceed the maximum number of mounts allowed.
+@objc
+public class DBXSharingTooManyMountsErrorTotalMountsExceeded: DBXSharingTooManyMountsError {
+    @objc
+    public var totalMountsExceeded: DBXSharingMountLimitsInfo
+
+    @objc
+    public init(_ arg: DBXSharingMountLimitsInfo) {
+        self.totalMountsExceeded = arg
+        let swift = Sharing.TooManyMountsError.totalMountsExceeded(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// The user can't add more mounts because it would exceed the mount limit for their home namespace.
+@objc
+public class DBXSharingTooManyMountsErrorHomeMountsExceeded: DBXSharingTooManyMountsError {
+    @objc
+    public var homeMountsExceeded: DBXSharingMountLimitsInfo
+
+    @objc
+    public init(_ arg: DBXSharingMountLimitsInfo) {
+        self.homeMountsExceeded = arg
+        let swift = Sharing.TooManyMountsError.homeMountsExceeded(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// The user can't create a new nested share because doing so would exceed the maximum number of namespaces
+/// allowed in the folder tree.
+@objc
+public class DBXSharingTooManyMountsErrorTreeSizeExceeded: DBXSharingTooManyMountsError {
+    @objc
+    public var treeSizeExceeded: DBXSharingMountLimitsInfo
+
+    @objc
+    public init(_ arg: DBXSharingMountLimitsInfo) {
+        self.treeSizeExceeded = arg
+        let swift = Sharing.TooManyMountsError.treeSizeExceeded(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXSharingTooManyMountsErrorOther: DBXSharingTooManyMountsError {
+    @objc
+    public init() {
+        let swift = Sharing.TooManyMountsError.other
+        super.init(swift: swift)
+    }
 }
 
 /// Objective-C compatible TransferFolderArg struct

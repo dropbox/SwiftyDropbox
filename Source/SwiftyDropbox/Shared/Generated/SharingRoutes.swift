@@ -27,8 +27,6 @@ public class SharingRoutes: DropboxTransportClientOwning {
     /// - parameter accessLevel: AccessLevel union object, describing what access level we want to give new members.
     /// - parameter addMessageAsComment: If the custom message should be added as a comment on the file. Only meant for
     /// Paper files.
-    /// - parameter fpSealedResult: Field is only returned for "internal" callers. The FingerprintJS Sealed Client
-    /// Result value
     ///
     /// - returns: Through the response callback, the caller will receive a `Array<Sharing.FileMemberActionResult>`
     /// object on success or a `Sharing.AddFileMemberError` object on failure.
@@ -38,8 +36,7 @@ public class SharingRoutes: DropboxTransportClientOwning {
         customMessage: String? = nil,
         quiet: Bool = false,
         accessLevel: Sharing.AccessLevel? = nil,
-        addMessageAsComment: Bool = false,
-        fpSealedResult: String? = nil
+        addMessageAsComment: Bool = false
     ) -> RpcRequest<ArraySerializer<Sharing.FileMemberActionResultSerializer>, Sharing.AddFileMemberErrorSerializer> {
         let route = Sharing.addFileMember
         let serverArgs = Sharing.AddFileMemberArgs(
@@ -48,8 +45,7 @@ public class SharingRoutes: DropboxTransportClientOwning {
             customMessage: customMessage,
             quiet: quiet,
             accessLevel: accessLevel,
-            addMessageAsComment: addMessageAsComment,
-            fpSealedResult: fpSealedResult
+            addMessageAsComment: addMessageAsComment
         )
         return client.request(route, serverArgs: serverArgs)
     }
@@ -65,26 +61,15 @@ public class SharingRoutes: DropboxTransportClientOwning {
     /// folder.
     /// - parameter quiet: Whether added members should be notified via email and device notifications of their invite.
     /// - parameter customMessage: Optional message to display to added members in their invitation.
-    /// - parameter fpSealedResult: Field is only returned for "internal" callers. The FingerprintJS Sealed Client
-    /// Result value
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.AddFolderMemberError` object on failure.
-    @discardableResult public func addFolderMember(
-        sharedFolderId: String,
-        members: [Sharing.AddMember],
-        quiet: Bool = false,
-        customMessage: String? = nil,
-        fpSealedResult: String? = nil
-    ) -> RpcRequest<VoidSerializer, Sharing.AddFolderMemberErrorSerializer> {
+    @discardableResult public func addFolderMember(sharedFolderId: String, members: [Sharing.AddMember], quiet: Bool = false, customMessage: String? = nil) -> RpcRequest<
+        VoidSerializer,
+        Sharing.AddFolderMemberErrorSerializer
+    > {
         let route = Sharing.addFolderMember
-        let serverArgs = Sharing.AddFolderMemberArg(
-            sharedFolderId: sharedFolderId,
-            members: members,
-            quiet: quiet,
-            customMessage: customMessage,
-            fpSealedResult: fpSealedResult
-        )
+        let serverArgs = Sharing.AddFolderMemberArg(sharedFolderId: sharedFolderId, members: members, quiet: quiet, customMessage: customMessage)
         return client.request(route, serverArgs: serverArgs)
     }
 

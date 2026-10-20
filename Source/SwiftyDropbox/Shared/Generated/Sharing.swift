@@ -242,16 +242,13 @@ public class Sharing {
         public let accessLevel: Sharing.AccessLevel?
         /// If the custom message should be added as a comment on the file. Only meant for Paper files.
         public let addMessageAsComment: Bool
-        /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
-        public let fpSealedResult: String?
         public init(
             file: String,
             members: [Sharing.MemberSelector],
             customMessage: String? = nil,
             quiet: Bool = false,
             accessLevel: Sharing.AccessLevel? = nil,
-            addMessageAsComment: Bool = false,
-            fpSealedResult: String? = nil
+            addMessageAsComment: Bool = false
         ) {
             stringValidator(minLength: 1, pattern: "((/|id:).*|nspath:[0-9]+:.*)|ns:[0-9]+(/.*)?")(file)
             self.file = file
@@ -261,8 +258,6 @@ public class Sharing {
             self.quiet = quiet
             self.accessLevel = accessLevel
             self.addMessageAsComment = addMessageAsComment
-            nullableValidator(stringValidator())(fpSealedResult)
-            self.fpSealedResult = fpSealedResult
         }
 
         func json() throws -> JSON {
@@ -288,7 +283,6 @@ public class Sharing {
                 "quiet": try Serialization._BoolSerializer.serialize(value.quiet),
                 "access_level": try NullableSerializer(Sharing.AccessLevelSerializer()).serialize(value.accessLevel),
                 "add_message_as_comment": try Serialization._BoolSerializer.serialize(value.addMessageAsComment),
-                "fp_sealed_result": try NullableSerializer(Serialization._StringSerializer).serialize(value.fpSealedResult),
             ]
             return .dictionary(output)
         }
@@ -302,15 +296,13 @@ public class Sharing {
                 let quiet = try Serialization._BoolSerializer.deserialize(dict["quiet"] ?? .number(0))
                 let accessLevel = try NullableSerializer(Sharing.AccessLevelSerializer()).deserialize(dict["access_level"] ?? .null)
                 let addMessageAsComment = try Serialization._BoolSerializer.deserialize(dict["add_message_as_comment"] ?? .number(0))
-                let fpSealedResult = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["fp_sealed_result"] ?? .null)
                 return AddFileMemberArgs(
                     file: file,
                     members: members,
                     customMessage: customMessage,
                     quiet: quiet,
                     accessLevel: accessLevel,
-                    addMessageAsComment: addMessageAsComment,
-                    fpSealedResult: fpSealedResult
+                    addMessageAsComment: addMessageAsComment
                 )
             default:
                 throw JSONSerializerError.deserializeError(type: AddFileMemberArgs.self, json: json)
@@ -415,17 +407,13 @@ public class Sharing {
         public let quiet: Bool
         /// Optional message to display to added members in their invitation.
         public let customMessage: String?
-        /// Field is only returned for "internal" callers. The FingerprintJS Sealed Client Result value
-        public let fpSealedResult: String?
-        public init(sharedFolderId: String, members: [Sharing.AddMember], quiet: Bool = false, customMessage: String? = nil, fpSealedResult: String? = nil) {
+        public init(sharedFolderId: String, members: [Sharing.AddMember], quiet: Bool = false, customMessage: String? = nil) {
             stringValidator(pattern: "[-_0-9a-zA-Z:]+")(sharedFolderId)
             self.sharedFolderId = sharedFolderId
             self.members = members
             self.quiet = quiet
             nullableValidator(stringValidator(minLength: 1))(customMessage)
             self.customMessage = customMessage
-            nullableValidator(stringValidator())(fpSealedResult)
-            self.fpSealedResult = fpSealedResult
         }
 
         func json() throws -> JSON {
@@ -449,7 +437,6 @@ public class Sharing {
                 "members": try ArraySerializer(Sharing.AddMemberSerializer()).serialize(value.members),
                 "quiet": try Serialization._BoolSerializer.serialize(value.quiet),
                 "custom_message": try NullableSerializer(Serialization._StringSerializer).serialize(value.customMessage),
-                "fp_sealed_result": try NullableSerializer(Serialization._StringSerializer).serialize(value.fpSealedResult),
             ]
             return .dictionary(output)
         }
@@ -461,14 +448,7 @@ public class Sharing {
                 let members = try ArraySerializer(Sharing.AddMemberSerializer()).deserialize(dict["members"] ?? .null)
                 let quiet = try Serialization._BoolSerializer.deserialize(dict["quiet"] ?? .number(0))
                 let customMessage = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["custom_message"] ?? .null)
-                let fpSealedResult = try NullableSerializer(Serialization._StringSerializer).deserialize(dict["fp_sealed_result"] ?? .null)
-                return AddFolderMemberArg(
-                    sharedFolderId: sharedFolderId,
-                    members: members,
-                    quiet: quiet,
-                    customMessage: customMessage,
-                    fpSealedResult: fpSealedResult
-                )
+                return AddFolderMemberArg(sharedFolderId: sharedFolderId, members: members, quiet: quiet, customMessage: customMessage)
             default:
                 throw JSONSerializerError.deserializeError(type: AddFolderMemberArg.self, json: json)
             }
@@ -4292,6 +4272,9 @@ public class Sharing {
         case password
         /// Field is deprecated. Link is accessible only by members of the content.
         case members
+        /// Link is accessible only by signed-in Dropbox users. This audience is currently read-only through API v2: API
+        /// v2 write methods reject requests that set it.
+        case publicLoggedInOnly
         /// An unspecified error.
         case other
 
@@ -4332,6 +4315,10 @@ public class Sharing {
                 var d = [String: JSON]()
                 d[".tag"] = .str("members")
                 return .dictionary(d)
+            case .publicLoggedInOnly:
+                var d = [String: JSON]()
+                d[".tag"] = .str("public_logged_in_only")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -4354,6 +4341,8 @@ public class Sharing {
                     return LinkAudience.password
                 case "members":
                     return LinkAudience.members
+                case "public_logged_in_only":
+                    return LinkAudience.publicLoggedInOnly
                 case "other":
                     return LinkAudience.other
                 default:
@@ -6825,6 +6814,8 @@ public class Sharing {
         /// The shared folder is not mountable by directly call APIs, instead the automounter is responsible for
         /// mounting it.
         case mustAutomount
+        /// User will have too many mounts after this operation.
+        case tooManyMounts(Sharing.TooManyMountsError)
         /// An unspecified error.
         case other
 
@@ -6873,6 +6864,10 @@ public class Sharing {
                 var d = [String: JSON]()
                 d[".tag"] = .str("must_automount")
                 return .dictionary(d)
+            case .tooManyMounts(let arg):
+                var d = try ["too_many_mounts": Sharing.TooManyMountsErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("too_many_mounts")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -6901,6 +6896,9 @@ public class Sharing {
                     return MountFolderError.notMountable
                 case "must_automount":
                     return MountFolderError.mustAutomount
+                case "too_many_mounts":
+                    let v = try Sharing.TooManyMountsErrorSerializer().deserialize(d["too_many_mounts"] ?? .null)
+                    return MountFolderError.tooManyMounts(v)
                 case "other":
                     return MountFolderError.other
                 default:
@@ -6908,6 +6906,60 @@ public class Sharing {
                 }
             default:
                 throw JSONSerializerError.deserializeError(type: MountFolderError.self, json: json)
+            }
+        }
+    }
+
+    /// Information about the mount limit that the operation would exceed.
+    public class MountLimitsInfo: CustomStringConvertible, JSONRepresentable {
+        /// The maximum number allowed for this limit.
+        public let limit: UInt64
+        /// The current number of mounts for the user, or of namespaces in the folder tree.
+        public let currentCount: UInt64
+        /// The number of mounts for the user, or of namespaces in the folder tree, if the operation were completed.
+        public let newCount: UInt64
+        public init(limit: UInt64, currentCount: UInt64, newCount: UInt64) {
+            comparableValidator()(limit)
+            self.limit = limit
+            comparableValidator()(currentCount)
+            self.currentCount = currentCount
+            comparableValidator()(newCount)
+            self.newCount = newCount
+        }
+
+        func json() throws -> JSON {
+            try MountLimitsInfoSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MountLimitsInfoSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MountLimitsInfo: \(error)"
+            }
+        }
+    }
+
+    public class MountLimitsInfoSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MountLimitsInfo) throws -> JSON {
+            let output = [
+                "limit": try Serialization._UInt64Serializer.serialize(value.limit),
+                "current_count": try Serialization._UInt64Serializer.serialize(value.currentCount),
+                "new_count": try Serialization._UInt64Serializer.serialize(value.newCount),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> MountLimitsInfo {
+            switch json {
+            case .dictionary(let dict):
+                let limit = try Serialization._UInt64Serializer.deserialize(dict["limit"] ?? .null)
+                let currentCount = try Serialization._UInt64Serializer.deserialize(dict["current_count"] ?? .null)
+                let newCount = try Serialization._UInt64Serializer.deserialize(dict["new_count"] ?? .null)
+                return MountLimitsInfo(limit: limit, currentCount: currentCount, newCount: newCount)
+            default:
+                throw JSONSerializerError.deserializeError(type: MountLimitsInfo.self, json: json)
             }
         }
     }
@@ -8523,6 +8575,8 @@ public class Sharing {
         case teamPolicyDisallowsMemberPolicy
         /// The current user's account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
         case disallowedSharedLinkPolicy
+        /// User will have too many mounts after the operation.
+        case tooManyMounts(Sharing.TooManyMountsError)
         /// An unspecified error.
         case other
 
@@ -8559,6 +8613,10 @@ public class Sharing {
                 var d = [String: JSON]()
                 d[".tag"] = .str("disallowed_shared_link_policy")
                 return .dictionary(d)
+            case .tooManyMounts(let arg):
+                var d = try ["too_many_mounts": Sharing.TooManyMountsErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("too_many_mounts")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -8580,6 +8638,9 @@ public class Sharing {
                     return ShareFolderErrorBase.teamPolicyDisallowsMemberPolicy
                 case "disallowed_shared_link_policy":
                     return ShareFolderErrorBase.disallowedSharedLinkPolicy
+                case "too_many_mounts":
+                    let v = try Sharing.TooManyMountsErrorSerializer().deserialize(d["too_many_mounts"] ?? .null)
+                    return ShareFolderErrorBase.tooManyMounts(v)
                 case "other":
                     return ShareFolderErrorBase.other
                 default:
@@ -8602,6 +8663,8 @@ public class Sharing {
         case teamPolicyDisallowsMemberPolicy
         /// The current user's account is not allowed to select the specified sharedLinkPolicy in ShareFolderArg.
         case disallowedSharedLinkPolicy
+        /// User will have too many mounts after the operation.
+        case tooManyMounts(Sharing.TooManyMountsError)
         /// An unspecified error.
         case other
         /// The current user does not have permission to perform this action.
@@ -8640,6 +8703,10 @@ public class Sharing {
                 var d = [String: JSON]()
                 d[".tag"] = .str("disallowed_shared_link_policy")
                 return .dictionary(d)
+            case .tooManyMounts(let arg):
+                var d = try ["too_many_mounts": Sharing.TooManyMountsErrorSerializer().serialize(arg)]
+                d[".tag"] = .str("too_many_mounts")
+                return .dictionary(d)
             case .other:
                 var d = [String: JSON]()
                 d[".tag"] = .str("other")
@@ -8665,6 +8732,9 @@ public class Sharing {
                     return ShareFolderError.teamPolicyDisallowsMemberPolicy
                 case "disallowed_shared_link_policy":
                     return ShareFolderError.disallowedSharedLinkPolicy
+                case "too_many_mounts":
+                    let v = try Sharing.TooManyMountsErrorSerializer().deserialize(d["too_many_mounts"] ?? .null)
+                    return ShareFolderError.tooManyMounts(v)
                 case "other":
                     return ShareFolderError.other
                 case "no_permission":
@@ -8973,9 +9043,11 @@ public class Sharing {
         case isOsxPackage
         /// We do not support sharing a folder inside a Mac OS X package.
         case insideOsxPackage
-        /// We do not support sharing the Vault folder.
+        /// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no
+        /// longer emitted.
         case isVault
-        /// We do not support sharing a folder inside a locked Vault.
+        /// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing
+        /// errors are no longer emitted.
         case isVaultLocked
         /// We do not support sharing the Family folder.
         case isFamily
@@ -9145,9 +9217,11 @@ public class Sharing {
         case isOsxPackage
         /// We do not support sharing a folder inside a Mac OS X package.
         case insideOsxPackage
-        /// We do not support sharing the Vault folder.
+        /// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no
+        /// longer emitted.
         case isVault
-        /// We do not support sharing a folder inside a locked Vault.
+        /// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing
+        /// errors are no longer emitted.
         case isVaultLocked
         /// An unspecified error.
         case other
@@ -9303,9 +9377,11 @@ public class Sharing {
         case isOsxPackage
         /// We do not support sharing a folder inside a Mac OS X package.
         case insideOsxPackage
-        /// We do not support sharing the Vault folder.
+        /// Field is deprecated. We do not support sharing the Vault folder. Deprecated: Vault sharing errors are no
+        /// longer emitted.
         case isVault
-        /// We do not support sharing a folder inside a locked Vault.
+        /// Field is deprecated. We do not support sharing a folder inside a locked Vault. Deprecated: Vault sharing
+        /// errors are no longer emitted.
         case isVaultLocked
         /// An unspecified error.
         case other
@@ -10863,6 +10939,79 @@ public class Sharing {
                 return TeamMemberInfo(teamInfo: teamInfo, displayName: displayName, memberId: memberId)
             default:
                 throw JSONSerializerError.deserializeError(type: TeamMemberInfo.self, json: json)
+            }
+        }
+    }
+
+    /// This operation would exceed the maximum number of mounts allowed.
+    public enum TooManyMountsError: CustomStringConvertible, JSONRepresentable {
+        /// The user can't add more mounts because it would exceed the maximum number of mounts allowed.
+        case totalMountsExceeded(Sharing.MountLimitsInfo)
+        /// The user can't add more mounts because it would exceed the mount limit for their home namespace.
+        case homeMountsExceeded(Sharing.MountLimitsInfo)
+        /// The user can't create a new nested share because doing so would exceed the maximum number of namespaces
+        /// allowed in the folder tree.
+        case treeSizeExceeded(Sharing.MountLimitsInfo)
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try TooManyMountsErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try TooManyMountsErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for TooManyMountsError: \(error)"
+            }
+        }
+    }
+
+    public class TooManyMountsErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: TooManyMountsError) throws -> JSON {
+            switch value {
+            case .totalMountsExceeded(let arg):
+                var d = try Serialization.getFields(Sharing.MountLimitsInfoSerializer().serialize(arg))
+                d[".tag"] = .str("total_mounts_exceeded")
+                return .dictionary(d)
+            case .homeMountsExceeded(let arg):
+                var d = try Serialization.getFields(Sharing.MountLimitsInfoSerializer().serialize(arg))
+                d[".tag"] = .str("home_mounts_exceeded")
+                return .dictionary(d)
+            case .treeSizeExceeded(let arg):
+                var d = try Serialization.getFields(Sharing.MountLimitsInfoSerializer().serialize(arg))
+                d[".tag"] = .str("tree_size_exceeded")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> TooManyMountsError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "total_mounts_exceeded":
+                    let v = try Sharing.MountLimitsInfoSerializer().deserialize(json)
+                    return TooManyMountsError.totalMountsExceeded(v)
+                case "home_mounts_exceeded":
+                    let v = try Sharing.MountLimitsInfoSerializer().deserialize(json)
+                    return TooManyMountsError.homeMountsExceeded(v)
+                case "tree_size_exceeded":
+                    let v = try Sharing.MountLimitsInfoSerializer().deserialize(json)
+                    return TooManyMountsError.treeSizeExceeded(v)
+                case "other":
+                    return TooManyMountsError.other
+                default:
+                    return TooManyMountsError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: TooManyMountsError.self, json: json)
             }
         }
     }
