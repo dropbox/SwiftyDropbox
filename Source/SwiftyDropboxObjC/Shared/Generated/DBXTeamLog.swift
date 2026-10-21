@@ -8036,6 +8036,124 @@ public class DBXTeamLogDefaultLinkExpirationDaysPolicyOther: DBXTeamLogDefaultLi
     }
 }
 
+/// Default sync setting for newly created team folders.
+@objc
+public class DBXTeamLogDefaultTeamFolderSyncPolicy: NSObject {
+    let swift: TeamLog.DefaultTeamFolderSyncPolicy
+
+    public init(swift: TeamLog.DefaultTeamFolderSyncPolicy) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: TeamLog.DefaultTeamFolderSyncPolicy) -> DBXTeamLogDefaultTeamFolderSyncPolicy {
+        switch swift {
+        case .doNotSync:
+            return DBXTeamLogDefaultTeamFolderSyncPolicyDoNotSync()
+        case .sync:
+            return DBXTeamLogDefaultTeamFolderSyncPolicySync()
+        case .other:
+            return DBXTeamLogDefaultTeamFolderSyncPolicyOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asDoNotSync: DBXTeamLogDefaultTeamFolderSyncPolicyDoNotSync? {
+        return self as? DBXTeamLogDefaultTeamFolderSyncPolicyDoNotSync
+    }
+
+    @objc
+    public var asSync: DBXTeamLogDefaultTeamFolderSyncPolicySync? {
+        return self as? DBXTeamLogDefaultTeamFolderSyncPolicySync
+    }
+
+    @objc
+    public var asOther: DBXTeamLogDefaultTeamFolderSyncPolicyOther? {
+        return self as? DBXTeamLogDefaultTeamFolderSyncPolicyOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogDefaultTeamFolderSyncPolicyDoNotSync: DBXTeamLogDefaultTeamFolderSyncPolicy {
+    @objc
+    public init() {
+        let swift = TeamLog.DefaultTeamFolderSyncPolicy.doNotSync
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogDefaultTeamFolderSyncPolicySync: DBXTeamLogDefaultTeamFolderSyncPolicy {
+    @objc
+    public init() {
+        let swift = TeamLog.DefaultTeamFolderSyncPolicy.sync
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogDefaultTeamFolderSyncPolicyOther: DBXTeamLogDefaultTeamFolderSyncPolicy {
+    @objc
+    public init() {
+        let swift = TeamLog.DefaultTeamFolderSyncPolicy.other
+        super.init(swift: swift)
+    }
+}
+
+/// Changed the default sync setting for new team folders.
+@objc
+public class DBXTeamLogDefaultTeamFolderSyncPolicyChangedDetails: NSObject {
+    /// New default sync setting for team folders.
+    @objc
+    public var newValue: DBXTeamLogDefaultTeamFolderSyncPolicy { DBXTeamLogDefaultTeamFolderSyncPolicy(swift: swift.newValue) }
+    /// Previous default sync setting for team folders.
+    @objc
+    public var previousValue: DBXTeamLogDefaultTeamFolderSyncPolicy { DBXTeamLogDefaultTeamFolderSyncPolicy(swift: swift.previousValue) }
+
+    @objc
+    public init(newValue: DBXTeamLogDefaultTeamFolderSyncPolicy, previousValue: DBXTeamLogDefaultTeamFolderSyncPolicy) {
+        self.swift = TeamLog.DefaultTeamFolderSyncPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
+    }
+
+    let swift: TeamLog.DefaultTeamFolderSyncPolicyChangedDetails
+
+    public init(swift: TeamLog.DefaultTeamFolderSyncPolicyChangedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible DefaultTeamFolderSyncPolicyChangedType struct
+@objc
+public class DBXTeamLogDefaultTeamFolderSyncPolicyChangedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.DefaultTeamFolderSyncPolicyChangedType(description_: description_)
+    }
+
+    let swift: TeamLog.DefaultTeamFolderSyncPolicyChangedType
+
+    public init(swift: TeamLog.DefaultTeamFolderSyncPolicyChangedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
 /// Deleted team invite link.
 @objc
 public class DBXTeamLogDeleteTeamInviteLinkDetails: NSObject {
@@ -11191,6 +11309,141 @@ public class DBXTeamLogEnforceLinkPasswordPolicyOther: DBXTeamLogEnforceLinkPass
     }
 }
 
+/// Enterprise managed authorization policy
+@objc
+public class DBXTeamLogEnterpriseManagedAuthPolicy: NSObject {
+    let swift: TeamLog.EnterpriseManagedAuthPolicy
+
+    public init(swift: TeamLog.EnterpriseManagedAuthPolicy) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: TeamLog.EnterpriseManagedAuthPolicy) -> DBXTeamLogEnterpriseManagedAuthPolicy {
+        switch swift {
+        case .default_:
+            return DBXTeamLogEnterpriseManagedAuthPolicyDefault_()
+        case .disabled:
+            return DBXTeamLogEnterpriseManagedAuthPolicyDisabled()
+        case .enabled:
+            return DBXTeamLogEnterpriseManagedAuthPolicyEnabled()
+        case .other:
+            return DBXTeamLogEnterpriseManagedAuthPolicyOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asDefault_: DBXTeamLogEnterpriseManagedAuthPolicyDefault_? {
+        return self as? DBXTeamLogEnterpriseManagedAuthPolicyDefault_
+    }
+
+    @objc
+    public var asDisabled: DBXTeamLogEnterpriseManagedAuthPolicyDisabled? {
+        return self as? DBXTeamLogEnterpriseManagedAuthPolicyDisabled
+    }
+
+    @objc
+    public var asEnabled: DBXTeamLogEnterpriseManagedAuthPolicyEnabled? {
+        return self as? DBXTeamLogEnterpriseManagedAuthPolicyEnabled
+    }
+
+    @objc
+    public var asOther: DBXTeamLogEnterpriseManagedAuthPolicyOther? {
+        return self as? DBXTeamLogEnterpriseManagedAuthPolicyOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEnterpriseManagedAuthPolicyDefault_: DBXTeamLogEnterpriseManagedAuthPolicy {
+    @objc
+    public init() {
+        let swift = TeamLog.EnterpriseManagedAuthPolicy.default_
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEnterpriseManagedAuthPolicyDisabled: DBXTeamLogEnterpriseManagedAuthPolicy {
+    @objc
+    public init() {
+        let swift = TeamLog.EnterpriseManagedAuthPolicy.disabled
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEnterpriseManagedAuthPolicyEnabled: DBXTeamLogEnterpriseManagedAuthPolicy {
+    @objc
+    public init() {
+        let swift = TeamLog.EnterpriseManagedAuthPolicy.enabled
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEnterpriseManagedAuthPolicyOther: DBXTeamLogEnterpriseManagedAuthPolicy {
+    @objc
+    public init() {
+        let swift = TeamLog.EnterpriseManagedAuthPolicy.other
+        super.init(swift: swift)
+    }
+}
+
+/// Changed enterprise managed authorization policy for team.
+@objc
+public class DBXTeamLogEnterpriseManagedAuthPolicyChangedDetails: NSObject {
+    /// New enterprise managed authorization policy.
+    @objc
+    public var newValue: DBXTeamLogEnterpriseManagedAuthPolicy { DBXTeamLogEnterpriseManagedAuthPolicy(swift: swift.newValue) }
+    /// Previous enterprise managed authorization policy. Might be missing due to historical data gap.
+    @objc
+    public var previousValue: DBXTeamLogEnterpriseManagedAuthPolicy? { guard let swift = swift.previousValue else { return nil }; return DBXTeamLogEnterpriseManagedAuthPolicy(swift: swift) }
+
+    @objc
+    public init(newValue: DBXTeamLogEnterpriseManagedAuthPolicy, previousValue: DBXTeamLogEnterpriseManagedAuthPolicy?) {
+        self.swift = TeamLog.EnterpriseManagedAuthPolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue?.swift)
+    }
+
+    let swift: TeamLog.EnterpriseManagedAuthPolicyChangedDetails
+
+    public init(swift: TeamLog.EnterpriseManagedAuthPolicyChangedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible EnterpriseManagedAuthPolicyChangedType struct
+@objc
+public class DBXTeamLogEnterpriseManagedAuthPolicyChangedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.EnterpriseManagedAuthPolicyChangedType(description_: description_)
+    }
+
+    let swift: TeamLog.EnterpriseManagedAuthPolicyChangedType
+
+    public init(swift: TeamLog.EnterpriseManagedAuthPolicyChangedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
 /// Changed who can update a setting.
 @objc
 public class DBXTeamLogEnterpriseSettingsLockingDetails: NSObject {
@@ -12582,15 +12835,48 @@ public class DBXTeamLogEventDetails: NSObject {
         case .protectActionRemoveCollaboratorDetails(let swiftArg):
             let arg = DBXTeamLogProtectActionRemoveCollaboratorDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsProtectActionRemoveCollaboratorDetails(arg)
+        case .protectActionRemoveDomainsDetails(let swiftArg):
+            let arg = DBXTeamLogProtectActionRemoveDomainsDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectActionRemoveDomainsDetails(arg)
         case .protectActionRemoveLinkDetails(let swiftArg):
             let arg = DBXTeamLogProtectActionRemoveLinkDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsProtectActionRemoveLinkDetails(arg)
         case .protectActionStopSharingDetails(let swiftArg):
             let arg = DBXTeamLogProtectActionStopSharingDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsProtectActionStopSharingDetails(arg)
+        case .protectCustomDataTypeCreatedDetails(let swiftArg):
+            let arg = DBXTeamLogProtectCustomDataTypeCreatedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectCustomDataTypeCreatedDetails(arg)
+        case .protectCustomDataTypeDeletedDetails(let swiftArg):
+            let arg = DBXTeamLogProtectCustomDataTypeDeletedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectCustomDataTypeDeletedDetails(arg)
+        case .protectCustomDataTypeDisabledDetails(let swiftArg):
+            let arg = DBXTeamLogProtectCustomDataTypeDisabledDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectCustomDataTypeDisabledDetails(arg)
+        case .protectCustomDataTypeEnabledDetails(let swiftArg):
+            let arg = DBXTeamLogProtectCustomDataTypeEnabledDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectCustomDataTypeEnabledDetails(arg)
+        case .protectCustomDataTypeModifiedDetails(let swiftArg):
+            let arg = DBXTeamLogProtectCustomDataTypeModifiedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectCustomDataTypeModifiedDetails(arg)
         case .protectInternalDomainsChangedDetails(let swiftArg):
             let arg = DBXTeamLogProtectInternalDomainsChangedDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsProtectInternalDomainsChangedDetails(arg)
+        case .protectPolicyActivatedDetails(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyActivatedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectPolicyActivatedDetails(arg)
+        case .protectPolicyDeactivatedDetails(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyDeactivatedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectPolicyDeactivatedDetails(arg)
+        case .protectPolicyScheduledDetails(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyScheduledDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectPolicyScheduledDetails(arg)
+        case .protectPolicyUpdatedDetails(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyUpdatedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectPolicyUpdatedDetails(arg)
+        case .protectReportViewDetails(let swiftArg):
+            let arg = DBXTeamLogProtectReportViewDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsProtectReportViewDetails(arg)
         case .classificationCreateReportDetails(let swiftArg):
             let arg = DBXTeamLogClassificationCreateReportDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsClassificationCreateReportDetails(arg)
@@ -13194,6 +13480,9 @@ public class DBXTeamLogEventDetails: NSObject {
         case .dataPlacementRestrictionSatisfyPolicyDetails(let swiftArg):
             let arg = DBXTeamLogDataPlacementRestrictionSatisfyPolicyDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsDataPlacementRestrictionSatisfyPolicyDetails(arg)
+        case .defaultTeamFolderSyncPolicyChangedDetails(let swiftArg):
+            let arg = DBXTeamLogDefaultTeamFolderSyncPolicyChangedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsDefaultTeamFolderSyncPolicyChangedDetails(arg)
         case .deviceApprovalsAddExceptionDetails(let swiftArg):
             let arg = DBXTeamLogDeviceApprovalsAddExceptionDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsDeviceApprovalsAddExceptionDetails(arg)
@@ -13233,6 +13522,9 @@ public class DBXTeamLogEventDetails: NSObject {
         case .emmRemoveExceptionDetails(let swiftArg):
             let arg = DBXTeamLogEmmRemoveExceptionDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsEmmRemoveExceptionDetails(arg)
+        case .enterpriseManagedAuthPolicyChangedDetails(let swiftArg):
+            let arg = DBXTeamLogEnterpriseManagedAuthPolicyChangedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsEnterpriseManagedAuthPolicyChangedDetails(arg)
         case .extendedVersionHistoryChangePolicyDetails(let swiftArg):
             let arg = DBXTeamLogExtendedVersionHistoryChangePolicyDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsExtendedVersionHistoryChangePolicyDetails(arg)
@@ -13344,6 +13636,9 @@ public class DBXTeamLogEventDetails: NSObject {
         case .paperEnabledUsersGroupRemovalDetails(let swiftArg):
             let arg = DBXTeamLogPaperEnabledUsersGroupRemovalDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsPaperEnabledUsersGroupRemovalDetails(arg)
+        case .paperOfflineModePolicyChangedDetails(let swiftArg):
+            let arg = DBXTeamLogPaperOfflineModePolicyChangedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsPaperOfflineModePolicyChangedDetails(arg)
         case .passkeyLoginPolicyChangedDetails(let swiftArg):
             let arg = DBXTeamLogPasskeyLoginPolicyChangedDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsPasskeyLoginPolicyChangedDetails(arg)
@@ -13437,6 +13732,12 @@ public class DBXTeamLogEventDetails: NSObject {
         case .teamExtensionsPolicyChangedDetails(let swiftArg):
             let arg = DBXTeamLogTeamExtensionsPolicyChangedDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsTeamExtensionsPolicyChangedDetails(arg)
+        case .teamExternalSharingControlsActivationStateChangedDetails(let swiftArg):
+            let arg = DBXTeamLogTeamExternalSharingControlsActivationStateChangedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsTeamExternalSharingControlsActivationStateChangedDetails(arg)
+        case .teamExternalSharingControlsRecipientListsChangedDetails(let swiftArg):
+            let arg = DBXTeamLogTeamExternalSharingControlsRecipientListsChangedDetails(swift: swiftArg)
+            return DBXTeamLogEventDetailsTeamExternalSharingControlsRecipientListsChangedDetails(arg)
         case .teamMemberStorageRequestPolicyChangedDetails(let swiftArg):
             let arg = DBXTeamLogTeamMemberStorageRequestPolicyChangedDetails(swift: swiftArg)
             return DBXTeamLogEventDetailsTeamMemberStorageRequestPolicyChangedDetails(arg)
@@ -15036,6 +15337,11 @@ public class DBXTeamLogEventDetails: NSObject {
     }
 
     @objc
+    public var asProtectActionRemoveDomainsDetails: DBXTeamLogEventDetailsProtectActionRemoveDomainsDetails? {
+        return self as? DBXTeamLogEventDetailsProtectActionRemoveDomainsDetails
+    }
+
+    @objc
     public var asProtectActionRemoveLinkDetails: DBXTeamLogEventDetailsProtectActionRemoveLinkDetails? {
         return self as? DBXTeamLogEventDetailsProtectActionRemoveLinkDetails
     }
@@ -15046,8 +15352,58 @@ public class DBXTeamLogEventDetails: NSObject {
     }
 
     @objc
+    public var asProtectCustomDataTypeCreatedDetails: DBXTeamLogEventDetailsProtectCustomDataTypeCreatedDetails? {
+        return self as? DBXTeamLogEventDetailsProtectCustomDataTypeCreatedDetails
+    }
+
+    @objc
+    public var asProtectCustomDataTypeDeletedDetails: DBXTeamLogEventDetailsProtectCustomDataTypeDeletedDetails? {
+        return self as? DBXTeamLogEventDetailsProtectCustomDataTypeDeletedDetails
+    }
+
+    @objc
+    public var asProtectCustomDataTypeDisabledDetails: DBXTeamLogEventDetailsProtectCustomDataTypeDisabledDetails? {
+        return self as? DBXTeamLogEventDetailsProtectCustomDataTypeDisabledDetails
+    }
+
+    @objc
+    public var asProtectCustomDataTypeEnabledDetails: DBXTeamLogEventDetailsProtectCustomDataTypeEnabledDetails? {
+        return self as? DBXTeamLogEventDetailsProtectCustomDataTypeEnabledDetails
+    }
+
+    @objc
+    public var asProtectCustomDataTypeModifiedDetails: DBXTeamLogEventDetailsProtectCustomDataTypeModifiedDetails? {
+        return self as? DBXTeamLogEventDetailsProtectCustomDataTypeModifiedDetails
+    }
+
+    @objc
     public var asProtectInternalDomainsChangedDetails: DBXTeamLogEventDetailsProtectInternalDomainsChangedDetails? {
         return self as? DBXTeamLogEventDetailsProtectInternalDomainsChangedDetails
+    }
+
+    @objc
+    public var asProtectPolicyActivatedDetails: DBXTeamLogEventDetailsProtectPolicyActivatedDetails? {
+        return self as? DBXTeamLogEventDetailsProtectPolicyActivatedDetails
+    }
+
+    @objc
+    public var asProtectPolicyDeactivatedDetails: DBXTeamLogEventDetailsProtectPolicyDeactivatedDetails? {
+        return self as? DBXTeamLogEventDetailsProtectPolicyDeactivatedDetails
+    }
+
+    @objc
+    public var asProtectPolicyScheduledDetails: DBXTeamLogEventDetailsProtectPolicyScheduledDetails? {
+        return self as? DBXTeamLogEventDetailsProtectPolicyScheduledDetails
+    }
+
+    @objc
+    public var asProtectPolicyUpdatedDetails: DBXTeamLogEventDetailsProtectPolicyUpdatedDetails? {
+        return self as? DBXTeamLogEventDetailsProtectPolicyUpdatedDetails
+    }
+
+    @objc
+    public var asProtectReportViewDetails: DBXTeamLogEventDetailsProtectReportViewDetails? {
+        return self as? DBXTeamLogEventDetailsProtectReportViewDetails
     }
 
     @objc
@@ -16056,6 +16412,11 @@ public class DBXTeamLogEventDetails: NSObject {
     }
 
     @objc
+    public var asDefaultTeamFolderSyncPolicyChangedDetails: DBXTeamLogEventDetailsDefaultTeamFolderSyncPolicyChangedDetails? {
+        return self as? DBXTeamLogEventDetailsDefaultTeamFolderSyncPolicyChangedDetails
+    }
+
+    @objc
     public var asDeviceApprovalsAddExceptionDetails: DBXTeamLogEventDetailsDeviceApprovalsAddExceptionDetails? {
         return self as? DBXTeamLogEventDetailsDeviceApprovalsAddExceptionDetails
     }
@@ -16118,6 +16479,11 @@ public class DBXTeamLogEventDetails: NSObject {
     @objc
     public var asEmmRemoveExceptionDetails: DBXTeamLogEventDetailsEmmRemoveExceptionDetails? {
         return self as? DBXTeamLogEventDetailsEmmRemoveExceptionDetails
+    }
+
+    @objc
+    public var asEnterpriseManagedAuthPolicyChangedDetails: DBXTeamLogEventDetailsEnterpriseManagedAuthPolicyChangedDetails? {
+        return self as? DBXTeamLogEventDetailsEnterpriseManagedAuthPolicyChangedDetails
     }
 
     @objc
@@ -16306,6 +16672,11 @@ public class DBXTeamLogEventDetails: NSObject {
     }
 
     @objc
+    public var asPaperOfflineModePolicyChangedDetails: DBXTeamLogEventDetailsPaperOfflineModePolicyChangedDetails? {
+        return self as? DBXTeamLogEventDetailsPaperOfflineModePolicyChangedDetails
+    }
+
+    @objc
     public var asPasskeyLoginPolicyChangedDetails: DBXTeamLogEventDetailsPasskeyLoginPolicyChangedDetails? {
         return self as? DBXTeamLogEventDetailsPasskeyLoginPolicyChangedDetails
     }
@@ -16458,6 +16829,16 @@ public class DBXTeamLogEventDetails: NSObject {
     @objc
     public var asTeamExtensionsPolicyChangedDetails: DBXTeamLogEventDetailsTeamExtensionsPolicyChangedDetails? {
         return self as? DBXTeamLogEventDetailsTeamExtensionsPolicyChangedDetails
+    }
+
+    @objc
+    public var asTeamExternalSharingControlsActivationStateChangedDetails: DBXTeamLogEventDetailsTeamExternalSharingControlsActivationStateChangedDetails? {
+        return self as? DBXTeamLogEventDetailsTeamExternalSharingControlsActivationStateChangedDetails
+    }
+
+    @objc
+    public var asTeamExternalSharingControlsRecipientListsChangedDetails: DBXTeamLogEventDetailsTeamExternalSharingControlsRecipientListsChangedDetails? {
+        return self as? DBXTeamLogEventDetailsTeamExternalSharingControlsRecipientListsChangedDetails
     }
 
     @objc
@@ -20716,6 +21097,20 @@ public class DBXTeamLogEventDetailsProtectActionRemoveCollaboratorDetails: DBXTe
 
 /// An unspecified error.
 @objc
+public class DBXTeamLogEventDetailsProtectActionRemoveDomainsDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectActionRemoveDomainsDetails: DBXTeamLogProtectActionRemoveDomainsDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectActionRemoveDomainsDetails) {
+        protectActionRemoveDomainsDetails = arg
+        let swift = TeamLog.EventDetails.protectActionRemoveDomainsDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
 public class DBXTeamLogEventDetailsProtectActionRemoveLinkDetails: DBXTeamLogEventDetails {
     @objc
     public var protectActionRemoveLinkDetails: DBXTeamLogProtectActionRemoveLinkDetails
@@ -20744,6 +21139,76 @@ public class DBXTeamLogEventDetailsProtectActionStopSharingDetails: DBXTeamLogEv
 
 /// An unspecified error.
 @objc
+public class DBXTeamLogEventDetailsProtectCustomDataTypeCreatedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectCustomDataTypeCreatedDetails: DBXTeamLogProtectCustomDataTypeCreatedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectCustomDataTypeCreatedDetails) {
+        protectCustomDataTypeCreatedDetails = arg
+        let swift = TeamLog.EventDetails.protectCustomDataTypeCreatedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsProtectCustomDataTypeDeletedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectCustomDataTypeDeletedDetails: DBXTeamLogProtectCustomDataTypeDeletedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectCustomDataTypeDeletedDetails) {
+        protectCustomDataTypeDeletedDetails = arg
+        let swift = TeamLog.EventDetails.protectCustomDataTypeDeletedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsProtectCustomDataTypeDisabledDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectCustomDataTypeDisabledDetails: DBXTeamLogProtectCustomDataTypeDisabledDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectCustomDataTypeDisabledDetails) {
+        protectCustomDataTypeDisabledDetails = arg
+        let swift = TeamLog.EventDetails.protectCustomDataTypeDisabledDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsProtectCustomDataTypeEnabledDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectCustomDataTypeEnabledDetails: DBXTeamLogProtectCustomDataTypeEnabledDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectCustomDataTypeEnabledDetails) {
+        protectCustomDataTypeEnabledDetails = arg
+        let swift = TeamLog.EventDetails.protectCustomDataTypeEnabledDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsProtectCustomDataTypeModifiedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectCustomDataTypeModifiedDetails: DBXTeamLogProtectCustomDataTypeModifiedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectCustomDataTypeModifiedDetails) {
+        protectCustomDataTypeModifiedDetails = arg
+        let swift = TeamLog.EventDetails.protectCustomDataTypeModifiedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
 public class DBXTeamLogEventDetailsProtectInternalDomainsChangedDetails: DBXTeamLogEventDetails {
     @objc
     public var protectInternalDomainsChangedDetails: DBXTeamLogProtectInternalDomainsChangedDetails
@@ -20752,6 +21217,76 @@ public class DBXTeamLogEventDetailsProtectInternalDomainsChangedDetails: DBXTeam
     public init(_ arg: DBXTeamLogProtectInternalDomainsChangedDetails) {
         protectInternalDomainsChangedDetails = arg
         let swift = TeamLog.EventDetails.protectInternalDomainsChangedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsProtectPolicyActivatedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectPolicyActivatedDetails: DBXTeamLogProtectPolicyActivatedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyActivatedDetails) {
+        protectPolicyActivatedDetails = arg
+        let swift = TeamLog.EventDetails.protectPolicyActivatedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsProtectPolicyDeactivatedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectPolicyDeactivatedDetails: DBXTeamLogProtectPolicyDeactivatedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyDeactivatedDetails) {
+        protectPolicyDeactivatedDetails = arg
+        let swift = TeamLog.EventDetails.protectPolicyDeactivatedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsProtectPolicyScheduledDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectPolicyScheduledDetails: DBXTeamLogProtectPolicyScheduledDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyScheduledDetails) {
+        protectPolicyScheduledDetails = arg
+        let swift = TeamLog.EventDetails.protectPolicyScheduledDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsProtectPolicyUpdatedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectPolicyUpdatedDetails: DBXTeamLogProtectPolicyUpdatedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyUpdatedDetails) {
+        protectPolicyUpdatedDetails = arg
+        let swift = TeamLog.EventDetails.protectPolicyUpdatedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsProtectReportViewDetails: DBXTeamLogEventDetails {
+    @objc
+    public var protectReportViewDetails: DBXTeamLogProtectReportViewDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectReportViewDetails) {
+        protectReportViewDetails = arg
+        let swift = TeamLog.EventDetails.protectReportViewDetails(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -23572,6 +24107,20 @@ public class DBXTeamLogEventDetailsDataPlacementRestrictionSatisfyPolicyDetails:
 
 /// An unspecified error.
 @objc
+public class DBXTeamLogEventDetailsDefaultTeamFolderSyncPolicyChangedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var defaultTeamFolderSyncPolicyChangedDetails: DBXTeamLogDefaultTeamFolderSyncPolicyChangedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogDefaultTeamFolderSyncPolicyChangedDetails) {
+        defaultTeamFolderSyncPolicyChangedDetails = arg
+        let swift = TeamLog.EventDetails.defaultTeamFolderSyncPolicyChangedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
 public class DBXTeamLogEventDetailsDeviceApprovalsAddExceptionDetails: DBXTeamLogEventDetails {
     @objc
     public var deviceApprovalsAddExceptionDetails: DBXTeamLogDeviceApprovalsAddExceptionDetails
@@ -23748,6 +24297,20 @@ public class DBXTeamLogEventDetailsEmmRemoveExceptionDetails: DBXTeamLogEventDet
     public init(_ arg: DBXTeamLogEmmRemoveExceptionDetails) {
         emmRemoveExceptionDetails = arg
         let swift = TeamLog.EventDetails.emmRemoveExceptionDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsEnterpriseManagedAuthPolicyChangedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var enterpriseManagedAuthPolicyChangedDetails: DBXTeamLogEnterpriseManagedAuthPolicyChangedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogEnterpriseManagedAuthPolicyChangedDetails) {
+        enterpriseManagedAuthPolicyChangedDetails = arg
+        let swift = TeamLog.EventDetails.enterpriseManagedAuthPolicyChangedDetails(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -24272,6 +24835,20 @@ public class DBXTeamLogEventDetailsPaperEnabledUsersGroupRemovalDetails: DBXTeam
 
 /// An unspecified error.
 @objc
+public class DBXTeamLogEventDetailsPaperOfflineModePolicyChangedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var paperOfflineModePolicyChangedDetails: DBXTeamLogPaperOfflineModePolicyChangedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogPaperOfflineModePolicyChangedDetails) {
+        paperOfflineModePolicyChangedDetails = arg
+        let swift = TeamLog.EventDetails.paperOfflineModePolicyChangedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
 public class DBXTeamLogEventDetailsPasskeyLoginPolicyChangedDetails: DBXTeamLogEventDetails {
     @objc
     public var passkeyLoginPolicyChangedDetails: DBXTeamLogPasskeyLoginPolicyChangedDetails
@@ -24700,6 +25277,34 @@ public class DBXTeamLogEventDetailsTeamExtensionsPolicyChangedDetails: DBXTeamLo
     public init(_ arg: DBXTeamLogTeamExtensionsPolicyChangedDetails) {
         teamExtensionsPolicyChangedDetails = arg
         let swift = TeamLog.EventDetails.teamExtensionsPolicyChangedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsTeamExternalSharingControlsActivationStateChangedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var teamExternalSharingControlsActivationStateChangedDetails: DBXTeamLogTeamExternalSharingControlsActivationStateChangedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamExternalSharingControlsActivationStateChangedDetails) {
+        teamExternalSharingControlsActivationStateChangedDetails = arg
+        let swift = TeamLog.EventDetails.teamExternalSharingControlsActivationStateChangedDetails(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogEventDetailsTeamExternalSharingControlsRecipientListsChangedDetails: DBXTeamLogEventDetails {
+    @objc
+    public var teamExternalSharingControlsRecipientListsChangedDetails: DBXTeamLogTeamExternalSharingControlsRecipientListsChangedDetails
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamExternalSharingControlsRecipientListsChangedDetails) {
+        teamExternalSharingControlsRecipientListsChangedDetails = arg
+        let swift = TeamLog.EventDetails.teamExternalSharingControlsRecipientListsChangedDetails(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -26411,15 +27016,48 @@ public class DBXTeamLogEventType: NSObject {
         case .protectActionRemoveCollaborator(let swiftArg):
             let arg = DBXTeamLogProtectActionRemoveCollaboratorType(swift: swiftArg)
             return DBXTeamLogEventTypeProtectActionRemoveCollaborator(arg)
+        case .protectActionRemoveDomains(let swiftArg):
+            let arg = DBXTeamLogProtectActionRemoveDomainsType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectActionRemoveDomains(arg)
         case .protectActionRemoveLink(let swiftArg):
             let arg = DBXTeamLogProtectActionRemoveLinkType(swift: swiftArg)
             return DBXTeamLogEventTypeProtectActionRemoveLink(arg)
         case .protectActionStopSharing(let swiftArg):
             let arg = DBXTeamLogProtectActionStopSharingType(swift: swiftArg)
             return DBXTeamLogEventTypeProtectActionStopSharing(arg)
+        case .protectCustomDataTypeCreated(let swiftArg):
+            let arg = DBXTeamLogProtectCustomDataTypeCreatedType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectCustomDataTypeCreated(arg)
+        case .protectCustomDataTypeDeleted(let swiftArg):
+            let arg = DBXTeamLogProtectCustomDataTypeDeletedType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectCustomDataTypeDeleted(arg)
+        case .protectCustomDataTypeDisabled(let swiftArg):
+            let arg = DBXTeamLogProtectCustomDataTypeDisabledType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectCustomDataTypeDisabled(arg)
+        case .protectCustomDataTypeEnabled(let swiftArg):
+            let arg = DBXTeamLogProtectCustomDataTypeEnabledType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectCustomDataTypeEnabled(arg)
+        case .protectCustomDataTypeModified(let swiftArg):
+            let arg = DBXTeamLogProtectCustomDataTypeModifiedType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectCustomDataTypeModified(arg)
         case .protectInternalDomainsChanged(let swiftArg):
             let arg = DBXTeamLogProtectInternalDomainsChangedType(swift: swiftArg)
             return DBXTeamLogEventTypeProtectInternalDomainsChanged(arg)
+        case .protectPolicyActivated(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyActivatedType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectPolicyActivated(arg)
+        case .protectPolicyDeactivated(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyDeactivatedType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectPolicyDeactivated(arg)
+        case .protectPolicyScheduled(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyScheduledType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectPolicyScheduled(arg)
+        case .protectPolicyUpdated(let swiftArg):
+            let arg = DBXTeamLogProtectPolicyUpdatedType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectPolicyUpdated(arg)
+        case .protectReportView(let swiftArg):
+            let arg = DBXTeamLogProtectReportViewType(swift: swiftArg)
+            return DBXTeamLogEventTypeProtectReportView(arg)
         case .classificationCreateReport(let swiftArg):
             let arg = DBXTeamLogClassificationCreateReportType(swift: swiftArg)
             return DBXTeamLogEventTypeClassificationCreateReport(arg)
@@ -27023,6 +27661,9 @@ public class DBXTeamLogEventType: NSObject {
         case .dataPlacementRestrictionSatisfyPolicy(let swiftArg):
             let arg = DBXTeamLogDataPlacementRestrictionSatisfyPolicyType(swift: swiftArg)
             return DBXTeamLogEventTypeDataPlacementRestrictionSatisfyPolicy(arg)
+        case .defaultTeamFolderSyncPolicyChanged(let swiftArg):
+            let arg = DBXTeamLogDefaultTeamFolderSyncPolicyChangedType(swift: swiftArg)
+            return DBXTeamLogEventTypeDefaultTeamFolderSyncPolicyChanged(arg)
         case .deviceApprovalsAddException(let swiftArg):
             let arg = DBXTeamLogDeviceApprovalsAddExceptionType(swift: swiftArg)
             return DBXTeamLogEventTypeDeviceApprovalsAddException(arg)
@@ -27062,6 +27703,9 @@ public class DBXTeamLogEventType: NSObject {
         case .emmRemoveException(let swiftArg):
             let arg = DBXTeamLogEmmRemoveExceptionType(swift: swiftArg)
             return DBXTeamLogEventTypeEmmRemoveException(arg)
+        case .enterpriseManagedAuthPolicyChanged(let swiftArg):
+            let arg = DBXTeamLogEnterpriseManagedAuthPolicyChangedType(swift: swiftArg)
+            return DBXTeamLogEventTypeEnterpriseManagedAuthPolicyChanged(arg)
         case .extendedVersionHistoryChangePolicy(let swiftArg):
             let arg = DBXTeamLogExtendedVersionHistoryChangePolicyType(swift: swiftArg)
             return DBXTeamLogEventTypeExtendedVersionHistoryChangePolicy(arg)
@@ -27173,6 +27817,9 @@ public class DBXTeamLogEventType: NSObject {
         case .paperEnabledUsersGroupRemoval(let swiftArg):
             let arg = DBXTeamLogPaperEnabledUsersGroupRemovalType(swift: swiftArg)
             return DBXTeamLogEventTypePaperEnabledUsersGroupRemoval(arg)
+        case .paperOfflineModePolicyChanged(let swiftArg):
+            let arg = DBXTeamLogPaperOfflineModePolicyChangedType(swift: swiftArg)
+            return DBXTeamLogEventTypePaperOfflineModePolicyChanged(arg)
         case .passkeyLoginPolicyChanged(let swiftArg):
             let arg = DBXTeamLogPasskeyLoginPolicyChangedType(swift: swiftArg)
             return DBXTeamLogEventTypePasskeyLoginPolicyChanged(arg)
@@ -27266,6 +27913,12 @@ public class DBXTeamLogEventType: NSObject {
         case .teamExtensionsPolicyChanged(let swiftArg):
             let arg = DBXTeamLogTeamExtensionsPolicyChangedType(swift: swiftArg)
             return DBXTeamLogEventTypeTeamExtensionsPolicyChanged(arg)
+        case .teamExternalSharingControlsActivationStateChanged(let swiftArg):
+            let arg = DBXTeamLogTeamExternalSharingControlsActivationStateChangedType(swift: swiftArg)
+            return DBXTeamLogEventTypeTeamExternalSharingControlsActivationStateChanged(arg)
+        case .teamExternalSharingControlsRecipientListsChanged(let swiftArg):
+            let arg = DBXTeamLogTeamExternalSharingControlsRecipientListsChangedType(swift: swiftArg)
+            return DBXTeamLogEventTypeTeamExternalSharingControlsRecipientListsChanged(arg)
         case .teamMemberStorageRequestPolicyChanged(let swiftArg):
             let arg = DBXTeamLogTeamMemberStorageRequestPolicyChangedType(swift: swiftArg)
             return DBXTeamLogEventTypeTeamMemberStorageRequestPolicyChanged(arg)
@@ -28862,6 +29515,11 @@ public class DBXTeamLogEventType: NSObject {
     }
 
     @objc
+    public var asProtectActionRemoveDomains: DBXTeamLogEventTypeProtectActionRemoveDomains? {
+        return self as? DBXTeamLogEventTypeProtectActionRemoveDomains
+    }
+
+    @objc
     public var asProtectActionRemoveLink: DBXTeamLogEventTypeProtectActionRemoveLink? {
         return self as? DBXTeamLogEventTypeProtectActionRemoveLink
     }
@@ -28872,8 +29530,58 @@ public class DBXTeamLogEventType: NSObject {
     }
 
     @objc
+    public var asProtectCustomDataTypeCreated: DBXTeamLogEventTypeProtectCustomDataTypeCreated? {
+        return self as? DBXTeamLogEventTypeProtectCustomDataTypeCreated
+    }
+
+    @objc
+    public var asProtectCustomDataTypeDeleted: DBXTeamLogEventTypeProtectCustomDataTypeDeleted? {
+        return self as? DBXTeamLogEventTypeProtectCustomDataTypeDeleted
+    }
+
+    @objc
+    public var asProtectCustomDataTypeDisabled: DBXTeamLogEventTypeProtectCustomDataTypeDisabled? {
+        return self as? DBXTeamLogEventTypeProtectCustomDataTypeDisabled
+    }
+
+    @objc
+    public var asProtectCustomDataTypeEnabled: DBXTeamLogEventTypeProtectCustomDataTypeEnabled? {
+        return self as? DBXTeamLogEventTypeProtectCustomDataTypeEnabled
+    }
+
+    @objc
+    public var asProtectCustomDataTypeModified: DBXTeamLogEventTypeProtectCustomDataTypeModified? {
+        return self as? DBXTeamLogEventTypeProtectCustomDataTypeModified
+    }
+
+    @objc
     public var asProtectInternalDomainsChanged: DBXTeamLogEventTypeProtectInternalDomainsChanged? {
         return self as? DBXTeamLogEventTypeProtectInternalDomainsChanged
+    }
+
+    @objc
+    public var asProtectPolicyActivated: DBXTeamLogEventTypeProtectPolicyActivated? {
+        return self as? DBXTeamLogEventTypeProtectPolicyActivated
+    }
+
+    @objc
+    public var asProtectPolicyDeactivated: DBXTeamLogEventTypeProtectPolicyDeactivated? {
+        return self as? DBXTeamLogEventTypeProtectPolicyDeactivated
+    }
+
+    @objc
+    public var asProtectPolicyScheduled: DBXTeamLogEventTypeProtectPolicyScheduled? {
+        return self as? DBXTeamLogEventTypeProtectPolicyScheduled
+    }
+
+    @objc
+    public var asProtectPolicyUpdated: DBXTeamLogEventTypeProtectPolicyUpdated? {
+        return self as? DBXTeamLogEventTypeProtectPolicyUpdated
+    }
+
+    @objc
+    public var asProtectReportView: DBXTeamLogEventTypeProtectReportView? {
+        return self as? DBXTeamLogEventTypeProtectReportView
     }
 
     @objc
@@ -29882,6 +30590,11 @@ public class DBXTeamLogEventType: NSObject {
     }
 
     @objc
+    public var asDefaultTeamFolderSyncPolicyChanged: DBXTeamLogEventTypeDefaultTeamFolderSyncPolicyChanged? {
+        return self as? DBXTeamLogEventTypeDefaultTeamFolderSyncPolicyChanged
+    }
+
+    @objc
     public var asDeviceApprovalsAddException: DBXTeamLogEventTypeDeviceApprovalsAddException? {
         return self as? DBXTeamLogEventTypeDeviceApprovalsAddException
     }
@@ -29944,6 +30657,11 @@ public class DBXTeamLogEventType: NSObject {
     @objc
     public var asEmmRemoveException: DBXTeamLogEventTypeEmmRemoveException? {
         return self as? DBXTeamLogEventTypeEmmRemoveException
+    }
+
+    @objc
+    public var asEnterpriseManagedAuthPolicyChanged: DBXTeamLogEventTypeEnterpriseManagedAuthPolicyChanged? {
+        return self as? DBXTeamLogEventTypeEnterpriseManagedAuthPolicyChanged
     }
 
     @objc
@@ -30132,6 +30850,11 @@ public class DBXTeamLogEventType: NSObject {
     }
 
     @objc
+    public var asPaperOfflineModePolicyChanged: DBXTeamLogEventTypePaperOfflineModePolicyChanged? {
+        return self as? DBXTeamLogEventTypePaperOfflineModePolicyChanged
+    }
+
+    @objc
     public var asPasskeyLoginPolicyChanged: DBXTeamLogEventTypePasskeyLoginPolicyChanged? {
         return self as? DBXTeamLogEventTypePasskeyLoginPolicyChanged
     }
@@ -30284,6 +31007,16 @@ public class DBXTeamLogEventType: NSObject {
     @objc
     public var asTeamExtensionsPolicyChanged: DBXTeamLogEventTypeTeamExtensionsPolicyChanged? {
         return self as? DBXTeamLogEventTypeTeamExtensionsPolicyChanged
+    }
+
+    @objc
+    public var asTeamExternalSharingControlsActivationStateChanged: DBXTeamLogEventTypeTeamExternalSharingControlsActivationStateChanged? {
+        return self as? DBXTeamLogEventTypeTeamExternalSharingControlsActivationStateChanged
+    }
+
+    @objc
+    public var asTeamExternalSharingControlsRecipientListsChanged: DBXTeamLogEventTypeTeamExternalSharingControlsRecipientListsChanged? {
+        return self as? DBXTeamLogEventTypeTeamExternalSharingControlsRecipientListsChanged
     }
 
     @objc
@@ -34535,6 +35268,20 @@ public class DBXTeamLogEventTypeProtectActionRemoveCollaborator: DBXTeamLogEvent
     }
 }
 
+/// (protect) Removed domains via Dropbox Protect
+@objc
+public class DBXTeamLogEventTypeProtectActionRemoveDomains: DBXTeamLogEventType {
+    @objc
+    public var protectActionRemoveDomains: DBXTeamLogProtectActionRemoveDomainsType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectActionRemoveDomainsType) {
+        protectActionRemoveDomains = arg
+        let swift = TeamLog.EventType.protectActionRemoveDomains(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
 /// (protect) Removed a link via Dropbox Protect
 @objc
 public class DBXTeamLogEventTypeProtectActionRemoveLink: DBXTeamLogEventType {
@@ -34563,6 +35310,76 @@ public class DBXTeamLogEventTypeProtectActionStopSharing: DBXTeamLogEventType {
     }
 }
 
+/// (protect) Created a Dropbox Protect custom data type
+@objc
+public class DBXTeamLogEventTypeProtectCustomDataTypeCreated: DBXTeamLogEventType {
+    @objc
+    public var protectCustomDataTypeCreated: DBXTeamLogProtectCustomDataTypeCreatedType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectCustomDataTypeCreatedType) {
+        protectCustomDataTypeCreated = arg
+        let swift = TeamLog.EventType.protectCustomDataTypeCreated(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Deleted a Dropbox Protect custom data type
+@objc
+public class DBXTeamLogEventTypeProtectCustomDataTypeDeleted: DBXTeamLogEventType {
+    @objc
+    public var protectCustomDataTypeDeleted: DBXTeamLogProtectCustomDataTypeDeletedType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectCustomDataTypeDeletedType) {
+        protectCustomDataTypeDeleted = arg
+        let swift = TeamLog.EventType.protectCustomDataTypeDeleted(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Disabled a Dropbox Protect custom data type
+@objc
+public class DBXTeamLogEventTypeProtectCustomDataTypeDisabled: DBXTeamLogEventType {
+    @objc
+    public var protectCustomDataTypeDisabled: DBXTeamLogProtectCustomDataTypeDisabledType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectCustomDataTypeDisabledType) {
+        protectCustomDataTypeDisabled = arg
+        let swift = TeamLog.EventType.protectCustomDataTypeDisabled(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Enabled a Dropbox Protect custom data type
+@objc
+public class DBXTeamLogEventTypeProtectCustomDataTypeEnabled: DBXTeamLogEventType {
+    @objc
+    public var protectCustomDataTypeEnabled: DBXTeamLogProtectCustomDataTypeEnabledType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectCustomDataTypeEnabledType) {
+        protectCustomDataTypeEnabled = arg
+        let swift = TeamLog.EventType.protectCustomDataTypeEnabled(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Modified a Dropbox Protect custom data type
+@objc
+public class DBXTeamLogEventTypeProtectCustomDataTypeModified: DBXTeamLogEventType {
+    @objc
+    public var protectCustomDataTypeModified: DBXTeamLogProtectCustomDataTypeModifiedType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectCustomDataTypeModifiedType) {
+        protectCustomDataTypeModified = arg
+        let swift = TeamLog.EventType.protectCustomDataTypeModified(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
 /// (protect) Modified Protect internal domains list
 @objc
 public class DBXTeamLogEventTypeProtectInternalDomainsChanged: DBXTeamLogEventType {
@@ -34573,6 +35390,76 @@ public class DBXTeamLogEventTypeProtectInternalDomainsChanged: DBXTeamLogEventTy
     public init(_ arg: DBXTeamLogProtectInternalDomainsChangedType) {
         protectInternalDomainsChanged = arg
         let swift = TeamLog.EventType.protectInternalDomainsChanged(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Activated a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeProtectPolicyActivated: DBXTeamLogEventType {
+    @objc
+    public var protectPolicyActivated: DBXTeamLogProtectPolicyActivatedType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyActivatedType) {
+        protectPolicyActivated = arg
+        let swift = TeamLog.EventType.protectPolicyActivated(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Deactivated a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeProtectPolicyDeactivated: DBXTeamLogEventType {
+    @objc
+    public var protectPolicyDeactivated: DBXTeamLogProtectPolicyDeactivatedType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyDeactivatedType) {
+        protectPolicyDeactivated = arg
+        let swift = TeamLog.EventType.protectPolicyDeactivated(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Scheduled a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeProtectPolicyScheduled: DBXTeamLogEventType {
+    @objc
+    public var protectPolicyScheduled: DBXTeamLogProtectPolicyScheduledType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyScheduledType) {
+        protectPolicyScheduled = arg
+        let swift = TeamLog.EventType.protectPolicyScheduled(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Updated a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeProtectPolicyUpdated: DBXTeamLogEventType {
+    @objc
+    public var protectPolicyUpdated: DBXTeamLogProtectPolicyUpdatedType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectPolicyUpdatedType) {
+        protectPolicyUpdated = arg
+        let swift = TeamLog.EventType.protectPolicyUpdated(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Viewed a Dropbox Protect report
+@objc
+public class DBXTeamLogEventTypeProtectReportView: DBXTeamLogEventType {
+    @objc
+    public var protectReportView: DBXTeamLogProtectReportViewType
+
+    @objc
+    public init(_ arg: DBXTeamLogProtectReportViewType) {
+        protectReportView = arg
+        let swift = TeamLog.EventType.protectReportView(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -37393,6 +38280,20 @@ public class DBXTeamLogEventTypeDataPlacementRestrictionSatisfyPolicy: DBXTeamLo
     }
 }
 
+/// (team_policies) Changed the default sync setting for new team folders
+@objc
+public class DBXTeamLogEventTypeDefaultTeamFolderSyncPolicyChanged: DBXTeamLogEventType {
+    @objc
+    public var defaultTeamFolderSyncPolicyChanged: DBXTeamLogDefaultTeamFolderSyncPolicyChangedType
+
+    @objc
+    public init(_ arg: DBXTeamLogDefaultTeamFolderSyncPolicyChangedType) {
+        defaultTeamFolderSyncPolicyChanged = arg
+        let swift = TeamLog.EventType.defaultTeamFolderSyncPolicyChanged(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
 /// (team_policies) Added members to device approvals exception list
 @objc
 public class DBXTeamLogEventTypeDeviceApprovalsAddException: DBXTeamLogEventType {
@@ -37571,6 +38472,20 @@ public class DBXTeamLogEventTypeEmmRemoveException: DBXTeamLogEventType {
     public init(_ arg: DBXTeamLogEmmRemoveExceptionType) {
         emmRemoveException = arg
         let swift = TeamLog.EventType.emmRemoveException(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (team_policies) Changed enterprise managed authorization policy for team
+@objc
+public class DBXTeamLogEventTypeEnterpriseManagedAuthPolicyChanged: DBXTeamLogEventType {
+    @objc
+    public var enterpriseManagedAuthPolicyChanged: DBXTeamLogEnterpriseManagedAuthPolicyChangedType
+
+    @objc
+    public init(_ arg: DBXTeamLogEnterpriseManagedAuthPolicyChangedType) {
+        enterpriseManagedAuthPolicyChanged = arg
+        let swift = TeamLog.EventType.enterpriseManagedAuthPolicyChanged(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -38095,6 +39010,20 @@ public class DBXTeamLogEventTypePaperEnabledUsersGroupRemoval: DBXTeamLogEventTy
     }
 }
 
+/// (team_policies) Enabled/disabled Paper offline mode for team
+@objc
+public class DBXTeamLogEventTypePaperOfflineModePolicyChanged: DBXTeamLogEventType {
+    @objc
+    public var paperOfflineModePolicyChanged: DBXTeamLogPaperOfflineModePolicyChangedType
+
+    @objc
+    public init(_ arg: DBXTeamLogPaperOfflineModePolicyChangedType) {
+        paperOfflineModePolicyChanged = arg
+        let swift = TeamLog.EventType.paperOfflineModePolicyChanged(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
 /// (team_policies) Changed passkey login policy for team
 @objc
 public class DBXTeamLogEventTypePasskeyLoginPolicyChanged: DBXTeamLogEventType {
@@ -38527,6 +39456,34 @@ public class DBXTeamLogEventTypeTeamExtensionsPolicyChanged: DBXTeamLogEventType
     public init(_ arg: DBXTeamLogTeamExtensionsPolicyChangedType) {
         teamExtensionsPolicyChanged = arg
         let swift = TeamLog.EventType.teamExtensionsPolicyChanged(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (team_policies) Changed external sharing controls activation state
+@objc
+public class DBXTeamLogEventTypeTeamExternalSharingControlsActivationStateChanged: DBXTeamLogEventType {
+    @objc
+    public var teamExternalSharingControlsActivationStateChanged: DBXTeamLogTeamExternalSharingControlsActivationStateChangedType
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamExternalSharingControlsActivationStateChangedType) {
+        teamExternalSharingControlsActivationStateChanged = arg
+        let swift = TeamLog.EventType.teamExternalSharingControlsActivationStateChanged(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// (team_policies) Changed approved or blocked entries for external sharing controls
+@objc
+public class DBXTeamLogEventTypeTeamExternalSharingControlsRecipientListsChanged: DBXTeamLogEventType {
+    @objc
+    public var teamExternalSharingControlsRecipientListsChanged: DBXTeamLogTeamExternalSharingControlsRecipientListsChangedType
+
+    @objc
+    public init(_ arg: DBXTeamLogTeamExternalSharingControlsRecipientListsChangedType) {
+        teamExternalSharingControlsRecipientListsChanged = arg
+        let swift = TeamLog.EventType.teamExternalSharingControlsRecipientListsChanged(arg.swift)
         super.init(swift: swift)
     }
 }
@@ -39945,12 +40902,34 @@ public class DBXTeamLogEventTypeArg: NSObject {
             return DBXTeamLogEventTypeArgProtectActionExport()
         case .protectActionRemoveCollaborator:
             return DBXTeamLogEventTypeArgProtectActionRemoveCollaborator()
+        case .protectActionRemoveDomains:
+            return DBXTeamLogEventTypeArgProtectActionRemoveDomains()
         case .protectActionRemoveLink:
             return DBXTeamLogEventTypeArgProtectActionRemoveLink()
         case .protectActionStopSharing:
             return DBXTeamLogEventTypeArgProtectActionStopSharing()
+        case .protectCustomDataTypeCreated:
+            return DBXTeamLogEventTypeArgProtectCustomDataTypeCreated()
+        case .protectCustomDataTypeDeleted:
+            return DBXTeamLogEventTypeArgProtectCustomDataTypeDeleted()
+        case .protectCustomDataTypeDisabled:
+            return DBXTeamLogEventTypeArgProtectCustomDataTypeDisabled()
+        case .protectCustomDataTypeEnabled:
+            return DBXTeamLogEventTypeArgProtectCustomDataTypeEnabled()
+        case .protectCustomDataTypeModified:
+            return DBXTeamLogEventTypeArgProtectCustomDataTypeModified()
         case .protectInternalDomainsChanged:
             return DBXTeamLogEventTypeArgProtectInternalDomainsChanged()
+        case .protectPolicyActivated:
+            return DBXTeamLogEventTypeArgProtectPolicyActivated()
+        case .protectPolicyDeactivated:
+            return DBXTeamLogEventTypeArgProtectPolicyDeactivated()
+        case .protectPolicyScheduled:
+            return DBXTeamLogEventTypeArgProtectPolicyScheduled()
+        case .protectPolicyUpdated:
+            return DBXTeamLogEventTypeArgProtectPolicyUpdated()
+        case .protectReportView:
+            return DBXTeamLogEventTypeArgProtectReportView()
         case .classificationCreateReport:
             return DBXTeamLogEventTypeArgClassificationCreateReport()
         case .classificationCreateReportFail:
@@ -40353,6 +41332,8 @@ public class DBXTeamLogEventTypeArg: NSObject {
             return DBXTeamLogEventTypeArgDataPlacementRestrictionChangePolicy()
         case .dataPlacementRestrictionSatisfyPolicy:
             return DBXTeamLogEventTypeArgDataPlacementRestrictionSatisfyPolicy()
+        case .defaultTeamFolderSyncPolicyChanged:
+            return DBXTeamLogEventTypeArgDefaultTeamFolderSyncPolicyChanged()
         case .deviceApprovalsAddException:
             return DBXTeamLogEventTypeArgDeviceApprovalsAddException()
         case .deviceApprovalsChangeDesktopPolicy:
@@ -40379,6 +41360,8 @@ public class DBXTeamLogEventTypeArg: NSObject {
             return DBXTeamLogEventTypeArgEmmChangePolicy()
         case .emmRemoveException:
             return DBXTeamLogEventTypeArgEmmRemoveException()
+        case .enterpriseManagedAuthPolicyChanged:
+            return DBXTeamLogEventTypeArgEnterpriseManagedAuthPolicyChanged()
         case .extendedVersionHistoryChangePolicy:
             return DBXTeamLogEventTypeArgExtendedVersionHistoryChangePolicy()
         case .externalDriveBackupPolicyChanged:
@@ -40453,6 +41436,8 @@ public class DBXTeamLogEventTypeArg: NSObject {
             return DBXTeamLogEventTypeArgPaperEnabledUsersGroupAddition()
         case .paperEnabledUsersGroupRemoval:
             return DBXTeamLogEventTypeArgPaperEnabledUsersGroupRemoval()
+        case .paperOfflineModePolicyChanged:
+            return DBXTeamLogEventTypeArgPaperOfflineModePolicyChanged()
         case .passkeyLoginPolicyChanged:
             return DBXTeamLogEventTypeArgPasskeyLoginPolicyChanged()
         case .passwordStrengthRequirementsChangePolicy:
@@ -40515,6 +41500,10 @@ public class DBXTeamLogEventTypeArg: NSObject {
             return DBXTeamLogEventTypeArgTeamBrandingPolicyChanged()
         case .teamExtensionsPolicyChanged:
             return DBXTeamLogEventTypeArgTeamExtensionsPolicyChanged()
+        case .teamExternalSharingControlsActivationStateChanged:
+            return DBXTeamLogEventTypeArgTeamExternalSharingControlsActivationStateChanged()
+        case .teamExternalSharingControlsRecipientListsChanged:
+            return DBXTeamLogEventTypeArgTeamExternalSharingControlsRecipientListsChanged()
         case .teamMemberStorageRequestPolicyChanged:
             return DBXTeamLogEventTypeArgTeamMemberStorageRequestPolicyChanged()
         case .teamSelectiveSyncPolicyChanged:
@@ -42052,6 +43041,11 @@ public class DBXTeamLogEventTypeArg: NSObject {
     }
 
     @objc
+    public var asProtectActionRemoveDomains: DBXTeamLogEventTypeArgProtectActionRemoveDomains? {
+        return self as? DBXTeamLogEventTypeArgProtectActionRemoveDomains
+    }
+
+    @objc
     public var asProtectActionRemoveLink: DBXTeamLogEventTypeArgProtectActionRemoveLink? {
         return self as? DBXTeamLogEventTypeArgProtectActionRemoveLink
     }
@@ -42062,8 +43056,58 @@ public class DBXTeamLogEventTypeArg: NSObject {
     }
 
     @objc
+    public var asProtectCustomDataTypeCreated: DBXTeamLogEventTypeArgProtectCustomDataTypeCreated? {
+        return self as? DBXTeamLogEventTypeArgProtectCustomDataTypeCreated
+    }
+
+    @objc
+    public var asProtectCustomDataTypeDeleted: DBXTeamLogEventTypeArgProtectCustomDataTypeDeleted? {
+        return self as? DBXTeamLogEventTypeArgProtectCustomDataTypeDeleted
+    }
+
+    @objc
+    public var asProtectCustomDataTypeDisabled: DBXTeamLogEventTypeArgProtectCustomDataTypeDisabled? {
+        return self as? DBXTeamLogEventTypeArgProtectCustomDataTypeDisabled
+    }
+
+    @objc
+    public var asProtectCustomDataTypeEnabled: DBXTeamLogEventTypeArgProtectCustomDataTypeEnabled? {
+        return self as? DBXTeamLogEventTypeArgProtectCustomDataTypeEnabled
+    }
+
+    @objc
+    public var asProtectCustomDataTypeModified: DBXTeamLogEventTypeArgProtectCustomDataTypeModified? {
+        return self as? DBXTeamLogEventTypeArgProtectCustomDataTypeModified
+    }
+
+    @objc
     public var asProtectInternalDomainsChanged: DBXTeamLogEventTypeArgProtectInternalDomainsChanged? {
         return self as? DBXTeamLogEventTypeArgProtectInternalDomainsChanged
+    }
+
+    @objc
+    public var asProtectPolicyActivated: DBXTeamLogEventTypeArgProtectPolicyActivated? {
+        return self as? DBXTeamLogEventTypeArgProtectPolicyActivated
+    }
+
+    @objc
+    public var asProtectPolicyDeactivated: DBXTeamLogEventTypeArgProtectPolicyDeactivated? {
+        return self as? DBXTeamLogEventTypeArgProtectPolicyDeactivated
+    }
+
+    @objc
+    public var asProtectPolicyScheduled: DBXTeamLogEventTypeArgProtectPolicyScheduled? {
+        return self as? DBXTeamLogEventTypeArgProtectPolicyScheduled
+    }
+
+    @objc
+    public var asProtectPolicyUpdated: DBXTeamLogEventTypeArgProtectPolicyUpdated? {
+        return self as? DBXTeamLogEventTypeArgProtectPolicyUpdated
+    }
+
+    @objc
+    public var asProtectReportView: DBXTeamLogEventTypeArgProtectReportView? {
+        return self as? DBXTeamLogEventTypeArgProtectReportView
     }
 
     @objc
@@ -43072,6 +44116,11 @@ public class DBXTeamLogEventTypeArg: NSObject {
     }
 
     @objc
+    public var asDefaultTeamFolderSyncPolicyChanged: DBXTeamLogEventTypeArgDefaultTeamFolderSyncPolicyChanged? {
+        return self as? DBXTeamLogEventTypeArgDefaultTeamFolderSyncPolicyChanged
+    }
+
+    @objc
     public var asDeviceApprovalsAddException: DBXTeamLogEventTypeArgDeviceApprovalsAddException? {
         return self as? DBXTeamLogEventTypeArgDeviceApprovalsAddException
     }
@@ -43134,6 +44183,11 @@ public class DBXTeamLogEventTypeArg: NSObject {
     @objc
     public var asEmmRemoveException: DBXTeamLogEventTypeArgEmmRemoveException? {
         return self as? DBXTeamLogEventTypeArgEmmRemoveException
+    }
+
+    @objc
+    public var asEnterpriseManagedAuthPolicyChanged: DBXTeamLogEventTypeArgEnterpriseManagedAuthPolicyChanged? {
+        return self as? DBXTeamLogEventTypeArgEnterpriseManagedAuthPolicyChanged
     }
 
     @objc
@@ -43322,6 +44376,11 @@ public class DBXTeamLogEventTypeArg: NSObject {
     }
 
     @objc
+    public var asPaperOfflineModePolicyChanged: DBXTeamLogEventTypeArgPaperOfflineModePolicyChanged? {
+        return self as? DBXTeamLogEventTypeArgPaperOfflineModePolicyChanged
+    }
+
+    @objc
     public var asPasskeyLoginPolicyChanged: DBXTeamLogEventTypeArgPasskeyLoginPolicyChanged? {
         return self as? DBXTeamLogEventTypeArgPasskeyLoginPolicyChanged
     }
@@ -43474,6 +44533,16 @@ public class DBXTeamLogEventTypeArg: NSObject {
     @objc
     public var asTeamExtensionsPolicyChanged: DBXTeamLogEventTypeArgTeamExtensionsPolicyChanged? {
         return self as? DBXTeamLogEventTypeArgTeamExtensionsPolicyChanged
+    }
+
+    @objc
+    public var asTeamExternalSharingControlsActivationStateChanged: DBXTeamLogEventTypeArgTeamExternalSharingControlsActivationStateChanged? {
+        return self as? DBXTeamLogEventTypeArgTeamExternalSharingControlsActivationStateChanged
+    }
+
+    @objc
+    public var asTeamExternalSharingControlsRecipientListsChanged: DBXTeamLogEventTypeArgTeamExternalSharingControlsRecipientListsChanged? {
+        return self as? DBXTeamLogEventTypeArgTeamExternalSharingControlsRecipientListsChanged
     }
 
     @objc
@@ -46597,6 +47666,16 @@ public class DBXTeamLogEventTypeArgProtectActionRemoveCollaborator: DBXTeamLogEv
     }
 }
 
+/// (protect) Removed domains via Dropbox Protect
+@objc
+public class DBXTeamLogEventTypeArgProtectActionRemoveDomains: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectActionRemoveDomains
+        super.init(swift: swift)
+    }
+}
+
 /// (protect) Removed a link via Dropbox Protect
 @objc
 public class DBXTeamLogEventTypeArgProtectActionRemoveLink: DBXTeamLogEventTypeArg {
@@ -46617,12 +47696,112 @@ public class DBXTeamLogEventTypeArgProtectActionStopSharing: DBXTeamLogEventType
     }
 }
 
+/// (protect) Created a Dropbox Protect custom data type
+@objc
+public class DBXTeamLogEventTypeArgProtectCustomDataTypeCreated: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectCustomDataTypeCreated
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Deleted a Dropbox Protect custom data type
+@objc
+public class DBXTeamLogEventTypeArgProtectCustomDataTypeDeleted: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectCustomDataTypeDeleted
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Disabled a Dropbox Protect custom data type
+@objc
+public class DBXTeamLogEventTypeArgProtectCustomDataTypeDisabled: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectCustomDataTypeDisabled
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Enabled a Dropbox Protect custom data type
+@objc
+public class DBXTeamLogEventTypeArgProtectCustomDataTypeEnabled: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectCustomDataTypeEnabled
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Modified a Dropbox Protect custom data type
+@objc
+public class DBXTeamLogEventTypeArgProtectCustomDataTypeModified: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectCustomDataTypeModified
+        super.init(swift: swift)
+    }
+}
+
 /// (protect) Modified Protect internal domains list
 @objc
 public class DBXTeamLogEventTypeArgProtectInternalDomainsChanged: DBXTeamLogEventTypeArg {
     @objc
     public init() {
         let swift = TeamLog.EventTypeArg.protectInternalDomainsChanged
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Activated a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeArgProtectPolicyActivated: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectPolicyActivated
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Deactivated a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeArgProtectPolicyDeactivated: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectPolicyDeactivated
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Scheduled a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeArgProtectPolicyScheduled: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectPolicyScheduled
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Updated a Dropbox Protect policy
+@objc
+public class DBXTeamLogEventTypeArgProtectPolicyUpdated: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectPolicyUpdated
+        super.init(swift: swift)
+    }
+}
+
+/// (protect) Viewed a Dropbox Protect report
+@objc
+public class DBXTeamLogEventTypeArgProtectReportView: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.protectReportView
         super.init(swift: swift)
     }
 }
@@ -48639,6 +49818,16 @@ public class DBXTeamLogEventTypeArgDataPlacementRestrictionSatisfyPolicy: DBXTea
     }
 }
 
+/// (team_policies) Changed the default sync setting for new team folders
+@objc
+public class DBXTeamLogEventTypeArgDefaultTeamFolderSyncPolicyChanged: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.defaultTeamFolderSyncPolicyChanged
+        super.init(swift: swift)
+    }
+}
+
 /// (team_policies) Added members to device approvals exception list
 @objc
 public class DBXTeamLogEventTypeArgDeviceApprovalsAddException: DBXTeamLogEventTypeArg {
@@ -48765,6 +49954,16 @@ public class DBXTeamLogEventTypeArgEmmRemoveException: DBXTeamLogEventTypeArg {
     @objc
     public init() {
         let swift = TeamLog.EventTypeArg.emmRemoveException
+        super.init(swift: swift)
+    }
+}
+
+/// (team_policies) Changed enterprise managed authorization policy for team
+@objc
+public class DBXTeamLogEventTypeArgEnterpriseManagedAuthPolicyChanged: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.enterpriseManagedAuthPolicyChanged
         super.init(swift: swift)
     }
 }
@@ -49141,6 +50340,16 @@ public class DBXTeamLogEventTypeArgPaperEnabledUsersGroupRemoval: DBXTeamLogEven
     }
 }
 
+/// (team_policies) Enabled/disabled Paper offline mode for team
+@objc
+public class DBXTeamLogEventTypeArgPaperOfflineModePolicyChanged: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.paperOfflineModePolicyChanged
+        super.init(swift: swift)
+    }
+}
+
 /// (team_policies) Changed passkey login policy for team
 @objc
 public class DBXTeamLogEventTypeArgPasskeyLoginPolicyChanged: DBXTeamLogEventTypeArg {
@@ -49449,6 +50658,26 @@ public class DBXTeamLogEventTypeArgTeamExtensionsPolicyChanged: DBXTeamLogEventT
     @objc
     public init() {
         let swift = TeamLog.EventTypeArg.teamExtensionsPolicyChanged
+        super.init(swift: swift)
+    }
+}
+
+/// (team_policies) Changed external sharing controls activation state
+@objc
+public class DBXTeamLogEventTypeArgTeamExternalSharingControlsActivationStateChanged: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.teamExternalSharingControlsActivationStateChanged
+        super.init(swift: swift)
+    }
+}
+
+/// (team_policies) Changed approved or blocked entries for external sharing controls
+@objc
+public class DBXTeamLogEventTypeArgTeamExternalSharingControlsRecipientListsChanged: DBXTeamLogEventTypeArg {
+    @objc
+    public init() {
+        let swift = TeamLog.EventTypeArg.teamExternalSharingControlsRecipientListsChanged
         super.init(swift: swift)
     }
 }
@@ -50752,6 +51981,92 @@ public class DBXTeamLogExternalDriveBackupStatusChangedType: NSObject {
 
     @objc
     public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ExternalSharingControlsActivationState union
+@objc
+public class DBXTeamLogExternalSharingControlsActivationState: NSObject {
+    let swift: TeamLog.ExternalSharingControlsActivationState
+
+    public init(swift: TeamLog.ExternalSharingControlsActivationState) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: TeamLog.ExternalSharingControlsActivationState) -> DBXTeamLogExternalSharingControlsActivationState {
+        switch swift {
+        case .active:
+            return DBXTeamLogExternalSharingControlsActivationStateActive()
+        case .disabled:
+            return DBXTeamLogExternalSharingControlsActivationStateDisabled()
+        case .legacy:
+            return DBXTeamLogExternalSharingControlsActivationStateLegacy()
+        case .other:
+            return DBXTeamLogExternalSharingControlsActivationStateOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asActive: DBXTeamLogExternalSharingControlsActivationStateActive? {
+        return self as? DBXTeamLogExternalSharingControlsActivationStateActive
+    }
+
+    @objc
+    public var asDisabled: DBXTeamLogExternalSharingControlsActivationStateDisabled? {
+        return self as? DBXTeamLogExternalSharingControlsActivationStateDisabled
+    }
+
+    @objc
+    public var asLegacy: DBXTeamLogExternalSharingControlsActivationStateLegacy? {
+        return self as? DBXTeamLogExternalSharingControlsActivationStateLegacy
+    }
+
+    @objc
+    public var asOther: DBXTeamLogExternalSharingControlsActivationStateOther? {
+        return self as? DBXTeamLogExternalSharingControlsActivationStateOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogExternalSharingControlsActivationStateActive: DBXTeamLogExternalSharingControlsActivationState {
+    @objc
+    public init() {
+        let swift = TeamLog.ExternalSharingControlsActivationState.active
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogExternalSharingControlsActivationStateDisabled: DBXTeamLogExternalSharingControlsActivationState {
+    @objc
+    public init() {
+        let swift = TeamLog.ExternalSharingControlsActivationState.disabled
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogExternalSharingControlsActivationStateLegacy: DBXTeamLogExternalSharingControlsActivationState {
+    @objc
+    public init() {
+        let swift = TeamLog.ExternalSharingControlsActivationState.legacy
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogExternalSharingControlsActivationStateOther: DBXTeamLogExternalSharingControlsActivationState {
+    @objc
+    public init() {
+        let swift = TeamLog.ExternalSharingControlsActivationState.other
+        super.init(swift: swift)
+    }
 }
 
 /// Created External sharing report.
@@ -58564,10 +59879,13 @@ public class DBXTeamLogMediaHubProjectTeamAddDetails: NSObject {
     /// Replay project.
     @objc
     public var project: DBXTeamLogMediaHubProjectLogInfo? { guard let swift = swift.project else { return nil }; return DBXTeamLogMediaHubProjectLogInfo(swift: swift) }
+    /// The email address of the Replay project member targeted by the event.
+    @objc
+    public var invitee: String? { swift.invitee }
 
     @objc
-    public init(project: DBXTeamLogMediaHubProjectLogInfo?) {
-        self.swift = TeamLog.MediaHubProjectTeamAddDetails(project: project?.swift)
+    public init(project: DBXTeamLogMediaHubProjectLogInfo?, invitee: String?) {
+        self.swift = TeamLog.MediaHubProjectTeamAddDetails(project: project?.swift, invitee: invitee)
     }
 
     let swift: TeamLog.MediaHubProjectTeamAddDetails
@@ -58610,10 +59928,13 @@ public class DBXTeamLogMediaHubProjectTeamDeleteDetails: NSObject {
     /// Replay project.
     @objc
     public var project: DBXTeamLogMediaHubProjectLogInfo? { guard let swift = swift.project else { return nil }; return DBXTeamLogMediaHubProjectLogInfo(swift: swift) }
+    /// The email address of the Replay project member targeted by the event.
+    @objc
+    public var invitee: String? { swift.invitee }
 
     @objc
-    public init(project: DBXTeamLogMediaHubProjectLogInfo?) {
-        self.swift = TeamLog.MediaHubProjectTeamDeleteDetails(project: project?.swift)
+    public init(project: DBXTeamLogMediaHubProjectLogInfo?, invitee: String?) {
+        self.swift = TeamLog.MediaHubProjectTeamDeleteDetails(project: project?.swift, invitee: invitee)
     }
 
     let swift: TeamLog.MediaHubProjectTeamDeleteDetails
@@ -58662,10 +59983,13 @@ public class DBXTeamLogMediaHubProjectTeamRoleChangedDetails: NSObject {
     /// Replay project.
     @objc
     public var project: DBXTeamLogMediaHubProjectLogInfo? { guard let swift = swift.project else { return nil }; return DBXTeamLogMediaHubProjectLogInfo(swift: swift) }
+    /// The email address of the Replay project member targeted by the event.
+    @objc
+    public var invitee: String? { swift.invitee }
 
     @objc
-    public init(previousRole: DBXTeamLogMediaHubProjectRole, newRole: DBXTeamLogMediaHubProjectRole, project: DBXTeamLogMediaHubProjectLogInfo?) {
-        self.swift = TeamLog.MediaHubProjectTeamRoleChangedDetails(previousRole: previousRole.swift, newRole: newRole.swift, project: project?.swift)
+    public init(previousRole: DBXTeamLogMediaHubProjectRole, newRole: DBXTeamLogMediaHubProjectRole, project: DBXTeamLogMediaHubProjectLogInfo?, invitee: String?) {
+        self.swift = TeamLog.MediaHubProjectTeamRoleChangedDetails(previousRole: previousRole.swift, newRole: newRole.swift, project: project?.swift, invitee: invitee)
     }
 
     let swift: TeamLog.MediaHubProjectTeamRoleChangedDetails
@@ -58717,6 +60041,8 @@ public class DBXTeamLogMediaHubSharedLinkAudience: NSObject {
             return DBXTeamLogMediaHubSharedLinkAudienceNoOne()
         case .public_:
             return DBXTeamLogMediaHubSharedLinkAudiencePublic_()
+        case .publicLoggedInOnly:
+            return DBXTeamLogMediaHubSharedLinkAudiencePublicLoggedInOnly()
         case .teamOnly:
             return DBXTeamLogMediaHubSharedLinkAudienceTeamOnly()
         case .other:
@@ -58735,6 +60061,11 @@ public class DBXTeamLogMediaHubSharedLinkAudience: NSObject {
     @objc
     public var asPublic_: DBXTeamLogMediaHubSharedLinkAudiencePublic_? {
         return self as? DBXTeamLogMediaHubSharedLinkAudiencePublic_
+    }
+
+    @objc
+    public var asPublicLoggedInOnly: DBXTeamLogMediaHubSharedLinkAudiencePublicLoggedInOnly? {
+        return self as? DBXTeamLogMediaHubSharedLinkAudiencePublicLoggedInOnly
     }
 
     @objc
@@ -58764,6 +60095,16 @@ public class DBXTeamLogMediaHubSharedLinkAudiencePublic_: DBXTeamLogMediaHubShar
     @objc
     public init() {
         let swift = TeamLog.MediaHubSharedLinkAudience.public_
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogMediaHubSharedLinkAudiencePublicLoggedInOnly: DBXTeamLogMediaHubSharedLinkAudience {
+    @objc
+    public init() {
+        let swift = TeamLog.MediaHubSharedLinkAudience.publicLoggedInOnly
         super.init(swift: swift)
     }
 }
@@ -65180,6 +66521,141 @@ public class DBXTeamLogPaperMemberPolicyOther: DBXTeamLogPaperMemberPolicy {
     }
 }
 
+/// Policy for controlling if team members can use Paper offline mode
+@objc
+public class DBXTeamLogPaperOfflineModePolicy: NSObject {
+    let swift: TeamLog.PaperOfflineModePolicy
+
+    public init(swift: TeamLog.PaperOfflineModePolicy) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: TeamLog.PaperOfflineModePolicy) -> DBXTeamLogPaperOfflineModePolicy {
+        switch swift {
+        case .default_:
+            return DBXTeamLogPaperOfflineModePolicyDefault_()
+        case .disabled:
+            return DBXTeamLogPaperOfflineModePolicyDisabled()
+        case .enabled:
+            return DBXTeamLogPaperOfflineModePolicyEnabled()
+        case .other:
+            return DBXTeamLogPaperOfflineModePolicyOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asDefault_: DBXTeamLogPaperOfflineModePolicyDefault_? {
+        return self as? DBXTeamLogPaperOfflineModePolicyDefault_
+    }
+
+    @objc
+    public var asDisabled: DBXTeamLogPaperOfflineModePolicyDisabled? {
+        return self as? DBXTeamLogPaperOfflineModePolicyDisabled
+    }
+
+    @objc
+    public var asEnabled: DBXTeamLogPaperOfflineModePolicyEnabled? {
+        return self as? DBXTeamLogPaperOfflineModePolicyEnabled
+    }
+
+    @objc
+    public var asOther: DBXTeamLogPaperOfflineModePolicyOther? {
+        return self as? DBXTeamLogPaperOfflineModePolicyOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogPaperOfflineModePolicyDefault_: DBXTeamLogPaperOfflineModePolicy {
+    @objc
+    public init() {
+        let swift = TeamLog.PaperOfflineModePolicy.default_
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogPaperOfflineModePolicyDisabled: DBXTeamLogPaperOfflineModePolicy {
+    @objc
+    public init() {
+        let swift = TeamLog.PaperOfflineModePolicy.disabled
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogPaperOfflineModePolicyEnabled: DBXTeamLogPaperOfflineModePolicy {
+    @objc
+    public init() {
+        let swift = TeamLog.PaperOfflineModePolicy.enabled
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogPaperOfflineModePolicyOther: DBXTeamLogPaperOfflineModePolicy {
+    @objc
+    public init() {
+        let swift = TeamLog.PaperOfflineModePolicy.other
+        super.init(swift: swift)
+    }
+}
+
+/// Enabled/disabled Paper offline mode for team.
+@objc
+public class DBXTeamLogPaperOfflineModePolicyChangedDetails: NSObject {
+    /// New Paper offline mode policy.
+    @objc
+    public var newValue: DBXTeamLogPaperOfflineModePolicy { DBXTeamLogPaperOfflineModePolicy(swift: swift.newValue) }
+    /// Previous Paper offline mode policy.
+    @objc
+    public var previousValue: DBXTeamLogPaperOfflineModePolicy { DBXTeamLogPaperOfflineModePolicy(swift: swift.previousValue) }
+
+    @objc
+    public init(newValue: DBXTeamLogPaperOfflineModePolicy, previousValue: DBXTeamLogPaperOfflineModePolicy) {
+        self.swift = TeamLog.PaperOfflineModePolicyChangedDetails(newValue: newValue.swift, previousValue: previousValue.swift)
+    }
+
+    let swift: TeamLog.PaperOfflineModePolicyChangedDetails
+
+    public init(swift: TeamLog.PaperOfflineModePolicyChangedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible PaperOfflineModePolicyChangedType struct
+@objc
+public class DBXTeamLogPaperOfflineModePolicyChangedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.PaperOfflineModePolicyChangedType(description_: description_)
+    }
+
+    let swift: TeamLog.PaperOfflineModePolicyChangedType
+
+    public init(swift: TeamLog.PaperOfflineModePolicyChangedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
 /// Changed permissions for published doc.
 @objc
 public class DBXTeamLogPaperPublishedLinkChangePermissionDetails: NSObject {
@@ -66843,6 +68319,52 @@ public class DBXTeamLogProtectActionRemoveCollaboratorType: NSObject {
     public override var description: String { swift.description }
 }
 
+/// Removed domains via Dropbox Protect.
+@objc
+public class DBXTeamLogProtectActionRemoveDomainsDetails: NSObject {
+    /// Action ID.
+    @objc
+    public var actionId: String { swift.actionId }
+
+    @objc
+    public init(actionId: String) {
+        self.swift = TeamLog.ProtectActionRemoveDomainsDetails(actionId: actionId)
+    }
+
+    let swift: TeamLog.ProtectActionRemoveDomainsDetails
+
+    public init(swift: TeamLog.ProtectActionRemoveDomainsDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectActionRemoveDomainsType struct
+@objc
+public class DBXTeamLogProtectActionRemoveDomainsType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectActionRemoveDomainsType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectActionRemoveDomainsType
+
+    public init(swift: TeamLog.ProtectActionRemoveDomainsType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
 /// Removed a link via Dropbox Protect.
 @objc
 public class DBXTeamLogProtectActionRemoveLinkDetails: NSObject {
@@ -66935,6 +68457,251 @@ public class DBXTeamLogProtectActionStopSharingType: NSObject {
     public override var description: String { swift.description }
 }
 
+/// Created a Dropbox Protect custom data type.
+@objc
+public class DBXTeamLogProtectCustomDataTypeCreatedDetails: NSObject {
+    /// ID.
+    @objc
+    public var customDataTypeId: String { swift.customDataTypeId }
+    /// Name.
+    @objc
+    public var name: String { swift.name }
+
+    @objc
+    public init(customDataTypeId: String, name: String) {
+        self.swift = TeamLog.ProtectCustomDataTypeCreatedDetails(customDataTypeId: customDataTypeId, name: name)
+    }
+
+    let swift: TeamLog.ProtectCustomDataTypeCreatedDetails
+
+    public init(swift: TeamLog.ProtectCustomDataTypeCreatedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectCustomDataTypeCreatedType struct
+@objc
+public class DBXTeamLogProtectCustomDataTypeCreatedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectCustomDataTypeCreatedType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectCustomDataTypeCreatedType
+
+    public init(swift: TeamLog.ProtectCustomDataTypeCreatedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Deleted a Dropbox Protect custom data type.
+@objc
+public class DBXTeamLogProtectCustomDataTypeDeletedDetails: NSObject {
+    /// ID.
+    @objc
+    public var customDataTypeId: String { swift.customDataTypeId }
+    /// Name.
+    @objc
+    public var name: String { swift.name }
+
+    @objc
+    public init(customDataTypeId: String, name: String) {
+        self.swift = TeamLog.ProtectCustomDataTypeDeletedDetails(customDataTypeId: customDataTypeId, name: name)
+    }
+
+    let swift: TeamLog.ProtectCustomDataTypeDeletedDetails
+
+    public init(swift: TeamLog.ProtectCustomDataTypeDeletedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectCustomDataTypeDeletedType struct
+@objc
+public class DBXTeamLogProtectCustomDataTypeDeletedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectCustomDataTypeDeletedType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectCustomDataTypeDeletedType
+
+    public init(swift: TeamLog.ProtectCustomDataTypeDeletedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Disabled a Dropbox Protect custom data type.
+@objc
+public class DBXTeamLogProtectCustomDataTypeDisabledDetails: NSObject {
+    /// ID.
+    @objc
+    public var customDataTypeId: String { swift.customDataTypeId }
+    /// Name.
+    @objc
+    public var name: String { swift.name }
+
+    @objc
+    public init(customDataTypeId: String, name: String) {
+        self.swift = TeamLog.ProtectCustomDataTypeDisabledDetails(customDataTypeId: customDataTypeId, name: name)
+    }
+
+    let swift: TeamLog.ProtectCustomDataTypeDisabledDetails
+
+    public init(swift: TeamLog.ProtectCustomDataTypeDisabledDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectCustomDataTypeDisabledType struct
+@objc
+public class DBXTeamLogProtectCustomDataTypeDisabledType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectCustomDataTypeDisabledType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectCustomDataTypeDisabledType
+
+    public init(swift: TeamLog.ProtectCustomDataTypeDisabledType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Enabled a Dropbox Protect custom data type.
+@objc
+public class DBXTeamLogProtectCustomDataTypeEnabledDetails: NSObject {
+    /// ID.
+    @objc
+    public var customDataTypeId: String { swift.customDataTypeId }
+    /// Name.
+    @objc
+    public var name: String { swift.name }
+
+    @objc
+    public init(customDataTypeId: String, name: String) {
+        self.swift = TeamLog.ProtectCustomDataTypeEnabledDetails(customDataTypeId: customDataTypeId, name: name)
+    }
+
+    let swift: TeamLog.ProtectCustomDataTypeEnabledDetails
+
+    public init(swift: TeamLog.ProtectCustomDataTypeEnabledDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectCustomDataTypeEnabledType struct
+@objc
+public class DBXTeamLogProtectCustomDataTypeEnabledType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectCustomDataTypeEnabledType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectCustomDataTypeEnabledType
+
+    public init(swift: TeamLog.ProtectCustomDataTypeEnabledType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Modified a Dropbox Protect custom data type.
+@objc
+public class DBXTeamLogProtectCustomDataTypeModifiedDetails: NSObject {
+    /// ID.
+    @objc
+    public var customDataTypeId: String { swift.customDataTypeId }
+    /// Name.
+    @objc
+    public var name: String { swift.name }
+
+    @objc
+    public init(customDataTypeId: String, name: String) {
+        self.swift = TeamLog.ProtectCustomDataTypeModifiedDetails(customDataTypeId: customDataTypeId, name: name)
+    }
+
+    let swift: TeamLog.ProtectCustomDataTypeModifiedDetails
+
+    public init(swift: TeamLog.ProtectCustomDataTypeModifiedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectCustomDataTypeModifiedType struct
+@objc
+public class DBXTeamLogProtectCustomDataTypeModifiedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectCustomDataTypeModifiedType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectCustomDataTypeModifiedType
+
+    public init(swift: TeamLog.ProtectCustomDataTypeModifiedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
 /// Modified Protect internal domains list.
 @objc
 public class DBXTeamLogProtectInternalDomainsChangedDetails: NSObject {
@@ -66976,6 +68743,1435 @@ public class DBXTeamLogProtectInternalDomainsChangedType: NSObject {
     let swift: TeamLog.ProtectInternalDomainsChangedType
 
     public init(swift: TeamLog.ProtectInternalDomainsChangedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Activated a Dropbox Protect policy.
+@objc
+public class DBXTeamLogProtectPolicyActivatedDetails: NSObject {
+    /// Policy ID.
+    @objc
+    public var policyId: String { swift.policyId }
+
+    @objc
+    public init(policyId: String) {
+        self.swift = TeamLog.ProtectPolicyActivatedDetails(policyId: policyId)
+    }
+
+    let swift: TeamLog.ProtectPolicyActivatedDetails
+
+    public init(swift: TeamLog.ProtectPolicyActivatedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectPolicyActivatedType struct
+@objc
+public class DBXTeamLogProtectPolicyActivatedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectPolicyActivatedType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectPolicyActivatedType
+
+    public init(swift: TeamLog.ProtectPolicyActivatedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Deactivated a Dropbox Protect policy.
+@objc
+public class DBXTeamLogProtectPolicyDeactivatedDetails: NSObject {
+    /// Policy ID.
+    @objc
+    public var policyId: String { swift.policyId }
+
+    @objc
+    public init(policyId: String) {
+        self.swift = TeamLog.ProtectPolicyDeactivatedDetails(policyId: policyId)
+    }
+
+    let swift: TeamLog.ProtectPolicyDeactivatedDetails
+
+    public init(swift: TeamLog.ProtectPolicyDeactivatedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectPolicyDeactivatedType struct
+@objc
+public class DBXTeamLogProtectPolicyDeactivatedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectPolicyDeactivatedType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectPolicyDeactivatedType
+
+    public init(swift: TeamLog.ProtectPolicyDeactivatedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Scheduled a Dropbox Protect policy.
+@objc
+public class DBXTeamLogProtectPolicyScheduledDetails: NSObject {
+    /// Policy ID.
+    @objc
+    public var policyId: String { swift.policyId }
+
+    @objc
+    public init(policyId: String) {
+        self.swift = TeamLog.ProtectPolicyScheduledDetails(policyId: policyId)
+    }
+
+    let swift: TeamLog.ProtectPolicyScheduledDetails
+
+    public init(swift: TeamLog.ProtectPolicyScheduledDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectPolicyScheduledType struct
+@objc
+public class DBXTeamLogProtectPolicyScheduledType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectPolicyScheduledType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectPolicyScheduledType
+
+    public init(swift: TeamLog.ProtectPolicyScheduledType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Updated a Dropbox Protect policy.
+@objc
+public class DBXTeamLogProtectPolicyUpdatedDetails: NSObject {
+    /// Policy ID.
+    @objc
+    public var policyId: String { swift.policyId }
+
+    @objc
+    public init(policyId: String) {
+        self.swift = TeamLog.ProtectPolicyUpdatedDetails(policyId: policyId)
+    }
+
+    let swift: TeamLog.ProtectPolicyUpdatedDetails
+
+    public init(swift: TeamLog.ProtectPolicyUpdatedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectPolicyUpdatedType struct
+@objc
+public class DBXTeamLogProtectPolicyUpdatedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectPolicyUpdatedType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectPolicyUpdatedType
+
+    public init(swift: TeamLog.ProtectPolicyUpdatedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// The category that a Dropbox Protect report belongs to
+@objc
+public class DBXTeamLogProtectReportCategory: NSObject {
+    let swift: TeamLog.ProtectReportCategory
+
+    public init(swift: TeamLog.ProtectReportCategory) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: TeamLog.ProtectReportCategory) -> DBXTeamLogProtectReportCategory {
+        switch swift {
+        case .overview:
+            return DBXTeamLogProtectReportCategoryOverview()
+        case .staleAccess:
+            return DBXTeamLogProtectReportCategoryStaleAccess()
+        case .other:
+            return DBXTeamLogProtectReportCategoryOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asOverview: DBXTeamLogProtectReportCategoryOverview? {
+        return self as? DBXTeamLogProtectReportCategoryOverview
+    }
+
+    @objc
+    public var asStaleAccess: DBXTeamLogProtectReportCategoryStaleAccess? {
+        return self as? DBXTeamLogProtectReportCategoryStaleAccess
+    }
+
+    @objc
+    public var asOther: DBXTeamLogProtectReportCategoryOther? {
+        return self as? DBXTeamLogProtectReportCategoryOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportCategoryOverview: DBXTeamLogProtectReportCategory {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportCategory.overview
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportCategoryStaleAccess: DBXTeamLogProtectReportCategory {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportCategory.staleAccess
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportCategoryOther: DBXTeamLogProtectReportCategory {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportCategory.other
+        super.init(swift: swift)
+    }
+}
+
+/// The metric that a Dropbox Protect report corresponds to
+@objc
+public class DBXTeamLogProtectReportMetric: NSObject {
+    let swift: TeamLog.ProtectReportMetric
+
+    public init(swift: TeamLog.ProtectReportMetric) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: TeamLog.ProtectReportMetric) -> DBXTeamLogProtectReportMetric {
+        switch swift {
+        case .externalModifiedOver1Year:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver1Year()
+        case .externalModifiedOver1YearCompany:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver1YearCompany()
+        case .externalModifiedOver1YearOutside:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver1YearOutside()
+        case .externalModifiedOver1YearPersonal:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver1YearPersonal()
+        case .externalModifiedOver1YearPublic:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver1YearPublic()
+        case .externalModifiedOver2Years:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver2Years()
+        case .externalModifiedOver2YearsCompany:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver2YearsCompany()
+        case .externalModifiedOver2YearsOutside:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver2YearsOutside()
+        case .externalModifiedOver2YearsPersonal:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver2YearsPersonal()
+        case .externalModifiedOver2YearsPublic:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver2YearsPublic()
+        case .externalModifiedOver3Years:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver3Years()
+        case .externalModifiedOver3YearsCompany:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver3YearsCompany()
+        case .externalModifiedOver3YearsOutside:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver3YearsOutside()
+        case .externalModifiedOver3YearsPersonal:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver3YearsPersonal()
+        case .externalModifiedOver3YearsPublic:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver3YearsPublic()
+        case .externalModifiedOver5Years:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver5Years()
+        case .externalModifiedOver5YearsCompany:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver5YearsCompany()
+        case .externalModifiedOver5YearsOutside:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver5YearsOutside()
+        case .externalModifiedOver5YearsPersonal:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver5YearsPersonal()
+        case .externalModifiedOver5YearsPublic:
+            return DBXTeamLogProtectReportMetricExternalModifiedOver5YearsPublic()
+        case .foldersCompany:
+            return DBXTeamLogProtectReportMetricFoldersCompany()
+        case .foldersInternal:
+            return DBXTeamLogProtectReportMetricFoldersInternal()
+        case .foldersOutside:
+            return DBXTeamLogProtectReportMetricFoldersOutside()
+        case .foldersPersonal:
+            return DBXTeamLogProtectReportMetricFoldersPersonal()
+        case .foldersPublic:
+            return DBXTeamLogProtectReportMetricFoldersPublic()
+        case .internalModifiedOver1Year:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver1Year()
+        case .internalModifiedOver1YearCompany:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver1YearCompany()
+        case .internalModifiedOver1YearOutside:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver1YearOutside()
+        case .internalModifiedOver1YearPersonal:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver1YearPersonal()
+        case .internalModifiedOver1YearPublic:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver1YearPublic()
+        case .internalModifiedOver2Years:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver2Years()
+        case .internalModifiedOver2YearsCompany:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver2YearsCompany()
+        case .internalModifiedOver2YearsOutside:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver2YearsOutside()
+        case .internalModifiedOver2YearsPersonal:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver2YearsPersonal()
+        case .internalModifiedOver2YearsPublic:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver2YearsPublic()
+        case .internalModifiedOver3Years:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver3Years()
+        case .internalModifiedOver3YearsCompany:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver3YearsCompany()
+        case .internalModifiedOver3YearsOutside:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver3YearsOutside()
+        case .internalModifiedOver3YearsPersonal:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver3YearsPersonal()
+        case .internalModifiedOver3YearsPublic:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver3YearsPublic()
+        case .internalModifiedOver5Years:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver5Years()
+        case .internalModifiedOver5YearsCompany:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver5YearsCompany()
+        case .internalModifiedOver5YearsOutside:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver5YearsOutside()
+        case .internalModifiedOver5YearsPersonal:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver5YearsPersonal()
+        case .internalModifiedOver5YearsPublic:
+            return DBXTeamLogProtectReportMetricInternalModifiedOver5YearsPublic()
+        case .itemsAll:
+            return DBXTeamLogProtectReportMetricItemsAll()
+        case .itemsCompanyAccess:
+            return DBXTeamLogProtectReportMetricItemsCompanyAccess()
+        case .itemsInternallyOwned:
+            return DBXTeamLogProtectReportMetricItemsInternallyOwned()
+        case .itemsModifiedOver1Year:
+            return DBXTeamLogProtectReportMetricItemsModifiedOver1Year()
+        case .itemsModifiedOver3Years:
+            return DBXTeamLogProtectReportMetricItemsModifiedOver3Years()
+        case .itemsOutsideAccess:
+            return DBXTeamLogProtectReportMetricItemsOutsideAccess()
+        case .itemsPersonalAccess:
+            return DBXTeamLogProtectReportMetricItemsPersonalAccess()
+        case .itemsPublicLinks:
+            return DBXTeamLogProtectReportMetricItemsPublicLinks()
+        case .otherFolders:
+            return DBXTeamLogProtectReportMetricOtherFolders()
+        case .otherSharedDrives:
+            return DBXTeamLogProtectReportMetricOtherSharedDrives()
+        case .sharedDrivesInternal:
+            return DBXTeamLogProtectReportMetricSharedDrivesInternal()
+        case .sharedDrivesOutside:
+            return DBXTeamLogProtectReportMetricSharedDrivesOutside()
+        case .sharedDrivesPersonal:
+            return DBXTeamLogProtectReportMetricSharedDrivesPersonal()
+        case .other:
+            return DBXTeamLogProtectReportMetricOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asExternalModifiedOver1Year: DBXTeamLogProtectReportMetricExternalModifiedOver1Year? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver1Year
+    }
+
+    @objc
+    public var asExternalModifiedOver1YearCompany: DBXTeamLogProtectReportMetricExternalModifiedOver1YearCompany? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver1YearCompany
+    }
+
+    @objc
+    public var asExternalModifiedOver1YearOutside: DBXTeamLogProtectReportMetricExternalModifiedOver1YearOutside? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver1YearOutside
+    }
+
+    @objc
+    public var asExternalModifiedOver1YearPersonal: DBXTeamLogProtectReportMetricExternalModifiedOver1YearPersonal? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver1YearPersonal
+    }
+
+    @objc
+    public var asExternalModifiedOver1YearPublic: DBXTeamLogProtectReportMetricExternalModifiedOver1YearPublic? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver1YearPublic
+    }
+
+    @objc
+    public var asExternalModifiedOver2Years: DBXTeamLogProtectReportMetricExternalModifiedOver2Years? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver2Years
+    }
+
+    @objc
+    public var asExternalModifiedOver2YearsCompany: DBXTeamLogProtectReportMetricExternalModifiedOver2YearsCompany? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver2YearsCompany
+    }
+
+    @objc
+    public var asExternalModifiedOver2YearsOutside: DBXTeamLogProtectReportMetricExternalModifiedOver2YearsOutside? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver2YearsOutside
+    }
+
+    @objc
+    public var asExternalModifiedOver2YearsPersonal: DBXTeamLogProtectReportMetricExternalModifiedOver2YearsPersonal? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver2YearsPersonal
+    }
+
+    @objc
+    public var asExternalModifiedOver2YearsPublic: DBXTeamLogProtectReportMetricExternalModifiedOver2YearsPublic? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver2YearsPublic
+    }
+
+    @objc
+    public var asExternalModifiedOver3Years: DBXTeamLogProtectReportMetricExternalModifiedOver3Years? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver3Years
+    }
+
+    @objc
+    public var asExternalModifiedOver3YearsCompany: DBXTeamLogProtectReportMetricExternalModifiedOver3YearsCompany? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver3YearsCompany
+    }
+
+    @objc
+    public var asExternalModifiedOver3YearsOutside: DBXTeamLogProtectReportMetricExternalModifiedOver3YearsOutside? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver3YearsOutside
+    }
+
+    @objc
+    public var asExternalModifiedOver3YearsPersonal: DBXTeamLogProtectReportMetricExternalModifiedOver3YearsPersonal? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver3YearsPersonal
+    }
+
+    @objc
+    public var asExternalModifiedOver3YearsPublic: DBXTeamLogProtectReportMetricExternalModifiedOver3YearsPublic? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver3YearsPublic
+    }
+
+    @objc
+    public var asExternalModifiedOver5Years: DBXTeamLogProtectReportMetricExternalModifiedOver5Years? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver5Years
+    }
+
+    @objc
+    public var asExternalModifiedOver5YearsCompany: DBXTeamLogProtectReportMetricExternalModifiedOver5YearsCompany? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver5YearsCompany
+    }
+
+    @objc
+    public var asExternalModifiedOver5YearsOutside: DBXTeamLogProtectReportMetricExternalModifiedOver5YearsOutside? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver5YearsOutside
+    }
+
+    @objc
+    public var asExternalModifiedOver5YearsPersonal: DBXTeamLogProtectReportMetricExternalModifiedOver5YearsPersonal? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver5YearsPersonal
+    }
+
+    @objc
+    public var asExternalModifiedOver5YearsPublic: DBXTeamLogProtectReportMetricExternalModifiedOver5YearsPublic? {
+        return self as? DBXTeamLogProtectReportMetricExternalModifiedOver5YearsPublic
+    }
+
+    @objc
+    public var asFoldersCompany: DBXTeamLogProtectReportMetricFoldersCompany? {
+        return self as? DBXTeamLogProtectReportMetricFoldersCompany
+    }
+
+    @objc
+    public var asFoldersInternal: DBXTeamLogProtectReportMetricFoldersInternal? {
+        return self as? DBXTeamLogProtectReportMetricFoldersInternal
+    }
+
+    @objc
+    public var asFoldersOutside: DBXTeamLogProtectReportMetricFoldersOutside? {
+        return self as? DBXTeamLogProtectReportMetricFoldersOutside
+    }
+
+    @objc
+    public var asFoldersPersonal: DBXTeamLogProtectReportMetricFoldersPersonal? {
+        return self as? DBXTeamLogProtectReportMetricFoldersPersonal
+    }
+
+    @objc
+    public var asFoldersPublic: DBXTeamLogProtectReportMetricFoldersPublic? {
+        return self as? DBXTeamLogProtectReportMetricFoldersPublic
+    }
+
+    @objc
+    public var asInternalModifiedOver1Year: DBXTeamLogProtectReportMetricInternalModifiedOver1Year? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver1Year
+    }
+
+    @objc
+    public var asInternalModifiedOver1YearCompany: DBXTeamLogProtectReportMetricInternalModifiedOver1YearCompany? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver1YearCompany
+    }
+
+    @objc
+    public var asInternalModifiedOver1YearOutside: DBXTeamLogProtectReportMetricInternalModifiedOver1YearOutside? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver1YearOutside
+    }
+
+    @objc
+    public var asInternalModifiedOver1YearPersonal: DBXTeamLogProtectReportMetricInternalModifiedOver1YearPersonal? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver1YearPersonal
+    }
+
+    @objc
+    public var asInternalModifiedOver1YearPublic: DBXTeamLogProtectReportMetricInternalModifiedOver1YearPublic? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver1YearPublic
+    }
+
+    @objc
+    public var asInternalModifiedOver2Years: DBXTeamLogProtectReportMetricInternalModifiedOver2Years? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver2Years
+    }
+
+    @objc
+    public var asInternalModifiedOver2YearsCompany: DBXTeamLogProtectReportMetricInternalModifiedOver2YearsCompany? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver2YearsCompany
+    }
+
+    @objc
+    public var asInternalModifiedOver2YearsOutside: DBXTeamLogProtectReportMetricInternalModifiedOver2YearsOutside? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver2YearsOutside
+    }
+
+    @objc
+    public var asInternalModifiedOver2YearsPersonal: DBXTeamLogProtectReportMetricInternalModifiedOver2YearsPersonal? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver2YearsPersonal
+    }
+
+    @objc
+    public var asInternalModifiedOver2YearsPublic: DBXTeamLogProtectReportMetricInternalModifiedOver2YearsPublic? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver2YearsPublic
+    }
+
+    @objc
+    public var asInternalModifiedOver3Years: DBXTeamLogProtectReportMetricInternalModifiedOver3Years? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver3Years
+    }
+
+    @objc
+    public var asInternalModifiedOver3YearsCompany: DBXTeamLogProtectReportMetricInternalModifiedOver3YearsCompany? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver3YearsCompany
+    }
+
+    @objc
+    public var asInternalModifiedOver3YearsOutside: DBXTeamLogProtectReportMetricInternalModifiedOver3YearsOutside? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver3YearsOutside
+    }
+
+    @objc
+    public var asInternalModifiedOver3YearsPersonal: DBXTeamLogProtectReportMetricInternalModifiedOver3YearsPersonal? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver3YearsPersonal
+    }
+
+    @objc
+    public var asInternalModifiedOver3YearsPublic: DBXTeamLogProtectReportMetricInternalModifiedOver3YearsPublic? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver3YearsPublic
+    }
+
+    @objc
+    public var asInternalModifiedOver5Years: DBXTeamLogProtectReportMetricInternalModifiedOver5Years? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver5Years
+    }
+
+    @objc
+    public var asInternalModifiedOver5YearsCompany: DBXTeamLogProtectReportMetricInternalModifiedOver5YearsCompany? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver5YearsCompany
+    }
+
+    @objc
+    public var asInternalModifiedOver5YearsOutside: DBXTeamLogProtectReportMetricInternalModifiedOver5YearsOutside? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver5YearsOutside
+    }
+
+    @objc
+    public var asInternalModifiedOver5YearsPersonal: DBXTeamLogProtectReportMetricInternalModifiedOver5YearsPersonal? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver5YearsPersonal
+    }
+
+    @objc
+    public var asInternalModifiedOver5YearsPublic: DBXTeamLogProtectReportMetricInternalModifiedOver5YearsPublic? {
+        return self as? DBXTeamLogProtectReportMetricInternalModifiedOver5YearsPublic
+    }
+
+    @objc
+    public var asItemsAll: DBXTeamLogProtectReportMetricItemsAll? {
+        return self as? DBXTeamLogProtectReportMetricItemsAll
+    }
+
+    @objc
+    public var asItemsCompanyAccess: DBXTeamLogProtectReportMetricItemsCompanyAccess? {
+        return self as? DBXTeamLogProtectReportMetricItemsCompanyAccess
+    }
+
+    @objc
+    public var asItemsInternallyOwned: DBXTeamLogProtectReportMetricItemsInternallyOwned? {
+        return self as? DBXTeamLogProtectReportMetricItemsInternallyOwned
+    }
+
+    @objc
+    public var asItemsModifiedOver1Year: DBXTeamLogProtectReportMetricItemsModifiedOver1Year? {
+        return self as? DBXTeamLogProtectReportMetricItemsModifiedOver1Year
+    }
+
+    @objc
+    public var asItemsModifiedOver3Years: DBXTeamLogProtectReportMetricItemsModifiedOver3Years? {
+        return self as? DBXTeamLogProtectReportMetricItemsModifiedOver3Years
+    }
+
+    @objc
+    public var asItemsOutsideAccess: DBXTeamLogProtectReportMetricItemsOutsideAccess? {
+        return self as? DBXTeamLogProtectReportMetricItemsOutsideAccess
+    }
+
+    @objc
+    public var asItemsPersonalAccess: DBXTeamLogProtectReportMetricItemsPersonalAccess? {
+        return self as? DBXTeamLogProtectReportMetricItemsPersonalAccess
+    }
+
+    @objc
+    public var asItemsPublicLinks: DBXTeamLogProtectReportMetricItemsPublicLinks? {
+        return self as? DBXTeamLogProtectReportMetricItemsPublicLinks
+    }
+
+    @objc
+    public var asOtherFolders: DBXTeamLogProtectReportMetricOtherFolders? {
+        return self as? DBXTeamLogProtectReportMetricOtherFolders
+    }
+
+    @objc
+    public var asOtherSharedDrives: DBXTeamLogProtectReportMetricOtherSharedDrives? {
+        return self as? DBXTeamLogProtectReportMetricOtherSharedDrives
+    }
+
+    @objc
+    public var asSharedDrivesInternal: DBXTeamLogProtectReportMetricSharedDrivesInternal? {
+        return self as? DBXTeamLogProtectReportMetricSharedDrivesInternal
+    }
+
+    @objc
+    public var asSharedDrivesOutside: DBXTeamLogProtectReportMetricSharedDrivesOutside? {
+        return self as? DBXTeamLogProtectReportMetricSharedDrivesOutside
+    }
+
+    @objc
+    public var asSharedDrivesPersonal: DBXTeamLogProtectReportMetricSharedDrivesPersonal? {
+        return self as? DBXTeamLogProtectReportMetricSharedDrivesPersonal
+    }
+
+    @objc
+    public var asOther: DBXTeamLogProtectReportMetricOther? {
+        return self as? DBXTeamLogProtectReportMetricOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver1Year: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver1Year
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver1YearCompany: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver1YearCompany
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver1YearOutside: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver1YearOutside
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver1YearPersonal: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver1YearPersonal
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver1YearPublic: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver1YearPublic
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver2Years: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver2Years
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver2YearsCompany: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver2YearsCompany
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver2YearsOutside: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver2YearsOutside
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver2YearsPersonal: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver2YearsPersonal
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver2YearsPublic: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver2YearsPublic
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver3Years: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver3Years
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver3YearsCompany: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver3YearsCompany
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver3YearsOutside: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver3YearsOutside
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver3YearsPersonal: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver3YearsPersonal
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver3YearsPublic: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver3YearsPublic
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver5Years: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver5Years
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver5YearsCompany: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver5YearsCompany
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver5YearsOutside: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver5YearsOutside
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver5YearsPersonal: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver5YearsPersonal
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricExternalModifiedOver5YearsPublic: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.externalModifiedOver5YearsPublic
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricFoldersCompany: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.foldersCompany
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricFoldersInternal: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.foldersInternal
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricFoldersOutside: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.foldersOutside
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricFoldersPersonal: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.foldersPersonal
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricFoldersPublic: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.foldersPublic
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver1Year: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver1Year
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver1YearCompany: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver1YearCompany
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver1YearOutside: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver1YearOutside
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver1YearPersonal: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver1YearPersonal
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver1YearPublic: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver1YearPublic
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver2Years: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver2Years
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver2YearsCompany: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver2YearsCompany
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver2YearsOutside: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver2YearsOutside
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver2YearsPersonal: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver2YearsPersonal
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver2YearsPublic: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver2YearsPublic
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver3Years: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver3Years
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver3YearsCompany: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver3YearsCompany
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver3YearsOutside: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver3YearsOutside
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver3YearsPersonal: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver3YearsPersonal
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver3YearsPublic: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver3YearsPublic
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver5Years: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver5Years
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver5YearsCompany: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver5YearsCompany
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver5YearsOutside: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver5YearsOutside
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver5YearsPersonal: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver5YearsPersonal
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricInternalModifiedOver5YearsPublic: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.internalModifiedOver5YearsPublic
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricItemsAll: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.itemsAll
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricItemsCompanyAccess: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.itemsCompanyAccess
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricItemsInternallyOwned: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.itemsInternallyOwned
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricItemsModifiedOver1Year: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.itemsModifiedOver1Year
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricItemsModifiedOver3Years: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.itemsModifiedOver3Years
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricItemsOutsideAccess: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.itemsOutsideAccess
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricItemsPersonalAccess: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.itemsPersonalAccess
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricItemsPublicLinks: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.itemsPublicLinks
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricOtherFolders: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.otherFolders
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricOtherSharedDrives: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.otherSharedDrives
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricSharedDrivesInternal: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.sharedDrivesInternal
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricSharedDrivesOutside: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.sharedDrivesOutside
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricSharedDrivesPersonal: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.sharedDrivesPersonal
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportMetricOther: DBXTeamLogProtectReportMetric {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportMetric.other
+        super.init(swift: swift)
+    }
+}
+
+/// The section that a Dropbox Protect report belongs to
+@objc
+public class DBXTeamLogProtectReportSection: NSObject {
+    let swift: TeamLog.ProtectReportSection
+
+    public init(swift: TeamLog.ProtectReportSection) {
+        self.swift = swift
+    }
+
+    public static func factory(swift: TeamLog.ProtectReportSection) -> DBXTeamLogProtectReportSection {
+        switch swift {
+        case .items:
+            return DBXTeamLogProtectReportSectionItems()
+        case .overviewOther:
+            return DBXTeamLogProtectReportSectionOverviewOther()
+        case .ownedExternally:
+            return DBXTeamLogProtectReportSectionOwnedExternally()
+        case .ownedInternally:
+            return DBXTeamLogProtectReportSectionOwnedInternally()
+        case .other:
+            return DBXTeamLogProtectReportSectionOther()
+        }
+    }
+
+    @objc
+    public override var description: String { swift.description }
+
+    @objc
+    public var asItems: DBXTeamLogProtectReportSectionItems? {
+        return self as? DBXTeamLogProtectReportSectionItems
+    }
+
+    @objc
+    public var asOverviewOther: DBXTeamLogProtectReportSectionOverviewOther? {
+        return self as? DBXTeamLogProtectReportSectionOverviewOther
+    }
+
+    @objc
+    public var asOwnedExternally: DBXTeamLogProtectReportSectionOwnedExternally? {
+        return self as? DBXTeamLogProtectReportSectionOwnedExternally
+    }
+
+    @objc
+    public var asOwnedInternally: DBXTeamLogProtectReportSectionOwnedInternally? {
+        return self as? DBXTeamLogProtectReportSectionOwnedInternally
+    }
+
+    @objc
+    public var asOther: DBXTeamLogProtectReportSectionOther? {
+        return self as? DBXTeamLogProtectReportSectionOther
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportSectionItems: DBXTeamLogProtectReportSection {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportSection.items
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportSectionOverviewOther: DBXTeamLogProtectReportSection {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportSection.overviewOther
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportSectionOwnedExternally: DBXTeamLogProtectReportSection {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportSection.ownedExternally
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportSectionOwnedInternally: DBXTeamLogProtectReportSection {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportSection.ownedInternally
+        super.init(swift: swift)
+    }
+}
+
+/// An unspecified error.
+@objc
+public class DBXTeamLogProtectReportSectionOther: DBXTeamLogProtectReportSection {
+    @objc
+    public init() {
+        let swift = TeamLog.ProtectReportSection.other
+        super.init(swift: swift)
+    }
+}
+
+/// Viewed a Dropbox Protect report.
+@objc
+public class DBXTeamLogProtectReportViewDetails: NSObject {
+    /// The category of the report that was viewed.
+    @objc
+    public var reportCategory: DBXTeamLogProtectReportCategory { DBXTeamLogProtectReportCategory(swift: swift.reportCategory) }
+    /// The section of the report that was viewed.
+    @objc
+    public var reportSection: DBXTeamLogProtectReportSection? { guard let swift = swift.reportSection else { return nil }; return DBXTeamLogProtectReportSection(swift: swift) }
+    /// The metric of the report that was viewed.
+    @objc
+    public var reportMetric: DBXTeamLogProtectReportMetric? { guard let swift = swift.reportMetric else { return nil }; return DBXTeamLogProtectReportMetric(swift: swift) }
+
+    @objc
+    public init(reportCategory: DBXTeamLogProtectReportCategory, reportSection: DBXTeamLogProtectReportSection?, reportMetric: DBXTeamLogProtectReportMetric?) {
+        self.swift = TeamLog.ProtectReportViewDetails(reportCategory: reportCategory.swift, reportSection: reportSection?.swift, reportMetric: reportMetric?.swift)
+    }
+
+    let swift: TeamLog.ProtectReportViewDetails
+
+    public init(swift: TeamLog.ProtectReportViewDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible ProtectReportViewType struct
+@objc
+public class DBXTeamLogProtectReportViewType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.ProtectReportViewType(description_: description_)
+    }
+
+    let swift: TeamLog.ProtectReportViewType
+
+    public init(swift: TeamLog.ProtectReportViewType) {
         self.swift = swift
     }
 
@@ -78188,6 +81384,110 @@ public class DBXTeamLogTeamExtensionsPolicyChangedType: NSObject {
     let swift: TeamLog.TeamExtensionsPolicyChangedType
 
     public init(swift: TeamLog.TeamExtensionsPolicyChangedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Changed external sharing controls activation state.
+@objc
+public class DBXTeamLogTeamExternalSharingControlsActivationStateChangedDetails: NSObject {
+    /// Previous external sharing controls activation state.
+    @objc
+    public var previousActivationState: DBXTeamLogExternalSharingControlsActivationState { DBXTeamLogExternalSharingControlsActivationState(swift: swift.previousActivationState) }
+    /// New external sharing controls activation state.
+    @objc
+    public var newActivationState: DBXTeamLogExternalSharingControlsActivationState { DBXTeamLogExternalSharingControlsActivationState(swift: swift.newActivationState) }
+
+    @objc
+    public init(previousActivationState: DBXTeamLogExternalSharingControlsActivationState, newActivationState: DBXTeamLogExternalSharingControlsActivationState) {
+        self.swift = TeamLog.TeamExternalSharingControlsActivationStateChangedDetails(previousActivationState: previousActivationState.swift, newActivationState: newActivationState.swift)
+    }
+
+    let swift: TeamLog.TeamExternalSharingControlsActivationStateChangedDetails
+
+    public init(swift: TeamLog.TeamExternalSharingControlsActivationStateChangedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible TeamExternalSharingControlsActivationStateChangedType struct
+@objc
+public class DBXTeamLogTeamExternalSharingControlsActivationStateChangedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.TeamExternalSharingControlsActivationStateChangedType(description_: description_)
+    }
+
+    let swift: TeamLog.TeamExternalSharingControlsActivationStateChangedType
+
+    public init(swift: TeamLog.TeamExternalSharingControlsActivationStateChangedType) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Changed approved or blocked entries for external sharing controls.
+@objc
+public class DBXTeamLogTeamExternalSharingControlsRecipientListsChangedDetails: NSObject {
+    /// Added approved external sharing recipient entries.
+    @objc
+    public var addedApprovedEntries: Array<String>? { swift.addedApprovedEntries }
+    /// Removed approved external sharing recipient entries.
+    @objc
+    public var removedApprovedEntries: Array<String>? { swift.removedApprovedEntries }
+    /// Added blocked external sharing recipient entries.
+    @objc
+    public var addedBlockedEntries: Array<String>? { swift.addedBlockedEntries }
+    /// Removed blocked external sharing recipient entries.
+    @objc
+    public var removedBlockedEntries: Array<String>? { swift.removedBlockedEntries }
+
+    @objc
+    public init(addedApprovedEntries: Array<String>?, removedApprovedEntries: Array<String>?, addedBlockedEntries: Array<String>?, removedBlockedEntries: Array<String>?) {
+        self.swift = TeamLog.TeamExternalSharingControlsRecipientListsChangedDetails(addedApprovedEntries: addedApprovedEntries, removedApprovedEntries: removedApprovedEntries, addedBlockedEntries: addedBlockedEntries, removedBlockedEntries: removedBlockedEntries)
+    }
+
+    let swift: TeamLog.TeamExternalSharingControlsRecipientListsChangedDetails
+
+    public init(swift: TeamLog.TeamExternalSharingControlsRecipientListsChangedDetails) {
+        self.swift = swift
+    }
+
+
+    @objc
+    public override var description: String { swift.description }
+}
+
+/// Objective-C compatible TeamExternalSharingControlsRecipientListsChangedType struct
+@objc
+public class DBXTeamLogTeamExternalSharingControlsRecipientListsChangedType: NSObject {
+    /// (no description)
+    @objc
+    public var description_: String { swift.description_ }
+
+    @objc
+    public init(description_: String) {
+        self.swift = TeamLog.TeamExternalSharingControlsRecipientListsChangedType(description_: description_)
+    }
+
+    let swift: TeamLog.TeamExternalSharingControlsRecipientListsChangedType
+
+    public init(swift: TeamLog.TeamExternalSharingControlsRecipientListsChangedType) {
         self.swift = swift
     }
 

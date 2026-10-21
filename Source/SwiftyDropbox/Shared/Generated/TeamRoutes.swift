@@ -833,7 +833,7 @@ public class TeamRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Launch a bulk suspend job. The server enforces a maximum of 500 members.
+    /// Deprecated compatibility alias for MembersSuspendBatch.
     ///
     /// - scope: members.write
     ///
@@ -841,27 +841,29 @@ public class TeamRoutes: DropboxTransportClientOwning {
     /// item IDs and duplicate member selectors.
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
-    /// or a `Team.BulkSuspendError` object on failure.
-    @discardableResult public func membersBulkSuspend(members: [Team.BulkSuspendMemberTarget]) -> RpcRequest<
+    /// or a `Team.MembersSuspendBatchError` object on failure.
+    @available(*, unavailable, message: "membersBulkSuspend is deprecated.")
+    @discardableResult public func membersBulkSuspend(members: [Team.MembersSuspendBatchTarget]) -> RpcRequest<
         Async.LaunchResultBaseSerializer,
-        Team.BulkSuspendErrorSerializer
+        Team.MembersSuspendBatchErrorSerializer
     > {
         let route = Team.membersBulkSuspend
-        let serverArgs = Team.BulkSuspendArg(members: members)
+        let serverArgs = Team.MembersSuspendBatchArg(members: members)
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Poll a previously launched bulk suspend job.
+    /// Deprecated compatibility alias for MembersSuspendBatchJobStatusCheck.
     ///
     /// - scope: members.write
     ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
     /// that launched the job.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Team.BulkSuspendJobStatus` object on
-    /// success or a `Async.PollError` object on failure.
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersSuspendBatchJobStatus` object
+    /// on success or a `Async.PollError` object on failure.
+    @available(*, unavailable, message: "membersBulkSuspendJobStatusCheck is deprecated.")
     @discardableResult public func membersBulkSuspendJobStatusCheck(asyncJobId: String) -> RpcRequest<
-        Team.BulkSuspendJobStatusSerializer,
+        Team.MembersSuspendBatchJobStatusSerializer,
         Async.PollErrorSerializer
     > {
         let route = Team.membersBulkSuspendJobStatusCheck
@@ -1394,6 +1396,42 @@ public class TeamRoutes: DropboxTransportClientOwning {
     > {
         let route = Team.membersSuspend
         let serverArgs = Team.MembersDeactivateArg(user: user, wipeData: wipeData)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Launch a member suspension batch. The server enforces a maximum of 500 members.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter members: Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
+    /// item IDs and duplicate member selectors.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Team.MembersSuspendBatchError` object on failure.
+    @discardableResult public func membersSuspendBatch(members: [Team.MembersSuspendBatchTarget]) -> RpcRequest<
+        Async.LaunchResultBaseSerializer,
+        Team.MembersSuspendBatchErrorSerializer
+    > {
+        let route = Team.membersSuspendBatch
+        let serverArgs = Team.MembersSuspendBatchArg(members: members)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Poll a previously launched member suspension batch job.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersSuspendBatchJobStatus` object
+    /// on success or a `Async.PollError` object on failure.
+    @discardableResult public func membersSuspendBatchJobStatusCheck(asyncJobId: String) -> RpcRequest<
+        Team.MembersSuspendBatchJobStatusSerializer,
+        Async.PollErrorSerializer
+    > {
+        let route = Team.membersSuspendBatchJobStatusCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
         return client.request(route, serverArgs: serverArgs)
     }
 
