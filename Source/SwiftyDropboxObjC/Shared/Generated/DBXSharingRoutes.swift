@@ -32,8 +32,6 @@ public class DBXSharingRoutes: NSObject {
     /// - parameter accessLevel: AccessLevel union object, describing what access level we want to give new members.
     /// - parameter addMessageAsComment: If the custom message should be added as a comment on the file. Only meant for
     /// Paper files.
-    /// - parameter fpSealedResult: Field is only returned for "internal" callers. The FingerprintJS Sealed Client
-    /// Result value
     ///
     /// - returns: Through the response callback, the caller will receive a `Array<Sharing.FileMemberActionResult>`
     /// object on success or a `Sharing.AddFileMemberError` object on failure.
@@ -44,8 +42,7 @@ public class DBXSharingRoutes: NSObject {
         customMessage: String?,
         quiet: NSNumber,
         accessLevel: DBXSharingAccessLevel?,
-        addMessageAsComment: NSNumber,
-        fpSealedResult: String?
+        addMessageAsComment: NSNumber
     ) -> DBXSharingAddFileMemberRpcRequest {
         let swift = swift.addFileMember(
             file: file,
@@ -53,8 +50,7 @@ public class DBXSharingRoutes: NSObject {
             customMessage: customMessage,
             quiet: quiet.boolValue,
             accessLevel: accessLevel?.swift,
-            addMessageAsComment: addMessageAsComment.boolValue,
-            fpSealedResult: fpSealedResult
+            addMessageAsComment: addMessageAsComment.boolValue
         )
         return DBXSharingAddFileMemberRpcRequest(swift: swift)
     }
@@ -82,26 +78,12 @@ public class DBXSharingRoutes: NSObject {
     /// folder.
     /// - parameter quiet: Whether added members should be notified via email and device notifications of their invite.
     /// - parameter customMessage: Optional message to display to added members in their invitation.
-    /// - parameter fpSealedResult: Field is only returned for "internal" callers. The FingerprintJS Sealed Client
-    /// Result value
     ///
     /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
     /// `Sharing.AddFolderMemberError` object on failure.
     @objc
-    @discardableResult public func addFolderMember(
-        sharedFolderId: String,
-        members: [DBXSharingAddMember],
-        quiet: NSNumber,
-        customMessage: String?,
-        fpSealedResult: String?
-    ) -> DBXSharingAddFolderMemberRpcRequest {
-        let swift = swift.addFolderMember(
-            sharedFolderId: sharedFolderId,
-            members: members.map(\.swift),
-            quiet: quiet.boolValue,
-            customMessage: customMessage,
-            fpSealedResult: fpSealedResult
-        )
+    @discardableResult public func addFolderMember(sharedFolderId: String, members: [DBXSharingAddMember], quiet: NSNumber, customMessage: String?) -> DBXSharingAddFolderMemberRpcRequest {
+        let swift = swift.addFolderMember(sharedFolderId: sharedFolderId, members: members.map(\.swift), quiet: quiet.boolValue, customMessage: customMessage)
         return DBXSharingAddFolderMemberRpcRequest(swift: swift)
     }
 
@@ -3151,73 +3133,6 @@ public class DBXSharingRelinquishFolderMembershipRpcRequest: NSObject, DBXReques
             var objc: DBXAsyncLaunchEmptyResult? = nil
             if let swift = result {
                 objc = DBXAsyncLaunchEmptyResult.factory(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
-public class DBXSharingRemoveFileMemberRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Sharing.FileMemberActionIndividualResultSerializer, Sharing.RemoveFileMemberErrorSerializer>
-
-    init(swift: RpcRequest<Sharing.FileMemberActionIndividualResultSerializer, Sharing.RemoveFileMemberErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXSharingFileMemberActionIndividualResult?, DBXSharingRemoveFileMemberError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXSharingFileMemberActionIndividualResult?, DBXSharingRemoveFileMemberError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXSharingRemoveFileMemberError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXSharingRemoveFileMemberError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXSharingFileMemberActionIndividualResult? = nil
-            if let swift = result {
-                objc = DBXSharingFileMemberActionIndividualResult.factory(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
