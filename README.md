@@ -42,7 +42,7 @@ Full documentation [here](https://dropbox.github.io/SwiftyDropbox/api-docs/lates
     * [Multiple Dropbox user case](#multiple-dropbox-user-case)
 * [Objective-C](#objective-c)
   * [Objective-C Compatibility Layer Distribution](#objective-c-compatibility-layer-distribution)
-  * [Using the Objective-C Compatbility Layer](#using-the-objective-c-compatbility-layer)
+  * [Using the Objective-C Compatibility Layer](#using-the-objective-c-compatibility-layer)
   * [Migrating from dropbox-sdk-obj-c](#migrating-from-dropbox-sdk-obj-c)
 * [Changes in version 10.0.0](#changes-in-version-1000)
 * [Examples](#examples)
@@ -956,7 +956,7 @@ target '<YOUR_PROJECT_NAME>' do
 end
 ```
 
-### Using the Objective-C Compatbility Layer
+### Using the Objective-C Compatibility Layer
 
 The Objective-C interface was built to mimic the Swift interface as closely as possible while still maintaining good Objective-C patterns and practices (for example full verbose names instead of the namespacing relied on in Swift). Other than the naming and some other small tweaks to accomodate Objective-C the usage of the SDK should be extremely similar in both languages, thus the instructions above should apply even when in Objective-C.
 
