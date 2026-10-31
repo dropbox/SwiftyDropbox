@@ -962,36 +962,6 @@ public class DBXTeamRoutes: NSObject {
         return DBXTeamMembersAddJobStatusGetRpcRequestV2(swift: swift)
     }
 
-    /// Launch a bulk suspend job. The server enforces a maximum of 500 members.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter members: Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
-    /// item IDs and duplicate member selectors.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
-    /// or a `Team.BulkSuspendError` object on failure.
-    @objc
-    @discardableResult public func membersBulkSuspend(members: [DBXTeamBulkSuspendMemberTarget]) -> DBXTeamMembersBulkSuspendRpcRequest {
-        let swift = swift.membersBulkSuspend(members: members.map(\.swift))
-        return DBXTeamMembersBulkSuspendRpcRequest(swift: swift)
-    }
-
-    /// Poll a previously launched bulk suspend job.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
-    /// that launched the job.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.BulkSuspendJobStatus` object on
-    /// success or a `Async.PollError` object on failure.
-    @objc
-    @discardableResult public func membersBulkSuspendJobStatusCheck(asyncJobId: String) -> DBXTeamMembersBulkSuspendJobStatusCheckRpcRequest {
-        let swift = swift.membersBulkSuspendJobStatusCheck(asyncJobId: asyncJobId)
-        return DBXTeamMembersBulkSuspendJobStatusCheckRpcRequest(swift: swift)
-    }
-
     /// Permanently delete the files of a user who has been removed from the team. After permanent deletion, those files
     /// will not be available to be transferred to another team member. Permission : Team member management Exactly
     /// one of team_member_id, email, or external_id must be provided to identify the user account.
@@ -1560,6 +1530,36 @@ public class DBXTeamRoutes: NSObject {
         return DBXTeamMembersSuspendRpcRequest(swift: swift)
     }
 
+    /// Launch a member suspension batch. The server enforces a maximum of 500 members.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter members: Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
+    /// item IDs and duplicate member selectors.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Team.MembersSuspendBatchError` object on failure.
+    @objc
+    @discardableResult public func membersSuspendBatch(members: [DBXTeamMembersSuspendBatchTarget]) -> DBXTeamMembersSuspendBatchRpcRequest {
+        let swift = swift.membersSuspendBatch(members: members.map(\.swift))
+        return DBXTeamMembersSuspendBatchRpcRequest(swift: swift)
+    }
+
+    /// Poll a previously launched member suspension batch job.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersSuspendBatchJobStatus` object
+    /// on success or a `Async.PollError` object on failure.
+    @objc
+    @discardableResult public func membersSuspendBatchJobStatusCheck(asyncJobId: String) -> DBXTeamMembersSuspendBatchJobStatusCheckRpcRequest {
+        let swift = swift.membersSuspendBatchJobStatusCheck(asyncJobId: asyncJobId)
+        return DBXTeamMembersSuspendBatchJobStatusCheckRpcRequest(swift: swift)
+    }
+
     /// Unsuspend a member from a team. Permission : Team member management Exactly one of team_member_id, email, or
     /// external_id must be provided to identify the user account.
     ///
@@ -1620,117 +1620,6 @@ public class DBXTeamRoutes: NSObject {
     @discardableResult public func namespacesListContinue(cursor: String) -> DBXTeamNamespacesListContinueRpcRequest {
         let swift = swift.namespacesListContinue(cursor: cursor)
         return DBXTeamNamespacesListContinueRpcRequest(swift: swift)
-    }
-
-    /// Endpoint adds Approve List entries. Changes are effective immediately. Changes are committed in transaction. In
-    /// case of single validation error - all entries are rejected. Valid domains (RFC-1034/5) and emails
-    /// (RFC-5322/822) are accepted. Added entries cannot overflow limit of 10000 entries per team. Maximum 100
-    /// entries per call is allowed.
-    ///
-    /// - scope: team_info.write
-    ///
-    /// - parameter domains: List of domains represented by valid string representation (RFC-1034/5).
-    /// - parameter emails: List of emails represented by valid string representation (RFC-5322/822).
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistAddResponse` object on
-    /// success or a `Team.SharingAllowlistAddError` object on failure.
-    @objc
-    @discardableResult public func sharingAllowlistAdd(domains: [String]?, emails: [String]?) -> DBXTeamSharingAllowlistAddRpcRequest {
-        let swift = swift.sharingAllowlistAdd(domains: domains, emails: emails)
-        return DBXTeamSharingAllowlistAddRpcRequest(swift: swift)
-    }
-
-    /// Endpoint adds Approve List entries. Changes are effective immediately. Changes are committed in transaction. In
-    /// case of single validation error - all entries are rejected. Valid domains (RFC-1034/5) and emails
-    /// (RFC-5322/822) are accepted. Added entries cannot overflow limit of 10000 entries per team. Maximum 100
-    /// entries per call is allowed.
-    ///
-    /// - scope: team_info.write
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistAddResponse` object on
-    /// success or a `Team.SharingAllowlistAddError` object on failure.
-    @objc
-    @discardableResult public func sharingAllowlistAdd() -> DBXTeamSharingAllowlistAddRpcRequest {
-        let swift = swift.sharingAllowlistAdd()
-        return DBXTeamSharingAllowlistAddRpcRequest(swift: swift)
-    }
-
-    /// Lists Approve List entries for given team, from newest to oldest, returning up to `limit` entries at a time. If
-    /// there are more than `limit` entries associated with the current team, more can be fetched by passing the
-    /// returned `cursor` to sharingAllowlistListContinue.
-    ///
-    /// - scope: team_info.read
-    ///
-    /// - parameter limit: The number of entries to fetch at one time.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistListResponse` object
-    /// on success or a `Team.SharingAllowlistListError` object on failure.
-    @objc
-    @discardableResult public func sharingAllowlistList(limit: NSNumber) -> DBXTeamSharingAllowlistListRpcRequest {
-        let swift = swift.sharingAllowlistList(limit: limit.uint32Value)
-        return DBXTeamSharingAllowlistListRpcRequest(swift: swift)
-    }
-
-    /// Lists Approve List entries for given team, from newest to oldest, returning up to `limit` entries at a time. If
-    /// there are more than `limit` entries associated with the current team, more can be fetched by passing the
-    /// returned `cursor` to sharingAllowlistListContinue.
-    ///
-    /// - scope: team_info.read
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistListResponse` object
-    /// on success or a `Team.SharingAllowlistListError` object on failure.
-    @objc
-    @discardableResult public func sharingAllowlistList() -> DBXTeamSharingAllowlistListRpcRequest {
-        let swift = swift.sharingAllowlistList()
-        return DBXTeamSharingAllowlistListRpcRequest(swift: swift)
-    }
-
-    /// Lists entries associated with given team, starting from a the cursor. See sharingAllowlistList.
-    ///
-    /// - scope: team_info.read
-    ///
-    /// - parameter cursor: The cursor returned from a previous call to sharingAllowlistList or
-    /// sharingAllowlistListContinue.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistListResponse` object
-    /// on success or a `Team.SharingAllowlistListContinueError` object on failure.
-    @objc
-    @discardableResult public func sharingAllowlistListContinue(cursor: String) -> DBXTeamSharingAllowlistListContinueRpcRequest {
-        let swift = swift.sharingAllowlistListContinue(cursor: cursor)
-        return DBXTeamSharingAllowlistListContinueRpcRequest(swift: swift)
-    }
-
-    /// Endpoint removes Approve List entries. Changes are effective immediately. Changes are committed in transaction.
-    /// In case of single validation error - all entries are rejected. Valid domains (RFC-1034/5) and emails
-    /// (RFC-5322/822) are accepted. Entries being removed have to be present on the list. Maximum 1000 entries per
-    /// call is allowed.
-    ///
-    /// - scope: team_info.write
-    ///
-    /// - parameter domains: List of domains represented by valid string representation (RFC-1034/5).
-    /// - parameter emails: List of emails represented by valid string representation (RFC-5322/822).
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistRemoveResponse` object
-    /// on success or a `Team.SharingAllowlistRemoveError` object on failure.
-    @objc
-    @discardableResult public func sharingAllowlistRemove(domains: [String]?, emails: [String]?) -> DBXTeamSharingAllowlistRemoveRpcRequest {
-        let swift = swift.sharingAllowlistRemove(domains: domains, emails: emails)
-        return DBXTeamSharingAllowlistRemoveRpcRequest(swift: swift)
-    }
-
-    /// Endpoint removes Approve List entries. Changes are effective immediately. Changes are committed in transaction.
-    /// In case of single validation error - all entries are rejected. Valid domains (RFC-1034/5) and emails
-    /// (RFC-5322/822) are accepted. Entries being removed have to be present on the list. Maximum 1000 entries per
-    /// call is allowed.
-    ///
-    /// - scope: team_info.write
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistRemoveResponse` object
-    /// on success or a `Team.SharingAllowlistRemoveError` object on failure.
-    @objc
-    @discardableResult public func sharingAllowlistRemove() -> DBXTeamSharingAllowlistRemoveRpcRequest {
-        let swift = swift.sharingAllowlistRemove()
-        return DBXTeamSharingAllowlistRemoveRpcRequest(swift: swift)
     }
 
     /// Sets an archived team folder's status to active. Permission : Team member file access.
@@ -4736,140 +4625,6 @@ public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXTeamMembersBulkSuspendRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.BulkSuspendErrorSerializer>
-
-    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.BulkSuspendErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamBulkSuspendError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamBulkSuspendError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamBulkSuspendError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXTeamBulkSuspendError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXAsyncLaunchResultBase? = nil
-            if let swift = result {
-                objc = DBXAsyncLaunchResultBase.factory(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
-public class DBXTeamMembersBulkSuspendJobStatusCheckRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.BulkSuspendJobStatusSerializer, Async.PollErrorSerializer>
-
-    init(swift: RpcRequest<Team.BulkSuspendJobStatusSerializer, Async.PollErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamBulkSuspendJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamBulkSuspendJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXAsyncPollError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXTeamBulkSuspendJobStatus? = nil
-            if let swift = result {
-                objc = DBXTeamBulkSuspendJobStatus.factory(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
 public class DBXTeamMembersDeleteFormerMemberFilesRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Team.MembersDeleteFormerMemberFilesErrorSerializer>
 
@@ -6563,6 +6318,140 @@ public class DBXTeamMembersSuspendRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
+public class DBXTeamMembersSuspendBatchRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.MembersSuspendBatchErrorSerializer>
+
+    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.MembersSuspendBatchErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamMembersSuspendBatchError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamMembersSuspendBatchError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXTeamMembersSuspendBatchError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXTeamMembersSuspendBatchError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXAsyncLaunchResultBase? = nil
+            if let swift = result {
+                objc = DBXAsyncLaunchResultBase.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXTeamMembersSuspendBatchJobStatusCheckRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.MembersSuspendBatchJobStatusSerializer, Async.PollErrorSerializer>
+
+    init(swift: RpcRequest<Team.MembersSuspendBatchJobStatusSerializer, Async.PollErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXTeamMembersSuspendBatchJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXTeamMembersSuspendBatchJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAsyncPollError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAsyncPollError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXTeamMembersSuspendBatchJobStatus? = nil
+            if let swift = result {
+                objc = DBXTeamMembersSuspendBatchJobStatus.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
 public class DBXTeamMembersUnsuspendRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Team.MembersUnsuspendErrorSerializer>
 
@@ -7129,274 +7018,6 @@ public class DBXTeamReportsGetStorageRpcRequest: NSObject, DBXRequest {
             var objc: DBXTeamGetStorageReport? = nil
             if let swift = result {
                 objc = DBXTeamGetStorageReport(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
-public class DBXTeamSharingAllowlistAddRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.SharingAllowlistAddResponseSerializer, Team.SharingAllowlistAddErrorSerializer>
-
-    init(swift: RpcRequest<Team.SharingAllowlistAddResponseSerializer, Team.SharingAllowlistAddErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamSharingAllowlistAddResponse?, DBXTeamSharingAllowlistAddError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamSharingAllowlistAddResponse?, DBXTeamSharingAllowlistAddError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamSharingAllowlistAddError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXTeamSharingAllowlistAddError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXTeamSharingAllowlistAddResponse? = nil
-            if let swift = result {
-                objc = DBXTeamSharingAllowlistAddResponse(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
-public class DBXTeamSharingAllowlistListRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.SharingAllowlistListResponseSerializer, Team.SharingAllowlistListErrorSerializer>
-
-    init(swift: RpcRequest<Team.SharingAllowlistListResponseSerializer, Team.SharingAllowlistListErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamSharingAllowlistListResponse?, DBXTeamSharingAllowlistListError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamSharingAllowlistListResponse?, DBXTeamSharingAllowlistListError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamSharingAllowlistListError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXTeamSharingAllowlistListError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXTeamSharingAllowlistListResponse? = nil
-            if let swift = result {
-                objc = DBXTeamSharingAllowlistListResponse(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
-public class DBXTeamSharingAllowlistListContinueRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.SharingAllowlistListResponseSerializer, Team.SharingAllowlistListContinueErrorSerializer>
-
-    init(swift: RpcRequest<Team.SharingAllowlistListResponseSerializer, Team.SharingAllowlistListContinueErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamSharingAllowlistListResponse?, DBXTeamSharingAllowlistListContinueError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamSharingAllowlistListResponse?, DBXTeamSharingAllowlistListContinueError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamSharingAllowlistListContinueError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXTeamSharingAllowlistListContinueError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXTeamSharingAllowlistListResponse? = nil
-            if let swift = result {
-                objc = DBXTeamSharingAllowlistListResponse(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
-public class DBXTeamSharingAllowlistRemoveRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.SharingAllowlistRemoveResponseSerializer, Team.SharingAllowlistRemoveErrorSerializer>
-
-    init(swift: RpcRequest<Team.SharingAllowlistRemoveResponseSerializer, Team.SharingAllowlistRemoveErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamSharingAllowlistRemoveResponse?, DBXTeamSharingAllowlistRemoveError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamSharingAllowlistRemoveResponse?, DBXTeamSharingAllowlistRemoveError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamSharingAllowlistRemoveError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXTeamSharingAllowlistRemoveError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXTeamSharingAllowlistRemoveResponse? = nil
-            if let swift = result {
-                objc = DBXTeamSharingAllowlistRemoveResponse(swift: swift)
             }
             completionHandler(objc, routeError, callError)
         }
