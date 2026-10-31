@@ -683,828 +683,6 @@ public class Team {
         }
     }
 
-    /// Launches one action-specific bulk suspend job.
-    public class BulkSuspendArg: CustomStringConvertible, JSONRepresentable {
-        /// Must contain between 1 and 500 targets. The launch handler also rejects duplicate client item IDs and
-        /// duplicate member selectors.
-        public let members: [Team.BulkSuspendMemberTarget]
-        public init(members: [Team.BulkSuspendMemberTarget]) {
-            self.members = members
-        }
-
-        func json() throws -> JSON {
-            try BulkSuspendArgSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try BulkSuspendArgSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for BulkSuspendArg: \(error)"
-            }
-        }
-    }
-
-    public class BulkSuspendArgSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: BulkSuspendArg) throws -> JSON {
-            let output = [
-                "members": try ArraySerializer(Team.BulkSuspendMemberTargetSerializer()).serialize(value.members),
-            ]
-            return .dictionary(output)
-        }
-
-        public func deserialize(_ json: JSON) throws -> BulkSuspendArg {
-            switch json {
-            case .dictionary(let dict):
-                let members = try ArraySerializer(Team.BulkSuspendMemberTargetSerializer()).deserialize(dict["members"] ?? .null)
-                return BulkSuspendArg(members: members)
-            default:
-                throw JSONSerializerError.deserializeError(type: BulkSuspendArg.self, json: json)
-            }
-        }
-    }
-
-    /// The BulkSuspendComplete struct
-    public class BulkSuspendComplete: CustomStringConvertible, JSONRepresentable {
-        /// (no description)
-        public let requested: Int64
-        /// (no description)
-        public let suspended: Int64
-        /// (no description)
-        public let failed: Int64
-        /// (no description)
-        public let unknown: Int64
-        /// (no description)
-        public let reportDelivery: Team.BulkSuspendReportDeliveryStatus
-        public init(requested: Int64, suspended: Int64, failed: Int64, unknown: Int64, reportDelivery: Team.BulkSuspendReportDeliveryStatus) {
-            comparableValidator()(requested)
-            self.requested = requested
-            comparableValidator()(suspended)
-            self.suspended = suspended
-            comparableValidator()(failed)
-            self.failed = failed
-            comparableValidator()(unknown)
-            self.unknown = unknown
-            self.reportDelivery = reportDelivery
-        }
-
-        func json() throws -> JSON {
-            try BulkSuspendCompleteSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try BulkSuspendCompleteSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for BulkSuspendComplete: \(error)"
-            }
-        }
-    }
-
-    public class BulkSuspendCompleteSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: BulkSuspendComplete) throws -> JSON {
-            let output = [
-                "requested": try Serialization._Int64Serializer.serialize(value.requested),
-                "suspended": try Serialization._Int64Serializer.serialize(value.suspended),
-                "failed": try Serialization._Int64Serializer.serialize(value.failed),
-                "unknown": try Serialization._Int64Serializer.serialize(value.unknown),
-                "report_delivery": try Team.BulkSuspendReportDeliveryStatusSerializer().serialize(value.reportDelivery),
-            ]
-            return .dictionary(output)
-        }
-
-        public func deserialize(_ json: JSON) throws -> BulkSuspendComplete {
-            switch json {
-            case .dictionary(let dict):
-                let requested = try Serialization._Int64Serializer.deserialize(dict["requested"] ?? .null)
-                let suspended = try Serialization._Int64Serializer.deserialize(dict["suspended"] ?? .null)
-                let failed = try Serialization._Int64Serializer.deserialize(dict["failed"] ?? .null)
-                let unknown = try Serialization._Int64Serializer.deserialize(dict["unknown"] ?? .null)
-                let reportDelivery = try Team.BulkSuspendReportDeliveryStatusSerializer().deserialize(dict["report_delivery"] ?? .null)
-                return BulkSuspendComplete(requested: requested, suspended: suspended, failed: failed, unknown: unknown, reportDelivery: reportDelivery)
-            default:
-                throw JSONSerializerError.deserializeError(type: BulkSuspendComplete.self, json: json)
-            }
-        }
-    }
-
-    /// A typed launch rejection. Authorization failures continue to use the API v2 authentication/permission error
-    /// surface.
-    public enum BulkSuspendError: CustomStringConvertible, JSONRepresentable {
-        /// An unspecified error.
-        case invalidRequest
-        /// An unspecified error.
-        case tooManyMembers
-        /// An unspecified error.
-        case duplicateClientItemId
-        /// An unspecified error.
-        case duplicateTeamMemberId
-        /// An unspecified error.
-        case actingAdmin
-        /// An unspecified error.
-        case lastAdmin
-        /// An unspecified error.
-        case other
-
-        func json() throws -> JSON {
-            try BulkSuspendErrorSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try BulkSuspendErrorSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for BulkSuspendError: \(error)"
-            }
-        }
-    }
-
-    public class BulkSuspendErrorSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: BulkSuspendError) throws -> JSON {
-            switch value {
-            case .invalidRequest:
-                var d = [String: JSON]()
-                d[".tag"] = .str("invalid_request")
-                return .dictionary(d)
-            case .tooManyMembers:
-                var d = [String: JSON]()
-                d[".tag"] = .str("too_many_members")
-                return .dictionary(d)
-            case .duplicateClientItemId:
-                var d = [String: JSON]()
-                d[".tag"] = .str("duplicate_client_item_id")
-                return .dictionary(d)
-            case .duplicateTeamMemberId:
-                var d = [String: JSON]()
-                d[".tag"] = .str("duplicate_team_member_id")
-                return .dictionary(d)
-            case .actingAdmin:
-                var d = [String: JSON]()
-                d[".tag"] = .str("acting_admin")
-                return .dictionary(d)
-            case .lastAdmin:
-                var d = [String: JSON]()
-                d[".tag"] = .str("last_admin")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            }
-        }
-
-        public func deserialize(_ json: JSON) throws -> BulkSuspendError {
-            switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "invalid_request":
-                    return BulkSuspendError.invalidRequest
-                case "too_many_members":
-                    return BulkSuspendError.tooManyMembers
-                case "duplicate_client_item_id":
-                    return BulkSuspendError.duplicateClientItemId
-                case "duplicate_team_member_id":
-                    return BulkSuspendError.duplicateTeamMemberId
-                case "acting_admin":
-                    return BulkSuspendError.actingAdmin
-                case "last_admin":
-                    return BulkSuspendError.lastAdmin
-                case "other":
-                    return BulkSuspendError.other
-                default:
-                    return BulkSuspendError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: BulkSuspendError.self, json: json)
-            }
-        }
-    }
-
-    /// Coarse job state. Live row progress and report contents are intentionally omitted; callers receive row details
-    /// in the terminal email report.
-    public enum BulkSuspendJobStatus: CustomStringConvertible, JSONRepresentable {
-        /// The asynchronous job is still in progress.
-        case inProgress
-        /// An unspecified error.
-        case complete(Team.BulkSuspendComplete)
-        /// An unspecified error.
-        case failed(Team.BulkSuspendTaskFailure)
-        /// An unspecified error.
-        case other
-
-        func json() throws -> JSON {
-            try BulkSuspendJobStatusSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try BulkSuspendJobStatusSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for BulkSuspendJobStatus: \(error)"
-            }
-        }
-    }
-
-    public class BulkSuspendJobStatusSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: BulkSuspendJobStatus) throws -> JSON {
-            switch value {
-            case .inProgress:
-                var d = [String: JSON]()
-                d[".tag"] = .str("in_progress")
-                return .dictionary(d)
-            case .complete(let arg):
-                var d = try Serialization.getFields(Team.BulkSuspendCompleteSerializer().serialize(arg))
-                d[".tag"] = .str("complete")
-                return .dictionary(d)
-            case .failed(let arg):
-                var d = try ["failed": Team.BulkSuspendTaskFailureSerializer().serialize(arg)]
-                d[".tag"] = .str("failed")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            }
-        }
-
-        public func deserialize(_ json: JSON) throws -> BulkSuspendJobStatus {
-            switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "in_progress":
-                    return BulkSuspendJobStatus.inProgress
-                case "complete":
-                    let v = try Team.BulkSuspendCompleteSerializer().deserialize(json)
-                    return BulkSuspendJobStatus.complete(v)
-                case "failed":
-                    let v = try Team.BulkSuspendTaskFailureSerializer().deserialize(d["failed"] ?? .null)
-                    return BulkSuspendJobStatus.failed(v)
-                case "other":
-                    return BulkSuspendJobStatus.other
-                default:
-                    return BulkSuspendJobStatus.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: BulkSuspendJobStatus.self, json: json)
-            }
-        }
-    }
-
-    /// One member selected for suspension. The opaque client item ID correlates the eventual report row with the
-    /// caller's input without sending CSV data.
-    public class BulkSuspendMemberTarget: CustomStringConvertible, JSONRepresentable {
-        /// (no description)
-        public let clientItemId: String
-        /// (no description)
-        public let suspendArg: Team.MembersDeactivateArg
-        public init(clientItemId: String, suspendArg: Team.MembersDeactivateArg) {
-            stringValidator()(clientItemId)
-            self.clientItemId = clientItemId
-            self.suspendArg = suspendArg
-        }
-
-        func json() throws -> JSON {
-            try BulkSuspendMemberTargetSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try BulkSuspendMemberTargetSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for BulkSuspendMemberTarget: \(error)"
-            }
-        }
-    }
-
-    public class BulkSuspendMemberTargetSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: BulkSuspendMemberTarget) throws -> JSON {
-            let output = [
-                "client_item_id": try Serialization._StringSerializer.serialize(value.clientItemId),
-                "suspend_arg": try Team.MembersDeactivateArgSerializer().serialize(value.suspendArg),
-            ]
-            return .dictionary(output)
-        }
-
-        public func deserialize(_ json: JSON) throws -> BulkSuspendMemberTarget {
-            switch json {
-            case .dictionary(let dict):
-                let clientItemId = try Serialization._StringSerializer.deserialize(dict["client_item_id"] ?? .null)
-                let suspendArg = try Team.MembersDeactivateArgSerializer().deserialize(dict["suspend_arg"] ?? .null)
-                return BulkSuspendMemberTarget(clientItemId: clientItemId, suspendArg: suspendArg)
-            default:
-                throw JSONSerializerError.deserializeError(type: BulkSuspendMemberTarget.self, json: json)
-            }
-        }
-    }
-
-    /// The BulkSuspendReportDeliveryStatus union
-    public enum BulkSuspendReportDeliveryStatus: CustomStringConvertible, JSONRepresentable {
-        /// An unspecified error.
-        case bulkSuspendReportDeliveryStatusUnspecified
-        /// An unspecified error.
-        case bulkSuspendReportDeliveryStatusPending
-        /// An unspecified error.
-        case bulkSuspendReportDeliveryStatusDelivered
-        /// An unspecified error.
-        case bulkSuspendReportDeliveryStatusFailed
-        /// An unspecified error.
-        case other
-
-        func json() throws -> JSON {
-            try BulkSuspendReportDeliveryStatusSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try BulkSuspendReportDeliveryStatusSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for BulkSuspendReportDeliveryStatus: \(error)"
-            }
-        }
-    }
-
-    public class BulkSuspendReportDeliveryStatusSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: BulkSuspendReportDeliveryStatus) throws -> JSON {
-            switch value {
-            case .bulkSuspendReportDeliveryStatusUnspecified:
-                var d = [String: JSON]()
-                d[".tag"] = .str("bulk_suspend_report_delivery_status_unspecified")
-                return .dictionary(d)
-            case .bulkSuspendReportDeliveryStatusPending:
-                var d = [String: JSON]()
-                d[".tag"] = .str("bulk_suspend_report_delivery_status_pending")
-                return .dictionary(d)
-            case .bulkSuspendReportDeliveryStatusDelivered:
-                var d = [String: JSON]()
-                d[".tag"] = .str("bulk_suspend_report_delivery_status_delivered")
-                return .dictionary(d)
-            case .bulkSuspendReportDeliveryStatusFailed:
-                var d = [String: JSON]()
-                d[".tag"] = .str("bulk_suspend_report_delivery_status_failed")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            }
-        }
-
-        public func deserialize(_ json: JSON) throws -> BulkSuspendReportDeliveryStatus {
-            switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "bulk_suspend_report_delivery_status_unspecified":
-                    return BulkSuspendReportDeliveryStatus.bulkSuspendReportDeliveryStatusUnspecified
-                case "bulk_suspend_report_delivery_status_pending":
-                    return BulkSuspendReportDeliveryStatus.bulkSuspendReportDeliveryStatusPending
-                case "bulk_suspend_report_delivery_status_delivered":
-                    return BulkSuspendReportDeliveryStatus.bulkSuspendReportDeliveryStatusDelivered
-                case "bulk_suspend_report_delivery_status_failed":
-                    return BulkSuspendReportDeliveryStatus.bulkSuspendReportDeliveryStatusFailed
-                case "other":
-                    return BulkSuspendReportDeliveryStatus.other
-                default:
-                    return BulkSuspendReportDeliveryStatus.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: BulkSuspendReportDeliveryStatus.self, json: json)
-            }
-        }
-    }
-
-    /// Error that can be returned whenever a struct derived from UserSelectorArg is used.
-    public enum UserSelectorError: CustomStringConvertible, JSONRepresentable {
-        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        case userNotFound
-
-        func json() throws -> JSON {
-            try UserSelectorErrorSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try UserSelectorErrorSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for UserSelectorError: \(error)"
-            }
-        }
-    }
-
-    public class UserSelectorErrorSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: UserSelectorError) throws -> JSON {
-            switch value {
-            case .userNotFound:
-                var d = [String: JSON]()
-                d[".tag"] = .str("user_not_found")
-                return .dictionary(d)
-            }
-        }
-
-        public func deserialize(_ json: JSON) throws -> UserSelectorError {
-            switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "user_not_found":
-                    return UserSelectorError.userNotFound
-                default:
-                    throw JSONSerializerError.unknownTag(type: UserSelectorError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: UserSelectorError.self, json: json)
-            }
-        }
-    }
-
-    /// The MembersDeactivateError union
-    public enum MembersDeactivateError: CustomStringConvertible, JSONRepresentable {
-        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        case userNotFound
-        /// The user is not a member of the team.
-        case userNotInTeam
-        /// An unspecified error.
-        case other
-
-        func json() throws -> JSON {
-            try MembersDeactivateErrorSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try MembersDeactivateErrorSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for MembersDeactivateError: \(error)"
-            }
-        }
-    }
-
-    public class MembersDeactivateErrorSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: MembersDeactivateError) throws -> JSON {
-            switch value {
-            case .userNotFound:
-                var d = [String: JSON]()
-                d[".tag"] = .str("user_not_found")
-                return .dictionary(d)
-            case .userNotInTeam:
-                var d = [String: JSON]()
-                d[".tag"] = .str("user_not_in_team")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            }
-        }
-
-        public func deserialize(_ json: JSON) throws -> MembersDeactivateError {
-            switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "user_not_found":
-                    return MembersDeactivateError.userNotFound
-                case "user_not_in_team":
-                    return MembersDeactivateError.userNotInTeam
-                case "other":
-                    return MembersDeactivateError.other
-                default:
-                    return MembersDeactivateError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: MembersDeactivateError.self, json: json)
-            }
-        }
-    }
-
-    /// The MembersSuspendError union
-    public enum MembersSuspendError: CustomStringConvertible, JSONRepresentable {
-        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        case userNotFound
-        /// The user is not a member of the team.
-        case userNotInTeam
-        /// An unspecified error.
-        case other
-        /// The user is not active, so it cannot be suspended.
-        case suspendInactiveUser
-        /// The user is the last admin of the team, so it cannot be suspended.
-        case suspendLastAdmin
-        /// Team is full. The organization has no available licenses.
-        case teamLicenseLimit
-
-        func json() throws -> JSON {
-            try MembersSuspendErrorSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendErrorSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for MembersSuspendError: \(error)"
-            }
-        }
-    }
-
-    public class MembersSuspendErrorSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: MembersSuspendError) throws -> JSON {
-            switch value {
-            case .userNotFound:
-                var d = [String: JSON]()
-                d[".tag"] = .str("user_not_found")
-                return .dictionary(d)
-            case .userNotInTeam:
-                var d = [String: JSON]()
-                d[".tag"] = .str("user_not_in_team")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .suspendInactiveUser:
-                var d = [String: JSON]()
-                d[".tag"] = .str("suspend_inactive_user")
-                return .dictionary(d)
-            case .suspendLastAdmin:
-                var d = [String: JSON]()
-                d[".tag"] = .str("suspend_last_admin")
-                return .dictionary(d)
-            case .teamLicenseLimit:
-                var d = [String: JSON]()
-                d[".tag"] = .str("team_license_limit")
-                return .dictionary(d)
-            }
-        }
-
-        public func deserialize(_ json: JSON) throws -> MembersSuspendError {
-            switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "user_not_found":
-                    return MembersSuspendError.userNotFound
-                case "user_not_in_team":
-                    return MembersSuspendError.userNotInTeam
-                case "other":
-                    return MembersSuspendError.other
-                case "suspend_inactive_user":
-                    return MembersSuspendError.suspendInactiveUser
-                case "suspend_last_admin":
-                    return MembersSuspendError.suspendLastAdmin
-                case "team_license_limit":
-                    return MembersSuspendError.teamLicenseLimit
-                default:
-                    throw JSONSerializerError.unknownTag(type: MembersSuspendError.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: MembersSuspendError.self, json: json)
-            }
-        }
-    }
-
-    /// Stable machine-readable reasons used by the terminal row report.
-    public enum BulkSuspendRowFailure: CustomStringConvertible, JSONRepresentable {
-        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
-        case userNotFound
-        /// The user is not a member of the team.
-        case userNotInTeam
-        /// An unspecified error.
-        case other
-        /// The user is not active, so it cannot be suspended.
-        case suspendInactiveUser
-        /// The user is the last admin of the team, so it cannot be suspended.
-        case suspendLastAdmin
-        /// Team is full. The organization has no available licenses.
-        case teamLicenseLimit
-        /// An unspecified error.
-        case protectedActingAdmin
-        /// An unspecified error.
-        case permissionChanged
-        /// An unspecified error.
-        case suspendFailed
-
-        func json() throws -> JSON {
-            try BulkSuspendRowFailureSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try BulkSuspendRowFailureSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for BulkSuspendRowFailure: \(error)"
-            }
-        }
-    }
-
-    public class BulkSuspendRowFailureSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: BulkSuspendRowFailure) throws -> JSON {
-            switch value {
-            case .userNotFound:
-                var d = [String: JSON]()
-                d[".tag"] = .str("user_not_found")
-                return .dictionary(d)
-            case .userNotInTeam:
-                var d = [String: JSON]()
-                d[".tag"] = .str("user_not_in_team")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            case .suspendInactiveUser:
-                var d = [String: JSON]()
-                d[".tag"] = .str("suspend_inactive_user")
-                return .dictionary(d)
-            case .suspendLastAdmin:
-                var d = [String: JSON]()
-                d[".tag"] = .str("suspend_last_admin")
-                return .dictionary(d)
-            case .teamLicenseLimit:
-                var d = [String: JSON]()
-                d[".tag"] = .str("team_license_limit")
-                return .dictionary(d)
-            case .protectedActingAdmin:
-                var d = [String: JSON]()
-                d[".tag"] = .str("protected_acting_admin")
-                return .dictionary(d)
-            case .permissionChanged:
-                var d = [String: JSON]()
-                d[".tag"] = .str("permission_changed")
-                return .dictionary(d)
-            case .suspendFailed:
-                var d = [String: JSON]()
-                d[".tag"] = .str("suspend_failed")
-                return .dictionary(d)
-            }
-        }
-
-        public func deserialize(_ json: JSON) throws -> BulkSuspendRowFailure {
-            switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "user_not_found":
-                    return BulkSuspendRowFailure.userNotFound
-                case "user_not_in_team":
-                    return BulkSuspendRowFailure.userNotInTeam
-                case "other":
-                    return BulkSuspendRowFailure.other
-                case "suspend_inactive_user":
-                    return BulkSuspendRowFailure.suspendInactiveUser
-                case "suspend_last_admin":
-                    return BulkSuspendRowFailure.suspendLastAdmin
-                case "team_license_limit":
-                    return BulkSuspendRowFailure.teamLicenseLimit
-                case "protected_acting_admin":
-                    return BulkSuspendRowFailure.protectedActingAdmin
-                case "permission_changed":
-                    return BulkSuspendRowFailure.permissionChanged
-                case "suspend_failed":
-                    return BulkSuspendRowFailure.suspendFailed
-                default:
-                    throw JSONSerializerError.unknownTag(type: BulkSuspendRowFailure.self, json: json, tag: tag)
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: BulkSuspendRowFailure.self, json: json)
-            }
-        }
-    }
-
-    /// The terminal outcome for one requested member. Row outcomes are delivered in the report rather than embedded in
-    /// the status response.
-    public enum BulkSuspendRowOutcome: CustomStringConvertible, JSONRepresentable {
-        /// An unspecified error.
-        case suspended
-        /// An unspecified error.
-        case failed(Team.BulkSuspendRowFailure)
-        /// An unspecified error.
-        case unknown
-        /// An unspecified error.
-        case other
-
-        func json() throws -> JSON {
-            try BulkSuspendRowOutcomeSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try BulkSuspendRowOutcomeSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for BulkSuspendRowOutcome: \(error)"
-            }
-        }
-    }
-
-    public class BulkSuspendRowOutcomeSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: BulkSuspendRowOutcome) throws -> JSON {
-            switch value {
-            case .suspended:
-                var d = [String: JSON]()
-                d[".tag"] = .str("suspended")
-                return .dictionary(d)
-            case .failed(let arg):
-                var d = try ["failed": Team.BulkSuspendRowFailureSerializer().serialize(arg)]
-                d[".tag"] = .str("failed")
-                return .dictionary(d)
-            case .unknown:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unknown")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            }
-        }
-
-        public func deserialize(_ json: JSON) throws -> BulkSuspendRowOutcome {
-            switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "suspended":
-                    return BulkSuspendRowOutcome.suspended
-                case "failed":
-                    let v = try Team.BulkSuspendRowFailureSerializer().deserialize(d["failed"] ?? .null)
-                    return BulkSuspendRowOutcome.failed(v)
-                case "unknown":
-                    return BulkSuspendRowOutcome.unknown
-                case "other":
-                    return BulkSuspendRowOutcome.other
-                default:
-                    return BulkSuspendRowOutcome.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: BulkSuspendRowOutcome.self, json: json)
-            }
-        }
-    }
-
-    /// The BulkSuspendTaskFailure union
-    public enum BulkSuspendTaskFailure: CustomStringConvertible, JSONRepresentable {
-        /// An unspecified error.
-        case unusableResult
-        /// An unspecified error.
-        case other
-
-        func json() throws -> JSON {
-            try BulkSuspendTaskFailureSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try BulkSuspendTaskFailureSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for BulkSuspendTaskFailure: \(error)"
-            }
-        }
-    }
-
-    public class BulkSuspendTaskFailureSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: BulkSuspendTaskFailure) throws -> JSON {
-            switch value {
-            case .unusableResult:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unusable_result")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            }
-        }
-
-        public func deserialize(_ json: JSON) throws -> BulkSuspendTaskFailure {
-            switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "unusable_result":
-                    return BulkSuspendTaskFailure.unusableResult
-                case "other":
-                    return BulkSuspendTaskFailure.other
-                default:
-                    return BulkSuspendTaskFailure.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: BulkSuspendTaskFailure.self, json: json)
-            }
-        }
-    }
-
     /// Error returned when getting member custom quota.
     public enum CustomQuotaError: CustomStringConvertible, JSONRepresentable {
         /// A maximum of 1000 users can be set for a single call.
@@ -9011,6 +8189,51 @@ public class Team {
         }
     }
 
+    /// Error that can be returned whenever a struct derived from UserSelectorArg is used.
+    public enum UserSelectorError: CustomStringConvertible, JSONRepresentable {
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+        case userNotFound
+
+        func json() throws -> JSON {
+            try UserSelectorErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try UserSelectorErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for UserSelectorError: \(error)"
+            }
+        }
+    }
+
+    public class UserSelectorErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: UserSelectorError) throws -> JSON {
+            switch value {
+            case .userNotFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("user_not_found")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> UserSelectorError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "user_not_found":
+                    return UserSelectorError.userNotFound
+                default:
+                    throw JSONSerializerError.unknownTag(type: UserSelectorError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: UserSelectorError.self, json: json)
+            }
+        }
+    }
+
     /// The MemberSelectorError union
     public enum MemberSelectorError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
@@ -9563,6 +8786,67 @@ public class Team {
                 return MembersDeactivateArg(user: user, wipeData: wipeData)
             default:
                 throw JSONSerializerError.deserializeError(type: MembersDeactivateArg.self, json: json)
+            }
+        }
+    }
+
+    /// The MembersDeactivateError union
+    public enum MembersDeactivateError: CustomStringConvertible, JSONRepresentable {
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+        case userNotFound
+        /// The user is not a member of the team.
+        case userNotInTeam
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try MembersDeactivateErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersDeactivateErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersDeactivateError: \(error)"
+            }
+        }
+    }
+
+    public class MembersDeactivateErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersDeactivateError) throws -> JSON {
+            switch value {
+            case .userNotFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("user_not_found")
+                return .dictionary(d)
+            case .userNotInTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("user_not_in_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersDeactivateError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "user_not_found":
+                    return MembersDeactivateError.userNotFound
+                case "user_not_in_team":
+                    return MembersDeactivateError.userNotInTeam
+                case "other":
+                    return MembersDeactivateError.other
+                default:
+                    return MembersDeactivateError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersDeactivateError.self, json: json)
             }
         }
     }
@@ -12023,6 +11307,714 @@ public class Team {
         }
     }
 
+    /// Launches one action-specific member suspension batch job.
+    public class MembersSuspendBatchArg: CustomStringConvertible, JSONRepresentable {
+        /// Must contain between 1 and 500 targets. The launch handler also rejects duplicate client item IDs and
+        /// duplicate member selectors.
+        public let members: [Team.MembersSuspendBatchTarget]
+        public init(members: [Team.MembersSuspendBatchTarget]) {
+            self.members = members
+        }
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchArgSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchArgSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchArg: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchArgSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchArg) throws -> JSON {
+            let output = [
+                "members": try ArraySerializer(Team.MembersSuspendBatchTargetSerializer()).serialize(value.members),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchArg {
+            switch json {
+            case .dictionary(let dict):
+                let members = try ArraySerializer(Team.MembersSuspendBatchTargetSerializer()).deserialize(dict["members"] ?? .null)
+                return MembersSuspendBatchArg(members: members)
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchArg.self, json: json)
+            }
+        }
+    }
+
+    /// The MembersSuspendBatchComplete struct
+    public class MembersSuspendBatchComplete: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let requested: Int64
+        /// (no description)
+        public let suspended: Int64
+        /// (no description)
+        public let failed: Int64
+        /// (no description)
+        public let unknown: Int64
+        /// (no description)
+        public let reportDelivery: Team.MembersSuspendBatchReportDeliveryStatus
+        public init(requested: Int64, suspended: Int64, failed: Int64, unknown: Int64, reportDelivery: Team.MembersSuspendBatchReportDeliveryStatus) {
+            comparableValidator()(requested)
+            self.requested = requested
+            comparableValidator()(suspended)
+            self.suspended = suspended
+            comparableValidator()(failed)
+            self.failed = failed
+            comparableValidator()(unknown)
+            self.unknown = unknown
+            self.reportDelivery = reportDelivery
+        }
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchCompleteSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchCompleteSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchComplete: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchCompleteSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchComplete) throws -> JSON {
+            let output = [
+                "requested": try Serialization._Int64Serializer.serialize(value.requested),
+                "suspended": try Serialization._Int64Serializer.serialize(value.suspended),
+                "failed": try Serialization._Int64Serializer.serialize(value.failed),
+                "unknown": try Serialization._Int64Serializer.serialize(value.unknown),
+                "report_delivery": try Team.MembersSuspendBatchReportDeliveryStatusSerializer().serialize(value.reportDelivery),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchComplete {
+            switch json {
+            case .dictionary(let dict):
+                let requested = try Serialization._Int64Serializer.deserialize(dict["requested"] ?? .null)
+                let suspended = try Serialization._Int64Serializer.deserialize(dict["suspended"] ?? .null)
+                let failed = try Serialization._Int64Serializer.deserialize(dict["failed"] ?? .null)
+                let unknown = try Serialization._Int64Serializer.deserialize(dict["unknown"] ?? .null)
+                let reportDelivery = try Team.MembersSuspendBatchReportDeliveryStatusSerializer().deserialize(dict["report_delivery"] ?? .null)
+                return MembersSuspendBatchComplete(requested: requested, suspended: suspended, failed: failed, unknown: unknown, reportDelivery: reportDelivery)
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchComplete.self, json: json)
+            }
+        }
+    }
+
+    /// A typed launch rejection. Authorization failures continue to use the API v2 authentication/permission error
+    /// surface.
+    public enum MembersSuspendBatchError: CustomStringConvertible, JSONRepresentable {
+        /// The request contains more than 500 members.
+        case tooManyMembers
+        /// More than one target uses the same client item ID.
+        case duplicateClientItemId
+        /// More than one target selects the same team member.
+        case duplicateTeamMemberId
+        /// The acting administrator cannot suspend their own account.
+        case actingAdmin
+        /// Suspending the selected members would leave the team without an active admin.
+        case lastAdmin
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchError: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchError) throws -> JSON {
+            switch value {
+            case .tooManyMembers:
+                var d = [String: JSON]()
+                d[".tag"] = .str("too_many_members")
+                return .dictionary(d)
+            case .duplicateClientItemId:
+                var d = [String: JSON]()
+                d[".tag"] = .str("duplicate_client_item_id")
+                return .dictionary(d)
+            case .duplicateTeamMemberId:
+                var d = [String: JSON]()
+                d[".tag"] = .str("duplicate_team_member_id")
+                return .dictionary(d)
+            case .actingAdmin:
+                var d = [String: JSON]()
+                d[".tag"] = .str("acting_admin")
+                return .dictionary(d)
+            case .lastAdmin:
+                var d = [String: JSON]()
+                d[".tag"] = .str("last_admin")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "too_many_members":
+                    return MembersSuspendBatchError.tooManyMembers
+                case "duplicate_client_item_id":
+                    return MembersSuspendBatchError.duplicateClientItemId
+                case "duplicate_team_member_id":
+                    return MembersSuspendBatchError.duplicateTeamMemberId
+                case "acting_admin":
+                    return MembersSuspendBatchError.actingAdmin
+                case "last_admin":
+                    return MembersSuspendBatchError.lastAdmin
+                case "other":
+                    return MembersSuspendBatchError.other
+                default:
+                    return MembersSuspendBatchError.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchError.self, json: json)
+            }
+        }
+    }
+
+    /// Coarse job state. Live row progress and report contents are intentionally omitted; the authorized team admin who
+    /// initiated the batch receives row details in the terminal email report.
+    public enum MembersSuspendBatchJobStatus: CustomStringConvertible, JSONRepresentable {
+        /// The asynchronous job is still in progress.
+        case inProgress
+        /// An unspecified error.
+        case complete(Team.MembersSuspendBatchComplete)
+        /// An unspecified error.
+        case failed(Team.MembersSuspendBatchTaskFailure)
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchJobStatusSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchJobStatusSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchJobStatus: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchJobStatusSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchJobStatus) throws -> JSON {
+            switch value {
+            case .inProgress:
+                var d = [String: JSON]()
+                d[".tag"] = .str("in_progress")
+                return .dictionary(d)
+            case .complete(let arg):
+                var d = try Serialization.getFields(Team.MembersSuspendBatchCompleteSerializer().serialize(arg))
+                d[".tag"] = .str("complete")
+                return .dictionary(d)
+            case .failed(let arg):
+                var d = try ["failed": Team.MembersSuspendBatchTaskFailureSerializer().serialize(arg)]
+                d[".tag"] = .str("failed")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchJobStatus {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "in_progress":
+                    return MembersSuspendBatchJobStatus.inProgress
+                case "complete":
+                    let v = try Team.MembersSuspendBatchCompleteSerializer().deserialize(json)
+                    return MembersSuspendBatchJobStatus.complete(v)
+                case "failed":
+                    let v = try Team.MembersSuspendBatchTaskFailureSerializer().deserialize(d["failed"] ?? .null)
+                    return MembersSuspendBatchJobStatus.failed(v)
+                case "other":
+                    return MembersSuspendBatchJobStatus.other
+                default:
+                    return MembersSuspendBatchJobStatus.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchJobStatus.self, json: json)
+            }
+        }
+    }
+
+    /// The MembersSuspendBatchReportDeliveryStatus union
+    public enum MembersSuspendBatchReportDeliveryStatus: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case membersSuspendBatchReportDeliveryStatusUnspecified
+        /// An unspecified error.
+        case membersSuspendBatchReportDeliveryStatusPending
+        /// An unspecified error.
+        case membersSuspendBatchReportDeliveryStatusDelivered
+        /// An unspecified error.
+        case membersSuspendBatchReportDeliveryStatusFailed
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchReportDeliveryStatusSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchReportDeliveryStatusSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchReportDeliveryStatus: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchReportDeliveryStatusSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchReportDeliveryStatus) throws -> JSON {
+            switch value {
+            case .membersSuspendBatchReportDeliveryStatusUnspecified:
+                var d = [String: JSON]()
+                d[".tag"] = .str("members_suspend_batch_report_delivery_status_unspecified")
+                return .dictionary(d)
+            case .membersSuspendBatchReportDeliveryStatusPending:
+                var d = [String: JSON]()
+                d[".tag"] = .str("members_suspend_batch_report_delivery_status_pending")
+                return .dictionary(d)
+            case .membersSuspendBatchReportDeliveryStatusDelivered:
+                var d = [String: JSON]()
+                d[".tag"] = .str("members_suspend_batch_report_delivery_status_delivered")
+                return .dictionary(d)
+            case .membersSuspendBatchReportDeliveryStatusFailed:
+                var d = [String: JSON]()
+                d[".tag"] = .str("members_suspend_batch_report_delivery_status_failed")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchReportDeliveryStatus {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "members_suspend_batch_report_delivery_status_unspecified":
+                    return MembersSuspendBatchReportDeliveryStatus.membersSuspendBatchReportDeliveryStatusUnspecified
+                case "members_suspend_batch_report_delivery_status_pending":
+                    return MembersSuspendBatchReportDeliveryStatus.membersSuspendBatchReportDeliveryStatusPending
+                case "members_suspend_batch_report_delivery_status_delivered":
+                    return MembersSuspendBatchReportDeliveryStatus.membersSuspendBatchReportDeliveryStatusDelivered
+                case "members_suspend_batch_report_delivery_status_failed":
+                    return MembersSuspendBatchReportDeliveryStatus.membersSuspendBatchReportDeliveryStatusFailed
+                case "other":
+                    return MembersSuspendBatchReportDeliveryStatus.other
+                default:
+                    return MembersSuspendBatchReportDeliveryStatus.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchReportDeliveryStatus.self, json: json)
+            }
+        }
+    }
+
+    /// The MembersSuspendError union
+    public enum MembersSuspendError: CustomStringConvertible, JSONRepresentable {
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+        case userNotFound
+        /// The user is not a member of the team.
+        case userNotInTeam
+        /// An unspecified error.
+        case other
+        /// The user is not active, so it cannot be suspended.
+        case suspendInactiveUser
+        /// The user is the last admin of the team, so it cannot be suspended.
+        case suspendLastAdmin
+        /// Team is full. The organization has no available licenses.
+        case teamLicenseLimit
+
+        func json() throws -> JSON {
+            try MembersSuspendErrorSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendErrorSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendError: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendErrorSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendError) throws -> JSON {
+            switch value {
+            case .userNotFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("user_not_found")
+                return .dictionary(d)
+            case .userNotInTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("user_not_in_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .suspendInactiveUser:
+                var d = [String: JSON]()
+                d[".tag"] = .str("suspend_inactive_user")
+                return .dictionary(d)
+            case .suspendLastAdmin:
+                var d = [String: JSON]()
+                d[".tag"] = .str("suspend_last_admin")
+                return .dictionary(d)
+            case .teamLicenseLimit:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_license_limit")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendError {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "user_not_found":
+                    return MembersSuspendError.userNotFound
+                case "user_not_in_team":
+                    return MembersSuspendError.userNotInTeam
+                case "other":
+                    return MembersSuspendError.other
+                case "suspend_inactive_user":
+                    return MembersSuspendError.suspendInactiveUser
+                case "suspend_last_admin":
+                    return MembersSuspendError.suspendLastAdmin
+                case "team_license_limit":
+                    return MembersSuspendError.teamLicenseLimit
+                default:
+                    throw JSONSerializerError.unknownTag(type: MembersSuspendError.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendError.self, json: json)
+            }
+        }
+    }
+
+    /// Stable machine-readable reasons used by the terminal row report.
+    public enum MembersSuspendBatchRowFailure: CustomStringConvertible, JSONRepresentable {
+        /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
+        case userNotFound
+        /// The user is not a member of the team.
+        case userNotInTeam
+        /// An unspecified error.
+        case other
+        /// The user is not active, so it cannot be suspended.
+        case suspendInactiveUser
+        /// The user is the last admin of the team, so it cannot be suspended.
+        case suspendLastAdmin
+        /// Team is full. The organization has no available licenses.
+        case teamLicenseLimit
+        /// An unspecified error.
+        case protectedActingAdmin
+        /// An unspecified error.
+        case permissionChanged
+        /// An unspecified error.
+        case suspendFailed
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchRowFailureSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchRowFailureSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchRowFailure: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchRowFailureSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchRowFailure) throws -> JSON {
+            switch value {
+            case .userNotFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("user_not_found")
+                return .dictionary(d)
+            case .userNotInTeam:
+                var d = [String: JSON]()
+                d[".tag"] = .str("user_not_in_team")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            case .suspendInactiveUser:
+                var d = [String: JSON]()
+                d[".tag"] = .str("suspend_inactive_user")
+                return .dictionary(d)
+            case .suspendLastAdmin:
+                var d = [String: JSON]()
+                d[".tag"] = .str("suspend_last_admin")
+                return .dictionary(d)
+            case .teamLicenseLimit:
+                var d = [String: JSON]()
+                d[".tag"] = .str("team_license_limit")
+                return .dictionary(d)
+            case .protectedActingAdmin:
+                var d = [String: JSON]()
+                d[".tag"] = .str("protected_acting_admin")
+                return .dictionary(d)
+            case .permissionChanged:
+                var d = [String: JSON]()
+                d[".tag"] = .str("permission_changed")
+                return .dictionary(d)
+            case .suspendFailed:
+                var d = [String: JSON]()
+                d[".tag"] = .str("suspend_failed")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchRowFailure {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "user_not_found":
+                    return MembersSuspendBatchRowFailure.userNotFound
+                case "user_not_in_team":
+                    return MembersSuspendBatchRowFailure.userNotInTeam
+                case "other":
+                    return MembersSuspendBatchRowFailure.other
+                case "suspend_inactive_user":
+                    return MembersSuspendBatchRowFailure.suspendInactiveUser
+                case "suspend_last_admin":
+                    return MembersSuspendBatchRowFailure.suspendLastAdmin
+                case "team_license_limit":
+                    return MembersSuspendBatchRowFailure.teamLicenseLimit
+                case "protected_acting_admin":
+                    return MembersSuspendBatchRowFailure.protectedActingAdmin
+                case "permission_changed":
+                    return MembersSuspendBatchRowFailure.permissionChanged
+                case "suspend_failed":
+                    return MembersSuspendBatchRowFailure.suspendFailed
+                default:
+                    throw JSONSerializerError.unknownTag(type: MembersSuspendBatchRowFailure.self, json: json, tag: tag)
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchRowFailure.self, json: json)
+            }
+        }
+    }
+
+    /// The terminal outcome for one requested member. Row outcomes are delivered in the report rather than embedded in
+    /// the status response.
+    public enum MembersSuspendBatchRowOutcome: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case suspended
+        /// An unspecified error.
+        case failed(Team.MembersSuspendBatchRowFailure)
+        /// An unspecified error.
+        case unknown
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchRowOutcomeSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchRowOutcomeSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchRowOutcome: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchRowOutcomeSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchRowOutcome) throws -> JSON {
+            switch value {
+            case .suspended:
+                var d = [String: JSON]()
+                d[".tag"] = .str("suspended")
+                return .dictionary(d)
+            case .failed(let arg):
+                var d = try ["failed": Team.MembersSuspendBatchRowFailureSerializer().serialize(arg)]
+                d[".tag"] = .str("failed")
+                return .dictionary(d)
+            case .unknown:
+                var d = [String: JSON]()
+                d[".tag"] = .str("unknown")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchRowOutcome {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "suspended":
+                    return MembersSuspendBatchRowOutcome.suspended
+                case "failed":
+                    let v = try Team.MembersSuspendBatchRowFailureSerializer().deserialize(d["failed"] ?? .null)
+                    return MembersSuspendBatchRowOutcome.failed(v)
+                case "unknown":
+                    return MembersSuspendBatchRowOutcome.unknown
+                case "other":
+                    return MembersSuspendBatchRowOutcome.other
+                default:
+                    return MembersSuspendBatchRowOutcome.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchRowOutcome.self, json: json)
+            }
+        }
+    }
+
+    /// One member selected for suspension. The opaque client item ID correlates the eventual report row with the
+    /// caller's input without sending CSV data.
+    public class MembersSuspendBatchTarget: CustomStringConvertible, JSONRepresentable {
+        /// (no description)
+        public let clientItemId: String
+        /// (no description)
+        public let suspendArg: Team.MembersDeactivateArg
+        public init(clientItemId: String, suspendArg: Team.MembersDeactivateArg) {
+            stringValidator(minLength: 1, maxLength: 128)(clientItemId)
+            self.clientItemId = clientItemId
+            self.suspendArg = suspendArg
+        }
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchTargetSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchTargetSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchTarget: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchTargetSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchTarget) throws -> JSON {
+            let output = [
+                "client_item_id": try Serialization._StringSerializer.serialize(value.clientItemId),
+                "suspend_arg": try Team.MembersDeactivateArgSerializer().serialize(value.suspendArg),
+            ]
+            return .dictionary(output)
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchTarget {
+            switch json {
+            case .dictionary(let dict):
+                let clientItemId = try Serialization._StringSerializer.deserialize(dict["client_item_id"] ?? .null)
+                let suspendArg = try Team.MembersDeactivateArgSerializer().deserialize(dict["suspend_arg"] ?? .null)
+                return MembersSuspendBatchTarget(clientItemId: clientItemId, suspendArg: suspendArg)
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchTarget.self, json: json)
+            }
+        }
+    }
+
+    /// The MembersSuspendBatchTaskFailure union
+    public enum MembersSuspendBatchTaskFailure: CustomStringConvertible, JSONRepresentable {
+        /// An unspecified error.
+        case unusableResult
+        /// An unspecified error.
+        case other
+
+        func json() throws -> JSON {
+            try MembersSuspendBatchTaskFailureSerializer().serialize(self)
+        }
+
+        public var description: String {
+            do {
+                return "\(SerializeUtil.prepareJSONForSerialization(try MembersSuspendBatchTaskFailureSerializer().serialize(self)))"
+            } catch {
+                return "Failed to generate description for MembersSuspendBatchTaskFailure: \(error)"
+            }
+        }
+    }
+
+    public class MembersSuspendBatchTaskFailureSerializer: JSONSerializer {
+        public init() {}
+        public func serialize(_ value: MembersSuspendBatchTaskFailure) throws -> JSON {
+            switch value {
+            case .unusableResult:
+                var d = [String: JSON]()
+                d[".tag"] = .str("unusable_result")
+                return .dictionary(d)
+            case .other:
+                var d = [String: JSON]()
+                d[".tag"] = .str("other")
+                return .dictionary(d)
+            }
+        }
+
+        public func deserialize(_ json: JSON) throws -> MembersSuspendBatchTaskFailure {
+            switch json {
+            case .dictionary(let d):
+                let tag = try Serialization.getTag(d)
+                switch tag {
+                case "unusable_result":
+                    return MembersSuspendBatchTaskFailure.unusableResult
+                case "other":
+                    return MembersSuspendBatchTaskFailure.other
+                default:
+                    return MembersSuspendBatchTaskFailure.other
+                }
+            default:
+                throw JSONSerializerError.deserializeError(type: MembersSuspendBatchTaskFailure.self, json: json)
+            }
+        }
+    }
+
     /// The MembersTransferFormerMembersFilesError union
     public enum MembersTransferFormerMembersFilesError: CustomStringConvertible, JSONRepresentable {
         /// No matching user found. The provided team_member_id, email, or external_id does not exist on this team.
@@ -13660,577 +13652,6 @@ public class Team {
                 }
             default:
                 throw JSONSerializerError.deserializeError(type: SetCustomQuotaError.self, json: json)
-            }
-        }
-    }
-
-    /// Structure representing Approve List entries. Domain and emails are supported. At least one entry of any
-    /// supported type is required.
-    public class SharingAllowlistAddArgs: CustomStringConvertible, JSONRepresentable {
-        /// List of domains represented by valid string representation (RFC-1034/5).
-        public let domains: [String]?
-        /// List of emails represented by valid string representation (RFC-5322/822).
-        public let emails: [String]?
-        public init(domains: [String]? = nil, emails: [String]? = nil) {
-            nullableValidator(arrayValidator(itemValidator: stringValidator()))(domains)
-            self.domains = domains
-            nullableValidator(arrayValidator(itemValidator: stringValidator()))(emails)
-            self.emails = emails
-        }
-
-        func json() throws -> JSON {
-            try SharingAllowlistAddArgsSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistAddArgsSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for SharingAllowlistAddArgs: \(error)"
-            }
-        }
-    }
-
-    public class SharingAllowlistAddArgsSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: SharingAllowlistAddArgs) throws -> JSON {
-            let output = [
-                "domains": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.domains),
-                "emails": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.emails),
-            ]
-            return .dictionary(output)
-        }
-
-        public func deserialize(_ json: JSON) throws -> SharingAllowlistAddArgs {
-            switch json {
-            case .dictionary(let dict):
-                let domains = try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["domains"] ?? .null)
-                let emails = try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["emails"] ?? .null)
-                return SharingAllowlistAddArgs(domains: domains, emails: emails)
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingAllowlistAddArgs.self, json: json)
-            }
-        }
-    }
-
-    /// The SharingAllowlistAddError union
-    public enum SharingAllowlistAddError: CustomStringConvertible, JSONRepresentable {
-        /// One of provided values is not valid.
-        case malformedEntry(String)
-        /// Neither single domain nor email provided.
-        case noEntriesProvided
-        /// Too many entries provided within one call.
-        case tooManyEntriesProvided
-        /// Team entries limit reached.
-        case teamLimitReached
-        /// Unknown error.
-        case unknownError
-        /// Entries already exists.
-        case entriesAlreadyExist(String)
-        /// An unspecified error.
-        case other
-
-        func json() throws -> JSON {
-            try SharingAllowlistAddErrorSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistAddErrorSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for SharingAllowlistAddError: \(error)"
-            }
-        }
-    }
-
-    public class SharingAllowlistAddErrorSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: SharingAllowlistAddError) throws -> JSON {
-            switch value {
-            case .malformedEntry(let arg):
-                var d = try ["malformed_entry": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("malformed_entry")
-                return .dictionary(d)
-            case .noEntriesProvided:
-                var d = [String: JSON]()
-                d[".tag"] = .str("no_entries_provided")
-                return .dictionary(d)
-            case .tooManyEntriesProvided:
-                var d = [String: JSON]()
-                d[".tag"] = .str("too_many_entries_provided")
-                return .dictionary(d)
-            case .teamLimitReached:
-                var d = [String: JSON]()
-                d[".tag"] = .str("team_limit_reached")
-                return .dictionary(d)
-            case .unknownError:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unknown_error")
-                return .dictionary(d)
-            case .entriesAlreadyExist(let arg):
-                var d = try ["entries_already_exist": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("entries_already_exist")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            }
-        }
-
-        public func deserialize(_ json: JSON) throws -> SharingAllowlistAddError {
-            switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "malformed_entry":
-                    let v = try Serialization._StringSerializer.deserialize(d["malformed_entry"] ?? .null)
-                    return SharingAllowlistAddError.malformedEntry(v)
-                case "no_entries_provided":
-                    return SharingAllowlistAddError.noEntriesProvided
-                case "too_many_entries_provided":
-                    return SharingAllowlistAddError.tooManyEntriesProvided
-                case "team_limit_reached":
-                    return SharingAllowlistAddError.teamLimitReached
-                case "unknown_error":
-                    return SharingAllowlistAddError.unknownError
-                case "entries_already_exist":
-                    let v = try Serialization._StringSerializer.deserialize(d["entries_already_exist"] ?? .null)
-                    return SharingAllowlistAddError.entriesAlreadyExist(v)
-                case "other":
-                    return SharingAllowlistAddError.other
-                default:
-                    return SharingAllowlistAddError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingAllowlistAddError.self, json: json)
-            }
-        }
-    }
-
-    /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
-    public class SharingAllowlistAddResponse: CustomStringConvertible, JSONRepresentable {
-        func json() throws -> JSON {
-            try SharingAllowlistAddResponseSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistAddResponseSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for SharingAllowlistAddResponse: \(error)"
-            }
-        }
-    }
-
-    public class SharingAllowlistAddResponseSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: SharingAllowlistAddResponse) throws -> JSON {
-            let output = [String: JSON]()
-            return .dictionary(output)
-        }
-
-        public func deserialize(_ json: JSON) throws -> SharingAllowlistAddResponse {
-            switch json {
-            case .dictionary:
-                return SharingAllowlistAddResponse()
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingAllowlistAddResponse.self, json: json)
-            }
-        }
-    }
-
-    /// The SharingAllowlistListArg struct
-    public class SharingAllowlistListArg: CustomStringConvertible, JSONRepresentable {
-        /// The number of entries to fetch at one time.
-        public let limit: UInt32
-        public init(limit: UInt32 = 1_000) {
-            comparableValidator(minValue: 1, maxValue: 1_000)(limit)
-            self.limit = limit
-        }
-
-        func json() throws -> JSON {
-            try SharingAllowlistListArgSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistListArgSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for SharingAllowlistListArg: \(error)"
-            }
-        }
-    }
-
-    public class SharingAllowlistListArgSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: SharingAllowlistListArg) throws -> JSON {
-            let output = [
-                "limit": try Serialization._UInt32Serializer.serialize(value.limit),
-            ]
-            return .dictionary(output)
-        }
-
-        public func deserialize(_ json: JSON) throws -> SharingAllowlistListArg {
-            switch json {
-            case .dictionary(let dict):
-                let limit = try Serialization._UInt32Serializer.deserialize(dict["limit"] ?? .number(1_000))
-                return SharingAllowlistListArg(limit: limit)
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingAllowlistListArg.self, json: json)
-            }
-        }
-    }
-
-    /// The SharingAllowlistListContinueArg struct
-    public class SharingAllowlistListContinueArg: CustomStringConvertible, JSONRepresentable {
-        /// The cursor returned from a previous call to sharingAllowlistList or sharingAllowlistListContinue.
-        public let cursor: String
-        public init(cursor: String) {
-            stringValidator()(cursor)
-            self.cursor = cursor
-        }
-
-        func json() throws -> JSON {
-            try SharingAllowlistListContinueArgSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistListContinueArgSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for SharingAllowlistListContinueArg: \(error)"
-            }
-        }
-    }
-
-    public class SharingAllowlistListContinueArgSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: SharingAllowlistListContinueArg) throws -> JSON {
-            let output = [
-                "cursor": try Serialization._StringSerializer.serialize(value.cursor),
-            ]
-            return .dictionary(output)
-        }
-
-        public func deserialize(_ json: JSON) throws -> SharingAllowlistListContinueArg {
-            switch json {
-            case .dictionary(let dict):
-                let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .null)
-                return SharingAllowlistListContinueArg(cursor: cursor)
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingAllowlistListContinueArg.self, json: json)
-            }
-        }
-    }
-
-    /// The SharingAllowlistListContinueError union
-    public enum SharingAllowlistListContinueError: CustomStringConvertible, JSONRepresentable {
-        /// Provided cursor is not valid.
-        case invalidCursor
-        /// An unspecified error.
-        case other
-
-        func json() throws -> JSON {
-            try SharingAllowlistListContinueErrorSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistListContinueErrorSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for SharingAllowlistListContinueError: \(error)"
-            }
-        }
-    }
-
-    public class SharingAllowlistListContinueErrorSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: SharingAllowlistListContinueError) throws -> JSON {
-            switch value {
-            case .invalidCursor:
-                var d = [String: JSON]()
-                d[".tag"] = .str("invalid_cursor")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            }
-        }
-
-        public func deserialize(_ json: JSON) throws -> SharingAllowlistListContinueError {
-            switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "invalid_cursor":
-                    return SharingAllowlistListContinueError.invalidCursor
-                case "other":
-                    return SharingAllowlistListContinueError.other
-                default:
-                    return SharingAllowlistListContinueError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingAllowlistListContinueError.self, json: json)
-            }
-        }
-    }
-
-    /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
-    public class SharingAllowlistListError: CustomStringConvertible, JSONRepresentable {
-        func json() throws -> JSON {
-            try SharingAllowlistListErrorSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistListErrorSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for SharingAllowlistListError: \(error)"
-            }
-        }
-    }
-
-    public class SharingAllowlistListErrorSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: SharingAllowlistListError) throws -> JSON {
-            let output = [String: JSON]()
-            return .dictionary(output)
-        }
-
-        public func deserialize(_ json: JSON) throws -> SharingAllowlistListError {
-            switch json {
-            case .dictionary:
-                return SharingAllowlistListError()
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingAllowlistListError.self, json: json)
-            }
-        }
-    }
-
-    /// The SharingAllowlistListResponse struct
-    public class SharingAllowlistListResponse: CustomStringConvertible, JSONRepresentable {
-        /// List of domains represented by valid string representation (RFC-1034/5).
-        public let domains: [String]
-        /// List of emails represented by valid string representation (RFC-5322/822).
-        public let emails: [String]
-        /// If this is nonempty, there are more entries that can be fetched with sharingAllowlistListContinue.
-        public let cursor: String
-        /// if true indicates that more entries can be fetched with sharingAllowlistListContinue.
-        public let hasMore: Bool
-        public init(domains: [String], emails: [String], cursor: String = "", hasMore: Bool = false) {
-            arrayValidator(itemValidator: stringValidator())(domains)
-            self.domains = domains
-            arrayValidator(itemValidator: stringValidator())(emails)
-            self.emails = emails
-            stringValidator()(cursor)
-            self.cursor = cursor
-            self.hasMore = hasMore
-        }
-
-        func json() throws -> JSON {
-            try SharingAllowlistListResponseSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistListResponseSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for SharingAllowlistListResponse: \(error)"
-            }
-        }
-    }
-
-    public class SharingAllowlistListResponseSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: SharingAllowlistListResponse) throws -> JSON {
-            let output = [
-                "domains": try ArraySerializer(Serialization._StringSerializer).serialize(value.domains),
-                "emails": try ArraySerializer(Serialization._StringSerializer).serialize(value.emails),
-                "cursor": try Serialization._StringSerializer.serialize(value.cursor),
-                "has_more": try Serialization._BoolSerializer.serialize(value.hasMore),
-            ]
-            return .dictionary(output)
-        }
-
-        public func deserialize(_ json: JSON) throws -> SharingAllowlistListResponse {
-            switch json {
-            case .dictionary(let dict):
-                let domains = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["domains"] ?? .null)
-                let emails = try ArraySerializer(Serialization._StringSerializer).deserialize(dict["emails"] ?? .null)
-                let cursor = try Serialization._StringSerializer.deserialize(dict["cursor"] ?? .str(""))
-                let hasMore = try Serialization._BoolSerializer.deserialize(dict["has_more"] ?? .number(0))
-                return SharingAllowlistListResponse(domains: domains, emails: emails, cursor: cursor, hasMore: hasMore)
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingAllowlistListResponse.self, json: json)
-            }
-        }
-    }
-
-    /// The SharingAllowlistRemoveArgs struct
-    public class SharingAllowlistRemoveArgs: CustomStringConvertible, JSONRepresentable {
-        /// List of domains represented by valid string representation (RFC-1034/5).
-        public let domains: [String]?
-        /// List of emails represented by valid string representation (RFC-5322/822).
-        public let emails: [String]?
-        public init(domains: [String]? = nil, emails: [String]? = nil) {
-            nullableValidator(arrayValidator(itemValidator: stringValidator()))(domains)
-            self.domains = domains
-            nullableValidator(arrayValidator(itemValidator: stringValidator()))(emails)
-            self.emails = emails
-        }
-
-        func json() throws -> JSON {
-            try SharingAllowlistRemoveArgsSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistRemoveArgsSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for SharingAllowlistRemoveArgs: \(error)"
-            }
-        }
-    }
-
-    public class SharingAllowlistRemoveArgsSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: SharingAllowlistRemoveArgs) throws -> JSON {
-            let output = [
-                "domains": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.domains),
-                "emails": try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).serialize(value.emails),
-            ]
-            return .dictionary(output)
-        }
-
-        public func deserialize(_ json: JSON) throws -> SharingAllowlistRemoveArgs {
-            switch json {
-            case .dictionary(let dict):
-                let domains = try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["domains"] ?? .null)
-                let emails = try NullableSerializer(ArraySerializer(Serialization._StringSerializer)).deserialize(dict["emails"] ?? .null)
-                return SharingAllowlistRemoveArgs(domains: domains, emails: emails)
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingAllowlistRemoveArgs.self, json: json)
-            }
-        }
-    }
-
-    /// The SharingAllowlistRemoveError union
-    public enum SharingAllowlistRemoveError: CustomStringConvertible, JSONRepresentable {
-        /// One of provided values is not valid.
-        case malformedEntry(String)
-        /// One or more provided values do not exist.
-        case entriesDoNotExist(String)
-        /// Neither single domain nor email provided.
-        case noEntriesProvided
-        /// Too many entries provided within one call.
-        case tooManyEntriesProvided
-        /// Unknown error.
-        case unknownError
-        /// An unspecified error.
-        case other
-
-        func json() throws -> JSON {
-            try SharingAllowlistRemoveErrorSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistRemoveErrorSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for SharingAllowlistRemoveError: \(error)"
-            }
-        }
-    }
-
-    public class SharingAllowlistRemoveErrorSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: SharingAllowlistRemoveError) throws -> JSON {
-            switch value {
-            case .malformedEntry(let arg):
-                var d = try ["malformed_entry": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("malformed_entry")
-                return .dictionary(d)
-            case .entriesDoNotExist(let arg):
-                var d = try ["entries_do_not_exist": Serialization._StringSerializer.serialize(arg)]
-                d[".tag"] = .str("entries_do_not_exist")
-                return .dictionary(d)
-            case .noEntriesProvided:
-                var d = [String: JSON]()
-                d[".tag"] = .str("no_entries_provided")
-                return .dictionary(d)
-            case .tooManyEntriesProvided:
-                var d = [String: JSON]()
-                d[".tag"] = .str("too_many_entries_provided")
-                return .dictionary(d)
-            case .unknownError:
-                var d = [String: JSON]()
-                d[".tag"] = .str("unknown_error")
-                return .dictionary(d)
-            case .other:
-                var d = [String: JSON]()
-                d[".tag"] = .str("other")
-                return .dictionary(d)
-            }
-        }
-
-        public func deserialize(_ json: JSON) throws -> SharingAllowlistRemoveError {
-            switch json {
-            case .dictionary(let d):
-                let tag = try Serialization.getTag(d)
-                switch tag {
-                case "malformed_entry":
-                    let v = try Serialization._StringSerializer.deserialize(d["malformed_entry"] ?? .null)
-                    return SharingAllowlistRemoveError.malformedEntry(v)
-                case "entries_do_not_exist":
-                    let v = try Serialization._StringSerializer.deserialize(d["entries_do_not_exist"] ?? .null)
-                    return SharingAllowlistRemoveError.entriesDoNotExist(v)
-                case "no_entries_provided":
-                    return SharingAllowlistRemoveError.noEntriesProvided
-                case "too_many_entries_provided":
-                    return SharingAllowlistRemoveError.tooManyEntriesProvided
-                case "unknown_error":
-                    return SharingAllowlistRemoveError.unknownError
-                case "other":
-                    return SharingAllowlistRemoveError.other
-                default:
-                    return SharingAllowlistRemoveError.other
-                }
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingAllowlistRemoveError.self, json: json)
-            }
-        }
-    }
-
-    /// This struct is empty. The comment here is intentionally emitted to avoid indentation issues with Stone.
-    public class SharingAllowlistRemoveResponse: CustomStringConvertible, JSONRepresentable {
-        func json() throws -> JSON {
-            try SharingAllowlistRemoveResponseSerializer().serialize(self)
-        }
-
-        public var description: String {
-            do {
-                return "\(SerializeUtil.prepareJSONForSerialization(try SharingAllowlistRemoveResponseSerializer().serialize(self)))"
-            } catch {
-                return "Failed to generate description for SharingAllowlistRemoveResponse: \(error)"
-            }
-        }
-    }
-
-    public class SharingAllowlistRemoveResponseSerializer: JSONSerializer {
-        public init() {}
-        public func serialize(_ value: SharingAllowlistRemoveResponse) throws -> JSON {
-            let output = [String: JSON]()
-            return .dictionary(output)
-        }
-
-        public func deserialize(_ json: JSON) throws -> SharingAllowlistRemoveResponse {
-            switch json {
-            case .dictionary:
-                return SharingAllowlistRemoveResponse()
-            default:
-                throw JSONSerializerError.deserializeError(type: SharingAllowlistRemoveResponse.self, json: json)
             }
         }
     }
@@ -18101,34 +17522,6 @@ public class Team {
             style: .rpc
         )
     )
-    static let membersBulkSuspend = Route(
-        name: "members/bulk_suspend",
-        version: 1,
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.BulkSuspendArgSerializer(),
-        responseSerializer: Async.LaunchResultBaseSerializer(),
-        errorSerializer: Team.BulkSuspendErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
-    )
-    static let membersBulkSuspendJobStatusCheck = Route(
-        name: "members/bulk_suspend/job_status/check",
-        version: 1,
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Async.PollArgSerializer(),
-        responseSerializer: Team.BulkSuspendJobStatusSerializer(),
-        errorSerializer: Async.PollErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
-    )
     static let membersDeleteFormerMemberFiles = Route(
         name: "members/delete_former_member_files",
         version: 1,
@@ -18493,6 +17886,34 @@ public class Team {
             style: .rpc
         )
     )
+    static let membersSuspendBatch = Route(
+        name: "members/suspend_batch",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Team.MembersSuspendBatchArgSerializer(),
+        responseSerializer: Async.LaunchResultBaseSerializer(),
+        errorSerializer: Team.MembersSuspendBatchErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.team],
+            host: .api,
+            style: .rpc
+        )
+    )
+    static let membersSuspendBatchJobStatusCheck = Route(
+        name: "members/suspend_batch/job_status/check",
+        version: 1,
+        namespace: "team",
+        deprecated: false,
+        argSerializer: Async.PollArgSerializer(),
+        responseSerializer: Team.MembersSuspendBatchJobStatusSerializer(),
+        errorSerializer: Async.PollErrorSerializer(),
+        attributes: RouteAttributes(
+            auth: [.team],
+            host: .api,
+            style: .rpc
+        )
+    )
     static let membersUnsuspend = Route(
         name: "members/unsuspend",
         version: 1,
@@ -18613,62 +18034,6 @@ public class Team {
         argSerializer: Team.DateRangeSerializer(),
         responseSerializer: Team.GetStorageReportSerializer(),
         errorSerializer: Team.DateRangeErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
-    )
-    static let sharingAllowlistAdd = Route(
-        name: "sharing_allowlist/add",
-        version: 1,
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.SharingAllowlistAddArgsSerializer(),
-        responseSerializer: Team.SharingAllowlistAddResponseSerializer(),
-        errorSerializer: Team.SharingAllowlistAddErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
-    )
-    static let sharingAllowlistList = Route(
-        name: "sharing_allowlist/list",
-        version: 1,
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.SharingAllowlistListArgSerializer(),
-        responseSerializer: Team.SharingAllowlistListResponseSerializer(),
-        errorSerializer: Team.SharingAllowlistListErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
-    )
-    static let sharingAllowlistListContinue = Route(
-        name: "sharing_allowlist/list/continue",
-        version: 1,
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.SharingAllowlistListContinueArgSerializer(),
-        responseSerializer: Team.SharingAllowlistListResponseSerializer(),
-        errorSerializer: Team.SharingAllowlistListContinueErrorSerializer(),
-        attributes: RouteAttributes(
-            auth: [.team],
-            host: .api,
-            style: .rpc
-        )
-    )
-    static let sharingAllowlistRemove = Route(
-        name: "sharing_allowlist/remove",
-        version: 1,
-        namespace: "team",
-        deprecated: false,
-        argSerializer: Team.SharingAllowlistRemoveArgsSerializer(),
-        responseSerializer: Team.SharingAllowlistRemoveResponseSerializer(),
-        errorSerializer: Team.SharingAllowlistRemoveErrorSerializer(),
         attributes: RouteAttributes(
             auth: [.team],
             host: .api,
