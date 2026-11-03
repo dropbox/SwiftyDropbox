@@ -833,42 +833,6 @@ public class TeamRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Launch a bulk suspend job. The server enforces a maximum of 500 members.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter members: Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
-    /// item IDs and duplicate member selectors.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
-    /// or a `Team.BulkSuspendError` object on failure.
-    @discardableResult public func membersBulkSuspend(members: [Team.BulkSuspendMemberTarget]) -> RpcRequest<
-        Async.LaunchResultBaseSerializer,
-        Team.BulkSuspendErrorSerializer
-    > {
-        let route = Team.membersBulkSuspend
-        let serverArgs = Team.BulkSuspendArg(members: members)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Poll a previously launched bulk suspend job.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
-    /// that launched the job.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.BulkSuspendJobStatus` object on
-    /// success or a `Async.PollError` object on failure.
-    @discardableResult public func membersBulkSuspendJobStatusCheck(asyncJobId: String) -> RpcRequest<
-        Team.BulkSuspendJobStatusSerializer,
-        Async.PollErrorSerializer
-    > {
-        let route = Team.membersBulkSuspendJobStatusCheck
-        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
     /// Permanently delete the files of a user who has been removed from the team. After permanent deletion, those files
     /// will not be available to be transferred to another team member. Permission : Team member management Exactly
     /// one of team_member_id, email, or external_id must be provided to identify the user account.
@@ -1397,6 +1361,42 @@ public class TeamRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Launch a member suspension batch. The server enforces a maximum of 500 members.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter members: Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
+    /// item IDs and duplicate member selectors.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Team.MembersSuspendBatchError` object on failure.
+    @discardableResult public func membersSuspendBatch(members: [Team.MembersSuspendBatchTarget]) -> RpcRequest<
+        Async.LaunchResultBaseSerializer,
+        Team.MembersSuspendBatchErrorSerializer
+    > {
+        let route = Team.membersSuspendBatch
+        let serverArgs = Team.MembersSuspendBatchArg(members: members)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Poll a previously launched member suspension batch job.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersSuspendBatchJobStatus` object
+    /// on success or a `Async.PollError` object on failure.
+    @discardableResult public func membersSuspendBatchJobStatusCheck(asyncJobId: String) -> RpcRequest<
+        Team.MembersSuspendBatchJobStatusSerializer,
+        Async.PollErrorSerializer
+    > {
+        let route = Team.membersSuspendBatchJobStatusCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Unsuspend a member from a team. Permission : Team member management Exactly one of team_member_id, email, or
     /// external_id must be provided to identify the user account.
     ///
@@ -1563,85 +1563,6 @@ public class TeamRoutes: DropboxTransportClientOwning {
     > {
         let route = Team.reportsGetStorage
         let serverArgs = Team.DateRange(startDate: startDate, endDate: endDate)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Endpoint adds Approve List entries. Changes are effective immediately. Changes are committed in transaction. In
-    /// case of single validation error - all entries are rejected. Valid domains (RFC-1034/5) and emails
-    /// (RFC-5322/822) are accepted. Added entries cannot overflow limit of 10000 entries per team. Maximum 100
-    /// entries per call is allowed.
-    ///
-    /// - scope: team_info.write
-    ///
-    /// - parameter domains: List of domains represented by valid string representation (RFC-1034/5).
-    /// - parameter emails: List of emails represented by valid string representation (RFC-5322/822).
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistAddResponse` object on
-    /// success or a `Team.SharingAllowlistAddError` object on failure.
-    @discardableResult public func sharingAllowlistAdd(domains: [String]? = nil, emails: [String]? = nil) -> RpcRequest<
-        Team.SharingAllowlistAddResponseSerializer,
-        Team.SharingAllowlistAddErrorSerializer
-    > {
-        let route = Team.sharingAllowlistAdd
-        let serverArgs = Team.SharingAllowlistAddArgs(domains: domains, emails: emails)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Lists Approve List entries for given team, from newest to oldest, returning up to `limit` entries at a time. If
-    /// there are more than `limit` entries associated with the current team, more can be fetched by passing the
-    /// returned `cursor` to sharingAllowlistListContinue.
-    ///
-    /// - scope: team_info.read
-    ///
-    /// - parameter limit: The number of entries to fetch at one time.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistListResponse` object
-    /// on success or a `Team.SharingAllowlistListError` object on failure.
-    @discardableResult public func sharingAllowlistList(limit: UInt32 = 1_000) -> RpcRequest<
-        Team.SharingAllowlistListResponseSerializer,
-        Team.SharingAllowlistListErrorSerializer
-    > {
-        let route = Team.sharingAllowlistList
-        let serverArgs = Team.SharingAllowlistListArg(limit: limit)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Lists entries associated with given team, starting from a the cursor. See sharingAllowlistList.
-    ///
-    /// - scope: team_info.read
-    ///
-    /// - parameter cursor: The cursor returned from a previous call to sharingAllowlistList or
-    /// sharingAllowlistListContinue.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistListResponse` object
-    /// on success or a `Team.SharingAllowlistListContinueError` object on failure.
-    @discardableResult public func sharingAllowlistListContinue(cursor: String) -> RpcRequest<
-        Team.SharingAllowlistListResponseSerializer,
-        Team.SharingAllowlistListContinueErrorSerializer
-    > {
-        let route = Team.sharingAllowlistListContinue
-        let serverArgs = Team.SharingAllowlistListContinueArg(cursor: cursor)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Endpoint removes Approve List entries. Changes are effective immediately. Changes are committed in transaction.
-    /// In case of single validation error - all entries are rejected. Valid domains (RFC-1034/5) and emails
-    /// (RFC-5322/822) are accepted. Entries being removed have to be present on the list. Maximum 1000 entries per
-    /// call is allowed.
-    ///
-    /// - scope: team_info.write
-    ///
-    /// - parameter domains: List of domains represented by valid string representation (RFC-1034/5).
-    /// - parameter emails: List of emails represented by valid string representation (RFC-5322/822).
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.SharingAllowlistRemoveResponse` object
-    /// on success or a `Team.SharingAllowlistRemoveError` object on failure.
-    @discardableResult public func sharingAllowlistRemove(domains: [String]? = nil, emails: [String]? = nil) -> RpcRequest<
-        Team.SharingAllowlistRemoveResponseSerializer,
-        Team.SharingAllowlistRemoveErrorSerializer
-    > {
-        let route = Team.sharingAllowlistRemove
-        let serverArgs = Team.SharingAllowlistRemoveArgs(domains: domains, emails: emails)
         return client.request(route, serverArgs: serverArgs)
     }
 

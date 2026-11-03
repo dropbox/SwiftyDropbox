@@ -203,7 +203,10 @@ public class DBXAuthAuthError: NSObject {
     }
 }
 
-/// The access token is invalid.
+/// The access token is invalid. This can happen if the access token has been revoked by Dropbox or the user. To
+/// fix this, you should re-authenticate the user. Note: Access tokens that are not returned exactly as
+/// provisioned will return this error. Be sure not to truncate or otherwise malform access tokens
+/// provided by Dropbox.
 @objc
 public class DBXAuthAuthErrorInvalidAccessToken: DBXAuthAuthError {
     @objc
@@ -326,7 +329,7 @@ public class DBXAuthInvalidAccountTypeError: NSObject {
     }
 }
 
-/// Current account type doesn't have permission to access this route endpoint.
+/// Current account type doesn't have permission to access this endpoint.
 @objc
 public class DBXAuthInvalidAccountTypeErrorEndpoint: DBXAuthInvalidAccountTypeError {
     @objc

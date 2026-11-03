@@ -10,12 +10,15 @@ import Foundation
 public class Users {
     /// The amount of detail revealed about an account depends on the user being queried and the user making the query.
     public class Account: CustomStringConvertible, JSONRepresentable {
-        /// The user's unique Dropbox ID.
+        /// The user's unique and stable Dropbox ID.
         public let accountId: String
         /// Details of a user's name.
         public let name: Users.Name
         /// The user's email address. Do not rely on this without checking the emailVerified field. Even then, it's
-        /// possible that the user has since lost access to their email.
+        /// possible that the user has since lost access to their email. Note: email is not a unique or stable
+        /// identifier for a Dropbox account. Users can change their email, and emails can be reused by
+        /// different accounts. Apps should not use email as a key for account identification; use accountId
+        /// instead.
         public let email: String
         /// Whether the user has verified their email address.
         public let emailVerified: Bool
