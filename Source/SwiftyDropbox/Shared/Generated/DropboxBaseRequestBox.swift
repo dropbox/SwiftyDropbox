@@ -27,6 +27,7 @@ public enum DropboxBaseRequestBox: CustomStringConvertible {
     case paper_docsCreate(UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocCreateErrorSerializer>)
     case paper_docsDownload(DownloadRequestFile<Paper.PaperDocExportResultSerializer, Paper.DocLookupErrorSerializer>)
     case paper_docsUpdate(UploadRequest<Paper.PaperDocCreateUpdateResultSerializer, Paper.PaperDocUpdateErrorSerializer>)
+    case riviera_downloadTransformOutput(DownloadRequestFile<Riviera.DownloadTransformOutputResultSerializer, Riviera.TransformApiV2ErrorSerializer>)
     case sharing_getSharedLinkFile(DownloadRequestFile<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer>)
 
     public var description: String {
@@ -69,6 +70,8 @@ public enum DropboxBaseRequestBox: CustomStringConvertible {
             return "paper/docs/download"
         case .paper_docsUpdate:
             return "paper/docs/update"
+        case .riviera_downloadTransformOutput:
+            return "riviera/download_transform_output"
         case .sharing_getSharedLinkFile:
             return "sharing/get_shared_link_file"
         }
