@@ -416,6 +416,9 @@ public class Paper {
         case other
         /// The required doc was not found.
         case docNotFound
+        /// Cloud Docs do not have legacy Paper folders. Use the Dropbox filesystem APIs to look up their containing
+        /// folders.
+        case folderNotFound
 
         func json() throws -> JSON {
             try DocLookupErrorSerializer().serialize(self)
@@ -446,6 +449,10 @@ public class Paper {
                 var d = [String: JSON]()
                 d[".tag"] = .str("doc_not_found")
                 return .dictionary(d)
+            case .folderNotFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("folder_not_found")
+                return .dictionary(d)
             }
         }
 
@@ -460,6 +467,8 @@ public class Paper {
                     return DocLookupError.other
                 case "doc_not_found":
                     return DocLookupError.docNotFound
+                case "folder_not_found":
+                    return DocLookupError.folderNotFound
                 default:
                     throw JSONSerializerError.unknownTag(type: DocLookupError.self, json: json, tag: tag)
                 }
@@ -2478,6 +2487,9 @@ public class Paper {
         case other
         /// The required doc was not found.
         case docNotFound
+        /// Cloud Docs do not have legacy Paper folders. Use the Dropbox filesystem APIs to look up their containing
+        /// folders.
+        case folderNotFound
         /// The provided content was malformed and cannot be imported to Paper.
         case contentMalformed
         /// The provided revision does not match the document head.
@@ -2521,6 +2533,10 @@ public class Paper {
                 var d = [String: JSON]()
                 d[".tag"] = .str("doc_not_found")
                 return .dictionary(d)
+            case .folderNotFound:
+                var d = [String: JSON]()
+                d[".tag"] = .str("folder_not_found")
+                return .dictionary(d)
             case .contentMalformed:
                 var d = [String: JSON]()
                 d[".tag"] = .str("content_malformed")
@@ -2559,6 +2575,8 @@ public class Paper {
                     return PaperDocUpdateError.other
                 case "doc_not_found":
                     return PaperDocUpdateError.docNotFound
+                case "folder_not_found":
+                    return PaperDocUpdateError.folderNotFound
                 case "content_malformed":
                     return PaperDocUpdateError.contentMalformed
                 case "revision_mismatch":
