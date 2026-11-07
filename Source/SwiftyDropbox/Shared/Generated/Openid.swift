@@ -149,18 +149,22 @@ public class Openid {
 
     /// The UserInfoResult struct
     public class UserInfoResult: CustomStringConvertible, JSONRepresentable {
-        /// Last name of user.
+        /// Last name of the user.
         public let familyName: String?
-        /// First name of user.
+        /// First name of the user.
         public let givenName: String?
-        /// Email address of user.
+        /// The user's email address. Be aware it's possible that the user has since lost access to their email. Note:
+        /// email is not a unique or stable identifier for a Dropbox account. Users can change their email, and
+        /// emails can be reused by different accounts. Apps should not use email as a key for account
+        /// identification; use sub instead.
         public let email: String?
-        /// If user is email verified.
+        /// If the user's email address is verified.
         public let emailVerified: Bool?
-        /// Issuer of token (in this case Dropbox).
+        /// Issuer of the token (in this case Dropbox).
         public let iss: String
         /// An identifier for the user. This is the Dropbox account_id, a string value such as
-        /// dbid:AAH4f99T0taONIb-OurWxbNQ6ywGRopQngc.
+        /// dbid:AAH4f99T0taONIb-OurWxbNQ6ywGRopQngc. The account_id is a unique and stable identifier for a
+        /// Dropbox account, suitable for use as a key in authentication and account management.
         public let sub: String
         public init(familyName: String? = nil, givenName: String? = nil, email: String? = nil, emailVerified: Bool? = nil, iss: String = "", sub: String = "") {
             nullableValidator(stringValidator())(familyName)

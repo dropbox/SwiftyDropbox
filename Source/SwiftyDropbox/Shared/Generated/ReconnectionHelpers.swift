@@ -183,6 +183,15 @@ enum ReconnectionHelpers: ReconnectionHelpersShared {
                     client: client
                 )
             )
+        case "riviera/download_transform_output":
+            return .riviera_downloadTransformOutput(
+                rebuildRequest(
+                    apiRequest: apiRequest,
+                    info: info,
+                    route: Riviera.downloadTransformOutput,
+                    client: client
+                )
+            )
         case "sharing/get_shared_link_file":
             return .sharing_getSharedLinkFile(
                 rebuildRequest(
