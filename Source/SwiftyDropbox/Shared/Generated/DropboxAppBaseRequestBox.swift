@@ -9,12 +9,15 @@ import Foundation
 /// Allows for heterogenous collections of typed requests
 public enum DropboxAppBaseRequestBox: CustomStringConvertible {
     case files_getThumbnailV2(DownloadRequestFile<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer>)
+    case riviera_downloadTransformOutput(DownloadRequestFile<Riviera.DownloadTransformOutputResultSerializer, Riviera.TransformApiV2ErrorSerializer>)
     case sharing_getSharedLinkFile(DownloadRequestFile<Sharing.SharedLinkMetadataSerializer, Sharing.GetSharedLinkFileErrorSerializer>)
 
     public var description: String {
         switch self {
         case .files_getThumbnailV2:
             return "files/get_thumbnail_v2"
+        case .riviera_downloadTransformOutput:
+            return "riviera/download_transform_output"
         case .sharing_getSharedLinkFile:
             return "sharing/get_shared_link_file"
         }
