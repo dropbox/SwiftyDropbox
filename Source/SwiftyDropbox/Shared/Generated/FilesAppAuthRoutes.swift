@@ -27,10 +27,12 @@ public class FilesAppAuthRoutes: DropboxTransportClientOwning {
     /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
-    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
     /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
     /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
     /// not needed.
+    /// - parameter preserveTransparency: Whether to preserve the original image's transparency in the thumbnail. This
+    /// is supported only when the output format is PNG or WebP. Requests that set this flag with JPEG output return
+    /// an error.
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
     /// an NSError will be thrown).
@@ -43,13 +45,20 @@ public class FilesAppAuthRoutes: DropboxTransportClientOwning {
         format: Files.ThumbnailFormat = .jpeg,
         size: Files.ThumbnailSize = .w64h64,
         mode: Files.ThumbnailMode = .strict,
-        quality: Files.ThumbnailQuality = .quality80,
         excludeMediaInfo: Bool? = nil,
+        preserveTransparency: Bool = false,
         overwrite: Bool = false,
         destination: URL
     ) -> DownloadRequestFile<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer> {
         let route = Files.getThumbnailV2
-        let serverArgs = Files.ThumbnailV2Arg(resource: resource, format: format, size: size, mode: mode, quality: quality, excludeMediaInfo: excludeMediaInfo)
+        let serverArgs = Files.ThumbnailV2Arg(
+            resource: resource,
+            format: format,
+            size: size,
+            mode: mode,
+            excludeMediaInfo: excludeMediaInfo,
+            preserveTransparency: preserveTransparency
+        )
         return client.request(route, serverArgs: serverArgs, overwrite: overwrite, destination: destination)
     }
 
@@ -66,10 +75,12 @@ public class FilesAppAuthRoutes: DropboxTransportClientOwning {
     /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
-    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
     /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
     /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
     /// not needed.
+    /// - parameter preserveTransparency: Whether to preserve the original image's transparency in the thumbnail. This
+    /// is supported only when the output format is PNG or WebP. Requests that set this flag with JPEG output return
+    /// an error.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.PreviewResult` object on success or a
     /// `Files.ThumbnailV2Error` object on failure.
@@ -78,11 +89,18 @@ public class FilesAppAuthRoutes: DropboxTransportClientOwning {
         format: Files.ThumbnailFormat = .jpeg,
         size: Files.ThumbnailSize = .w64h64,
         mode: Files.ThumbnailMode = .strict,
-        quality: Files.ThumbnailQuality = .quality80,
-        excludeMediaInfo: Bool? = nil
+        excludeMediaInfo: Bool? = nil,
+        preserveTransparency: Bool = false
     ) -> DownloadRequestMemory<Files.PreviewResultSerializer, Files.ThumbnailV2ErrorSerializer> {
         let route = Files.getThumbnailV2
-        let serverArgs = Files.ThumbnailV2Arg(resource: resource, format: format, size: size, mode: mode, quality: quality, excludeMediaInfo: excludeMediaInfo)
+        let serverArgs = Files.ThumbnailV2Arg(
+            resource: resource,
+            format: format,
+            size: size,
+            mode: mode,
+            excludeMediaInfo: excludeMediaInfo,
+            preserveTransparency: preserveTransparency
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 
