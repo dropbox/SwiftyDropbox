@@ -19,54 +19,106 @@ public class DBXRivieraAppAuthRoutes: NSObject {
 
     public let client: DBXDropboxTransportClient
 
-    /// Asynchronous document-to-markdown conversion for supported file formats. Supported formats: .binder, .docx,
-    /// .html, .paper, .papert, .pptx, .xlsx, .gsheet, .ods, .pdf. Unsupported formats return an
-    /// `unsupported_format_error`. Size limit: the source file must be at most 50 MB. Larger files are rejected.
+    /// Download the output of a completed `get_transform_async` job. Pass the `output_handle` from the job's `complete`
+    /// result. The body is the produced file, and the `Dropbox-API-Result` header describes it. A handle can only
+    /// be redeemed by the user who requested the transform, and only until its `expires_ts`; after that this route
+    /// fails with `expired_handle_error`, and the transform has to be requested again. A handle that was never
+    /// valid, or that belongs to another user, fails with `user_error`.
     ///
     /// - scope: files.content.read
     ///
-    /// - parameter fileIdOrUrl: Identifier of the document to convert. Callers must set exactly one of the
-    /// `FileIdOrUrl` variants. The referenced file must be a document in a supported format (see the route
-    /// description for the list); requests against unsupported formats return `unsupported_format_error`.
-    /// - parameter enableOcr: Enable OCR for PDF documents. Processing is slower when enabled.
-    /// - parameter embedImages: When true, embed images as base64 data URIs in the markdown output. This can
-    /// significantly increase output size.
+    /// - parameter outputHandle: The `output_handle` from a `complete` `get_transform_async/check` result.
+    /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
+    /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
+    /// an NSError will be thrown).
+    /// - parameter destination: The location to write the download to.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.DownloadTransformOutputResult`
+    /// object on success or a `Riviera.TransformApiV2Error` object on failure.
+    @objc
+    @discardableResult public func downloadTransformOutputURL(outputHandle: String, overwrite: Bool, destination: URL) -> DBXRivieraDownloadTransformOutputDownloadRequestFile {
+        let swift = swift.downloadTransformOutput(outputHandle: outputHandle, overwrite: overwrite, destination: destination)
+        return DBXRivieraDownloadTransformOutputDownloadRequestFile(swift: swift)
+    }
+
+    /// Download the output of a completed `get_transform_async` job. Pass the `output_handle` from the job's `complete`
+    /// result. The body is the produced file, and the `Dropbox-API-Result` header describes it. A handle can only
+    /// be redeemed by the user who requested the transform, and only until its `expires_ts`; after that this route
+    /// fails with `expired_handle_error`, and the transform has to be requested again. A handle that was never
+    /// valid, or that belongs to another user, fails with `user_error`.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter outputHandle: The `output_handle` from a `complete` `get_transform_async/check` result.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Riviera.DownloadTransformOutputResult`
+    /// object on success or a `Riviera.TransformApiV2Error` object on failure.
+    @objc
+    @discardableResult public func downloadTransformOutput(outputHandle: String) -> DBXRivieraDownloadTransformOutputDownloadRequestMemory {
+        let swift = swift.downloadTransformOutput(outputHandle: outputHandle)
+        return DBXRivieraDownloadTransformOutputDownloadRequestMemory(swift: swift)
+    }
+
+    /// Asynchronous content extraction from a single file. One route covers every Riviera extraction. Name the source
+    /// file in `file_id_or_url`, and say what to extract in `extract_type`, whose variant carries that extraction's
+    /// options: - `markdown`: a document, converted to markdown that preserves its structure. - `text`: the plain
+    /// text of a document. - `ocr`: the text of an image or scanned PDF, plus hOCR with per-word coordinates. -
+    /// `transcript`: the timestamped transcript of an audio or video file. - `keyframes`: one keyframe per scene
+    /// change in a video. The accepted formats and size limits differ per extraction; see `ExtractType`. Formats
+    /// the requested extraction does not support fail with `unsupported_format_error`, and files over its size
+    /// limit fail with `limit_exceeded_error`. The result is not returned by this route. Poll `extract_async/check`
+    /// with the returned async job ID until it reports `complete` or `failed`. A `complete` result is an
+    /// `ExtractResult` whose variant matches the requested `extract_type`.
+    ///
+    /// - scope: files.content.read
+    ///
+    /// - parameter fileIdOrUrl: Identifier of the source file. Callers must set exactly one of the `FileIdOrUrl`
+    /// variants. The file must be in a format the requested `extract_type` supports; see `ExtractType` for the
+    /// per-type lists.
+    /// - parameter extractType: What to extract, and that extraction's options. Required.
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Void` object on failure.
     @objc
-    @discardableResult public func getMarkdownAsync(fileIdOrUrl: DBXRivieraFileIdOrUrl?, enableOcr: NSNumber, embedImages: NSNumber) -> DBXRivieraGetMarkdownAsyncRpcRequest {
-        let swift = swift.getMarkdownAsync(fileIdOrUrl: fileIdOrUrl?.swift, enableOcr: enableOcr.boolValue, embedImages: embedImages.boolValue)
-        return DBXRivieraGetMarkdownAsyncRpcRequest(swift: swift)
+    @discardableResult public func extractAsync(extractType: DBXRivieraExtractType, fileIdOrUrl: DBXRivieraFileIdOrUrl?) -> DBXRivieraExtractAsyncRpcRequest {
+        let swift = swift.extractAsync(extractType: extractType.swift, fileIdOrUrl: fileIdOrUrl?.swift)
+        return DBXRivieraExtractAsyncRpcRequest(swift: swift)
     }
 
-    /// Asynchronous document-to-markdown conversion for supported file formats. Supported formats: .binder, .docx,
-    /// .html, .paper, .papert, .pptx, .xlsx, .gsheet, .ods, .pdf. Unsupported formats return an
-    /// `unsupported_format_error`. Size limit: the source file must be at most 50 MB. Larger files are rejected.
+    /// Asynchronous content extraction from a single file. One route covers every Riviera extraction. Name the source
+    /// file in `file_id_or_url`, and say what to extract in `extract_type`, whose variant carries that extraction's
+    /// options: - `markdown`: a document, converted to markdown that preserves its structure. - `text`: the plain
+    /// text of a document. - `ocr`: the text of an image or scanned PDF, plus hOCR with per-word coordinates. -
+    /// `transcript`: the timestamped transcript of an audio or video file. - `keyframes`: one keyframe per scene
+    /// change in a video. The accepted formats and size limits differ per extraction; see `ExtractType`. Formats
+    /// the requested extraction does not support fail with `unsupported_format_error`, and files over its size
+    /// limit fail with `limit_exceeded_error`. The result is not returned by this route. Poll `extract_async/check`
+    /// with the returned async job ID until it reports `complete` or `failed`. A `complete` result is an
+    /// `ExtractResult` whose variant matches the requested `extract_type`.
     ///
     /// - scope: files.content.read
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Void` object on failure.
     @objc
-    @discardableResult public func getMarkdownAsync() -> DBXRivieraGetMarkdownAsyncRpcRequest {
-        let swift = swift.getMarkdownAsync()
-        return DBXRivieraGetMarkdownAsyncRpcRequest(swift: swift)
+    @discardableResult public func extractAsync(extractType: DBXRivieraExtractType) -> DBXRivieraExtractAsyncRpcRequest {
+        let swift = swift.extractAsync(extractType: extractType.swift)
+        return DBXRivieraExtractAsyncRpcRequest(swift: swift)
     }
 
-    /// Returns the status or result of specified get_markdown_async task.
+    /// Returns the status or result of specified extract_async task.
     ///
     /// - scope: files.content.read
     ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
     /// that launched the job.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Riviera.GetMarkdownAsyncCheckResult` object
-    /// on success or a `Async.PollError` object on failure.
+    /// - returns: Through the response callback, the caller will receive a `Riviera.ExtractAsyncCheckResult` object on
+    /// success or a `Async.PollError` object on failure.
     @objc
-    @discardableResult public func getMarkdownAsyncCheck(asyncJobId: String) -> DBXRivieraGetMarkdownAsyncCheckRpcRequest {
-        let swift = swift.getMarkdownAsyncCheck(asyncJobId: asyncJobId)
-        return DBXRivieraGetMarkdownAsyncCheckRpcRequest(swift: swift)
+    @discardableResult public func extractAsyncCheck(asyncJobId: String) -> DBXRivieraExtractAsyncCheckRpcRequest {
+        let swift = swift.extractAsyncCheck(asyncJobId: asyncJobId)
+        return DBXRivieraExtractAsyncCheckRpcRequest(swift: swift)
     }
 
     /// Asynchronous file metadata extraction for supported file formats. The kind of metadata returned depends on the
@@ -76,15 +128,20 @@ public class DBXRivieraAppAuthRoutes: NSObject {
     /// Audio/video (media) formats: .aac, .aif, .aiff, .flac, .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma, .3gp,
     /// .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf,
     /// .oggtheora, .ogv, .rm, .ts, .vob, .webm, .wmv. - PDF format: .pdf. - MS Office formats: .docx, .pptx, .xlsx.
-    /// Unsupported formats return an `unsupported_format_error`.
+    /// Files in other formats fail with userError in MetadataExtractionApiV2Error. Size limits depend on the kind
+    /// of metadata being extracted: at most 200 MB for image (EXIF) files, 100 GB for audio/video files, 500 MB for
+    /// PDFs, and 288 MB for MS Office files. Files over the limit for their kind fail with userError in
+    /// MetadataExtractionApiV2Error. The metadata is not returned by this route. Poll getMetadataAsyncCheck with
+    /// the returned async job ID until it reports complete in GetMetadataAsyncCheckResult or failed in
+    /// GetMetadataAsyncCheckResult.
     ///
     /// - scope: files.content.read
     ///
     /// - parameter fileIdOrUrl: Identifier of the file to extract metadata from. Callers must set exactly one of the
-    /// `FileIdOrUrl` variants. The kind of metadata returned is determined by the file type: image files return
-    /// EXIF metadata, audio/video files return media metadata, PDFs return PDF metadata, and MS Office documents
-    /// (docx, pptx, xlsx) return Office metadata. See the route description for the supported formats. Requests
-    /// against unsupported formats return `unsupported_format_error`.
+    /// FileIdOrUrl variants. The kind of metadata returned is determined by the file type: image files return EXIF
+    /// metadata, audio/video files return media metadata, PDFs return PDF metadata, and MS Office documents (docx,
+    /// pptx, xlsx) return Office metadata. See the route description for the supported formats. Requests against
+    /// unsupported formats fail with userError in MetadataExtractionApiV2Error.
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Void` object on failure.
@@ -101,7 +158,12 @@ public class DBXRivieraAppAuthRoutes: NSObject {
     /// Audio/video (media) formats: .aac, .aif, .aiff, .flac, .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma, .3gp,
     /// .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf,
     /// .oggtheora, .ogv, .rm, .ts, .vob, .webm, .wmv. - PDF format: .pdf. - MS Office formats: .docx, .pptx, .xlsx.
-    /// Unsupported formats return an `unsupported_format_error`.
+    /// Files in other formats fail with userError in MetadataExtractionApiV2Error. Size limits depend on the kind
+    /// of metadata being extracted: at most 200 MB for image (EXIF) files, 100 GB for audio/video files, 500 MB for
+    /// PDFs, and 288 MB for MS Office files. Files over the limit for their kind fail with userError in
+    /// MetadataExtractionApiV2Error. The metadata is not returned by this route. Poll getMetadataAsyncCheck with
+    /// the returned async job ID until it reports complete in GetMetadataAsyncCheckResult or failed in
+    /// GetMetadataAsyncCheckResult.
     ///
     /// - scope: files.content.read
     ///
@@ -128,74 +190,113 @@ public class DBXRivieraAppAuthRoutes: NSObject {
         return DBXRivieraGetMetadataAsyncCheckRpcRequest(swift: swift)
     }
 
-    /// Asynchronous transcript generation for audio and video files. Supported audio formats: .aac, .aif, .aiff, .flac,
-    /// .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma. Supported video formats: .3gp, .3gpp, .3gpp2, .asf, .avi, .dv,
-    /// .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm,
-    /// .wmv. Unsupported formats return an `unsupported_format_error`. Size limits: the source file must be at most
-    /// 10 GB and its audio track at most 1 hour in duration. Files exceeding these limits are rejected.
+    /// Asynchronous file transformation: produces a new file from an existing one. One route covers many conversions.
+    /// Name the source file in `file_id_or_url`, say what you want back in `transform_type`, and supply that type's
+    /// options message if it needs one: - `pdf`: documents and images, to PDF. - `html`: spreadsheets, to HTML,
+    /// preserving the sheet layout. - `image`: images and single document pages, to JPEG or PNG. - `thumbnail`: any
+    /// thumbnailable source, resized to a named size bucket. - `image_pdf`: documents, to a page image rendered by
+    /// way of PDF. - `video_frame`: one still frame from a video, at a requested offset. The accepted input formats
+    /// differ per transform -- they are not one shared list -- and each is the intersection of the source format
+    /// with the pipeline that transform uses: - `pdf` and `image_pdf`: word-processing, presentation and
+    /// spreadsheet documents (.doc, .docx, .ppt, .pptx, .xls, .xlsx, .odt, .odp, .ods, .rtf, .epub, .gdoc,
+    /// .gslides, .hwp, .ai, .eps, .dwg among others). Images are not accepted. - `html`: spreadsheets only -- .xls,
+    /// .xlsm, .xlsx, .ods, .gsheet. This is the complete list. Note that .csv and .txt are *not* accepted here. -
+    /// `image`: the documents above, plus .pdf and .html, plus the iWork and design formats .pages, .key, .numbers,
+    /// .sketch, .xd, .indd and .psd, plus .avif, .heic, .svg and camera RAW, plus fonts (.otf, .ttf), plus video.
+    /// Formats a browser can already display (.bmp, .gif, .ico, .jpeg, .png, .tif, .tiff, .webp) are not accepted;
+    /// use `thumbnail` for those. - `thumbnail`: everything `image` accepts, plus .bmp, .gif, .ico, .jpeg, .png,
+    /// .tif, .tiff, .webp and JPEG 2000. - `video_frame`: .3g2, .3gp, .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t,
+    /// .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf, .ogv, .rm, .ts, .vob, .webm, .wmv. This is the
+    /// complete list. These lists track Riviera's capability registry
+    /// (`dropbox/riviera/supported_types/previews_supported_types.yaml`), which is generated and authoritative;
+    /// treat it rather than this comment as the final word. Formats the requested transform does not support fail
+    /// with `unsupported_format_error`. Options belonging to a different transform type than the one requested fail
+    /// with `invalid_options_error`. The produced bytes are not returned by this route, and not by its `/check`
+    /// poll either. Poll `get_transform_async/check` with the returned async job ID until it reports `complete` or
+    /// `failed`; a `complete` result carries a `TransformOutput` whose `output_handle` `download_transform_output`
+    /// exchanges for the bytes. Splitting retrieval out this way is what lets the route return outputs larger than
+    /// an async result can carry.
     ///
     /// - scope: files.content.read
     ///
-    /// - parameter fileIdOrUrl: Identifier of the media asset to transcribe. Callers must set exactly one of the
-    /// `FileIdOrUrl` variants. The referenced asset must be an audio or video file in a supported format (see the
-    /// route description for the list); requests against files with no audio track return a `no_audio_error`.
-    /// - parameter timestampLevel: Granularity of the time offsets returned for each transcript segment. Defaults to
-    /// `SENTENCE` when the field is omitted. - SENTENCE: one segment per spoken sentence (recommended). - WORD: one
-    /// segment per word, useful for fine-grained alignment such as captioning or highlight-as-you-listen
-    /// experiences.
-    /// - parameter includedSpecialWords: Comma-delimited list of non-lexical filler words to preserve in the transcript
-    /// output, e.g. `"uh, ah, uhm"`. By default these fillers are stripped. Unrecognized tokens are ignored. Leave
-    /// empty to use the default filtering behavior.
-    /// - parameter audioLanguage: Optional ISO 639-1 two-letter language code hinting the spoken language of the source
-    /// audio (e.g. "en", "ja"). When empty, the service auto-detects the language; supplying a hint improves
-    /// accuracy and latency for short or ambiguous clips. Unsupported languages fall back to auto-detection.
+    /// - parameter fileIdOrUrl: Identifier of the source file to transform. Callers must set exactly one of the
+    /// `FileIdOrUrl` variants. The referenced file must be in a format the requested `transform_type` supports; see
+    /// the route description for the per-transform format lists. Requests against unsupported formats fail with
+    /// `unsupported_format_error`.
+    /// - parameter transformType: What to produce from the source file. Required.
+    /// - parameter thumbnail: Options for `TransformType.thumbnail`.
+    /// - parameter image: Options for `TransformType.image` and `TransformType.image_pdf`.
+    /// - parameter videoFrame: Options for `TransformType.video_frame`.
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Void` object on failure.
     @objc
-    @discardableResult public func getTranscriptAsync(
+    @discardableResult public func getTransformAsync(
+        transformType: DBXRivieraTransformType,
         fileIdOrUrl: DBXRivieraFileIdOrUrl?,
-        timestampLevel: DBXRivieraTimestampLevel,
-        includedSpecialWords: String,
-        audioLanguage: String
-    ) -> DBXRivieraGetTranscriptAsyncRpcRequest {
-        let swift = swift.getTranscriptAsync(
+        thumbnail: DBXRivieraThumbnailOptions?,
+        image: DBXRivieraImageOptions?,
+        videoFrame: DBXRivieraVideoFrameOptions?
+    ) -> DBXRivieraGetTransformAsyncRpcRequest {
+        let swift = swift.getTransformAsync(
+            transformType: transformType.swift,
             fileIdOrUrl: fileIdOrUrl?.swift,
-            timestampLevel: timestampLevel.swift,
-            includedSpecialWords: includedSpecialWords,
-            audioLanguage: audioLanguage
+            thumbnail: thumbnail?.swift,
+            image: image?.swift,
+            videoFrame: videoFrame?.swift
         )
-        return DBXRivieraGetTranscriptAsyncRpcRequest(swift: swift)
+        return DBXRivieraGetTransformAsyncRpcRequest(swift: swift)
     }
 
-    /// Asynchronous transcript generation for audio and video files. Supported audio formats: .aac, .aif, .aiff, .flac,
-    /// .m4a, .m4r, .mp3, .oga, .ogg, .wav, .wma. Supported video formats: .3gp, .3gpp, .3gpp2, .asf, .avi, .dv,
-    /// .flv, .m2t, .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf, .oggtheora, .ogv, .rm, .ts, .vob, .webm,
-    /// .wmv. Unsupported formats return an `unsupported_format_error`. Size limits: the source file must be at most
-    /// 10 GB and its audio track at most 1 hour in duration. Files exceeding these limits are rejected.
+    /// Asynchronous file transformation: produces a new file from an existing one. One route covers many conversions.
+    /// Name the source file in `file_id_or_url`, say what you want back in `transform_type`, and supply that type's
+    /// options message if it needs one: - `pdf`: documents and images, to PDF. - `html`: spreadsheets, to HTML,
+    /// preserving the sheet layout. - `image`: images and single document pages, to JPEG or PNG. - `thumbnail`: any
+    /// thumbnailable source, resized to a named size bucket. - `image_pdf`: documents, to a page image rendered by
+    /// way of PDF. - `video_frame`: one still frame from a video, at a requested offset. The accepted input formats
+    /// differ per transform -- they are not one shared list -- and each is the intersection of the source format
+    /// with the pipeline that transform uses: - `pdf` and `image_pdf`: word-processing, presentation and
+    /// spreadsheet documents (.doc, .docx, .ppt, .pptx, .xls, .xlsx, .odt, .odp, .ods, .rtf, .epub, .gdoc,
+    /// .gslides, .hwp, .ai, .eps, .dwg among others). Images are not accepted. - `html`: spreadsheets only -- .xls,
+    /// .xlsm, .xlsx, .ods, .gsheet. This is the complete list. Note that .csv and .txt are *not* accepted here. -
+    /// `image`: the documents above, plus .pdf and .html, plus the iWork and design formats .pages, .key, .numbers,
+    /// .sketch, .xd, .indd and .psd, plus .avif, .heic, .svg and camera RAW, plus fonts (.otf, .ttf), plus video.
+    /// Formats a browser can already display (.bmp, .gif, .ico, .jpeg, .png, .tif, .tiff, .webp) are not accepted;
+    /// use `thumbnail` for those. - `thumbnail`: everything `image` accepts, plus .bmp, .gif, .ico, .jpeg, .png,
+    /// .tif, .tiff, .webp and JPEG 2000. - `video_frame`: .3g2, .3gp, .3gpp, .3gpp2, .asf, .avi, .dv, .flv, .m2t,
+    /// .m2ts, .m4v, .mkv, .mov, .mp4, .mpeg, .mpg, .mts, .mxf, .ogv, .rm, .ts, .vob, .webm, .wmv. This is the
+    /// complete list. These lists track Riviera's capability registry
+    /// (`dropbox/riviera/supported_types/previews_supported_types.yaml`), which is generated and authoritative;
+    /// treat it rather than this comment as the final word. Formats the requested transform does not support fail
+    /// with `unsupported_format_error`. Options belonging to a different transform type than the one requested fail
+    /// with `invalid_options_error`. The produced bytes are not returned by this route, and not by its `/check`
+    /// poll either. Poll `get_transform_async/check` with the returned async job ID until it reports `complete` or
+    /// `failed`; a `complete` result carries a `TransformOutput` whose `output_handle` `download_transform_output`
+    /// exchanges for the bytes. Splitting retrieval out this way is what lets the route return outputs larger than
+    /// an async result can carry.
     ///
     /// - scope: files.content.read
     ///
     /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
     /// or a `Void` object on failure.
     @objc
-    @discardableResult public func getTranscriptAsync() -> DBXRivieraGetTranscriptAsyncRpcRequest {
-        let swift = swift.getTranscriptAsync()
-        return DBXRivieraGetTranscriptAsyncRpcRequest(swift: swift)
+    @discardableResult public func getTransformAsync(transformType: DBXRivieraTransformType) -> DBXRivieraGetTransformAsyncRpcRequest {
+        let swift = swift.getTransformAsync(transformType: transformType.swift)
+        return DBXRivieraGetTransformAsyncRpcRequest(swift: swift)
     }
 
-    /// Returns the status or result of specified get_transcript_async task.
+    /// Returns the status or result of specified get_transform_async task.
     ///
     /// - scope: files.content.read
     ///
     /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
     /// that launched the job.
     ///
-    /// - returns: Through the response callback, the caller will receive a `Riviera.GetTranscriptAsyncCheckResult`
+    /// - returns: Through the response callback, the caller will receive a `Riviera.GetTransformAsyncCheckResult`
     /// object on success or a `Async.PollError` object on failure.
     @objc
-    @discardableResult public func getTranscriptAsyncCheck(asyncJobId: String) -> DBXRivieraGetTranscriptAsyncCheckRpcRequest {
-        let swift = swift.getTranscriptAsyncCheck(asyncJobId: asyncJobId)
-        return DBXRivieraGetTranscriptAsyncCheckRpcRequest(swift: swift)
+    @discardableResult public func getTransformAsyncCheck(asyncJobId: String) -> DBXRivieraGetTransformAsyncCheckRpcRequest {
+        let swift = swift.getTransformAsyncCheck(asyncJobId: asyncJobId)
+        return DBXRivieraGetTransformAsyncCheckRpcRequest(swift: swift)
     }
 }

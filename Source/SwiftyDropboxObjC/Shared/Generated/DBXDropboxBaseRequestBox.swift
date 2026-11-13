@@ -66,6 +66,9 @@ extension DropboxBaseRequestBox {
         if case .paper_docsUpdate(let swift) = self {
             return DBXPaperDocsUpdateUploadRequest(swift: swift)
         }
+        if case .riviera_downloadTransformOutput(let swift) = self {
+            return DBXRivieraDownloadTransformOutputDownloadRequestFile(swift: swift)
+        }
         if case .sharing_getSharedLinkFile(let swift) = self {
             return DBXSharingGetSharedLinkFileDownloadRequestFile(swift: swift)
         } else {
