@@ -2667,7 +2667,9 @@ public class DBXFilesFileStatusActive: DBXFilesFileStatus {
     }
 }
 
-/// An unspecified error.
+/// Field is deprecated. Deprecated. Deleted-file search does not work and should not be used. Use listFolder
+/// with includeDeleted in ListFolderArg set to true to enumerate deleted entries; this does not provide
+/// equivalent full-text search.
 @objc
 public class DBXFilesFileStatusDeleted: DBXFilesFileStatus {
     @objc
@@ -4978,7 +4980,7 @@ public class DBXFilesMoveIntoFamilyErrorOther: DBXFilesMoveIntoFamilyError {
     }
 }
 
-/// Objective-C compatible MoveIntoVaultError union
+/// Deprecated: the server no longer emits this error.
 @objc
 public class DBXFilesMoveIntoVaultError: NSObject {
     let swift: Files.MoveIntoVaultError
@@ -6110,6 +6112,10 @@ public class DBXFilesRelocationError: NSObject {
         case .cantMoveIntoFamily(let swiftArg):
             let arg = DBXFilesMoveIntoFamilyError(swift: swiftArg)
             return DBXFilesRelocationErrorCantMoveIntoFamily(arg)
+        case .teamFolderInsufficientQuota:
+            return DBXFilesRelocationErrorTeamFolderInsufficientQuota()
+        case .memberFolderInsufficientQuota:
+            return DBXFilesRelocationErrorMemberFolderInsufficientQuota()
         case .other:
             return DBXFilesRelocationErrorOther()
         }
@@ -6186,6 +6192,16 @@ public class DBXFilesRelocationError: NSObject {
     @objc
     public var asCantMoveIntoFamily: DBXFilesRelocationErrorCantMoveIntoFamily? {
         self as? DBXFilesRelocationErrorCantMoveIntoFamily
+    }
+
+    @objc
+    public var asTeamFolderInsufficientQuota: DBXFilesRelocationErrorTeamFolderInsufficientQuota? {
+        self as? DBXFilesRelocationErrorTeamFolderInsufficientQuota
+    }
+
+    @objc
+    public var asMemberFolderInsufficientQuota: DBXFilesRelocationErrorMemberFolderInsufficientQuota? {
+        self as? DBXFilesRelocationErrorMemberFolderInsufficientQuota
     }
 
     @objc
@@ -6328,7 +6344,8 @@ public class DBXFilesRelocationErrorCantMoveSharedFolder: DBXFilesRelocationErro
     }
 }
 
-/// Some content cannot be moved into Vault under certain circumstances, see detailed error.
+/// Field is deprecated. Some content cannot be moved into Vault under certain circumstances, see detailed
+/// error. Deprecated: the server no longer emits this error.
 @objc
 public class DBXFilesRelocationErrorCantMoveIntoVault: DBXFilesRelocationError {
     @objc
@@ -6352,6 +6369,26 @@ public class DBXFilesRelocationErrorCantMoveIntoFamily: DBXFilesRelocationError 
     public init(_ arg: DBXFilesMoveIntoFamilyError) {
         self.cantMoveIntoFamily = arg
         let swift = Files.RelocationError.cantMoveIntoFamily(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// The destination team folder has reached its storage limit.
+@objc
+public class DBXFilesRelocationErrorTeamFolderInsufficientQuota: DBXFilesRelocationError {
+    @objc
+    public init() {
+        let swift = Files.RelocationError.teamFolderInsufficientQuota
+        super.init(swift: swift)
+    }
+}
+
+/// The user's member folder has reached its storage limit.
+@objc
+public class DBXFilesRelocationErrorMemberFolderInsufficientQuota: DBXFilesRelocationError {
+    @objc
+    public init() {
+        let swift = Files.RelocationError.memberFolderInsufficientQuota
         super.init(swift: swift)
     }
 }
@@ -6410,6 +6447,10 @@ public class DBXFilesRelocationBatchError: NSObject {
         case .cantMoveIntoFamily(let swiftArg):
             let arg = DBXFilesMoveIntoFamilyError(swift: swiftArg)
             return DBXFilesRelocationBatchErrorCantMoveIntoFamily(arg)
+        case .teamFolderInsufficientQuota:
+            return DBXFilesRelocationBatchErrorTeamFolderInsufficientQuota()
+        case .memberFolderInsufficientQuota:
+            return DBXFilesRelocationBatchErrorMemberFolderInsufficientQuota()
         case .other:
             return DBXFilesRelocationBatchErrorOther()
         case .tooManyWriteOperations:
@@ -6488,6 +6529,16 @@ public class DBXFilesRelocationBatchError: NSObject {
     @objc
     public var asCantMoveIntoFamily: DBXFilesRelocationBatchErrorCantMoveIntoFamily? {
         self as? DBXFilesRelocationBatchErrorCantMoveIntoFamily
+    }
+
+    @objc
+    public var asTeamFolderInsufficientQuota: DBXFilesRelocationBatchErrorTeamFolderInsufficientQuota? {
+        self as? DBXFilesRelocationBatchErrorTeamFolderInsufficientQuota
+    }
+
+    @objc
+    public var asMemberFolderInsufficientQuota: DBXFilesRelocationBatchErrorMemberFolderInsufficientQuota? {
+        self as? DBXFilesRelocationBatchErrorMemberFolderInsufficientQuota
     }
 
     @objc
@@ -6635,7 +6686,8 @@ public class DBXFilesRelocationBatchErrorCantMoveSharedFolder: DBXFilesRelocatio
     }
 }
 
-/// Some content cannot be moved into Vault under certain circumstances, see detailed error.
+/// Field is deprecated. Some content cannot be moved into Vault under certain circumstances, see detailed
+/// error. Deprecated: the server no longer emits this error.
 @objc
 public class DBXFilesRelocationBatchErrorCantMoveIntoVault: DBXFilesRelocationBatchError {
     @objc
@@ -6659,6 +6711,26 @@ public class DBXFilesRelocationBatchErrorCantMoveIntoFamily: DBXFilesRelocationB
     public init(_ arg: DBXFilesMoveIntoFamilyError) {
         self.cantMoveIntoFamily = arg
         let swift = Files.RelocationBatchError.cantMoveIntoFamily(arg.swift)
+        super.init(swift: swift)
+    }
+}
+
+/// The destination team folder has reached its storage limit.
+@objc
+public class DBXFilesRelocationBatchErrorTeamFolderInsufficientQuota: DBXFilesRelocationBatchError {
+    @objc
+    public init() {
+        let swift = Files.RelocationBatchError.teamFolderInsufficientQuota
+        super.init(swift: swift)
+    }
+}
+
+/// The user's member folder has reached its storage limit.
+@objc
+public class DBXFilesRelocationBatchErrorMemberFolderInsufficientQuota: DBXFilesRelocationBatchError {
+    @objc
+    public init() {
+        let swift = Files.RelocationBatchError.memberFolderInsufficientQuota
         super.init(swift: swift)
     }
 }
@@ -8411,7 +8483,8 @@ public class DBXFilesSearchOptions: NSObject {
         return DBXFilesSearchOrderBy(swift: swift)
     }
 
-    /// Restricts search to the given file status.
+    /// Restricts search to the given file status. The deleted in FileStatus value is deprecated and should not be
+    /// used. This also applies to searches continued with searchContinueV2.
     @objc
     public var fileStatus: DBXFilesFileStatus { DBXFilesFileStatus(swift: swift.fileStatus) }
     /// Restricts search to only match on filenames.
@@ -9078,31 +9151,14 @@ public class DBXFilesThumbnailArg: NSObject {
     /// How to resize and crop the image to achieve the desired size.
     @objc
     public var mode: DBXFilesThumbnailMode { DBXFilesThumbnailMode(swift: swift.mode) }
-    /// Field is only returned for "internal" callers. Quality of the thumbnail image.
-    @objc
-    public var quality: DBXFilesThumbnailQuality { DBXFilesThumbnailQuality(swift: swift.quality) }
     /// Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is true, mediaInfo in
     /// FileMetadata is not populated. This improves latency for use cases where `media_info` is not needed.
     @objc
     public var excludeMediaInfo: NSNumber? { swift.excludeMediaInfo as NSNumber? }
 
     @objc
-    public init(
-        path: String,
-        format: DBXFilesThumbnailFormat,
-        size: DBXFilesThumbnailSize,
-        mode: DBXFilesThumbnailMode,
-        quality: DBXFilesThumbnailQuality,
-        excludeMediaInfo: NSNumber?
-    ) {
-        self.swift = Files.ThumbnailArg(
-            path: path,
-            format: format.swift,
-            size: size.swift,
-            mode: mode.swift,
-            quality: quality.swift,
-            excludeMediaInfo: excludeMediaInfo?.boolValue
-        )
+    public init(path: String, format: DBXFilesThumbnailFormat, size: DBXFilesThumbnailSize, mode: DBXFilesThumbnailMode, excludeMediaInfo: NSNumber?) {
+        self.swift = Files.ThumbnailArg(path: path, format: format.swift, size: size.swift, mode: mode.swift, excludeMediaInfo: excludeMediaInfo?.boolValue)
     }
 
     let swift: Files.ThumbnailArg
@@ -9459,8 +9515,6 @@ public class DBXFilesThumbnailSize: NSObject {
             return DBXFilesThumbnailSizeW1024h768()
         case .w2048h1536:
             return DBXFilesThumbnailSizeW2048h1536()
-        case .w3200h2400:
-            return DBXFilesThumbnailSizeW3200h2400()
         }
     }
 
@@ -9510,11 +9564,6 @@ public class DBXFilesThumbnailSize: NSObject {
     @objc
     public var asW2048h1536: DBXFilesThumbnailSizeW2048h1536? {
         self as? DBXFilesThumbnailSizeW2048h1536
-    }
-
-    @objc
-    public var asW3200h2400: DBXFilesThumbnailSizeW3200h2400? {
-        self as? DBXFilesThumbnailSizeW3200h2400
     }
 }
 
@@ -9608,16 +9657,6 @@ public class DBXFilesThumbnailSizeW2048h1536: DBXFilesThumbnailSize {
     }
 }
 
-/// Field is only returned for "internal" callers. 3200 by 2400 px.
-@objc
-public class DBXFilesThumbnailSizeW3200h2400: DBXFilesThumbnailSize {
-    @objc
-    public init() {
-        let swift = Files.ThumbnailSize.w3200h2400
-        super.init(swift: swift)
-    }
-}
-
 /// Objective-C compatible ThumbnailV2Arg struct
 @objc
 public class DBXFilesThumbnailV2Arg: NSObject {
@@ -9635,13 +9674,14 @@ public class DBXFilesThumbnailV2Arg: NSObject {
     /// How to resize and crop the image to achieve the desired size.
     @objc
     public var mode: DBXFilesThumbnailMode { DBXFilesThumbnailMode(swift: swift.mode) }
-    /// Field is only returned for "internal" callers. Quality of the thumbnail image.
-    @objc
-    public var quality: DBXFilesThumbnailQuality { DBXFilesThumbnailQuality(swift: swift.quality) }
     /// Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is true, mediaInfo in
     /// FileMetadata is not populated. This improves latency for use cases where `media_info` is not needed.
     @objc
     public var excludeMediaInfo: NSNumber? { swift.excludeMediaInfo as NSNumber? }
+    /// Whether to preserve the original image's transparency in the thumbnail. This is supported only when the
+    /// output format is PNG or WebP. Requests that set this flag with JPEG output return an error.
+    @objc
+    public var preserveTransparency: NSNumber { swift.preserveTransparency as NSNumber }
 
     @objc
     public init(
@@ -9649,16 +9689,16 @@ public class DBXFilesThumbnailV2Arg: NSObject {
         format: DBXFilesThumbnailFormat,
         size: DBXFilesThumbnailSize,
         mode: DBXFilesThumbnailMode,
-        quality: DBXFilesThumbnailQuality,
-        excludeMediaInfo: NSNumber?
+        excludeMediaInfo: NSNumber?,
+        preserveTransparency: NSNumber
     ) {
         self.swift = Files.ThumbnailV2Arg(
             resource: resource.swift,
             format: format.swift,
             size: size.swift,
             mode: mode.swift,
-            quality: quality.swift,
-            excludeMediaInfo: excludeMediaInfo?.boolValue
+            excludeMediaInfo: excludeMediaInfo?.boolValue,
+            preserveTransparency: preserveTransparency.boolValue
         )
     }
 
@@ -9698,6 +9738,8 @@ public class DBXFilesThumbnailV2Error: NSObject {
             return DBXFilesThumbnailV2ErrorAccessDenied()
         case .notFound:
             return DBXFilesThumbnailV2ErrorNotFound()
+        case .unsupportedOutputFormat:
+            return DBXFilesThumbnailV2ErrorUnsupportedOutputFormat()
         case .other:
             return DBXFilesThumbnailV2ErrorOther()
         }
@@ -9739,6 +9781,11 @@ public class DBXFilesThumbnailV2Error: NSObject {
     @objc
     public var asNotFound: DBXFilesThumbnailV2ErrorNotFound? {
         self as? DBXFilesThumbnailV2ErrorNotFound
+    }
+
+    @objc
+    public var asUnsupportedOutputFormat: DBXFilesThumbnailV2ErrorUnsupportedOutputFormat? {
+        self as? DBXFilesThumbnailV2ErrorUnsupportedOutputFormat
     }
 
     @objc
@@ -9821,6 +9868,16 @@ public class DBXFilesThumbnailV2ErrorNotFound: DBXFilesThumbnailV2Error {
     }
 }
 
+/// Transparency preservation is supported only for PNG and WebP output.
+@objc
+public class DBXFilesThumbnailV2ErrorUnsupportedOutputFormat: DBXFilesThumbnailV2Error {
+    @objc
+    public init() {
+        let swift = Files.ThumbnailV2Error.unsupportedOutputFormat
+        super.init(swift: swift)
+    }
+}
+
 /// An unspecified error.
 @objc
 public class DBXFilesThumbnailV2ErrorOther: DBXFilesThumbnailV2Error {
@@ -9880,7 +9937,8 @@ public class DBXFilesUnlockFileBatchArg: NSObject {
 @objc
 public class DBXFilesUploadArg: DBXFilesCommitInfo {
     /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
-    /// hash, an error will be returned. For more information see our Content hash
+    /// hash, an error will be returned. Optional, but recommended to avoid committing data corrupted in
+    /// transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     @objc
     public var contentHash: String? { subSwift.contentHash }
@@ -10062,7 +10120,8 @@ public class DBXFilesUploadSessionAppendArg: NSObject {
     @objc
     public var close: NSNumber { swift.close as NSNumber }
     /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
-    /// hash, an error will be returned. For more information see our Content hash
+    /// hash, an error will be returned. Optional, but recommended to avoid committing data corrupted in
+    /// transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     @objc
     public var contentHash: String? { swift.contentHash }
@@ -10088,9 +10147,10 @@ public class DBXFilesUploadSessionAppendBatchArg: NSObject {
     /// Append information for each file in the batch.
     @objc
     public var entries: [DBXFilesUploadSessionAppendBatchArgEntry] { swift.entries.map { DBXFilesUploadSessionAppendBatchArgEntry(swift: $0) } }
-    /// A hash of the entire request body which is all the concatenated pieces of file content that were uploaded in
-    /// this call. If provided and the uploaded content does not match this hash, an error will be returned. For
-    /// more information see our Content hash https://www.dropbox.com/developers/reference/content-hash page.
+    /// A single hash of all the concatenated file contents uploaded in this call. If provided and the uploaded
+    /// content does not match this hash, an error will be returned. Optional, but recommended to avoid
+    /// committing data corrupted in transit. For more information see our Content hash
+    /// https://www.dropbox.com/developers/reference/content-hash page.
     @objc
     public var contentHash: String? { swift.contentHash }
 
@@ -10666,7 +10726,8 @@ public class DBXFilesUploadSessionFinishArg: NSObject {
     @objc
     public var commit: DBXFilesCommitInfo { DBXFilesCommitInfo(swift: swift.commit) }
     /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
-    /// hash, an error will be returned. For more information see our Content hash
+    /// hash, an error will be returned. Optional, but recommended to avoid committing data corrupted in
+    /// transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     @objc
     public var contentHash: String? { swift.contentHash }
@@ -11385,7 +11446,8 @@ public class DBXFilesUploadSessionStartArg: NSObject {
     }
 
     /// A hash of the file content uploaded in this call. If provided and the uploaded content does not match this
-    /// hash, an error will be returned. For more information see our Content hash
+    /// hash, an error will be returned. Optional, but recommended to avoid committing data corrupted in
+    /// transit. For more information see our Content hash
     /// https://www.dropbox.com/developers/reference/content-hash page.
     @objc
     public var contentHash: String? { swift.contentHash }
@@ -11840,6 +11902,12 @@ public class DBXFilesWriteError: NSObject {
             return DBXFilesWriteErrorTooManyWriteOperations()
         case .accessRestricted:
             return DBXFilesWriteErrorAccessRestricted()
+        case .teamFolderInsufficientSpace:
+            return DBXFilesWriteErrorTeamFolderInsufficientSpace()
+        case .memberFolderInsufficientSpace:
+            return DBXFilesWriteErrorMemberFolderInsufficientSpace()
+        case .uploadTrafficLimitReached:
+            return DBXFilesWriteErrorUploadTrafficLimitReached()
         case .other:
             return DBXFilesWriteErrorOther()
         }
@@ -11891,6 +11959,21 @@ public class DBXFilesWriteError: NSObject {
     @objc
     public var asAccessRestricted: DBXFilesWriteErrorAccessRestricted? {
         self as? DBXFilesWriteErrorAccessRestricted
+    }
+
+    @objc
+    public var asTeamFolderInsufficientSpace: DBXFilesWriteErrorTeamFolderInsufficientSpace? {
+        self as? DBXFilesWriteErrorTeamFolderInsufficientSpace
+    }
+
+    @objc
+    public var asMemberFolderInsufficientSpace: DBXFilesWriteErrorMemberFolderInsufficientSpace? {
+        self as? DBXFilesWriteErrorMemberFolderInsufficientSpace
+    }
+
+    @objc
+    public var asUploadTrafficLimitReached: DBXFilesWriteErrorUploadTrafficLimitReached? {
+        self as? DBXFilesWriteErrorUploadTrafficLimitReached
     }
 
     @objc
@@ -11995,6 +12078,36 @@ public class DBXFilesWriteErrorAccessRestricted: DBXFilesWriteError {
     @objc
     public init() {
         let swift = Files.WriteError.accessRestricted
+        super.init(swift: swift)
+    }
+}
+
+/// The destination team folder has reached its storage limit.
+@objc
+public class DBXFilesWriteErrorTeamFolderInsufficientSpace: DBXFilesWriteError {
+    @objc
+    public init() {
+        let swift = Files.WriteError.teamFolderInsufficientSpace
+        super.init(swift: swift)
+    }
+}
+
+/// The user's member folder has reached its storage limit.
+@objc
+public class DBXFilesWriteErrorMemberFolderInsufficientSpace: DBXFilesWriteError {
+    @objc
+    public init() {
+        let swift = Files.WriteError.memberFolderInsufficientSpace
+        super.init(swift: swift)
+    }
+}
+
+/// The user has reached their monthly upload traffic limit.
+@objc
+public class DBXFilesWriteErrorUploadTrafficLimitReached: DBXFilesWriteError {
+    @objc
+    public init() {
+        let swift = Files.WriteError.uploadTrafficLimitReached
         super.init(swift: swift)
     }
 }

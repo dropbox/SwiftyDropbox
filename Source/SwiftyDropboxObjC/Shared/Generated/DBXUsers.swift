@@ -13,14 +13,16 @@ import SwiftyDropbox
 /// The amount of detail revealed about an account depends on the user being queried and the user making the query.
 @objc
 public class DBXUsersAccount: NSObject {
-    /// The user's unique Dropbox ID.
+    /// The user's unique and stable Dropbox ID.
     @objc
     public var accountId: String { swift.accountId }
     /// Details of a user's name.
     @objc
     public var name: DBXUsersName { DBXUsersName(swift: swift.name) }
     /// The user's email address. Do not rely on this without checking the emailVerified field. Even then, it's
-    /// possible that the user has since lost access to their email.
+    /// possible that the user has since lost access to their email. Note: email is not a unique or stable
+    /// identifier for a Dropbox account. Users can change their email, and emails can be reused by different
+    /// accounts. Apps should not use email as a key for account identification; use accountId instead.
     @objc
     public var email: String { swift.email }
     /// Whether the user has verified their email address.
