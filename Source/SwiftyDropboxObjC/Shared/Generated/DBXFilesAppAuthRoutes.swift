@@ -32,10 +32,12 @@ public class DBXFilesAppAuthRoutes: NSObject {
     /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
-    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
     /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
     /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
     /// not needed.
+    /// - parameter preserveTransparency: Whether to preserve the original image's transparency in the thumbnail. This
+    /// is supported only when the output format is PNG or WebP. Requests that set this flag with JPEG output return
+    /// an error.
     /// - parameter overwrite: A boolean to set behavior in the event of a naming conflict. `True` will overwrite
     /// conflicting file at destination. `False` will take no action (but if left unhandled in destination closure,
     /// an NSError will be thrown).
@@ -49,8 +51,8 @@ public class DBXFilesAppAuthRoutes: NSObject {
         format: DBXFilesThumbnailFormat,
         size: DBXFilesThumbnailSize,
         mode: DBXFilesThumbnailMode,
-        quality: DBXFilesThumbnailQuality,
         excludeMediaInfo: NSNumber?,
+        preserveTransparency: NSNumber,
         overwrite: Bool,
         destination: URL
     ) -> DBXFilesGetThumbnailDownloadRequestFileV2 {
@@ -59,8 +61,8 @@ public class DBXFilesAppAuthRoutes: NSObject {
             format: format.swift,
             size: size.swift,
             mode: mode.swift,
-            quality: quality.swift,
             excludeMediaInfo: excludeMediaInfo?.boolValue,
+            preserveTransparency: preserveTransparency.boolValue,
             overwrite: overwrite,
             destination: destination
         )
@@ -94,10 +96,12 @@ public class DBXFilesAppAuthRoutes: NSObject {
     /// compression.
     /// - parameter size: The size for the thumbnail image.
     /// - parameter mode: How to resize and crop the image to achieve the desired size.
-    /// - parameter quality: Field is only returned for "internal" callers. Quality of the thumbnail image.
     /// - parameter excludeMediaInfo: Normally, mediaInfo in FileMetadata is set for photo and video. When this flag is
     /// true, mediaInfo in FileMetadata is not populated. This improves latency for use cases where `media_info` is
     /// not needed.
+    /// - parameter preserveTransparency: Whether to preserve the original image's transparency in the thumbnail. This
+    /// is supported only when the output format is PNG or WebP. Requests that set this flag with JPEG output return
+    /// an error.
     ///
     /// - returns: Through the response callback, the caller will receive a `Files.PreviewResult` object on success or a
     /// `Files.ThumbnailV2Error` object on failure.
@@ -107,16 +111,16 @@ public class DBXFilesAppAuthRoutes: NSObject {
         format: DBXFilesThumbnailFormat,
         size: DBXFilesThumbnailSize,
         mode: DBXFilesThumbnailMode,
-        quality: DBXFilesThumbnailQuality,
-        excludeMediaInfo: NSNumber?
+        excludeMediaInfo: NSNumber?,
+        preserveTransparency: NSNumber
     ) -> DBXFilesGetThumbnailDownloadRequestMemoryV2 {
         let swift = swift.getThumbnailV2(
             resource: resource.swift,
             format: format.swift,
             size: size.swift,
             mode: mode.swift,
-            quality: quality.swift,
-            excludeMediaInfo: excludeMediaInfo?.boolValue
+            excludeMediaInfo: excludeMediaInfo?.boolValue,
+            preserveTransparency: preserveTransparency.boolValue
         )
         return DBXFilesGetThumbnailDownloadRequestMemoryV2(swift: swift)
     }
