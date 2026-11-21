@@ -135,23 +135,27 @@ public class DBXOpenidUserInfoErrorOther: DBXOpenidUserInfoError {
 /// Objective-C compatible UserInfoResult struct
 @objc
 public class DBXOpenidUserInfoResult: NSObject {
-    /// Last name of user.
+    /// Last name of the user.
     @objc
     public var familyName: String? { swift.familyName }
-    /// First name of user.
+    /// First name of the user.
     @objc
     public var givenName: String? { swift.givenName }
-    /// Email address of user.
+    /// The user's email address. Be aware it's possible that the user has since lost access to their email. Note:
+    /// email is not a unique or stable identifier for a Dropbox account. Users can change their email, and
+    /// emails can be reused by different accounts. Apps should not use email as a key for account
+    /// identification; use sub instead.
     @objc
     public var email: String? { swift.email }
-    /// If user is email verified.
+    /// If the user's email address is verified.
     @objc
     public var emailVerified: NSNumber? { swift.emailVerified as NSNumber? }
-    /// Issuer of token (in this case Dropbox).
+    /// Issuer of the token (in this case Dropbox).
     @objc
     public var iss: String { swift.iss }
     /// An identifier for the user. This is the Dropbox account_id, a string value such as
-    /// dbid:AAH4f99T0taONIb-OurWxbNQ6ywGRopQngc.
+    /// dbid:AAH4f99T0taONIb-OurWxbNQ6ywGRopQngc. The account_id is a unique and stable identifier for a Dropbox
+    /// account, suitable for use as a key in authentication and account management.
     @objc
     public var sub: String { swift.sub }
 
