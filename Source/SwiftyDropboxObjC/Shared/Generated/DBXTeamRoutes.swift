@@ -962,36 +962,6 @@ public class DBXTeamRoutes: NSObject {
         return DBXTeamMembersAddJobStatusGetRpcRequestV2(swift: swift)
     }
 
-    /// Launch a bulk suspend job. The server enforces a maximum of 500 members.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter members: Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
-    /// item IDs and duplicate member selectors.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
-    /// or a `Team.BulkSuspendError` object on failure.
-    @objc
-    @discardableResult public func membersBulkSuspend(members: [DBXTeamBulkSuspendMemberTarget]) -> DBXTeamMembersBulkSuspendRpcRequest {
-        let swift = swift.membersBulkSuspend(members: members.map(\.swift))
-        return DBXTeamMembersBulkSuspendRpcRequest(swift: swift)
-    }
-
-    /// Poll a previously launched bulk suspend job.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
-    /// that launched the job.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.BulkSuspendJobStatus` object on
-    /// success or a `Async.PollError` object on failure.
-    @objc
-    @discardableResult public func membersBulkSuspendJobStatusCheck(asyncJobId: String) -> DBXTeamMembersBulkSuspendJobStatusCheckRpcRequest {
-        let swift = swift.membersBulkSuspendJobStatusCheck(asyncJobId: asyncJobId)
-        return DBXTeamMembersBulkSuspendJobStatusCheckRpcRequest(swift: swift)
-    }
-
     /// Permanently delete the files of a user who has been removed from the team. After permanent deletion, those files
     /// will not be available to be transferred to another team member. Permission : Team member management Exactly
     /// one of team_member_id, email, or external_id must be provided to identify the user account.
@@ -1560,6 +1530,36 @@ public class DBXTeamRoutes: NSObject {
         return DBXTeamMembersSuspendRpcRequest(swift: swift)
     }
 
+    /// Launch a member suspension batch. The server enforces a maximum of 500 members.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter members: Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
+    /// item IDs and duplicate member selectors.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Team.MembersSuspendBatchError` object on failure.
+    @objc
+    @discardableResult public func membersSuspendBatch(members: [DBXTeamMembersSuspendBatchTarget]) -> DBXTeamMembersSuspendBatchRpcRequest {
+        let swift = swift.membersSuspendBatch(members: members.map(\.swift))
+        return DBXTeamMembersSuspendBatchRpcRequest(swift: swift)
+    }
+
+    /// Poll a previously launched member suspension batch job.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersSuspendBatchJobStatus` object
+    /// on success or a `Async.PollError` object on failure.
+    @objc
+    @discardableResult public func membersSuspendBatchJobStatusCheck(asyncJobId: String) -> DBXTeamMembersSuspendBatchJobStatusCheckRpcRequest {
+        let swift = swift.membersSuspendBatchJobStatusCheck(asyncJobId: asyncJobId)
+        return DBXTeamMembersSuspendBatchJobStatusCheckRpcRequest(swift: swift)
+    }
+
     /// Unsuspend a member from a team. Permission : Team member management Exactly one of team_member_id, email, or
     /// external_id must be provided to identify the user account.
     ///
@@ -1923,6 +1923,51 @@ public class DBXTeamRoutes: NSObject {
     @discardableResult public func teamFolderRestore(teamFolderId: String) -> DBXTeamTeamFolderRestoreRpcRequest {
         let swift = swift.teamFolderRestore(teamFolderId: teamFolderId)
         return DBXTeamTeamFolderRestoreRpcRequest(swift: swift)
+    }
+
+    /// Returns the space limit configuration of a team folder. See TeamFolderSpaceLimitCapsType for how space limits
+    /// are enforced.
+    ///
+    /// - scope: team_data.content.read
+    ///
+    /// - parameter teamFolderId: The ID of the team folder.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamFolderGetSpaceLimitResponse`
+    /// object on success or a `Team.TeamFolderGetSpaceLimitError` object on failure.
+    @objc
+    @discardableResult public func teamFolderSpaceLimitGet(teamFolderId: String) -> DBXTeamTeamFolderSpaceLimitGetRpcRequest {
+        let swift = swift.teamFolderSpaceLimitGet(teamFolderId: teamFolderId)
+        return DBXTeamTeamFolderSpaceLimitGetRpcRequest(swift: swift)
+    }
+
+    /// Sets the space limit configuration of a team folder, replacing any existing configuration. See
+    /// TeamFolderSpaceLimitCapsType for how space limits are enforced.
+    ///
+    /// - scope: team_data.content.write
+    ///
+    /// - parameter spaceLimitBytes: The maximum total size, in bytes, of all content in the team folder and its
+    /// subfolders. When capsType is soft in TeamFolderSpaceLimitCapsType or hard in TeamFolderSpaceLimitCapsType,
+    /// this must be at least 2 GB (2147483648 bytes). It must never exceed the team's total storage capacity. When
+    /// capsType is off in TeamFolderSpaceLimitCapsType, the value is stored but has no effect, and it may be 0.
+    /// - parameter capsType: The caps type to apply to the specified team folder.
+    /// - parameter notificationTarget: Who receives usage notifications for the specified team folder.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// `Team.TeamFolderSetSpaceLimitError` object on failure.
+    @objc
+    @discardableResult public func teamFolderSpaceLimitSet(
+        teamFolderId: String,
+        spaceLimitBytes: NSNumber,
+        capsType: DBXTeamTeamFolderSpaceLimitCapsType,
+        notificationTarget: DBXTeamTeamFolderSpaceLimitNotificationTarget
+    ) -> DBXTeamTeamFolderSpaceLimitSetRpcRequest {
+        let swift = swift.teamFolderSpaceLimitSet(
+            teamFolderId: teamFolderId,
+            spaceLimitBytes: spaceLimitBytes.uint64Value,
+            capsType: capsType.swift,
+            notificationTarget: notificationTarget.swift
+        )
+        return DBXTeamTeamFolderSpaceLimitSetRpcRequest(swift: swift)
     }
 
     /// Updates the sync settings on a team folder or its contents.  Use of this endpoint requires that the team has
@@ -4736,140 +4781,6 @@ public class DBXTeamMembersAddJobStatusGetRpcRequestV2: NSObject, DBXRequest {
 }
 
 @objc
-public class DBXTeamMembersBulkSuspendRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.BulkSuspendErrorSerializer>
-
-    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.BulkSuspendErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamBulkSuspendError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamBulkSuspendError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXTeamBulkSuspendError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXTeamBulkSuspendError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXAsyncLaunchResultBase? = nil
-            if let swift = result {
-                objc = DBXAsyncLaunchResultBase.factory(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
-public class DBXTeamMembersBulkSuspendJobStatusCheckRpcRequest: NSObject, DBXRequest {
-    var swift: RpcRequest<Team.BulkSuspendJobStatusSerializer, Async.PollErrorSerializer>
-
-    init(swift: RpcRequest<Team.BulkSuspendJobStatusSerializer, Async.PollErrorSerializer>) {
-        self.swift = swift
-    }
-
-    @objc
-    @discardableResult public func response(
-        completionHandler: @escaping (DBXTeamBulkSuspendJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
-    ) -> Self {
-        response(queue: nil, completionHandler: completionHandler)
-    }
-
-    @objc
-    @discardableResult public func response(
-        queue: DispatchQueue?,
-        completionHandler: @escaping (DBXTeamBulkSuspendJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
-    ) -> Self {
-        swift.response(queue: queue) { result, error in
-            var routeError: DBXAsyncPollError?
-            var callError: DBXCallError?
-            switch error {
-            case .routeError(let box, _, _, _):
-                routeError = DBXAsyncPollError(swift: box.unboxed)
-                callError = nil
-            default:
-                routeError = nil
-                callError = error?.objc
-            }
-
-            var objc: DBXTeamBulkSuspendJobStatus? = nil
-            if let swift = result {
-                objc = DBXTeamBulkSuspendJobStatus.factory(swift: swift)
-            }
-            completionHandler(objc, routeError, callError)
-        }
-        return self
-    }
-
-    @objc
-    public var clientPersistedString: String? { swift.clientPersistedString }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public var earliestBeginDate: Date? { swift.earliestBeginDate }
-
-    @objc
-    public func persistingString(string: String?) -> Self {
-        swift.persistingString(string: string)
-        return self
-    }
-
-    @available(iOS 13.0, macOS 10.13, *)
-    @objc
-    public func settingEarliestBeginDate(date: Date?) -> Self {
-        swift.settingEarliestBeginDate(date: date)
-        return self
-    }
-
-    @objc
-    public func cancel() {
-        swift.cancel()
-    }
-}
-
-@objc
 public class DBXTeamMembersDeleteFormerMemberFilesRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Team.MembersDeleteFormerMemberFilesErrorSerializer>
 
@@ -6563,6 +6474,140 @@ public class DBXTeamMembersSuspendRpcRequest: NSObject, DBXRequest {
 }
 
 @objc
+public class DBXTeamMembersSuspendBatchRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.MembersSuspendBatchErrorSerializer>
+
+    init(swift: RpcRequest<Async.LaunchResultBaseSerializer, Team.MembersSuspendBatchErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamMembersSuspendBatchError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXAsyncLaunchResultBase?, DBXTeamMembersSuspendBatchError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXTeamMembersSuspendBatchError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXTeamMembersSuspendBatchError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXAsyncLaunchResultBase? = nil
+            if let swift = result {
+                objc = DBXAsyncLaunchResultBase.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXTeamMembersSuspendBatchJobStatusCheckRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.MembersSuspendBatchJobStatusSerializer, Async.PollErrorSerializer>
+
+    init(swift: RpcRequest<Team.MembersSuspendBatchJobStatusSerializer, Async.PollErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXTeamMembersSuspendBatchJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXTeamMembersSuspendBatchJobStatus?, DBXAsyncPollError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXAsyncPollError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXAsyncPollError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXTeamMembersSuspendBatchJobStatus? = nil
+            if let swift = result {
+                objc = DBXTeamMembersSuspendBatchJobStatus.factory(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
 public class DBXTeamMembersUnsuspendRpcRequest: NSObject, DBXRequest {
     var swift: RpcRequest<VoidSerializer, Team.MembersUnsuspendErrorSerializer>
 
@@ -8054,6 +8099,136 @@ public class DBXTeamTeamFolderRestoreRpcRequest: NSObject, DBXRequest {
                 objc = DBXTeamTeamFolderMetadata(swift: swift)
             }
             completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXTeamTeamFolderSpaceLimitGetRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<Team.TeamFolderGetSpaceLimitResponseSerializer, Team.TeamFolderGetSpaceLimitErrorSerializer>
+
+    init(swift: RpcRequest<Team.TeamFolderGetSpaceLimitResponseSerializer, Team.TeamFolderGetSpaceLimitErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXTeamTeamFolderGetSpaceLimitResponse?, DBXTeamTeamFolderGetSpaceLimitError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXTeamTeamFolderGetSpaceLimitResponse?, DBXTeamTeamFolderGetSpaceLimitError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { result, error in
+            var routeError: DBXTeamTeamFolderGetSpaceLimitError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXTeamTeamFolderGetSpaceLimitError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            var objc: DBXTeamTeamFolderGetSpaceLimitResponse? = nil
+            if let swift = result {
+                objc = DBXTeamTeamFolderGetSpaceLimitResponse(swift: swift)
+            }
+            completionHandler(objc, routeError, callError)
+        }
+        return self
+    }
+
+    @objc
+    public var clientPersistedString: String? { swift.clientPersistedString }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public var earliestBeginDate: Date? { swift.earliestBeginDate }
+
+    @objc
+    public func persistingString(string: String?) -> Self {
+        swift.persistingString(string: string)
+        return self
+    }
+
+    @available(iOS 13.0, macOS 10.13, *)
+    @objc
+    public func settingEarliestBeginDate(date: Date?) -> Self {
+        swift.settingEarliestBeginDate(date: date)
+        return self
+    }
+
+    @objc
+    public func cancel() {
+        swift.cancel()
+    }
+}
+
+@objc
+public class DBXTeamTeamFolderSpaceLimitSetRpcRequest: NSObject, DBXRequest {
+    var swift: RpcRequest<VoidSerializer, Team.TeamFolderSetSpaceLimitErrorSerializer>
+
+    init(swift: RpcRequest<VoidSerializer, Team.TeamFolderSetSpaceLimitErrorSerializer>) {
+        self.swift = swift
+    }
+
+    @objc
+    @discardableResult public func response(
+        completionHandler: @escaping (DBXTeamTeamFolderSetSpaceLimitError?, DBXCallError?) -> Void
+    ) -> Self {
+        response(queue: nil, completionHandler: completionHandler)
+    }
+
+    @objc
+    @discardableResult public func response(
+        queue: DispatchQueue?,
+        completionHandler: @escaping (DBXTeamTeamFolderSetSpaceLimitError?, DBXCallError?) -> Void
+    ) -> Self {
+        swift.response(queue: queue) { _, error in
+            var routeError: DBXTeamTeamFolderSetSpaceLimitError?
+            var callError: DBXCallError?
+            switch error {
+            case .routeError(let box, _, _, _):
+                routeError = DBXTeamTeamFolderSetSpaceLimitError(swift: box.unboxed)
+                callError = nil
+            default:
+                routeError = nil
+                callError = error?.objc
+            }
+
+            completionHandler(routeError, callError)
         }
         return self
     }

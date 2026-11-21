@@ -833,42 +833,6 @@ public class TeamRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
-    /// Launch a bulk suspend job. The server enforces a maximum of 500 members.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter members: Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
-    /// item IDs and duplicate member selectors.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
-    /// or a `Team.BulkSuspendError` object on failure.
-    @discardableResult public func membersBulkSuspend(members: [Team.BulkSuspendMemberTarget]) -> RpcRequest<
-        Async.LaunchResultBaseSerializer,
-        Team.BulkSuspendErrorSerializer
-    > {
-        let route = Team.membersBulkSuspend
-        let serverArgs = Team.BulkSuspendArg(members: members)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
-    /// Poll a previously launched bulk suspend job.
-    ///
-    /// - scope: members.write
-    ///
-    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
-    /// that launched the job.
-    ///
-    /// - returns: Through the response callback, the caller will receive a `Team.BulkSuspendJobStatus` object on
-    /// success or a `Async.PollError` object on failure.
-    @discardableResult public func membersBulkSuspendJobStatusCheck(asyncJobId: String) -> RpcRequest<
-        Team.BulkSuspendJobStatusSerializer,
-        Async.PollErrorSerializer
-    > {
-        let route = Team.membersBulkSuspendJobStatusCheck
-        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
-        return client.request(route, serverArgs: serverArgs)
-    }
-
     /// Permanently delete the files of a user who has been removed from the team. After permanent deletion, those files
     /// will not be available to be transferred to another team member. Permission : Team member management Exactly
     /// one of team_member_id, email, or external_id must be provided to identify the user account.
@@ -1397,6 +1361,42 @@ public class TeamRoutes: DropboxTransportClientOwning {
         return client.request(route, serverArgs: serverArgs)
     }
 
+    /// Launch a member suspension batch. The server enforces a maximum of 500 members.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter members: Must contain between 1 and 500 targets. The launch handler also rejects duplicate client
+    /// item IDs and duplicate member selectors.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Async.LaunchResultBase` object on success
+    /// or a `Team.MembersSuspendBatchError` object on failure.
+    @discardableResult public func membersSuspendBatch(members: [Team.MembersSuspendBatchTarget]) -> RpcRequest<
+        Async.LaunchResultBaseSerializer,
+        Team.MembersSuspendBatchErrorSerializer
+    > {
+        let route = Team.membersSuspendBatch
+        let serverArgs = Team.MembersSuspendBatchArg(members: members)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Poll a previously launched member suspension batch job.
+    ///
+    /// - scope: members.write
+    ///
+    /// - parameter asyncJobId: Id of the asynchronous job. This is the value of a response returned from the method
+    /// that launched the job.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.MembersSuspendBatchJobStatus` object
+    /// on success or a `Async.PollError` object on failure.
+    @discardableResult public func membersSuspendBatchJobStatusCheck(asyncJobId: String) -> RpcRequest<
+        Team.MembersSuspendBatchJobStatusSerializer,
+        Async.PollErrorSerializer
+    > {
+        let route = Team.membersSuspendBatchJobStatusCheck
+        let serverArgs = Async.PollArg(asyncJobId: asyncJobId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
     /// Unsuspend a member from a team. Permission : Team member management Exactly one of team_member_id, email, or
     /// external_id must be provided to identify the user account.
     ///
@@ -1818,6 +1818,54 @@ public class TeamRoutes: DropboxTransportClientOwning {
     > {
         let route = Team.teamFolderRestore
         let serverArgs = Team.TeamFolderIdArg(teamFolderId: teamFolderId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Returns the space limit configuration of a team folder. See TeamFolderSpaceLimitCapsType for how space limits
+    /// are enforced.
+    ///
+    /// - scope: team_data.content.read
+    ///
+    /// - parameter teamFolderId: The ID of the team folder.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Team.TeamFolderGetSpaceLimitResponse`
+    /// object on success or a `Team.TeamFolderGetSpaceLimitError` object on failure.
+    @discardableResult public func teamFolderSpaceLimitGet(teamFolderId: String) -> RpcRequest<
+        Team.TeamFolderGetSpaceLimitResponseSerializer,
+        Team.TeamFolderGetSpaceLimitErrorSerializer
+    > {
+        let route = Team.teamFolderSpaceLimitGet
+        let serverArgs = Team.TeamFolderIdArg(teamFolderId: teamFolderId)
+        return client.request(route, serverArgs: serverArgs)
+    }
+
+    /// Sets the space limit configuration of a team folder, replacing any existing configuration. See
+    /// TeamFolderSpaceLimitCapsType for how space limits are enforced.
+    ///
+    /// - scope: team_data.content.write
+    ///
+    /// - parameter spaceLimitBytes: The maximum total size, in bytes, of all content in the team folder and its
+    /// subfolders. When capsType is soft in TeamFolderSpaceLimitCapsType or hard in TeamFolderSpaceLimitCapsType,
+    /// this must be at least 2 GB (2147483648 bytes). It must never exceed the team's total storage capacity. When
+    /// capsType is off in TeamFolderSpaceLimitCapsType, the value is stored but has no effect, and it may be 0.
+    /// - parameter capsType: The caps type to apply to the specified team folder.
+    /// - parameter notificationTarget: Who receives usage notifications for the specified team folder.
+    ///
+    /// - returns: Through the response callback, the caller will receive a `Void` object on success or a
+    /// `Team.TeamFolderSetSpaceLimitError` object on failure.
+    @discardableResult public func teamFolderSpaceLimitSet(
+        teamFolderId: String,
+        spaceLimitBytes: UInt64,
+        capsType: Team.TeamFolderSpaceLimitCapsType,
+        notificationTarget: Team.TeamFolderSpaceLimitNotificationTarget
+    ) -> RpcRequest<VoidSerializer, Team.TeamFolderSetSpaceLimitErrorSerializer> {
+        let route = Team.teamFolderSpaceLimitSet
+        let serverArgs = Team.TeamFolderSetSpaceLimitArg(
+            teamFolderId: teamFolderId,
+            spaceLimitBytes: spaceLimitBytes,
+            capsType: capsType,
+            notificationTarget: notificationTarget
+        )
         return client.request(route, serverArgs: serverArgs)
     }
 

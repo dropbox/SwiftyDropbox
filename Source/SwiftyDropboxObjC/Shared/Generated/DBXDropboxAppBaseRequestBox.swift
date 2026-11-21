@@ -12,6 +12,9 @@ extension DropboxAppBaseRequestBox {
         if case .files_getThumbnailV2(let swift) = self {
             return DBXFilesGetThumbnailDownloadRequestFileV2(swift: swift)
         }
+        if case .riviera_downloadTransformOutput(let swift) = self {
+            return DBXRivieraDownloadTransformOutputDownloadRequestFile(swift: swift)
+        }
         if case .sharing_getSharedLinkFile(let swift) = self {
             return DBXSharingGetSharedLinkFileDownloadRequestFile(swift: swift)
         } else {

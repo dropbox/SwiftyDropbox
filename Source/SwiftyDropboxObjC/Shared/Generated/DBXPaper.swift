@@ -371,6 +371,8 @@ public class DBXPaperDocLookupError: NSObject {
             return DBXPaperDocLookupErrorOther()
         case .docNotFound:
             return DBXPaperDocLookupErrorDocNotFound()
+        case .folderNotFound:
+            return DBXPaperDocLookupErrorFolderNotFound()
         }
     }
 
@@ -390,6 +392,11 @@ public class DBXPaperDocLookupError: NSObject {
     @objc
     public var asDocNotFound: DBXPaperDocLookupErrorDocNotFound? {
         self as? DBXPaperDocLookupErrorDocNotFound
+    }
+
+    @objc
+    public var asFolderNotFound: DBXPaperDocLookupErrorFolderNotFound? {
+        self as? DBXPaperDocLookupErrorFolderNotFound
     }
 }
 
@@ -421,6 +428,17 @@ public class DBXPaperDocLookupErrorDocNotFound: DBXPaperDocLookupError {
     @objc
     public init() {
         let swift = Paper.DocLookupError.docNotFound
+        super.init(swift: swift)
+    }
+}
+
+/// Cloud Docs do not have legacy Paper folders. Use the Dropbox filesystem APIs to look up their containing
+/// folders.
+@objc
+public class DBXPaperDocLookupErrorFolderNotFound: DBXPaperDocLookupError {
+    @objc
+    public init() {
+        let swift = Paper.DocLookupError.folderNotFound
         super.init(swift: swift)
     }
 }
@@ -2214,6 +2232,8 @@ public class DBXPaperPaperDocUpdateError: NSObject {
             return DBXPaperPaperDocUpdateErrorOther()
         case .docNotFound:
             return DBXPaperPaperDocUpdateErrorDocNotFound()
+        case .folderNotFound:
+            return DBXPaperPaperDocUpdateErrorFolderNotFound()
         case .contentMalformed:
             return DBXPaperPaperDocUpdateErrorContentMalformed()
         case .revisionMismatch:
@@ -2245,6 +2265,11 @@ public class DBXPaperPaperDocUpdateError: NSObject {
     @objc
     public var asDocNotFound: DBXPaperPaperDocUpdateErrorDocNotFound? {
         self as? DBXPaperPaperDocUpdateErrorDocNotFound
+    }
+
+    @objc
+    public var asFolderNotFound: DBXPaperPaperDocUpdateErrorFolderNotFound? {
+        self as? DBXPaperPaperDocUpdateErrorFolderNotFound
     }
 
     @objc
@@ -2306,6 +2331,17 @@ public class DBXPaperPaperDocUpdateErrorDocNotFound: DBXPaperPaperDocUpdateError
     @objc
     public init() {
         let swift = Paper.PaperDocUpdateError.docNotFound
+        super.init(swift: swift)
+    }
+}
+
+/// Cloud Docs do not have legacy Paper folders. Use the Dropbox filesystem APIs to look up their containing
+/// folders.
+@objc
+public class DBXPaperPaperDocUpdateErrorFolderNotFound: DBXPaperPaperDocUpdateError {
+    @objc
+    public init() {
+        let swift = Paper.PaperDocUpdateError.folderNotFound
         super.init(swift: swift)
     }
 }
