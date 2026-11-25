@@ -19,7 +19,7 @@ jobs:
           aws-region: us-west-2
 
       - name: Fetch GitHub App credentials from Secrets Manager
-        uses: aws-actions/aws-secretsmanager-get-secrets@v3
+        uses: aws-actions/aws-secretsmanager-get-secrets@v4
         with:
           secret-ids: |
             SDK_UPDATER,sdk-updater-github-app
